@@ -2,8 +2,9 @@ import { StyleSheet } from "react-native";
 
 export const TrainingPlanStyles = StyleSheet.create({
     sectionPlan:{
-        height:'79%',
+        height:'99%',
         position:'relative',
+        width:'100%'
         
     },
     withoutPlanContainer:{
@@ -26,7 +27,7 @@ export const TrainingPlanStyles = StyleSheet.create({
         width:'98%',
         marginLeft:'1%',
         marginRight:'1%',
-        height:'100%'
+        height:'79%',
     },
     withoutPlanText:{
         fontSize:30,

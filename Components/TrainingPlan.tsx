@@ -33,12 +33,14 @@ const TrainingPlan:React.FC=()=>{
         return <View><Text>Loading...</Text></View>
     }
     return(
-        <View style={TrainingPlanStyles.sectionPlan} >
-            <ImageBackground style={TrainingPlanStyles.backgroundIMG} source={backgroundLogo}>
-                {yourPlan}
-            </ImageBackground>
-            
-        </View>
+      <ImageBackground style={TrainingPlanStyles.backgroundIMG} source={backgroundLogo}>
+          <View style={TrainingPlanStyles.sectionPlan} >
+              
+                  {yourPlan}
+              
+              
+          </View>
+        </ImageBackground>
     )
 }
 export default TrainingPlan
