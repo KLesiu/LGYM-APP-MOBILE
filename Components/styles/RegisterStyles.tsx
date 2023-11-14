@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const LoginStyles = StyleSheet.create({
+export const RegisterStyles=StyleSheet.create({
     container:{
         display:'flex',
         alignItems:'center',
@@ -10,12 +10,13 @@ export const LoginStyles = StyleSheet.create({
         backgroundColor:'rgba(25,25,25,1)'
     },
     logo:{
-        width:'60%',
-        height:'30%'
+        width:'40%',
+        height:'20%',
+        marginBottom:'5%'
     },
     label:{
         color:'rgb(185, 177, 162)',
-        fontSize:30,
+        fontSize:25,
 
     },
     input:{
@@ -28,17 +29,17 @@ export const LoginStyles = StyleSheet.create({
         paddingLeft:15
 
     },
-    buttonLogin:{
-       marginTop:10,
-       width:'50%',
-       backgroundColor:'rgb(170,180,189);',
-       display:'flex',
-       alignItems:'center',
-       justifyContent:'center',
-       borderRadius:10,
-       height:'10%'
-    },
-    buttonLoginText:{
-        fontSize:40
-    }
+    buttonRegister:{
+        marginTop:10,
+        width:'50%',
+        backgroundColor:'rgb(170,180,189);',
+        display:'flex',
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius:10,
+        height:'7%'
+     },
+     buttonRegisterText:{
+         fontSize:30
+     }
 })
