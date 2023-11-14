@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const TrainingPlanStyles = StyleSheet.create({
     sectionPlan:{
-        height:'80%',
+        height:'79%',
         position:'relative',
         
     },
@@ -14,7 +14,8 @@ export const TrainingPlanStyles = StyleSheet.create({
         height:'100%',
         width:'100%',
         backgroundColor:'rgba(255,255,255,0.97)',
-        borderRadius:10,
+        borderTopStartRadius:10,
+        borderTopEndRadius:10,
     },
     backgroundIMG:{
         flex:1,
@@ -32,7 +33,7 @@ export const TrainingPlanStyles = StyleSheet.create({
         textAlign:'center'
     },
     withoutPlanButton:{
-        backgroundColor: 'rgb(134,134,134)',
+        backgroundColor: 'rgb(194,194,194)',
         width:'50%',
         height:'10%',
         display:'flex',
