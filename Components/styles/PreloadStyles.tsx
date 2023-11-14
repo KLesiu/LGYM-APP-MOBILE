@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 
+
 export const PreloadStyles = StyleSheet.create({
     logoLGYMAPP:{
         width:'70%',
@@ -29,6 +30,7 @@ export const PreloadStyles = StyleSheet.create({
         backgroundColor: 'rgb(170, 180, 189)',
         borderRadius: 10,
         display: 'flex',
+        fontSize:10,
         justifyContent: 'center',
         marginTop: 20,
         height: '10%',
@@ -48,8 +50,7 @@ export const PreloadStyles = StyleSheet.create({
     },
     loginText:{
         color: 'black',
-        fontSize: 25,
-        fontWeight: '700',
+        fontSize: 35,
         textDecorationLine: 'none',
         textShadowColor: 'rgb(0, 0, 0)',
         textShadowOffset: { width: 1, height: 1 },
@@ -58,12 +59,15 @@ export const PreloadStyles = StyleSheet.create({
     },
     registerText:{
         color: 'black',
-        fontSize: 25,
-        fontWeight: '700',
+        fontSize: 35,
         textDecorationLine: 'none',
         textShadowColor: 'rgb(0, 0, 0)',
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 1,
         letterSpacing: 4,  
+    },
+    quote:{
+        textAlign:'center',
+        width:'90%',
     }
 })

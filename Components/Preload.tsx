@@ -4,13 +4,35 @@ import backgroundLGYM from './img/backgroundLGYMApp500.png'
 import { PreloadStyles } from "./styles/PreloadStyles";
 import Login from "./Login";
 import {useState,useEffect} from 'react'
+import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
+import {Caveat_400Regular} from '@expo-google-fonts/caveat';
+import * as SplashScreen from 'expo-splash-screen'
 
 
 const Preload=()=>{
-    const [quote,setQuote]=useState<boolean>(false)
-    useEffect(()=>{
-        setTimeout(()=>setQuote(true),10000)
-    },[])
+    const [quote,setQuote]=useState<boolean>(true)
+    const [fontsLoaded]=useFonts({
+        Teko_700Bold,
+        Caveat_400Regular
+    })
+    useEffect(() => {
+        const loadAsyncResources = async () => {
+          try {
+            SplashScreen.preventAutoHideAsync();
+            await fontsLoaded;
+            SplashScreen.hideAsync();
+          } catch (error) {
+            console.error('Błąd ładowania zasobów:', error);
+          }
+        };
+    
+        loadAsyncResources();
+      }, [fontsLoaded]);
+
+
+    if(!fontsLoaded){
+        return <View><Text>Loading...</Text></View>
+    }
     return(
         <View>
             <ImageBackground source={backgroundLGYM}>
@@ -18,12 +40,12 @@ const Preload=()=>{
                             <View style={PreloadStyles.preLoadContainer}>
                                 <Image source={logoLGYM} style={PreloadStyles.logoLGYMAPP}/>
                                 <TouchableOpacity style={PreloadStyles.login}>
-                                    <Text style={PreloadStyles.loginText}>LOGIN</Text>
+                                    <Text  style={{fontFamily:'Teko_700Bold',...PreloadStyles.loginText}}>LOGIN</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={PreloadStyles.register}>
-                                    <Text style={PreloadStyles.registerText}>REGISTER</Text>
+                                    <Text style={{fontFamily:'Teko_700Bold',...PreloadStyles.registerText}}>REGISTER</Text>
                                 </TouchableOpacity>
-                                {quote?<Text>'Strength does not come from winning. Your struggles develop your strengths. When you go through hardships and decide not to surrender, that is strength. When you make an impasse passable, that is strength. But you must have ego, the kind of ego which makes you think of yourself in terms of superlatives. You must want to be the greatest. We are all starved for compliments. So we do things that get positive feedback.' (Arnold Schwarzenegger, 1982)</Text>:''}
+                                {quote?<Text style={{fontFamily:'Caveat_400Regular',...PreloadStyles.quote}}>'Strength does not come from winning. Your struggles develop your strengths. When you go through hardships and decide not to surrender, that is strength. When you make an impasse passable, that is strength. But you must have ego, the kind of ego which makes you think of yourself in terms of superlatives. You must want to be the greatest. We are all starved for compliments. So we do things that get positive feedback.' (Arnold Schwarzenegger, 1982)</Text>:''}
                             </View>
                                 
                         </View>
