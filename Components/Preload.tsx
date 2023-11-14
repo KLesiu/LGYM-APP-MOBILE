@@ -7,10 +7,13 @@ import {useState,useEffect} from 'react'
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "./types/RootStackParamList";
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 
-const Preload=()=>{
-    const [quote,setQuote]=useState<boolean>(true)
+const Preload:React.FC=()=>{
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular
@@ -28,7 +31,12 @@ const Preload=()=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
-
+    const handleLoginPress:VoidFunction=():void=>{
+        navigation.navigate('Login')
+    }
+    const handleRegisterPress:VoidFunction=():void=>{
+        navigation.navigate('Register')
+    }
 
     if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
@@ -39,13 +47,13 @@ const Preload=()=>{
                         <View style={PreloadStyles.preLoadDiv}>
                             <View style={PreloadStyles.preLoadContainer}>
                                 <Image source={logoLGYM} style={PreloadStyles.logoLGYMAPP}/>
-                                <TouchableOpacity style={PreloadStyles.login}>
+                                <TouchableOpacity onPress={handleLoginPress}  style={PreloadStyles.login}>
                                     <Text  style={{fontFamily:'Teko_700Bold',...PreloadStyles.loginText}}>LOGIN</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={PreloadStyles.register}>
+                                <TouchableOpacity onPress={handleRegisterPress} style={PreloadStyles.register}>
                                     <Text style={{fontFamily:'Teko_700Bold',...PreloadStyles.registerText}}>REGISTER</Text>
                                 </TouchableOpacity>
-                                {quote?<Text style={{fontFamily:'Caveat_400Regular',...PreloadStyles.quote}}>'Strength does not come from winning. Your struggles develop your strengths. When you go through hardships and decide not to surrender, that is strength. When you make an impasse passable, that is strength. But you must have ego, the kind of ego which makes you think of yourself in terms of superlatives. You must want to be the greatest. We are all starved for compliments. So we do things that get positive feedback.' (Arnold Schwarzenegger, 1982)</Text>:''}
+                               <Text style={{fontFamily:'Caveat_400Regular',...PreloadStyles.quote}}>'Strength does not come from winning. Your struggles develop your strengths. When you go through hardships and decide not to surrender, that is strength. When you make an impasse passable, that is strength. But you must have ego, the kind of ego which makes you think of yourself in terms of superlatives. You must want to be the greatest. We are all starved for compliments. So we do things that get positive feedback.' (Arnold Schwarzenegger, 1982)</Text>
                             </View>
                                 
                         </View>
