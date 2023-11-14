@@ -72,13 +72,13 @@ const Register:React.FC=()=>{
     return (
         <View style={RegisterStyles.container}>
             <Image style={RegisterStyles.logo} source={logoLGYM}/>
-            <Text style={RegisterStyles.label}>Username</Text>
+            <Text style={{fontFamily: 'Teko_700Bold',...RegisterStyles.label}}>Username</Text>
             <TextInput onChangeText={(text)=>setUsername(text)} style={RegisterStyles.input}/>
-            <Text style={RegisterStyles.label}>Email</Text>
+            <Text style={{fontFamily: 'Teko_700Bold',...RegisterStyles.label}}>Email</Text>
             <TextInput onChangeText={(text)=>setEmail(text)} style={RegisterStyles.input}/>
-            <Text style={RegisterStyles.label}>Password</Text>
+            <Text style={{fontFamily: 'Teko_700Bold',...RegisterStyles.label}}>Password</Text>
             <TextInput secureTextEntry={true} onChangeText={(text)=>setPassword(text)} style={RegisterStyles.input}/>
-            <Text style={RegisterStyles.label}>Repeat password</Text>
+            <Text style={{fontFamily: 'Teko_700Bold',...RegisterStyles.label}}>Repeat password</Text>
             <TextInput secureTextEntry={true} onChangeText={(text)=>setRPassword(text)} style={RegisterStyles.input}/>
             <TouchableOpacity onPress={register} style={RegisterStyles.buttonRegister}>
                 <Text style={{fontFamily:'Teko_700Bold',...RegisterStyles.buttonRegisterText}}>REGISTER</Text>

@@ -89,9 +89,9 @@ const Login:React.FC=()=>{
     return(
        <View style={LoginStyles.container}>
             <Image style={LoginStyles.logo} source={logoLGYM}/>
-            <Text style={LoginStyles.label}>Username</Text>
+            <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.label}}>Username</Text>
             <TextInput onChangeText={(text:string|'')=>setUsername(text)} style={LoginStyles.input} autoComplete="given-name" />
-            <Text style={LoginStyles.label}>Password</Text>
+            <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.label}}>Password</Text>
             <TextInput onChangeText={(text:string|'')=>setPassword(text)} style={LoginStyles.input} secureTextEntry={true}></TextInput>
             <TouchableOpacity onPress={login} style={LoginStyles.buttonLogin}>
                 <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.buttonLoginText}}>LOGIN</Text>

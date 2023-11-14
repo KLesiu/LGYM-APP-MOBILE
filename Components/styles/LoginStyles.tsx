@@ -16,6 +16,7 @@ export const LoginStyles = StyleSheet.create({
     label:{
         color:'rgb(185, 177, 162)',
         fontSize:30,
+        margin:5
 
     },
     input:{
@@ -24,22 +25,24 @@ export const LoginStyles = StyleSheet.create({
         fontSize:15,
         width:'80%',
         backgroundColor:'rgb(60,60,60)',
-        marginTop:15,
+        marginTop:5,
         paddingLeft:15
 
     },
     buttonLogin:{
        marginTop:10,
        width:'50%',
-       backgroundColor:'rgb(170,180,189);',
+       backgroundColor: 'rgb(134,134,134)',
        display:'flex',
        alignItems:'center',
        justifyContent:'center',
        borderRadius:10,
-       height:'10%'
+       height:'10%',
+       
     },
     buttonLoginText:{
-        fontSize:40
+        fontSize:40,
+        color:'rgb(226,226,226)'
     },
     errorContainer:{
         display:'flex',

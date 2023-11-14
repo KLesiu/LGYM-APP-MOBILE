@@ -42,7 +42,7 @@ const Preload:React.FC=()=>{
         return <View><Text>Loading...</Text></View>
     }
     return(
-        <View>
+        <View style={{backgroundColor:'black'}}>
             <ImageBackground source={backgroundLGYM}>
                         <View style={PreloadStyles.preLoadDiv}>
                             <View style={PreloadStyles.preLoadContainer}>

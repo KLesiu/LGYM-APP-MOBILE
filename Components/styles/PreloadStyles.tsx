@@ -7,7 +7,7 @@ export const PreloadStyles = StyleSheet.create({
         height:'40%'
     },
     preLoadDiv:{
-        backgroundColor: 'rgba(92, 92, 92,0.1)',
+        backgroundColor: 'rgba(92, 92, 92,0.7)',
         height:'100%',
         width:'100%',
 
@@ -23,11 +23,12 @@ export const PreloadStyles = StyleSheet.create({
         flex:1,
         alignItems:'center',
         backgroundColor: 'rgba(0, 0, 0, 0.897)',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
+        gap:20
     },
     login:{
         alignItems: 'center',
-        backgroundColor: 'rgb(170, 180, 189)',
+        backgroundColor: 'rgb(134,134,134)',
         borderRadius: 10,
         display: 'flex',
         fontSize:10,
@@ -39,7 +40,7 @@ export const PreloadStyles = StyleSheet.create({
     },
     register:{
         alignItems: 'center',
-        backgroundColor: 'rgb(170, 180, 189)',
+        backgroundColor: 'rgb(134,134,134)',
         borderRadius: 10,
         display: 'flex',
         justifyContent: 'center',
@@ -49,7 +50,7 @@ export const PreloadStyles = StyleSheet.create({
         width: '70%',
     },
     loginText:{
-        color: 'black',
+        color: 'rgb(226,226,226)',
         fontSize: 35,
         textDecorationLine: 'none',
         textShadowColor: 'rgb(0, 0, 0)',
@@ -58,7 +59,7 @@ export const PreloadStyles = StyleSheet.create({
         letterSpacing: 4,  
     },
     registerText:{
-        color: 'black',
+        color: 'rgb(226,226,226)',
         fontSize: 35,
         textDecorationLine: 'none',
         textShadowColor: 'rgb(0, 0, 0)',
@@ -69,5 +70,6 @@ export const PreloadStyles = StyleSheet.create({
     quote:{
         textAlign:'center',
         width:'90%',
+        color:'white'
     }
 })
