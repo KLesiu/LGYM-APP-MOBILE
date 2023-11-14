@@ -1,18 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import uniqd from 'uniqid'
 import { LoginStyles } from './styles/LoginStyles';
 import logoLGYM from './img/logoLGYM.png'
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
+import ErrorMsg from './types/ErrorMsg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import { RootStackParamList } from "./types/RootStackParamList";
 
 
 
 const Login:React.FC=()=>{
-    const [errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState<ErrorMsg[]>([]);
     const [loading, setLoading] = useState(false);
-    
+    const [username,setUsername]=useState<string>()
+    const [password,setPassword]=useState<string>()
+    const [text,setText]=useState<string>()
+    const apiURL =`${process.env.REACT_APP_BACKEND}/api/login`
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular
@@ -33,16 +42,63 @@ const Login:React.FC=()=>{
       if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
     }
+    const login=async():Promise<string | void>=>{
+        
+        // setLoading(true)
+        if(!username || !password){
+            setErrors([])
+            // setTimeout(()=>setLoading(false),1000)
+            setErrors([{msg:'All fields are required!'}])
+            return
+        }
+        try{
+            const response:'Authorized'|'Unauthorized' = await fetch(apiURL,{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                },
+                body:JSON.stringify({
+                    name:username,
+                    password:password
+                })
+            }).then(res=>res.json()).catch(()=>'Unauthorized').then(async(res)=>{
+                if(res === 'Unauthorized'){
+                    setErrors([{msg:'We havent heard about you yet!  Please register'},{
+                        msg: "Maybe you typed wrong password! Please check it"
+                    }])
+                    return 'Unauthorized'
+                }else{
+                    await AsyncStorage.setItem('token',res.token)
+                    await AsyncStorage.setItem('username',res.req.name)
+                    await AsyncStorage.setItem('id',res.req._id)
+                    await AsyncStorage.setItem('email',res.req.email)
+                    return 'Authorized'
+                }  
+            })
+            
+            if(response==`${process.env.REACT_APP_MSG_LOGIN_AUTH}`){
+                setErrors([])
+                // setTimeout(()=>setLoading(false),1000)
+                navigation.navigate('Home')
+            }
+
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
     return(
        <View style={LoginStyles.container}>
             <Image style={LoginStyles.logo} source={logoLGYM}/>
             <Text style={LoginStyles.label}>Username</Text>
-            <TextInput style={LoginStyles.input} autoComplete="given-name" />
+            <TextInput onChangeText={(text:string|'')=>setUsername(text)} style={LoginStyles.input} autoComplete="given-name" />
             <Text style={LoginStyles.label}>Password</Text>
-            <TextInput style={LoginStyles.input} secureTextEntry={true}></TextInput>
-            <TouchableOpacity style={LoginStyles.buttonLogin}>
+            <TextInput onChangeText={(text:string|'')=>setPassword(text)} style={LoginStyles.input} secureTextEntry={true}></TextInput>
+            <TouchableOpacity onPress={login} style={LoginStyles.buttonLogin}>
                 <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.buttonLoginText}}>LOGIN</Text>
             </TouchableOpacity>
+            <Text>{text}</Text>
+            <View style={LoginStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={LoginStyles.errorText} key={index}>{ele.msg}</Text>):''}</View>
        </View>
     )
 }

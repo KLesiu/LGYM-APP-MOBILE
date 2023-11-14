@@ -40,5 +40,18 @@ export const LoginStyles = StyleSheet.create({
     },
     buttonLoginText:{
         fontSize:40
+    },
+    errorContainer:{
+        display:'flex',
+        flexDirection:'column',
+        textAlign:'center',
+        width:'90%',
+        
+    },
+    errorText:{
+        color:'red',
+        width:'100%',
+        textAlign:'center',
+        marginTop:'2%'
     }
 })

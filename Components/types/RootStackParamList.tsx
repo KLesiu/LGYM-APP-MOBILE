@@ -1,6 +1,7 @@
 export type RootStackParamList = {
-    Home: undefined;
+    Preload: undefined;
     Login: undefined;
-    Register:undefined
+    Register:undefined;
+    Home:undefined
   };
 

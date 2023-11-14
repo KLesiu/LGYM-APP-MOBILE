@@ -29,6 +29,7 @@ const Register:React.FC=()=>{
       if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
     }
+    
     return (
         <View style={RegisterStyles.container}>
             <Image style={RegisterStyles.logo} source={logoLGYM}/>
