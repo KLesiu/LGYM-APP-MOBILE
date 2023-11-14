@@ -9,6 +9,9 @@ import { RegisterStyles } from './styles/RegisterStyles';
 import ErrorMsg from './types/ErrorMsg';
 import ErrorRegister from './types/ErrorRegister';
 import SuccessMsg from './types/SuccessMsg';
+import { useNavigation } from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import { RootStackParamList } from "./types/RootStackParamList";
 
 const Register:React.FC=()=>{
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -16,6 +19,7 @@ const Register:React.FC=()=>{
   const [password,setPassword]=useState<string>()
   const [rpassword,setRPassword]=useState<string>()
   const [email,setEmail]=useState<string>()
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const apiURL =`${process.env.REACT_APP_BACKEND}/api/register`
   const [fontsLoaded]=useFonts({
         Teko_700Bold,
@@ -57,7 +61,12 @@ const Register:React.FC=()=>{
         return res.msg
       }else return res
     })
-    console.log(response)
+    if(typeof response === 'object' && 'errors' in response){
+      return setErrors(response.errors)
+    }
+    else{
+      return navigation.navigate('Login')
+    }
   }
     
     return (
@@ -74,7 +83,7 @@ const Register:React.FC=()=>{
             <TouchableOpacity onPress={register} style={RegisterStyles.buttonRegister}>
                 <Text style={{fontFamily:'Teko_700Bold',...RegisterStyles.buttonRegisterText}}>REGISTER</Text>
             </TouchableOpacity>
-            <View >{errors?errors.map((ele,index:number)=><Text  key={index}>{ele.msg}</Text>):''}</View>
+            <View style={RegisterStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={RegisterStyles.errorText}  key={index}>{ele.msg}</Text>):''}</View>
         </View>
     )
 }
