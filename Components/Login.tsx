@@ -18,7 +18,6 @@ const Login:React.FC=()=>{
     const [loading, setLoading] = useState(false);
     const [username,setUsername]=useState<string>()
     const [password,setPassword]=useState<string>()
-    const [text,setText]=useState<string>()
     const apiURL =`${process.env.REACT_APP_BACKEND}/api/login`
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
@@ -97,7 +96,6 @@ const Login:React.FC=()=>{
             <TouchableOpacity onPress={login} style={LoginStyles.buttonLogin}>
                 <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.buttonLoginText}}>LOGIN</Text>
             </TouchableOpacity>
-            <Text>{text}</Text>
             <View style={LoginStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={LoginStyles.errorText} key={index}>{ele.msg}</Text>):''}</View>
        </View>
     )
