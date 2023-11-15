@@ -7,7 +7,7 @@ import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
 const TrainingPlan:React.FC=()=>{
     const [yourPlan,setYourPlan]=useState<JSX.Element>(<View style={TrainingPlanStyles.withoutPlanContainer}>
-        <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanText}}>You dont have any plans!</Text>
+        <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
         <TouchableOpacity style={TrainingPlanStyles.withoutPlanButton}>
             <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
         </TouchableOpacity>
