@@ -77,8 +77,8 @@ const Profile:React.FC=()=>{
                         
                     </View>
                 </View>
-                <TouchableOpacity>
-                    <Text>LOGOUT</Text>
+                <TouchableOpacity style={ProfileStyles.logoutButton}>
+                    <Text style={{fontFamily:'Teko_700Bold',color:'white',fontSize:30}}>LOGOUT</Text>
                 </TouchableOpacity>
             </View>
         </ImageBackground>

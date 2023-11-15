@@ -8,6 +8,8 @@ export const ProfileStyles=StyleSheet.create({
         backgroundColor:'rgba(255,255,255,0.95)',
         height:'99%',
         width:'100%',
+        display:'flex',
+        flexDirection:'column',
         zIndex:2
     },
     background:{
@@ -72,5 +74,19 @@ export const ProfileStyles=StyleSheet.create({
         borderRadius:3,
         fontSize:20,
         marginTop:20
+    },
+    logoutButton:{
+        width:'50%',
+        height:'10%',
+        backgroundColor:'rgba(189,18,18,.884)',
+        borderColor:'black',
+        borderWidth:1,
+        borderRadius:10,
+        display:'flex',
+        justifyContent:'center',
+        flexDirection:'row',
+        alignItems:'center',
+        marginLeft:'25%',
+        marginTop:'15%'
     }
 })
