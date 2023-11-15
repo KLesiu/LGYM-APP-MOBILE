@@ -5,7 +5,7 @@ export const ProfileStyles=StyleSheet.create({
     profileContainer:{
         borderTopStartRadius:10,
         borderTopEndRadius:10,
-        backgroundColor:'rgba(255,255,255,0.97)',
+        backgroundColor:'rgba(255,255,255,0.95)',
         height:'99%',
         width:'100%',
         zIndex:2
@@ -20,5 +20,57 @@ export const ProfileStyles=StyleSheet.create({
         alignItems:'center',
         opacity:1,
         resizeMode:'cover',
+    },
+    h1:{
+        borderRadius: 20,
+        margin: 0,
+        fontSize:40,
+        width:'100%',
+        textAlign:'center'
+    },
+    h2:{
+        padding:5,
+        borderColor:'grey',
+        borderWidth:2,
+        width:'70%',
+        borderRadius:3,
+        fontSize:25,
+        marginBottom:40
+    },
+    containerForInfoProfile:{
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection:'row',
+        flexWrap: 'wrap',
+        height: '60%'
+    },
+    columnProfile:{
+        width:'100%',
+        display:'flex',
+        flexDirection:'column',
+        height:'100%',
+        alignItems:'center'
+    },
+    profileRankContainer:{
+        alignItems:'flex-start',
+        display:'flex',
+        width:'70%',
+        justifyContent:'flex-start',
+        flexDirection:'column',
+        flexWrap:'wrap',
+        backgroundColor:'rgba(49,49,49,0.7)',
+        borderRadius:3,
+        paddingLeft:5,
+        height:'40%'
+    },
+    h3:{
+        padding:5,
+        borderColor:'grey',
+        borderWidth:2,
+        width:'70%',
+        borderRadius:3,
+        fontSize:20,
+        marginTop:20
     }
 })
