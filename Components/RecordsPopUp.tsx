@@ -6,6 +6,7 @@ import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
 import { RecordsPopUpStyles } from "./styles/RecordsPopUpStyles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const RecordsPopUp:React.FC<RecordsPopUpProps>=(props)=>{
     const [error,setError]= useState<ErrorMsg>()
     const [benchPressValue,setBenchPressValue]=useState<string>()
@@ -32,6 +33,30 @@ const RecordsPopUp:React.FC<RecordsPopUpProps>=(props)=>{
         return <View><Text>Loading...</Text></View>
     }
     const setRecords = async():Promise<void>=>{
+        const dlValue = parseFloat(deadLiftValue!)
+        const sqValue = parseFloat(squatValue!)
+        const bpValue = parseFloat(benchPressValue!)
+        const id = await AsyncStorage.getItem('id')
+        const response:string = await fetch(`${process.env.REACT_APP_BACKEND}/api/userRecords`,{
+            method:"POST",
+            headers:{
+                'content-type': "application/json"
+            },
+            body:JSON.stringify({
+                id: id,
+                sq: sqValue || 0,
+                dl: dlValue || 0,
+                bp: bpValue || 0
+                      
+            })
+
+        }).then(res=>res.json()).catch(err=>err).then(res=>res.msg)
+        if(response === 'Updated'){
+            await AsyncStorage.setItem('dl',`${dlValue}`)
+            await AsyncStorage.setItem('sq',`${sqValue}`)
+            await AsyncStorage.setItem('bp',`${bpValue}`)
+            props.offPopUp()
+        } 
     
     }
 
@@ -39,12 +64,12 @@ const RecordsPopUp:React.FC<RecordsPopUpProps>=(props)=>{
         <View style={RecordsPopUpStyles.recordsPopUpContainer}>
             <Text style={{fontFamily:'Teko_700Bold',...RecordsPopUpStyles.h2}}>Set Your Records!</Text>
             <Text style={{fontFamily:'Teko_700Bold',...RecordsPopUpStyles.label}}>DeadLift:</Text>
-            <TextInput onChangeText={(text:string|'')=>setDeadLiftValue(text)} style={RecordsPopUpStyles.input}/>
+            <TextInput placeholder="number or float (for example 1 or 1.0)" onChangeText={(text:string|'')=>setDeadLiftValue(text)} style={RecordsPopUpStyles.input}/>
             <Text style={{fontFamily:'Teko_700Bold',...RecordsPopUpStyles.label}}>Squat:</Text>
-            <TextInput onChangeText={(text:string|'')=>setSquatValue(text)} style={RecordsPopUpStyles.input}/>
+            <TextInput placeholder="number or float (for example 1 or 1.0)" onChangeText={(text:string|'')=>setSquatValue(text)} style={RecordsPopUpStyles.input}/>
             <Text style={{fontFamily:'Teko_700Bold',...RecordsPopUpStyles.label}}>BenchPress:</Text>
-            <TextInput onChangeText={(text:string|'')=>setBenchPressValue(text)} style={RecordsPopUpStyles.input}/>
-            <TouchableOpacity style={RecordsPopUpStyles.buttonUpdateRecordsPopUp}>
+            <TextInput placeholder="number or float (for example 1 or 1.0)" onChangeText={(text:string|'')=>setBenchPressValue(text)} style={RecordsPopUpStyles.input}/>
+            <TouchableOpacity onPress={setRecords} style={RecordsPopUpStyles.buttonUpdateRecordsPopUp}>
                 <Text style={{fontFamily:'Teko_700Bold',fontSize:30}}>Update!</Text>
             </TouchableOpacity>
             <Text style={{fontFamily:'Teko_700Bold'}}>{error?error.msg:''}</Text>
