@@ -33,5 +33,18 @@ export const HistoryStyles=StyleSheet.create({
     },
     withoutTrainingText:{
         fontSize:20
+    },
+    session:{
+        alignItems:'flex-start',
+        borderWidth:3,
+        borderColor:'grey',
+        display:'flex',
+        flexDirection:'column',
+        justifyContent:'flex-start',
+        position:'relative',
+        marginTop:20,
+        padding:2,
+        width:'90%',
+        borderRadius:10
     }
 })
