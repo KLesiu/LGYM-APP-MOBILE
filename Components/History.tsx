@@ -64,15 +64,15 @@ const History:React.FC=()=>{
         <ImageBackground style={HistoryStyles.background} source={backgroundLogo}>
             <View style={HistoryStyles.historyContainer}>
                 <Text style={{fontFamily:'Teko_700Bold',...HistoryStyles.h1}}>Training History</Text>
-                <ScrollView>
+                <ScrollView style={HistoryStyles.scrollView}>
                 {currentSessions.length>0?currentSessions.map((ele,index:number)=>
                    <View style={HistoryStyles.session} key={index}>
-                        <Text>Training symbol {ele.symbol}</Text>
-                        <Text>Date: <Text>{ele.date.slice(0,25)}</Text></Text>
-                        <Text>Series: {ele.exercises.length}</Text>
-                        <Text>Id: <Text>{ele.id}</Text></Text>
-                        <TouchableOpacity>
-                            <Icon name="book"/>
+                        <Text style={{fontFamily:'Teko_700Bold'}}>Training symbol {ele.symbol}</Text>
+                        <Text style={{fontFamily:'Teko_700Bold'}}>Date: <Text>{ele.date.slice(0,25)}</Text></Text>
+                        <Text style={{fontFamily:'Teko_700Bold'}}>Series: {ele.exercises.length}</Text>
+                        <Text style={{fontFamily:'Teko_700Bold'}}>Id: <Text>{ele.id}</Text></Text>
+                        <TouchableOpacity style={HistoryStyles.buttonRead}>
+                            <Icon style={{fontSize:40}}  name="book-outline"/>
                         </TouchableOpacity>
                    </View> 
                 ):

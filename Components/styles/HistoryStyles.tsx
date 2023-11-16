@@ -42,9 +42,25 @@ export const HistoryStyles=StyleSheet.create({
         flexDirection:'column',
         justifyContent:'flex-start',
         position:'relative',
-        marginTop:20,
-        padding:2,
+        marginTop:'2%',
+        padding:10,
         width:'90%',
-        borderRadius:10
+        marginLeft:'5%',
+        marginRight:'5%',
+        borderRadius:10,
+        marginBottom:'2%',
+       
+    },
+    scrollView:{
+        padding:5,
+        display:'flex',
+        flexDirection:'column',
+        
+    },
+    buttonRead:{
+        position:'absolute',
+        right:'10%',
+        top:'30%',
+        
     }
 })
