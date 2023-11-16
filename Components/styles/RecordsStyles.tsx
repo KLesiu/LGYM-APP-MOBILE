@@ -60,7 +60,7 @@ export const RecordsStyles=StyleSheet.create({
         fontSize:40
     },
     total:{
-        width:'50%',
+        width:'70%',
         fontSize:25,
         borderBottomColor:'white',
         borderBottomWidth:2,

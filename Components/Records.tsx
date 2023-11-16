@@ -9,6 +9,7 @@ import deadLiftIcon from './img/dlIcon.png'
 import benchPressIcon from './img/benchpressIcon.png'
 import squatIcon from './img/squatIcon.png'
 import RecordsPopUp from "./RecordsPopUp";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Records:React.FC=()=>{
     const [deadLift,setDeadLift]=useState<number>()
     const [squat,setSquat]=useState<number>()
@@ -32,11 +33,26 @@ const Records:React.FC=()=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
-    if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
-    }
+    useEffect(()=>{
+        getDataFromStorage()
+
+    },[popUp])
+    
+    
     const chagePopUpValue:VoidFunction=():void=>{
         setPopUp(false)
+    }
+    const getDataFromStorage=async():Promise<void>=>{
+        const dl =  await AsyncStorage.getItem('dl') 
+        const sq = await AsyncStorage.getItem('sq') 
+        const bp = await AsyncStorage.getItem('bp') 
+        setDeadLift(dl?parseFloat(dl!):0)
+        setBenchPress(bp?parseFloat(bp!):0)
+        setSquat(sq?parseFloat(sq!):0)
+        setTotal(parseFloat(dl!)+parseFloat(sq!)+parseFloat(bp!))
+      }
+      if(!fontsLoaded){
+        return <View><Text>Loading...</Text></View>
     }
     return(
         <ImageBackground source={backgroundLogo} style={RecordsStyles.background}>
@@ -46,18 +62,18 @@ const Records:React.FC=()=>{
                     <Image style={RecordsStyles.icon} source={deadLiftIcon}/>
                     <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.lift}}>Dead Lift:</Text>
                 </View>
-                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>0 kg</Text>
+                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>{benchPress || 0} kg</Text>
                 <View style={RecordsStyles.titleOfLift}>
                     <Image style={RecordsStyles.icon} source={squatIcon} />
                     <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.lift}}>Squat:</Text>
                 </View>
-                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>0 kg</Text>
+                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>{squat || 0} kg</Text>
                 <View style={RecordsStyles.titleOfLift}>
                     <Image  style={RecordsStyles.icon} source={benchPressIcon} />
                     <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.lift}} >Bench Press:</Text>
                 </View>
-                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>0 kg</Text>
-                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.total}}>Your total is: 0 kg</Text>
+                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>{benchPress || 0} kg</Text>
+                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.total}}>Your total is: {total || 0} kg</Text>
                 <TouchableOpacity onPress={()=>setPopUp(true)} style={RecordsStyles.buttonUpdateRecords}><Text  style={{fontFamily:'Teko_700Bold',...RecordsStyles.buttonText}}>Update Records</Text></TouchableOpacity>
                 {popUp?<RecordsPopUp offPopUp={chagePopUpValue}/>:''}
             </View>
