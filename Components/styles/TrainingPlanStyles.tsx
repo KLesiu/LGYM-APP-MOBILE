@@ -30,7 +30,8 @@ export const TrainingPlanStyles = StyleSheet.create({
         height:'79%',
     },
     withoutPlanText:{
-        fontSize:30,
+        marginTop:'20%',
+        fontSize:20,
         textAlign:'center'
     },
     withoutPlanButton:{

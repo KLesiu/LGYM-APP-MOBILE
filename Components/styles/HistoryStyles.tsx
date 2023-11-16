@@ -19,5 +19,19 @@ export const HistoryStyles=StyleSheet.create({
         alignItems:'center',
         opacity:1,
         resizeMode:'cover',
+    },
+    withoutTrainingContainer:{
+        display:'flex',
+        width:'100%',
+        height:'50%',
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    h1:{
+        fontSize:40,
+        textAlign:'center'
+    },
+    withoutTrainingText:{
+        fontSize:20
     }
 })
