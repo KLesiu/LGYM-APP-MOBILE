@@ -23,7 +23,7 @@ export const HistoryStyles=StyleSheet.create({
     withoutTrainingContainer:{
         display:'flex',
         width:'100%',
-        height:'50%',
+        height:'100%',
         justifyContent:'center',
         alignItems:'center'
     },
