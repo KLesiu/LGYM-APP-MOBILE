@@ -71,6 +71,9 @@ const Login:React.FC=()=>{
                     await AsyncStorage.setItem('username',res.req.name)
                     await AsyncStorage.setItem('id',res.req._id)
                     await AsyncStorage.setItem('email',res.req.email)
+                    await AsyncStorage.setItem('bp',`${res.req.Bp}` || '0')
+                    await AsyncStorage.setItem('dl',`${res.req.Dl}` || '0')
+                    await AsyncStorage.setItem('sq',`${res.req.Sq}` || '0')
                     return 'Authorized'
                 }  
             })
