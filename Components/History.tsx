@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
+import { Text,Image,View,ImageBackground,TouchableOpacity,ScrollView } from "react-native";
 import backgroundLogo from './img/backgroundLGYMApp500.png'
 import { HistoryStyles } from "./styles/HistoryStyles";
 import {useState,useEffect} from 'react'
@@ -64,6 +64,7 @@ const History:React.FC=()=>{
         <ImageBackground style={HistoryStyles.background} source={backgroundLogo}>
             <View style={HistoryStyles.historyContainer}>
                 <Text style={{fontFamily:'Teko_700Bold',...HistoryStyles.h1}}>Training History</Text>
+                <ScrollView>
                 {currentSessions.length>0?currentSessions.map((ele,index:number)=>
                    <View style={HistoryStyles.session} key={index}>
                         <Text>Training symbol {ele.symbol}</Text>
@@ -79,6 +80,7 @@ const History:React.FC=()=>{
                     <Text style={{fontFamily:'Teko_700Bold',...HistoryStyles.withoutTrainingText}}>You dont have training history!</Text>    
                 </View>
                 }
+                </ScrollView>
             </View>
         </ImageBackground>
         
