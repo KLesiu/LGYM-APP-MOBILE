@@ -8,12 +8,18 @@ import { useEffect,useState } from "react";
 import deadLiftIcon from './img/dlIcon.png'
 import benchPressIcon from './img/benchpressIcon.png'
 import squatIcon from './img/squatIcon.png'
+import RecordsPopUp from "./RecordsPopUp";
 const Records:React.FC=()=>{
+    const [deadLift,setDeadLift]=useState<number>()
+    const [squat,setSquat]=useState<number>()
+    const [benchPress,setBenchPress]=useState<number>()
+    const [total,setTotal]=useState<number>()
+    const [popUp,setPopUp]=useState<boolean>(false)
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular
     })
-  useEffect(() => {
+    useEffect(() => {
         const loadAsyncResources = async () => {
           try {
             SplashScreen.preventAutoHideAsync();
@@ -28,6 +34,9 @@ const Records:React.FC=()=>{
       }, [fontsLoaded]);
     if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
+    }
+    const chagePopUpValue:VoidFunction=():void=>{
+        setPopUp(false)
     }
     return(
         <ImageBackground source={backgroundLogo} style={RecordsStyles.background}>
@@ -49,7 +58,8 @@ const Records:React.FC=()=>{
                 </View>
                 <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>0 kg</Text>
                 <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.total}}>Your total is: 0 kg</Text>
-                <TouchableOpacity style={RecordsStyles.buttonUpdateRecords}><Text  style={{fontFamily:'Teko_700Bold',...RecordsStyles.buttonText}}>Update Records</Text></TouchableOpacity>
+                <TouchableOpacity onPress={()=>setPopUp(true)} style={RecordsStyles.buttonUpdateRecords}><Text  style={{fontFamily:'Teko_700Bold',...RecordsStyles.buttonText}}>Update Records</Text></TouchableOpacity>
+                {popUp?<RecordsPopUp offPopUp={chagePopUpValue}/>:''}
             </View>
         </ImageBackground>
     )
