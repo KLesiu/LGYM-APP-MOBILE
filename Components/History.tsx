@@ -4,19 +4,22 @@ import { HistoryStyles } from "./styles/HistoryStyles";
 import {useState,useEffect} from 'react'
 import Session from "./types/Session";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
+import { useFonts,Teko_700Bold,Teko_400Regular } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
 import TrainingHistory from "./types/TrainingHistory";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CurrentTrainingHistorySession from "./CurrentTrainingHistorySession";
+import ErrorMsg from "./types/ErrorMsg";
+import Training from "./types/Training";
 const History:React.FC=()=>{
     const [sessions,setSessions]=useState<Session[]>([])
-    const [currentSessionsNumber,setcurrentSessionsNumber]=useState<number>(3)
     const [currentSessions,setCurrentSessions]=useState<Session[]>([])
     const [currentHistoryTrainingSession,setCurrentHistoryTrainingSession]=useState<JSX.Element>()
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
-        Caveat_400Regular
+        Caveat_400Regular,
+        Teko_400Regular
     })
     useEffect(() => {
         const loadAsyncResources = async () => {
@@ -56,6 +59,20 @@ const History:React.FC=()=>{
         }
         
     }
+    const showCurrentTrainingHistorySession=(id:string,date:string):void=>{
+        setCurrentHistoryTrainingSession(<CurrentTrainingHistorySession getInformationAboutHistorySession={getInformationAboutHistorySession} offCurrentTrainingHistorySession={offCurrentTrainingHistorySession}  id={id} date={date}/>)
+
+        
+     }
+     const offCurrentTrainingHistorySession:VoidFunction=():void=>{
+        setCurrentHistoryTrainingSession(<View></View>)
+    }
+    const getInformationAboutHistorySession=async(id:string):Promise<Training|string>=>{
+        
+        const response:ErrorMsg|{training:Training}= await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getTrainingSession`).then(res=>res.json()).catch(err=>err).then(res=>res)
+        if('msg' in response) return response.msg
+        else return response.training
+    }
       if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
     }
@@ -66,21 +83,27 @@ const History:React.FC=()=>{
                 <Text style={{fontFamily:'Teko_700Bold',...HistoryStyles.h1}}>Training History</Text>
                 <ScrollView style={HistoryStyles.scrollView}>
                 {currentSessions.length>0?currentSessions.map((ele,index:number)=>
-                   <View style={HistoryStyles.session} key={index}>
-                        <Text style={{fontFamily:'Teko_700Bold'}}>Training symbol {ele.symbol}</Text>
-                        <Text style={{fontFamily:'Teko_700Bold'}}>Date: <Text>{ele.date.slice(0,25)}</Text></Text>
-                        <Text style={{fontFamily:'Teko_700Bold'}}>Series: {ele.exercises.length}</Text>
-                        <Text style={{fontFamily:'Teko_700Bold'}}>Id: <Text>{ele.id}</Text></Text>
-                        <TouchableOpacity style={HistoryStyles.buttonRead}>
+                    {
+                        return(
+                        <View style={HistoryStyles.session} key={index}>
+                        <Text style={{fontFamily:'Teko_700Bold',borderWidth:1,borderBottomColor:'white',marginBottom:10,paddingLeft:5,borderLeftColor:'white',borderBottomLeftRadius:3}}>Training symbol {ele.symbol}</Text>
+                        <Text style={{fontFamily:'Teko_700Bold'}}>Date: <Text style={{fontFamily:'Teko_400Regular'}}>{ele.date.slice(0,25)}</Text></Text>
+                        <Text style={{fontFamily:'Teko_700Bold'}}>Series: <Text style={{fontFamily:'Teko_400Regular'}}> {ele.exercises.length}</Text></Text>
+                        <Text style={{fontFamily:'Teko_700Bold'}}>Id: <Text style={{fontFamily:'Teko_400Regular'}}>{ele.id}</Text></Text>
+                        <TouchableOpacity onPress={()=>showCurrentTrainingHistorySession(ele.id!,ele.date!)} style={HistoryStyles.buttonRead}>
                             <Icon style={{fontSize:40}}  name="book-outline"/>
                         </TouchableOpacity>
                    </View> 
+                        )
+                    }
+                   
                 ):
                 <View style={HistoryStyles.withoutTrainingContainer}>
                     <Text style={{fontFamily:'Teko_700Bold',...HistoryStyles.withoutTrainingText}}>You dont have training history!</Text>    
                 </View>
                 }
                 </ScrollView>
+                {currentHistoryTrainingSession}
             </View>
         </ImageBackground>
         
