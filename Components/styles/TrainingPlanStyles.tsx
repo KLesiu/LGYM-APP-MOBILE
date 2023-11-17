@@ -98,6 +98,34 @@ export const TrainingPlanStyles = StyleSheet.create({
         position:'absolute',
         height:'100%',
         width:'100%',
-        backgroundColor:'black'
+        backgroundColor:'rgba(0,0,0,0.7)',
+        zIndex:3,
+        display:'flex',
+        paddingTop:'30%',
+        flexDirection:'column',
+        alignItems:'center'
+       
+    },
+    buttonYes:{
+        width:'50%',
+        height:'10%',
+        backgroundColor:'green',
+        borderRadius:10,
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:"center",
+        marginTop:'10%'
+    },
+    buttonNo:{
+        width:'50%',
+        height:'10%',
+        backgroundColor:'red',
+        marginTop:'10%',
+        borderRadius:10,
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:"center"
     }
 })

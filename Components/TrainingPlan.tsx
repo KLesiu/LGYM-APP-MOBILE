@@ -23,6 +23,7 @@ const TrainingPlan:React.FC=()=>{
      const [isPlanSet,setIsPlanSet]=useState<boolean>(false)
      const [planConfigSection,setplanConfigSection]=useState<boolean>(false)
      const [isPopUpDeleteShowed,setIsPopUpDeleteShowed]=useState<boolean>(false)
+     const [popUp,setPopUp]=useState<JSX.Element>()
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular,
@@ -44,6 +45,19 @@ const TrainingPlan:React.FC=()=>{
     useEffect(()=>{
       getUserPlan()
     },[])
+    useEffect(()=>{
+      if(isPopUpDeleteShowed){
+        setPopUp(<View style={TrainingPlanStyles.popUpDelete}>
+          <Text style={{fontFamily:'Teko_400Regular',fontSize:50}}>Are you sure?</Text>
+          <TouchableOpacity style={TrainingPlanStyles.buttonYes}>
+            <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>YES</Text>
+            </TouchableOpacity>
+          <TouchableOpacity style={TrainingPlanStyles.buttonNo}>
+            <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>NO</Text>
+          </TouchableOpacity>
+        </View>)
+      } 
+    },[isPopUpDeleteShowed])
     const getUserPlan = async():Promise<void>=>{
         const id = await AsyncStorage.getItem('id')
         const response:{data:Data|string}  = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getPlan`).then(res=>res.json()).catch(err=>err).then(res=>res)
@@ -209,15 +223,7 @@ const TrainingPlan:React.FC=()=>{
                 {!isPlanSet?<>{yourPlan}</>:<>
                   {yourPlan}
                    </>}
-                {isPopUpDeleteShowed?<View>
-                  <Text style={{fontFamily:'Caveat_400Regular'}}>Are you sure?</Text>
-                  <TouchableOpacity>
-                    <Text>YES</Text>
-                    </TouchableOpacity>
-                  <TouchableOpacity>
-                    <Text>NO</Text>
-                  </TouchableOpacity>
-                </View>:''}
+                {popUp}
 
                 
           </View>
