@@ -145,12 +145,15 @@ export const TrainingPlanStyles = StyleSheet.create({
         alignItems:'center',
         display:'flex',
         justifyContent:'center',
-        gap:10,
-        flexWrap:'wrap',
         flexDirection:'column',
         marginTop:20,
+        marginRight:'5%',
         width:'40%',
-        backgroundColor:'rgba(150,150,150,0.7)'
+        marginLeft:'5%',
+        borderColor:'grey',
+        borderWidth:1,
+        borderRadius:5
+        
     },
     buttonCreate:{
         borderColor:'grey',
@@ -162,5 +165,13 @@ export const TrainingPlanStyles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:'center'
+    },
+    setTrainingButton:{
+        height:'5%',
+        width:'80%',
+        backgroundColor:'rgb(199,199,199)',
+        borderRadius:10,
+        padding:5,
+        marginBottom:'3%'
     }
 })

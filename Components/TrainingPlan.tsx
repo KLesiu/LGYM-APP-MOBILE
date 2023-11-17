@@ -262,7 +262,7 @@ const TrainingPlan:React.FC=()=>{
                       <View style={TrainingPlanStyles.formPlanCreateDiv} key={index}>
                          <Text style={{fontFamily:'Teko_400Regular',fontSize:15,textAlign:'center'}} >{ele}: </Text>
                          <TextInput style={{width:'80%',textAlign:'center'}}  value={'Uncompleted'} editable={false} />
-                         <TouchableOpacity  onPress={()=>{
+                         <TouchableOpacity style={TrainingPlanStyles.setTrainingButton}  onPress={()=>{
                           setCurrentDayCreateSection(true)
                           setCurrentDay(ele)
                          }}>
