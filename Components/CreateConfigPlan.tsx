@@ -9,6 +9,7 @@ import { CreateConfigPlanStyles } from "./styles/CreateConfigPlanStyles";
 const CreateConfigPlan:React.FC<CreatePlanProps> =(props)=>{
     const [name,setName]=useState<string>()
     const [days,setDays]=useState<string>()
+    const [error,setErrors]=useState<String[]>()
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Teko_400Regular
@@ -27,8 +28,12 @@ const CreateConfigPlan:React.FC<CreatePlanProps> =(props)=>{
         loadAsyncResources();
       }, [fontsLoaded]);
     const sendDaysAndName=()=>{
-        console.log(name,days)
-        // props.setDayAndName!(name!,days!)
+        if(!name || !days) return setErrors(['All fields are required'])
+        if(parseInt(days)>1 || parseInt(days) < 7){
+            props.setDayAndName!(name!,days!)
+        }
+        else return setErrors(['In second field you have to type number from 1-7'])  
+        
     }
     if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
@@ -43,6 +48,7 @@ const CreateConfigPlan:React.FC<CreatePlanProps> =(props)=>{
             <TouchableOpacity style={CreateConfigPlanStyles.button} onPress={sendDaysAndName}>
                 <Text style={{fontFamily:'Teko_700Bold',fontSize:30,color:'rgb(200,200,200)'}}>NEXT</Text>
             </TouchableOpacity>
+            {error?error.map((ele,index:number)=><Text style={{color:'red',marginTop:10,fontFamily:'Teko_400Regular',fontSize:20}} key={index}>{ele}</Text>):''}
         </View>
     )
 }
