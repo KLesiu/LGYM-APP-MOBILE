@@ -3,7 +3,7 @@ import Training from "./types/Training";
 import ExerciseTraining from "./types/ExerciseTraining";
 import {useState,useEffect} from 'react'
 import { CurrentTrainingHistorySessionStyles } from "./styles/CurrentTrainingHistorySessionStyles";
-import CurrentTrainingHistorySessionProps from "./props/CurrenTrainingHistorySessionProps";
+import CurrentTrainingHistorySessionProps from "./props/CurrentTrainingHistorySessionProps";
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'

@@ -11,12 +11,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ErrorMsg from "./types/ErrorMsg";
 import SuccessMsg from "./types/SuccessMsg";
+import CreateConfigPlan from "./CreateConfigPlan";
 const TrainingPlan:React.FC=()=>{
     const [yourPlan,setYourPlan]=useState<JSX.Element>(
     <View style={TrainingPlanStyles.withoutPlanContainer}>
         <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>Training Plan</Text>
         <Text style={{fontFamily:'Teko_700Bold',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
-        <TouchableOpacity style={TrainingPlanStyles.withoutPlanButton}>
+        <TouchableOpacity onPress={()=>setplanConfigSection(true)} style={TrainingPlanStyles.withoutPlanButton}>
             <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
         </TouchableOpacity>
     </View>)
@@ -24,7 +25,7 @@ const TrainingPlan:React.FC=()=>{
      const [planConfigSection,setplanConfigSection]=useState<boolean>(false)
      const [isPopUpDeleteShowed,setIsPopUpDeleteShowed]=useState<boolean>(false)
      const [popUp,setPopUp]=useState<JSX.Element>()
-    const [fontsLoaded]=useFonts({
+     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular,
         Teko_400Regular
@@ -69,7 +70,7 @@ const TrainingPlan:React.FC=()=>{
             setYourPlan(<View style={TrainingPlanStyles.withoutPlanContainer}>
               <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>Training Plan</Text>
               <Text style={{fontFamily:'Teko_700Bold',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
-              <TouchableOpacity style={TrainingPlanStyles.withoutPlanButton}>
+              <TouchableOpacity onPress={()=>setplanConfigSection(true)} style={TrainingPlanStyles.withoutPlanButton}>
                   <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
               </TouchableOpacity>
           </View>)
@@ -205,7 +206,7 @@ const TrainingPlan:React.FC=()=>{
         setYourPlan(<View style={TrainingPlanStyles.withoutPlanContainer}>
           <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>Training Plan</Text>
           <Text style={{fontFamily:'Teko_700Bold',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
-          <TouchableOpacity style={TrainingPlanStyles.withoutPlanButton}>
+          <TouchableOpacity onPress={()=>setplanConfigSection(true)} style={TrainingPlanStyles.withoutPlanButton}>
               <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
           </TouchableOpacity>
       </View>)
@@ -217,6 +218,21 @@ const TrainingPlan:React.FC=()=>{
       
       
   }
+    const setDayAndName = async(name:string,days:string):Promise<void>=>{
+      const id = await AsyncStorage.getItem('id')
+      const response:string = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`,{
+        method:"POST",
+        headers:{
+            "content-type": "application/json"
+        },
+        body:JSON.stringify({
+            name:name,
+            days:days
+        })
+    }).then(res=>res.json()).catch(err=>err).then(res=>res.msg)
+    console.log(response)
+    }
+    
 
 
     if(!fontsLoaded){
@@ -229,7 +245,7 @@ const TrainingPlan:React.FC=()=>{
                   {yourPlan}
                    </>}
                 {popUp}
-
+                {planConfigSection?<CreateConfigPlan setDayAndName={setDayAndName} />:''}
                 
           </View>
         </ImageBackground>
