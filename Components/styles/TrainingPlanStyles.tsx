@@ -127,5 +127,40 @@ export const TrainingPlanStyles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'center',
         alignItems:"center"
+    },
+    formPlanCreate:{
+        alignItems:'center',
+        height:'100%',
+        color:'white',
+        display:'flex',
+        flexDirection:'row',
+        flexWrap:'wrap',
+        justifyContent:'center',
+        position:'absolute',
+        top:0,
+        width:'100%',
+        zIndex:3
+    },
+    formPlanCreateDiv:{
+        alignItems:'center',
+        display:'flex',
+        justifyContent:'center',
+        gap:10,
+        flexWrap:'wrap',
+        flexDirection:'column',
+        marginTop:20,
+        width:'40%',
+        backgroundColor:'rgba(150,150,150,0.7)'
+    },
+    buttonCreate:{
+        borderColor:'grey',
+        borderWidth:1,
+        borderRadius:5,
+        height:50,
+        width:'70%',
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center'
     }
 })

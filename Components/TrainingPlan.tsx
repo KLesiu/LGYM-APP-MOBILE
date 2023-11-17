@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity, ScrollView,Alert } from "react-native";
+import { Text,Image,View,ImageBackground,TouchableOpacity, ScrollView,Alert, TextInput } from "react-native";
 import { TrainingPlanStyles } from "./styles/TrainingPlanStyles";
 import backgroundLogo from './img/backgroundLGYMApp500.png'
 import {useState,useEffect} from 'react'
@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ErrorMsg from "./types/ErrorMsg";
 import SuccessMsg from "./types/SuccessMsg";
 import CreateConfigPlan from "./CreateConfigPlan";
+import CreatePlan from "./CreatePlan";
 const TrainingPlan:React.FC=()=>{
     const [yourPlan,setYourPlan]=useState<JSX.Element>(
     <View style={TrainingPlanStyles.withoutPlanContainer}>
@@ -21,11 +22,16 @@ const TrainingPlan:React.FC=()=>{
             <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
         </TouchableOpacity>
     </View>)
-     const [isPlanSet,setIsPlanSet]=useState<boolean>(false)
-     const [planConfigSection,setplanConfigSection]=useState<boolean>(false)
-     const [isPopUpDeleteShowed,setIsPopUpDeleteShowed]=useState<boolean>(false)
-     const [popUp,setPopUp]=useState<JSX.Element>()
-     const [fontsLoaded]=useFonts({
+    const [namePlan,setNamePlan]=useState<string>()
+    const [isPlanSet,setIsPlanSet]=useState<boolean>(false)
+    const [planConfigSection,setplanConfigSection]=useState<boolean>(false)
+    const [isPopUpDeleteShowed,setIsPopUpDeleteShowed]=useState<boolean>(false)
+    const [popUp,setPopUp]=useState<JSX.Element>()
+    const [planCreateSection , setplanCreateSection ]= useState<boolean>(false)
+    const [formElements,setFormElements]=useState<JSX.Element>(<></>)
+    const [currentDayCreateSection,setCurrentDayCreateSection]= useState<boolean>(false)
+    const [currentDay,setCurrentDay]=useState<string>('')
+    const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular,
         Teko_400Regular
@@ -230,8 +236,56 @@ const TrainingPlan:React.FC=()=>{
             days:days
         })
     }).then(res=>res.json()).catch(err=>err).then(res=>res.msg)
-    console.log(response)
+    if(response === 'Created'){
+      setNamePlan(name)
+      setplanConfigSection(false)
+      setplanCreateSection (true)
+      getPlanInfo()
+  } 
     }
+    const getPlanInfo = async():Promise<void>=>{
+      const id = await AsyncStorage.getItem('id')
+      const response:number = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`).then(res=>res.json()).catch(err=>err).then(res=>res.count)
+      
+      const planDays:Array<string> = []
+      const planDaysAll:Array<string> = ['planA','planB','planC','planD','planE','planF','planG']
+      for(let i=0;i<response;i++){
+          planDays.push(planDaysAll[i])
+      }
+      setFormElements(()=>{
+          
+          return(
+              <View style={TrainingPlanStyles.formPlanCreate}>
+                  <Text style={{fontFamily:'Teko_700Bold',borderBottomColor:'grey',margin:0,fontSize:30,textAlign:'center',paddingBottom:10,width:'95%'}}>Plan creator</Text>
+                  {planDays.map((ele,index:number)=>{
+                    return(
+                      <View style={TrainingPlanStyles.formPlanCreateDiv} key={index}>
+                         <Text style={{fontFamily:'Teko_400Regular',fontSize:15,textAlign:'center'}} >{ele}: </Text>
+                         <TextInput style={{width:'80%',textAlign:'center'}}  value={'Uncompleted'} editable={false} />
+                         <TouchableOpacity  onPress={()=>{
+                          setCurrentDayCreateSection(true)
+                          setCurrentDay(ele)
+                         }}>
+                            <Text style={{fontFamily:'Teko_400Regular',textAlign:'center'}}>Set training: <Text>{ele}</Text></Text>
+
+                         </TouchableOpacity>
+
+                      </View>
+                    )
+                  })}
+                    <TouchableOpacity style={TrainingPlanStyles.buttonCreate} onPress={()=>{
+
+                    }}>
+                        <Text style={{fontFamily:'Teko_700Bold',fontSize:25}}>CREATE</Text>
+                    </TouchableOpacity>
+
+              </View>
+          )
+      }
+          
+      )
+
+  }
     
 
 
@@ -246,7 +300,7 @@ const TrainingPlan:React.FC=()=>{
                    </>}
                 {popUp}
                 {planConfigSection?<CreateConfigPlan setDayAndName={setDayAndName} />:''}
-                
+                {planCreateSection?<CreatePlan formElements ={formElements} />:''}
           </View>
         </ImageBackground>
     )
