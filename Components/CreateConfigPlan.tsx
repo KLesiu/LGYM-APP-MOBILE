@@ -35,12 +35,13 @@ const CreateConfigPlan:React.FC<CreatePlanProps> =(props)=>{
     }
     return(
         <View style={CreateConfigPlanStyles.createConfigPlanSection}>
-            <Text style={{fontFamily:'Teko_700Bold'}}>Plan name:</Text>
-            <TextInput onChangeText={(text:string)=>setName(text)}/>
-            <Text style={{fontFamily:'Teko_700Bold'}}>How many days per week do you want to train?</Text>
-            <TextInput onChangeText={(text:string)=>setDays(text)}/>
-            <TouchableOpacity onPress={sendDaysAndName}>
-                <Text style={{fontFamily:'Teko_700Bold'}}>NEXT</Text>
+            <Text style={{fontFamily:'Teko_700Bold',fontSize:40,marginBottom:'20%',color:'rgb(200,200,200)'}}>Plan Config</Text>
+            <Text style={{fontFamily:'Teko_700Bold',fontSize:30,color:'rgb(200,200,200)'}}>Plan name:</Text>
+            <TextInput placeholder="FBW" style={CreateConfigPlanStyles.input} onChangeText={(text:string)=>setName(text)}/>
+            <Text style={{fontFamily:'Teko_700Bold',fontSize:25,textAlign:'center',width:'80%',color:'rgb(200,200,200)'}}>How many days per week do you want to train?</Text>
+            <TextInput placeholder="1-7" style={CreateConfigPlanStyles.input} onChangeText={(text:string)=>setDays(text)}/>
+            <TouchableOpacity style={CreateConfigPlanStyles.button} onPress={sendDaysAndName}>
+                <Text style={{fontFamily:'Teko_700Bold',fontSize:30,color:'rgb(200,200,200)'}}>NEXT</Text>
             </TouchableOpacity>
         </View>
     )
