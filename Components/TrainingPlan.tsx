@@ -49,10 +49,13 @@ const TrainingPlan:React.FC=()=>{
       if(isPopUpDeleteShowed){
         setPopUp(<View style={TrainingPlanStyles.popUpDelete}>
           <Text style={{fontFamily:'Teko_400Regular',fontSize:50}}>Are you sure?</Text>
-          <TouchableOpacity style={TrainingPlanStyles.buttonYes}>
+          <TouchableOpacity onPress={deletePlan} style={TrainingPlanStyles.buttonYes}>
             <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>YES</Text>
             </TouchableOpacity>
-          <TouchableOpacity style={TrainingPlanStyles.buttonNo}>
+          <TouchableOpacity onPress={()=>{
+            setPopUp(<></>)
+            setIsPopUpDeleteShowed(false)
+          }} style={TrainingPlanStyles.buttonNo}>
             <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>NO</Text>
           </TouchableOpacity>
         </View>)
@@ -198,7 +201,7 @@ const TrainingPlan:React.FC=()=>{
       const response:ErrorMsg | SuccessMsg = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/deletePlan`,{
           method:'DELETE'
       }).then(res=>res.json()).catch(err=>err).then(res=>res)
-      if(response.msg==='Deleted'){
+      if(response.msg==='Deleted!'){
         setYourPlan(<View style={TrainingPlanStyles.withoutPlanContainer}>
           <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>Training Plan</Text>
           <Text style={{fontFamily:'Teko_700Bold',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
@@ -207,6 +210,8 @@ const TrainingPlan:React.FC=()=>{
           </TouchableOpacity>
       </View>)
         setIsPlanSet(false)
+        setPopUp(<></>)
+        setIsPopUpDeleteShowed(false)
         await AsyncStorage.removeItem('plan')
       }
       
