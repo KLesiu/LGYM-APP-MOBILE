@@ -13,6 +13,7 @@ import ErrorMsg from "./types/ErrorMsg";
 import SuccessMsg from "./types/SuccessMsg";
 import CreateConfigPlan from "./CreateConfigPlan";
 import CreatePlan from "./CreatePlan";
+import CreateCurrentDayPlan from "./CreateCurrentDayPlan";
 const TrainingPlan:React.FC=()=>{
     const [yourPlan,setYourPlan]=useState<JSX.Element>(
     <View style={TrainingPlanStyles.withoutPlanContainer}>
@@ -31,6 +32,13 @@ const TrainingPlan:React.FC=()=>{
     const [formElements,setFormElements]=useState<JSX.Element>(<></>)
     const [currentDayCreateSection,setCurrentDayCreateSection]= useState<boolean>(false)
     const [currentDay,setCurrentDay]=useState<string>('')
+    const [planACurrent,setPlanACurrent]=useState<Array<Exercise>>()
+    const [planBCurrent,setPlanBCurrent]=useState<Array<Exercise>>()
+    const [planCCurrent,setPlanCCurrent]=useState<Array<Exercise>>()
+    const [planDCurrent,setPlanDCurrent]=useState<Array<Exercise>>()
+    const [planECurrent,setPlanECurrent]=useState<Array<Exercise>>()
+    const [planFCurrent,setPlanFCurrent]=useState<Array<Exercise>>()
+    const [planGCurrent,setPlanGCurrent]=useState<Array<Exercise>>()
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular,
@@ -286,6 +294,9 @@ const TrainingPlan:React.FC=()=>{
       )
 
   }
+    const setCurrentPlanDay = ():void=>{
+
+    }
     
 
 
@@ -301,6 +312,7 @@ const TrainingPlan:React.FC=()=>{
                 {popUp}
                 {planConfigSection?<CreateConfigPlan setDayAndName={setDayAndName} />:''}
                 {planCreateSection?<CreatePlan formElements ={formElements} />:''}
+                {currentDayCreateSection?<CreateCurrentDayPlan setCurrentPlanDay ={setCurrentPlanDay} day={currentDay} planA={planACurrent || null} planB={planBCurrent || null} planC={planCCurrent || null} planD={planDCurrent || null} planE={planECurrent || null} planF={planFCurrent || null} planG={planGCurrent || null} />:''}
           </View>
         </ImageBackground>
     )
