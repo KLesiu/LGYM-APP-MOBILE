@@ -139,17 +139,17 @@ export const TrainingPlanStyles = StyleSheet.create({
         position:'absolute',
         top:0,
         width:'100%',
-        zIndex:3
+        zIndex:3,
+        
     },
     formPlanCreateDiv:{
         alignItems:'center',
         display:'flex',
+        flexDirection:'row',
+        
+        flexWrap:'wrap',
+        width:'100%',
         justifyContent:'center',
-        flexDirection:'column',
-        marginTop:20,
-        marginRight:'5%',
-        width:'40%',
-        marginLeft:'5%',
         borderColor:'grey',
         borderWidth:1,
         borderRadius:5
@@ -173,5 +173,14 @@ export const TrainingPlanStyles = StyleSheet.create({
         borderRadius:10,
         padding:5,
         marginBottom:'3%'
+    },
+    input:{
+        borderRadius:10,
+        height:'6%',
+        fontSize:10,
+        width:'30%',
+        borderColor:'grey',
+        borderWidth:1,
+        
     }
 })

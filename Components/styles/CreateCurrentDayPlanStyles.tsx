@@ -16,10 +16,6 @@ export const CreateCurrentDayPlanStyles = StyleSheet.create({
         textAlign:'center',
         width:'100%'
     },
-    plus:{
-        marginLeft:'47%',
-        marginRight:'47%'
-    },
     readyButton:{
         width:'30%',
         height:'8%',
@@ -47,7 +43,8 @@ export const CreateCurrentDayPlanStyles = StyleSheet.create({
         paddingLeft:15
     },
     delete:{
-        marginLeft:'80%',
-        marginTop:'5%'
+        marginTop:'5%',
+        position:'absolute',
+        
     }
 })
