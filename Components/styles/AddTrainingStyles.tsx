@@ -52,7 +52,8 @@ export const AddTrainingStyles=StyleSheet.create({
     },
     button:{
         alignItems: 'center',
-        backgroundColor: 'rgb(134,134,134)',
+        borderColor:'rgb(134,134,134)',
+        borderWidth:1,
         borderRadius: 10,
         display: 'flex',
         fontSize:10,

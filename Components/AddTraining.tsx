@@ -7,12 +7,17 @@ import { useFonts,Teko_700Bold,Teko_400Regular } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Exercise from "./types/Exercise";
+import Data from "./types/DataPlansArrays";
 
 
 const AddTraining:React.FC=()=>{
     const [plan,setPlan]=useState<string | null | undefined>('')
     const [chooseDay,setChooseDay]=useState<JSX.Element>(<View></View>)
     const [daySection,setDaySection]=useState<JSX.Element>(<View></View>)
+    const [dayToCheck,setDayToCheck]=useState<string>()
+    const [pickedDay,setPickedDay]=useState<Array<Exercise>>()
+
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular,
@@ -48,11 +53,31 @@ const AddTraining:React.FC=()=>{
         }
         
         setChooseDay(<View style={AddTrainingStyles.chooseDaySection} >
-            <Text style={{fontFamily:'Teko_700Bold',fontSize:40,color:'grey'}}>Choose training day!</Text>
-            {daysArray.map((ele,index:number)=><TouchableOpacity style={AddTrainingStyles.button}  key={index}>
+            <Text style={{fontFamily:'Teko_700Bold',fontSize:40,color:'white'}}>Choose training day!</Text>
+            {daysArray.map((ele,index:number)=><TouchableOpacity onPress={()=>showDaySection(ele)} style={AddTrainingStyles.button}  key={index}>
                 <Text style={{fontFamily:'Teko_700Bold',fontSize:30}}>{ele}</Text></TouchableOpacity>)}
         </View>)
     }
+    const showDaySection=async(day:string):Promise<void>=>{   
+        const id = await AsyncStorage.getItem('id')     
+        const planOfTheDay:Array<Exercise> | undefined = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getPlan`).then(res=>res.json()).catch(err=>err).then(res=>{
+            const data:Data=res.data
+            if(day=== 'A') return data.planA
+            else if(day=== 'B') return data.planB
+            else if(day=== 'C') return data.planC
+            else if(day=== 'D') return data.planD
+            else if(day=== 'E') return data.planE
+            else if(day=== 'F') return data.planF
+            else if(day ==='G') return data.planG
+        })
+        // setCurrentDaySection(planOfTheDay!,day)
+        setDayToCheck(day)
+        setChooseDay(<View></View>)
+        setPickedDay(planOfTheDay)
+
+        
+    }
+    
       if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
     }
