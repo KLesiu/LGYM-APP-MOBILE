@@ -11,9 +11,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ErrorMsg from "./types/ErrorMsg";
 import SuccessMsg from "./types/SuccessMsg";
-import CreateConfigPlan from "./CreateConfigPlan";
-import CreatePlan from "./CreatePlan";
-import CreateCurrentDayPlan from "./CreateCurrentDayPlan";
+// import CreateConfigPlan from "./CreateConfigPlan";
+// import CreatePlan from "./CreatePlan";
+// import CreateCurrentDayPlan from "./CreateCurrentDayPlan";
 
 const TrainingPlan:React.FC=()=>{
     const [yourPlan,setYourPlan]=useState<JSX.Element>(
