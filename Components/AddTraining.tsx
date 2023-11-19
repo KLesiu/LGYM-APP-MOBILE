@@ -781,7 +781,7 @@ const AddTraining:React.FC=()=>{
           arr.push(arrReps[i]);
           arr.push(arrWeight[i]);
         }
-        console.log(arr)
+        addYourTrainingToDataBase(dayToCheck!,arr)
 
         
         
@@ -809,6 +809,7 @@ const AddTraining:React.FC=()=>{
         }
     }
     const popUpTurnOn:VoidFunction=():void=>{
+      setTimeout(()=>setIsPopUpShowed(false),3000)
 
     }   
     
@@ -825,7 +826,7 @@ const AddTraining:React.FC=()=>{
                         <Icon style={{fontSize:100,marginTop:'40%'}} name="plus-circle" />
                     </TouchableOpacity>
                     {chooseDay}
-                    {!isPopUpShowed?
+                    {isPopUpShowed?
                     <View style={AddTrainingStyles.popUp}>
                       <Icon style={{fontSize:100}} name="check" />
                     </View>:''}
