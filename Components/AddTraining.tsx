@@ -1,7 +1,7 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity, TextInput, ScrollView } from "react-native";
+import { Text,Image,View,ImageBackground,TouchableOpacity, TextInput, ScrollView,KeyboardAvoidingView,Button } from "react-native";
 import backgroundLogo from './img/backgroundLGYMApp500.png'
 import { AddTrainingStyles } from "./styles/AddTrainingStyles";
-import { useState,useEffect } from "react";
+import { useState,useEffect,useReducer } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts,Teko_700Bold,Teko_400Regular } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
@@ -11,6 +11,27 @@ import Exercise from "./types/Exercise";
 import Data from "./types/DataPlansArrays";
 import LastTrainingSession from "./types/LastTrainingSession";
 import ExerciseTraining from "./types/ExerciseTraining";
+import KeyboardAwareScrollView from 'react-native-keyboard-aware-scroll-view';
+
+type InputAction = {
+    type: 'UPDATE_INPUT';
+    index: number;
+    value: string;
+  };
+  
+  type InputState = Record<number, string>;
+  
+  const inputReducer = (state: InputState, action: InputAction): InputState => {
+    switch (action.type) {
+      case 'UPDATE_INPUT':
+        return {
+          ...state,
+          [action.index]: action.value,
+        };
+      default:
+        return state;
+    }
+  };
 
 
 const AddTraining:React.FC=()=>{
@@ -22,6 +43,8 @@ const AddTraining:React.FC=()=>{
     const [lastTrainingSessionDate,setLastTrainingSessionDate]=useState<string>()
     const [lastTrainingSessionExercises,setLastTrainingSessionExercises]=useState<Array<ExerciseTraining>>()
     const [showExercise,setShowExercise]=useState<boolean>()
+    const [inputValues,dispatch] = useReducer(inputReducer,{})
+    const [inputWeightValues,dispatchWeight]=useReducer(inputReducer,{})
 
 
     const [fontsLoaded]=useFonts({
@@ -76,6 +99,7 @@ const AddTraining:React.FC=()=>{
             else if(day=== 'F') return data.planF
             else if(day ==='G') return data.planG
         })
+
         setCurrentDaySection(planOfTheDay!,day)
         setDayToCheck(day)
         setChooseDay(<View></View>)
@@ -112,11 +136,12 @@ const AddTraining:React.FC=()=>{
                                         <Text style={{fontFamily:'Teko_400Regular',fontSize:15,width:'20%'}}>
                                             <Text>{ele.name}</Text> {s}: Rep
                                         </Text>
-                                        <TextInput style={AddTrainingStyles.input} />
+                                        <TextInput onChangeText={(text) => handleInputChange(index, text)}  style={AddTrainingStyles.input} />
                                         <Text style={{fontFamily:'Teko_400Regular',fontSize:15,width:'20%',marginLeft:'10%'}}>
                                             <Text>{ele.name}</Text> {s}: Weight (kg)
                                         </Text>
-                                        <TextInput style={{borderBottomColor:'grey',borderBottomWidth:2,...AddTrainingStyles.input}}/>
+                                        <TextInput onChangeText={(text) => handleInputWeightChange(index, text)} style={{borderBottomColor:'grey',borderBottomWidth:2,...AddTrainingStyles.input}}/>
+                                      
                                     </View>
                                 )
                             })}
@@ -132,6 +157,26 @@ const AddTraining:React.FC=()=>{
         setShowExercise(true)
         
     }
+    const handleInputChange = (index:number, text:string) => {
+        dispatch({
+          type: 'UPDATE_INPUT',
+          index,
+          value: text,
+        });
+      };
+    const handleInputWeightChange=(index:number, text:string)=> {
+        dispatchWeight({
+          type: 'UPDATE_INPUT',
+          index,
+          value: text,
+        });
+      };
+    const handleButtonPress = () => {
+        console.log('Input rep values:', inputValues);
+        console.log('Input weight values:',inputWeightValues)
+    
+        // Tutaj możesz wykonywać inne operacje na wartościach pól TextInput
+      };
     
       if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
@@ -146,13 +191,15 @@ const AddTraining:React.FC=()=>{
                         <Icon style={{fontSize:100,marginTop:'40%'}} name="plus-circle" />
                     </TouchableOpacity>
                     {chooseDay}
+                   
                     {daySection}
                     {showExercise?
                     <View style={AddTrainingStyles.buttonsSection}>
-                            <TouchableOpacity style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:25}}>ADD TRAINING</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={handleButtonPress} style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:25}}>ADD TRAINING</Text></TouchableOpacity>
                             <TouchableOpacity style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:17}}>SHOW PREVIOUS SESSION</Text></TouchableOpacity>
                     </View>
                         :''}
+            
                 </View>
                 :
                 <View style={AddTrainingStyles.withoutTraining}>
