@@ -104,19 +104,19 @@ const AddTraining:React.FC=()=>{
                         helpsArray.push(`Series: ${i}`)
                     }
                     return(
-                        <View key={index}>
-                            <Text>{ele.name}</Text>
+                        <View style={{marginBottom:50}} key={index}>
+                            <Text style={{fontFamily:'Teko_700Bold',fontSize:20,marginBottom:30,marginLeft:5}}>{ele.name}</Text>
                             {helpsArray.map((s,index:number)=>{
                                 return(
-                                    <View key={index}>
-                                        <Text>
+                                    <View style={AddTrainingStyles.exerciseDiv} key={index}>
+                                        <Text style={{fontFamily:'Teko_400Regular',fontSize:15,width:'20%'}}>
                                             <Text>{ele.name}</Text> {s}: Rep
                                         </Text>
-                                        <TextInput />
-                                        <Text>
+                                        <TextInput style={AddTrainingStyles.input} />
+                                        <Text style={{fontFamily:'Teko_400Regular',fontSize:15,width:'20%',marginLeft:'10%'}}>
                                             <Text>{ele.name}</Text> {s}: Weight (kg)
                                         </Text>
-                                        <TextInput/>
+                                        <TextInput style={{borderBottomColor:'grey',borderBottomWidth:2,...AddTrainingStyles.input}}/>
                                     </View>
                                 )
                             })}
@@ -147,6 +147,12 @@ const AddTraining:React.FC=()=>{
                     </TouchableOpacity>
                     {chooseDay}
                     {daySection}
+                    {showExercise?
+                    <View style={AddTrainingStyles.buttonsSection}>
+                            <TouchableOpacity style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:25}}>ADD TRAINING</Text></TouchableOpacity>
+                            <TouchableOpacity style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:17}}>SHOW PREVIOUS SESSION</Text></TouchableOpacity>
+                    </View>
+                        :''}
                 </View>
                 :
                 <View style={AddTrainingStyles.withoutTraining}>

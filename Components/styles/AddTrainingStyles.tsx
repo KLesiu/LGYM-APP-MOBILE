@@ -68,6 +68,44 @@ export const AddTrainingStyles=StyleSheet.create({
         width:'100%',
         height:'100%',
         color:'white',
-        backgroundColor:"rgba(0, 0, 0, 0.962)"
+        backgroundColor:"rgba(0, 0, 0, 0.962)",
+        display:'flex',
+        flexDirection:'column',
+    },
+    input:{
+        borderRadius:10,
+        fontSize:15,
+        width:'20%',
+        borderColor:'rgb(60,60,60)',
+        borderWidth:2,
+        color:'black',
+        paddingLeft:10
+    },
+    exerciseDiv:{
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center',
+        borderBottomColor:'grey',
+        borderBottomWidth:1,
+        marginTop:5,
+    },
+    buttonsSection:{
+        width:'100%',
+        display:'flex',
+        justifyContent:'center',
+        flexDirection:'row',
+        position:'absolute',
+        bottom:0,
+        gap:20
+    },
+    buttonAtAddTrainingConfig:{
+        width:'30%',
+        height:50,
+        borderRadius:10,
+        backgroundColor: 'rgb(170,180,189)',
+        display:'flex',
+        justifyContent:'center',
+        alignItems:'center'
     }
 })
