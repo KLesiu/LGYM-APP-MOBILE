@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
+import { Text,Image,View,ImageBackground,TouchableOpacity, TextInput, ScrollView } from "react-native";
 import backgroundLogo from './img/backgroundLGYMApp500.png'
 import { AddTrainingStyles } from "./styles/AddTrainingStyles";
 import { useState,useEffect } from "react";
@@ -9,6 +9,8 @@ import * as SplashScreen from 'expo-splash-screen'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Exercise from "./types/Exercise";
 import Data from "./types/DataPlansArrays";
+import LastTrainingSession from "./types/LastTrainingSession";
+import ExerciseTraining from "./types/ExerciseTraining";
 
 
 const AddTraining:React.FC=()=>{
@@ -17,6 +19,10 @@ const AddTraining:React.FC=()=>{
     const [daySection,setDaySection]=useState<JSX.Element>(<View></View>)
     const [dayToCheck,setDayToCheck]=useState<string>()
     const [pickedDay,setPickedDay]=useState<Array<Exercise>>()
+    const [lastTrainingSessionDate,setLastTrainingSessionDate]=useState<string>()
+    const [lastTrainingSessionExercises,setLastTrainingSessionExercises]=useState<Array<ExerciseTraining>>()
+    const [showExercise,setShowExercise]=useState<boolean>()
+
 
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
@@ -70,11 +76,60 @@ const AddTraining:React.FC=()=>{
             else if(day=== 'F') return data.planF
             else if(day ==='G') return data.planG
         })
-        // setCurrentDaySection(planOfTheDay!,day)
+        setCurrentDaySection(planOfTheDay!,day)
         setDayToCheck(day)
         setChooseDay(<View></View>)
         setPickedDay(planOfTheDay)
 
+        
+    }
+    const setCurrentDaySection=async(exercises:Array<Exercise>,day:string):Promise<void>=>{
+        const id = await AsyncStorage.getItem('id')
+        const response:{prevSession:LastTrainingSession}|null = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getPrevSessionTraining/${day}`).then(res=>res.json()).catch(err=>err).then(res=>res)
+        let lastTraining:string
+        let lastExercises:Array<ExerciseTraining>
+        
+        if('prevSession' in response!){
+                lastTraining = response.prevSession.createdAt.slice(0,24) 
+                lastExercises=response.prevSession.exercises.map(ele=>ele)
+                
+        }
+        setDaySection(
+            <View style={AddTrainingStyles.daySection}>
+                <Text style={{fontFamily:'Teko_700Bold',width:'100%',textAlign:'center',fontSize:30}}>Training <Text>{day}</Text></Text>
+                <ScrollView>
+                {exercises.map((ele:Exercise,index:number)=>{
+                    let helpsArray:Array<string> = []
+                    for(let i=1;i<+ele.series+1;i++){
+                        helpsArray.push(`Series: ${i}`)
+                    }
+                    return(
+                        <View key={index}>
+                            <Text>{ele.name}</Text>
+                            {helpsArray.map((s,index:number)=>{
+                                return(
+                                    <View key={index}>
+                                        <Text>
+                                            <Text>{ele.name}</Text> {s}: Rep
+                                        </Text>
+                                        <TextInput />
+                                        <Text>
+                                            <Text>{ele.name}</Text> {s}: Weight (kg)
+                                        </Text>
+                                        <TextInput/>
+                                    </View>
+                                )
+                            })}
+                        </View>
+                    )
+                })}
+                </ScrollView>
+            </View>
+        
+        )
+        setLastTrainingSessionDate(lastTraining!)
+        setLastTrainingSessionExercises(lastExercises!)
+        setShowExercise(true)
         
     }
     

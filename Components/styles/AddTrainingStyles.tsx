@@ -62,5 +62,12 @@ export const AddTrainingStyles=StyleSheet.create({
         height: '10%',
         opacity: 1,
         width: '70%',
+    },
+    daySection:{
+        position:'absolute',
+        width:'100%',
+        height:'100%',
+        color:'white',
+        backgroundColor:"rgba(0, 0, 0, 0.962)"
     }
 })
