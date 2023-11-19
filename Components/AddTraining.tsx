@@ -488,30 +488,319 @@ const AddTraining:React.FC=()=>{
       };
 
     const handleButtonPress = () => {
-        console.log(fieldsArray)
-        let arrReps:ExerciseTraining[]=[]
-        let arrWeight:ExerciseTraining[]=[]
-        let arr:ExerciseTraining[]=[]
-        let number:number=0
-        if(pickedDay?.length===3){
-            for(let i=0;i<Object.keys(inputValues).length*2;i=i+2)
-                arrReps.push({field:`${fieldsArray![i]}`,score:inputValues[`${i===0?i:i/2}`]})
-                number++
-            
-            for(let i=2, j=0;i<=Object.keys(inputWeightValues).length*2;i=i+2,j++)
-                arrWeight.push({field:`${fieldsArray![i-1]}`,score:inputWeightValues[`${j}`]})
-                number++
-
-            for(let i=0;i<arrWeight.length;i++){
-                arr.push(arrReps[i])
-                arr.push(arrWeight[i])
-            }
-            console.log(arrReps)
-            console.log(arrWeight)
-
-        }
-
+        const arrReps:ExerciseTraining[]=[]
+        const arrWeight:ExerciseTraining[]=[]
+        const arr:ExerciseTraining[]=[]
         
+        let helpsArrayReps = fieldsArray?.filter((ele,index:number)=> index===0||index%2===0)
+        let helpsArrayWeights = fieldsArray?.filter((ele,index:number)=>index !== 0 && index%2 !== 0)
+        // if(pickedDay?.length===1){
+        //     for(let i=0;i<Object.keys(inputValues).length;i++)
+        //           arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValues[`${i}`]})
+        //     for(let i=0; i<Object.keys(inputWeightValues).length;i++)
+        //           arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValues[`${i}`]})
+        //     for(let i=0;i<arrReps.length;i++){
+        //             arr.push(arrReps[i])
+        //             arr.push(arrWeight[i])
+        //     }
+
+        // }
+        // else if(pickedDay?.length===2){
+        //     for(let i=0;i<Object.keys(inputValues).length;i++)
+        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValues[`${i}`]})
+        //     for(let i=0; i<Object.keys(inputWeightValues).length;i++)
+        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValues[`${i}`]})
+            
+            
+        //     helpsArrayReps=helpsArrayReps!.slice(Object.keys(inputValues).length)
+        //     helpsArrayWeights=helpsArrayWeights!.slice(Object.keys(inputWeightValues).length)
+
+        //     for(let i=0;i<Object.keys(inputValuesSecond).length;i++)
+        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValuesSecond[`${i}`]})
+        //     for(let i=0; i<Object.keys(inputWeightValuesSecond).length;i++)
+        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValuesSecond[`${i}`]})
+        //     for(let i=0;i<arrReps.length;i++){
+        //           arr.push(arrReps[i])
+        //           arr.push(arrWeight[i])
+        //     }
+        // }
+        // else if(pickedDay?.length===3){
+        //     for(let i=0;i<Object.keys(inputValues).length;i++)
+        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValues[`${i}`]})
+        //     for(let i=0; i<Object.keys(inputWeightValues).length;i++)
+        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValues[`${i}`]})
+            
+            
+        //     helpsArrayReps=helpsArrayReps!.slice(Object.keys(inputValues).length)
+        //     helpsArrayWeights=helpsArrayWeights!.slice(Object.keys(inputWeightValues).length)
+
+        //     for(let i=0;i<Object.keys(inputValuesSecond).length;i++)
+        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValuesSecond[`${i}`]})
+        //     for(let i=0; i<Object.keys(inputWeightValuesSecond).length;i++)
+        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValuesSecond[`${i}`]})
+
+        //     helpsArrayReps= helpsArrayReps?.slice(Object.keys(inputValuesSecond).length)
+        //     helpsArrayWeights=helpsArrayWeights?.slice(Object.keys(inputWeightValuesSecond).length)
+
+
+            
+        //     for(let i=0;i<Object.keys(inputValuesThird).length;i++)
+        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValuesThird[`${i}`]})
+        //     for(let i=0; i<Object.keys(inputWeightValuesThird).length;i++)
+        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValuesThird[`${i}`]})
+        //     helpsArrayReps = helpsArrayReps?.slice(Object.keys(inputValuesThird).length)
+        //     helpsArrayWeights = helpsArrayWeights?.slice(Object.keys(inputWeightValuesThird).length)
+
+        //     for(let i=0;i<arrReps.length;i++){
+        //       arr.push(arrReps[i])
+        //       arr.push(arrWeight[i])
+        //     }
+            
+              
+        //  }
+        function processInputValues(values:any, weights:any, repsArray:any, weightArray:any) {
+          for (let i = 0; i < Object.keys(values).length; i++) {
+            repsArray.push({ field: `${helpsArrayReps![i]}`, score: values[i] });
+            weightArray.push({ field: `${helpsArrayWeights![i]}`, score: weights[i] });
+          }
+          helpsArrayReps = helpsArrayReps!.slice(Object.keys(values).length);
+          helpsArrayWeights = helpsArrayWeights!.slice(Object.keys(weights).length);
+        }
+        
+        if(pickedDay?.length===1){
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight)
+        }
+        else if(pickedDay?.length===2){
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight)
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 3) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight)
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 4) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 5) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight, );
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight,);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight,);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight,);
+        }
+        else if (pickedDay?.length === 6) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 7) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 8) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+        }    
+        else if (pickedDay?.length === 9) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 10) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 11) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 12) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+          processInputValues(inputValuesTwelfth, inputWeightValuesTwelfth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 13) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+          processInputValues(inputValuesTwelfth, inputWeightValuesTwelfth, arrReps, arrWeight);
+          processInputValues(inputValuesThirteenth, inputWeightValuesThirteenth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 14) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+          processInputValues(inputValuesTwelfth, inputWeightValuesTwelfth, arrReps, arrWeight);
+          processInputValues(inputValuesThirteenth, inputWeightValuesThirteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFourteenth, inputWeightValuesFourteenth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 15) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+          processInputValues(inputValuesTwelfth, inputWeightValuesTwelfth, arrReps, arrWeight);
+          processInputValues(inputValuesThirteenth, inputWeightValuesThirteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFourteenth, inputWeightValuesFourteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFifteenth, inputWeightValuesFifteenth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 16) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+          processInputValues(inputValuesTwelfth, inputWeightValuesTwelfth, arrReps, arrWeight);
+          processInputValues(inputValuesThirteenth, inputWeightValuesThirteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFourteenth, inputWeightValuesFourteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFifteenth, inputWeightValuesFifteenth, arrReps, arrWeight);
+          processInputValues(inputValuesSixteenth, inputWeightValuesSixteenth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 17) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+          processInputValues(inputValuesTwelfth, inputWeightValuesTwelfth, arrReps, arrWeight);
+          processInputValues(inputValuesThirteenth, inputWeightValuesThirteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFourteenth, inputWeightValuesFourteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFifteenth, inputWeightValuesFifteenth, arrReps, arrWeight);
+          processInputValues(inputValuesSixteenth, inputWeightValuesSixteenth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventeenth, inputWeightValuesSeventeenth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 18) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+          processInputValues(inputValuesTwelfth, inputWeightValuesTwelfth, arrReps, arrWeight);
+          processInputValues(inputValuesThirteenth, inputWeightValuesThirteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFourteenth, inputWeightValuesFourteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFifteenth, inputWeightValuesFifteenth, arrReps, arrWeight);
+          processInputValues(inputValuesSixteenth, inputWeightValuesSixteenth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventeenth, inputWeightValuesSeventeenth, arrReps, arrWeight);
+          processInputValues(inputValuesEighteenth, inputWeightValuesEighteenth, arrReps, arrWeight);
+        }
+        else if (pickedDay?.length === 19) {
+          processInputValues(inputValues, inputWeightValues, arrReps, arrWeight);
+          processInputValues(inputValuesSecond, inputWeightValuesSecond, arrReps, arrWeight);
+          processInputValues(inputValuesThird, inputWeightValuesThird, arrReps, arrWeight);
+          processInputValues(inputValuesFourth, inputWeightValuesFourth, arrReps, arrWeight);
+          processInputValues(inputValuesFifth, inputWeightValuesFifth, arrReps, arrWeight);
+          processInputValues(inputValuesSixth, inputWeightValuesSixth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventh, inputWeightValuesSeventh, arrReps, arrWeight);
+          processInputValues(inputValuesEighth, inputWeightValuesEighth, arrReps, arrWeight);
+          processInputValues(inputValuesNinth, inputWeightValuesNinth, arrReps, arrWeight);
+          processInputValues(inputValuesTenth, inputWeightValuesTenth, arrReps, arrWeight);
+          processInputValues(inputValuesEleventh, inputWeightValuesEleventh, arrReps, arrWeight);
+          processInputValues(inputValuesTwelfth, inputWeightValuesTwelfth, arrReps, arrWeight);
+          processInputValues(inputValuesThirteenth, inputWeightValuesThirteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFourteenth, inputWeightValuesFourteenth, arrReps, arrWeight);
+          processInputValues(inputValuesFifteenth, inputWeightValuesFifteenth, arrReps, arrWeight);
+          processInputValues(inputValuesSixteenth, inputWeightValuesSixteenth, arrReps, arrWeight);
+          processInputValues(inputValuesSeventeenth, inputWeightValuesSeventeenth, arrReps, arrWeight);
+          processInputValues(inputValuesEighteenth, inputWeightValuesEighteenth, arrReps, arrWeight);
+          processInputValues(inputValuesNineteenth, inputWeightValuesNineteenth, arrReps, arrWeight);
+        }
+        for (let i = 0; i < arrReps.length; i++) {
+          arr.push(arrReps[i]);
+          arr.push(arrWeight[i]);
+        }
+        console.log(arr)
+
         
         
       };
