@@ -71,6 +71,7 @@ export const AddTrainingStyles=StyleSheet.create({
         backgroundColor:"rgba(0, 0, 0, 0.962)",
         display:'flex',
         flexDirection:'column',
+        paddingBottom:40,
     },
     input:{
         borderRadius:10,
@@ -97,7 +98,8 @@ export const AddTrainingStyles=StyleSheet.create({
         flexDirection:'row',
         position:'absolute',
         bottom:0,
-        gap:20
+        gap:50,
+        marginBottom:20
     },
     buttonAtAddTrainingConfig:{
         width:'30%',
