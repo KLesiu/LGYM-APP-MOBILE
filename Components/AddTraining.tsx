@@ -492,18 +492,22 @@ const AddTraining:React.FC=()=>{
         let arrReps:ExerciseTraining[]=[]
         let arrWeight:ExerciseTraining[]=[]
         let arr:ExerciseTraining[]=[]
+        let number:number=0
         if(pickedDay?.length===3){
             for(let i=0;i<Object.keys(inputValues).length*2;i=i+2)
                 arrReps.push({field:`${fieldsArray![i]}`,score:inputValues[`${i===0?i:i/2}`]})
+                number++
             
-            for(let i=2, j=0;i<=Object.keys(inputWeightValues).length*2;i=i+2,j++){
+            for(let i=2, j=0;i<=Object.keys(inputWeightValues).length*2;i=i+2,j++)
                 arrWeight.push({field:`${fieldsArray![i-1]}`,score:inputWeightValues[`${j}`]})
-            }
+                number++
+
             for(let i=0;i<arrWeight.length;i++){
                 arr.push(arrReps[i])
                 arr.push(arrWeight[i])
             }
-            console.log(arr)
+            console.log(arrReps)
+            console.log(arrWeight)
 
         }
 
