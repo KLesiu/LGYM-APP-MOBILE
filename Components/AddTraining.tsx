@@ -12,16 +12,16 @@ import Data from "./types/DataPlansArrays";
 import LastTrainingSession from "./types/LastTrainingSession";
 import ExerciseTraining from "./types/ExerciseTraining";
 import KeyboardAwareScrollView from 'react-native-keyboard-aware-scroll-view';
-
+import addTrainingFetchType from "./types/AddTrainingFetchAnsw";
 type InputAction = {
     type: 'UPDATE_INPUT';
     index: number;
     value: string;
   };
   
-  type InputState = Record<number, string>;
+type InputState = Record<number, string>;
   
-  const inputReducer = (state: InputState, action: InputAction): InputState => {
+const inputReducer = (state: InputState, action: InputAction): InputState => {
     switch (action.type) {
       case 'UPDATE_INPUT':
         return {
@@ -44,7 +44,7 @@ const AddTraining:React.FC=()=>{
     const [lastTrainingSessionExercises,setLastTrainingSessionExercises]=useState<Array<ExerciseTraining>>()
     const [showExercise,setShowExercise]=useState<boolean>()
     const [fieldsArray,setFieldsArray]=useState<String[]>()
-
+    const [isPopUpShowed,setIsPopUpShowed] = useState<boolean>(false)
     const [inputValues,dispatch] = useReducer(inputReducer,{})
     const [inputWeightValues,dispatchWeight]=useReducer(inputReducer,{})
     // Second
@@ -118,12 +118,6 @@ const AddTraining:React.FC=()=>{
     // Nineteenth
     const [inputValuesNineteenth, dispatchNineteenth] = useReducer(inputReducer, {});
     const [inputWeightValuesNineteenth, dispatchWeightNineteenth] = useReducer(inputReducer, {});
-
-    // Twentieth
-    const [inputValuesTwentieth, dispatchTwentieth] = useReducer(inputReducer, {});
-    const [inputWeightValuesTwentieth, dispatchWeightTwentieth] = useReducer(inputReducer, {});
-
-
 
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
@@ -351,13 +345,7 @@ const AddTraining:React.FC=()=>{
                   index,
                   value: text,
                 });
-              } else if (indexMain === 19) {
-                dispatchTwentieth({
-                  type: 'UPDATE_INPUT',
-                  index,
-                  value: text,
-                });
-              }
+              } 
               
        
       };
@@ -476,18 +464,12 @@ const AddTraining:React.FC=()=>{
               index,
               value: text,
             });
-          } else if (indexMain === 19) {
-            dispatchWeightTwentieth({
-              type: 'UPDATE_INPUT',
-              index,
-              value: text,
-            });
-          }
+          } 
           
         
       };
 
-    const handleButtonPress = () => {
+    const submitYourTraining = () => {
         const arrReps:ExerciseTraining[]=[]
         const arrWeight:ExerciseTraining[]=[]
         const arr:ExerciseTraining[]=[]
@@ -804,6 +786,31 @@ const AddTraining:React.FC=()=>{
         
         
       };
+    const addYourTrainingToDataBase=async(day:string,training:Array<ExerciseTraining>):Promise<void>=>{
+        const id = await AsyncStorage.getItem('id') 
+        const response:addTrainingFetchType = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/addTraining`,{
+            method:"POST",
+            headers:{
+                "content-type":"application/json"
+            },
+            body:JSON.stringify({
+                day: day,
+                training:training,
+                createdAt:new Date().getTime(),
+            })
+        }).then(res=>res.json()).catch(err=>err).then(res=>res)
+        if(response.msg="Training added"){
+            setChooseDay(<View></View>)
+            setDaySection(<View></View>)
+            setShowExercise(false)
+            setIsPopUpShowed(true)
+            popUpTurnOn()
+            
+        }
+    }
+    const popUpTurnOn:VoidFunction=():void=>{
+
+    }   
     
       if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
@@ -818,14 +825,18 @@ const AddTraining:React.FC=()=>{
                         <Icon style={{fontSize:100,marginTop:'40%'}} name="plus-circle" />
                     </TouchableOpacity>
                     {chooseDay}
-                   
+                    {!isPopUpShowed?
+                    <View style={AddTrainingStyles.popUp}>
+                      <Icon style={{fontSize:100}} name="check" />
+                    </View>:''}
                     {daySection}
                     {showExercise?
                     <View style={AddTrainingStyles.buttonsSection}>
-                            <TouchableOpacity onPress={handleButtonPress} style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:25}}>ADD TRAINING</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={submitYourTraining} style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:25}}>ADD TRAINING</Text></TouchableOpacity>
                             <TouchableOpacity style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:17}}>SHOW PREVIOUS SESSION</Text></TouchableOpacity>
                     </View>
                         :''}
+
             
                 </View>
                 :

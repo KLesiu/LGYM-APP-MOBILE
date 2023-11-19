@@ -109,5 +109,18 @@ export const AddTrainingStyles=StyleSheet.create({
         display:'flex',
         justifyContent:'center',
         alignItems:'center'
+    },
+    popUp:{
+        alignItems:'center',
+        backgroundColor:'green',
+        borderRadius:50,
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'center',
+        width:'50%',
+        height:'30%',
+        top:'30%',
+        position:'absolute'
+
     }
 })
