@@ -832,7 +832,7 @@ const AddTraining:React.FC=()=>{
           return(
               <View style={AddTrainingStyles.lastSessionTrainingSection} >
                   <TouchableOpacity onPress={hideLastTrainingSection}>
-                      <Icon name="close" />
+                      <Icon style={{fontSize:40}} name="close" />
                   </TouchableOpacity>
                   <Text style={{fontFamily:'Teko_400Regular',...AddTrainingStyles.lastSessionDate}}>Date: {lastTrainingSessionDate}</Text>
                   <ScrollView style={AddTrainingStyles.scrollViewLastSession}>
@@ -842,7 +842,7 @@ const AddTraining:React.FC=()=>{
                       if(index !== 0 && index%2 !== 0) return
                       return(
                           <View style={AddTrainingStyles.lastSessionField} key={index}>
-                              {index===0||index%2==0?<Text style={{fontFamily:'Teko_400Regular',fontSize:20,marginTop:10}}>{ele.field.slice(0,ele.field.length-4)}</Text>:''}
+                              {index===0||index%2==0?<Text style={{fontFamily:'Teko_400Regular',fontSize:20,marginTop:20,marginLeft:10}}>{ele.field.slice(0,ele.field.length-4)}</Text>:''}
                               
                           </View>
                           

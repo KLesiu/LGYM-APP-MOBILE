@@ -153,10 +153,9 @@ export const AddTrainingStyles=StyleSheet.create({
         borderBottomColor:'grey',
         borderBottomWidth:1,
         height:80,
-        display:'flex',
-        flexDirection:'row',
-        justifyContent:'center',
-        alignItems:'center',
+        paddingLeft:'10%',
+        backgroundColor:"rgba(20,20,20,0.7)",
+        paddingTop:20
     },
     ViewLastSessionInsideScroll:{
         width:'100%',
