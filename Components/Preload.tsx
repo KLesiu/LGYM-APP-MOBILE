@@ -10,10 +10,11 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "./types/RootStackParamList";
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
-
+import Loading from "./Loading";
 
 const Preload:React.FC=()=>{
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+    const [isLoading,setIsLoading]=useState<boolean>(true)
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular
@@ -37,6 +38,9 @@ const Preload:React.FC=()=>{
     const handleRegisterPress:VoidFunction=():void=>{
         navigation.navigate('Register')
     }
+    const offLoading=()=>{
+        setIsLoading(false)
+    }
 
     if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
@@ -59,7 +63,7 @@ const Preload:React.FC=()=>{
                         </View>
                 </ImageBackground>
                 
-            
+            {isLoading?<Loading offLoading={offLoading} />:''}
             
         </View>
 
