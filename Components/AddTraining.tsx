@@ -13,6 +13,7 @@ import LastTrainingSession from "./types/LastTrainingSession";
 import ExerciseTraining from "./types/ExerciseTraining";
 import KeyboardAwareScrollView from 'react-native-keyboard-aware-scroll-view';
 import addTrainingFetchType from "./types/AddTrainingFetchAnsw";
+import SuccessMsg from "./types/SuccessMsg";
 type InputAction = {
     type: 'UPDATE_INPUT';
     index: number;
@@ -47,6 +48,9 @@ const AddTraining:React.FC=()=>{
     const [isPopUpShowed,setIsPopUpShowed] = useState<boolean>(false)
     const [inputValues,dispatch] = useReducer(inputReducer,{})
     const [inputWeightValues,dispatchWeight]=useReducer(inputReducer,{})
+    const [lastTrainingSection,setLastTrainingSection]=useState<JSX.Element>()
+
+
     // Second
     const [inputValuesSecond, dispatchSecond] = useReducer(inputReducer, {});
     const [inputWeightValuesSecond, dispatchWeightSecond] = useReducer(inputReducer, {});
@@ -811,7 +815,69 @@ const AddTraining:React.FC=()=>{
     const popUpTurnOn:VoidFunction=():void=>{
       setTimeout(()=>setIsPopUpShowed(false),3000)
 
-    }   
+    }
+    const showLastTrainingSection:VoidFunction=async():Promise<void>=>{
+      if(!lastTrainingSessionDate || lastTrainingSessionExercises?.length!<1 || !lastTrainingSessionExercises) return console.log('You dont have training sessions!')
+      if(! await checkLastTrainingSession(dayToCheck!)) return console.log('You dont have training sessions!')
+      
+      let count:number=0
+      pickedDay?.map(ele=>{
+          count+=ele.series
+          
+      })
+      
+      let scoreAndFieldsCount = count*2
+      if(lastTrainingSessionExercises.length !== scoreAndFieldsCount) return console.log('You dont have training sessions!')
+      setLastTrainingSection(()=>{
+          return(
+              <View style={AddTrainingStyles.lastSessionTrainingSection} >
+                  <TouchableOpacity onPress={hideLastTrainingSection}>
+                      <Icon name="close" />
+                  </TouchableOpacity>
+                  <Text style={{fontFamily:'Teko_400Regular',...AddTrainingStyles.lastSessionDate}}>Date: {lastTrainingSessionDate}</Text>
+                  <ScrollView style={AddTrainingStyles.scrollViewLastSession}>
+                  <View style={AddTrainingStyles.ViewLastSessionInsideScroll}>
+                      <View style={AddTrainingStyles.containerForFieldsAtLastSession}>
+                  {lastTrainingSessionExercises.length>0?lastTrainingSessionExercises.map((ele,index:number)=>{
+                      if(index !== 0 && index%2 !== 0) return
+                      return(
+                          <View style={AddTrainingStyles.lastSessionField} key={index}>
+                              {index===0||index%2==0?<Text style={{fontFamily:'Teko_400Regular',fontSize:20,marginTop:10}}>{ele.field.slice(0,ele.field.length-4)}</Text>:''}
+                              
+                          </View>
+                          
+                      )
+                  }):''}
+                      </View>
+                 
+                  
+                  <View style={AddTrainingStyles.containerForScoresAtLastSession}>
+                  {lastTrainingSessionExercises.length>0?lastTrainingSessionExercises.map((ele,index)=>{
+                      return(
+                          <Text style={{fontFamily:'Teko_400Regular',fontSize:20,...AddTrainingStyles.lastSessionScore}}  key={index}>{ele.score}</Text>
+                      )
+                  }):''}
+                  </View>
+                  </View>
+                  </ScrollView>
+
+              </View>
+          )
+      })
+      
+
+  }
+    const checkLastTrainingSession=async(day:string):Promise<boolean>=>{
+      const id = await AsyncStorage.getItem('id')
+      const response:SuccessMsg = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/checkPrevSessionTraining/${day}`).then(res=>res.json()).catch(err=>err).then(res=>res)
+      if(response.msg === 'Yes') return true
+      return false
+    
+}
+    const hideLastTrainingSection:VoidFunction=():void=>{
+      setLastTrainingSection(<View></View>)
+}
+
     
       if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
@@ -831,10 +897,11 @@ const AddTraining:React.FC=()=>{
                       <Icon style={{fontSize:100}} name="check" />
                     </View>:''}
                     {daySection}
+                    {lastTrainingSection}
                     {showExercise?
                     <View style={AddTrainingStyles.buttonsSection}>
                             <TouchableOpacity onPress={submitYourTraining} style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:25}}>ADD TRAINING</Text></TouchableOpacity>
-                            <TouchableOpacity style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:17}}>SHOW PREVIOUS SESSION</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={showLastTrainingSection} style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:17}}>SHOW PREVIOUS SESSION</Text></TouchableOpacity>
                     </View>
                         :''}
 

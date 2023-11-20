@@ -122,5 +122,56 @@ export const AddTrainingStyles=StyleSheet.create({
         top:'30%',
         position:'absolute'
 
+    },
+    lastSessionTrainingSection:{
+        backgroundColor:'rgba(0,0,0,0.98)',
+        position:'absolute',
+        width:'100%',
+        height:'100%',
+        display:'flex',
+        flexDirection:"column",
+        zIndex:5,
+    },
+    lastSessionField:{
+        width:'100%',
+        borderBottomColor:'grey',
+        borderBottomWidth:1,
+        height:80,
+    },
+    lastSessionDate:{
+        fontSize:30,
+        textAlign:'center'
+    },
+    scrollViewLastSession:{
+        width:'80%',
+        marginLeft:'10%',
+        height:'70%',
+        
+    },
+    lastSessionScore:{
+        width:'50%',
+        borderBottomColor:'grey',
+        borderBottomWidth:1,
+        height:80,
+        display:'flex',
+        flexDirection:'row',
+        justifyContent:'center',
+        alignItems:'center',
+    },
+    ViewLastSessionInsideScroll:{
+        width:'100%',
+        display:'flex',
+        flexDirection:'row',
+    },
+    containerForFieldsAtLastSession:{
+        width:'60%',
+    
+    },
+    containerForScoresAtLastSession:{
+        width:'40%',
+        display:'flex',
+        flexDirection:'row',
+        flexWrap:'wrap',
+  
     }
 })
