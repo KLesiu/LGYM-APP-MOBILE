@@ -79,7 +79,7 @@ export const AddTrainingStyles=StyleSheet.create({
         width:'20%',
         borderColor:'rgb(60,60,60)',
         borderWidth:2,
-        color:'black',
+        color:'white',
         paddingLeft:10
     },
     exerciseDiv:{

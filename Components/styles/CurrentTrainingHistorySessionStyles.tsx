@@ -74,7 +74,8 @@ export const CurrentTrainingHistorySessionStyles = StyleSheet.create({
         borderRightColor:'white',
         borderRightWidth:1,
         backgroundColor:'rgba(150,150,150,0.1)',
-        borderRadius:10
+        borderRadius:10,
+        color:'white'
 
         
     },
@@ -97,7 +98,8 @@ export const CurrentTrainingHistorySessionStyles = StyleSheet.create({
     },
     exerciseDivSpanSpanWeight:{
         width:'100%',
-        fontSize:30
+        fontSize:30,
+        color:'white'
     }
     
 })

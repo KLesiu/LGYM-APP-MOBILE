@@ -87,6 +87,6 @@ export const ProfileStyles=StyleSheet.create({
         flexDirection:'row',
         alignItems:'center',
         marginLeft:'25%',
-        marginTop:'15%'
+        marginTop:'20%'
     }
 })

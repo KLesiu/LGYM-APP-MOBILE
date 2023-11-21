@@ -160,7 +160,7 @@ const AddTraining:React.FC=()=>{
         setChooseDay(<View style={AddTrainingStyles.chooseDaySection} >
             <Text style={{fontFamily:'Teko_700Bold',fontSize:40,color:'white'}}>Choose training day!</Text>
             {daysArray.map((ele,index:number)=><TouchableOpacity onPress={()=>showDaySection(ele)} style={AddTrainingStyles.button}  key={index}>
-                <Text style={{fontFamily:'Teko_700Bold',fontSize:30}}>{ele}</Text></TouchableOpacity>)}
+                <Text style={{fontFamily:'Teko_700Bold',fontSize:30,color:'white'}}>{ele}</Text></TouchableOpacity>)}
         </View>)
     }
     const showDaySection=async(day:string):Promise<void>=>{   
@@ -197,7 +197,7 @@ const AddTraining:React.FC=()=>{
         let arr:String[]=[]
         setDaySection(
             <View style={AddTrainingStyles.daySection}>
-                <Text style={{fontFamily:'Teko_700Bold',width:'100%',textAlign:'center',fontSize:30}}>Training <Text>{day}</Text></Text>
+                <Text style={{fontFamily:'Teko_700Bold',width:'100%',textAlign:'center',fontSize:30,color:'white'}}>Training <Text>{day}</Text></Text>
                 <ScrollView>
                 {exercises.map((ele:Exercise,indexMain:number)=>{
                     let helpsArray:Array<string> = []
@@ -206,17 +206,17 @@ const AddTraining:React.FC=()=>{
                     }
                     return(
                         <View style={{marginBottom:50}} key={indexMain}>
-                            <Text style={{fontFamily:'Teko_700Bold',fontSize:20,marginBottom:30,marginLeft:5}}>{ele.name}</Text>
+                            <Text style={{fontFamily:'Teko_700Bold',fontSize:20,marginBottom:30,marginLeft:5,color:'white'}}>{ele.name}</Text>
                             {helpsArray.map((s,index:number)=>{
                                 arr.push(`${ele.name} ${s}: Rep`)
                                 arr.push(`${ele.name} ${s}: Weight (kg)`)
                                 return(
                                     <View style={AddTrainingStyles.exerciseDiv} key={index}>
-                                        <Text style={{fontFamily:'Teko_400Regular',fontSize:15,width:'20%'}}>
+                                        <Text style={{fontFamily:'Teko_400Regular',fontSize:15,width:'20%',color:'white'}}>
                                             <Text>{ele.name}</Text> {s}: Rep
                                         </Text>
                                         <TextInput onChangeText={(text) => handleInputChange(index, text,indexMain)}  style={AddTrainingStyles.input} />
-                                        <Text style={{fontFamily:'Teko_400Regular',fontSize:15,width:'20%',marginLeft:'10%'}}>
+                                        <Text style={{fontFamily:'Teko_400Regular',fontSize:15,width:'20%',marginLeft:'10%',color:'white'}}>
                                             <Text>{ele.name}</Text> {s}: Weight (kg)
                                         </Text>
                                         <TextInput onChangeText={(text) => handleInputWeightChange(index, text,indexMain)} style={{borderBottomColor:'grey',borderBottomWidth:2,...AddTrainingStyles.input}}/>
