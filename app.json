@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logoLGYM.png",
+        "foregroundImage": "./assets/logo300.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.lesiuuu.lgymappmobile"
