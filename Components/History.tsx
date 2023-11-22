@@ -12,10 +12,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import CurrentTrainingHistorySession from "./CurrentTrainingHistorySession";
 import ErrorMsg from "./types/ErrorMsg";
 import Training from "./types/Training";
+import ViewLoading from "./ViewLoading";
 const History:React.FC=()=>{
     const [sessions,setSessions]=useState<Session[]>([])
     const [currentSessions,setCurrentSessions]=useState<Session[]>([])
     const [currentHistoryTrainingSession,setCurrentHistoryTrainingSession]=useState<JSX.Element>()
+    const [viewLoading,setViewLoading]=useState<boolean>(false)
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular,
@@ -35,10 +37,12 @@ const History:React.FC=()=>{
         loadAsyncResources();
       }, [fontsLoaded]);
     useEffect(()=>{
+        setViewLoading(true)
         getTrainingHistory()
     },[])
     useEffect(()=>{
         setCurrentSessions(sessions)
+        if(sessions.length>0) setViewLoading(false)
     },[sessions])
     const getTrainingHistory=async():Promise<void>=>{
         const id = await AsyncStorage.getItem('id')
@@ -57,6 +61,7 @@ const History:React.FC=()=>{
             setSessions(sessions)
             
         }
+        else setViewLoading(false)
         
     }
     const showCurrentTrainingHistorySession=(id:string,date:string):void=>{
@@ -74,7 +79,7 @@ const History:React.FC=()=>{
         else return response.training
     }
       if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
+        return <ViewLoading/>
     }
 
     return(
@@ -104,6 +109,7 @@ const History:React.FC=()=>{
                 }
                 </ScrollView>
                 {currentHistoryTrainingSession}
+                {viewLoading?<ViewLoading/>:''}
             </View>
         </ImageBackground>
         

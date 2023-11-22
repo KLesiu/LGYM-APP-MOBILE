@@ -14,6 +14,8 @@ import ExerciseTraining from "./types/ExerciseTraining";
 import KeyboardAwareScrollView from 'react-native-keyboard-aware-scroll-view';
 import addTrainingFetchType from "./types/AddTrainingFetchAnsw";
 import SuccessMsg from "./types/SuccessMsg";
+import ViewLoading from "./ViewLoading";
+import MiniLoading from "./MiniLoading";
 type InputAction = {
     type: 'UPDATE_INPUT';
     index: number;
@@ -49,6 +51,8 @@ const AddTraining:React.FC=()=>{
     const [inputValues,dispatch] = useReducer(inputReducer,{})
     const [inputWeightValues,dispatchWeight]=useReducer(inputReducer,{})
     const [lastTrainingSection,setLastTrainingSection]=useState<JSX.Element>()
+    const [viewLoading,setViewLoading]=useState<boolean>(false)
+    const [loading,setLoading]=useState<boolean>(true)
 
 
     // Second
@@ -142,13 +146,16 @@ const AddTraining:React.FC=()=>{
         loadAsyncResources();
       }, [fontsLoaded]);
     useEffect(()=>{
+        setViewLoading(true)
         getFromStorage()
     },[])
     const getFromStorage=async():Promise<void>=>{
         const plan:string|null|undefined = await AsyncStorage.getItem('plan') || ''
+        setViewLoading(false)
         setPlan(plan)
     }
     const getInformationsAboutPlanDays:VoidFunction = async():Promise<void>=>{
+        setLoading(true)
         const id = await AsyncStorage.getItem('id')
         const trainingDays:number = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`).then(res=>res.json()).catch(err=>err).then(res=>res.count)
         const helpsArray= ["A","B","C","D","E","F","G"]
@@ -161,9 +168,12 @@ const AddTraining:React.FC=()=>{
             <Text style={{fontFamily:'Teko_700Bold',fontSize:40,color:'white'}}>Choose training day!</Text>
             {daysArray.map((ele,index:number)=><TouchableOpacity onPress={()=>showDaySection(ele)} style={AddTrainingStyles.button}  key={index}>
                 <Text style={{fontFamily:'Teko_700Bold',fontSize:30,color:'white'}}>{ele}</Text></TouchableOpacity>)}
+                {loading?<MiniLoading/>:''}
         </View>)
+        setLoading(false)
     }
     const showDaySection=async(day:string):Promise<void>=>{   
+        setViewLoading(true)
         const id = await AsyncStorage.getItem('id')     
         const planOfTheDay:Array<Exercise> | undefined = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getPlan`).then(res=>res.json()).catch(err=>err).then(res=>{
             const data:Data=res.data
@@ -235,6 +245,7 @@ const AddTraining:React.FC=()=>{
         setLastTrainingSessionExercises(lastExercises!)
         setShowExercise(true)
         setFieldsArray(arr)
+        setViewLoading(false)
     }
     const handleInputChange = (index:number, text:string,indexMain:number) => {
                 if(indexMain === 0)
@@ -480,70 +491,6 @@ const AddTraining:React.FC=()=>{
         
         let helpsArrayReps = fieldsArray?.filter((ele,index:number)=> index===0||index%2===0)
         let helpsArrayWeights = fieldsArray?.filter((ele,index:number)=>index !== 0 && index%2 !== 0)
-        // if(pickedDay?.length===1){
-        //     for(let i=0;i<Object.keys(inputValues).length;i++)
-        //           arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValues[`${i}`]})
-        //     for(let i=0; i<Object.keys(inputWeightValues).length;i++)
-        //           arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValues[`${i}`]})
-        //     for(let i=0;i<arrReps.length;i++){
-        //             arr.push(arrReps[i])
-        //             arr.push(arrWeight[i])
-        //     }
-
-        // }
-        // else if(pickedDay?.length===2){
-        //     for(let i=0;i<Object.keys(inputValues).length;i++)
-        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValues[`${i}`]})
-        //     for(let i=0; i<Object.keys(inputWeightValues).length;i++)
-        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValues[`${i}`]})
-            
-            
-        //     helpsArrayReps=helpsArrayReps!.slice(Object.keys(inputValues).length)
-        //     helpsArrayWeights=helpsArrayWeights!.slice(Object.keys(inputWeightValues).length)
-
-        //     for(let i=0;i<Object.keys(inputValuesSecond).length;i++)
-        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValuesSecond[`${i}`]})
-        //     for(let i=0; i<Object.keys(inputWeightValuesSecond).length;i++)
-        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValuesSecond[`${i}`]})
-        //     for(let i=0;i<arrReps.length;i++){
-        //           arr.push(arrReps[i])
-        //           arr.push(arrWeight[i])
-        //     }
-        // }
-        // else if(pickedDay?.length===3){
-        //     for(let i=0;i<Object.keys(inputValues).length;i++)
-        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValues[`${i}`]})
-        //     for(let i=0; i<Object.keys(inputWeightValues).length;i++)
-        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValues[`${i}`]})
-            
-            
-        //     helpsArrayReps=helpsArrayReps!.slice(Object.keys(inputValues).length)
-        //     helpsArrayWeights=helpsArrayWeights!.slice(Object.keys(inputWeightValues).length)
-
-        //     for(let i=0;i<Object.keys(inputValuesSecond).length;i++)
-        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValuesSecond[`${i}`]})
-        //     for(let i=0; i<Object.keys(inputWeightValuesSecond).length;i++)
-        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValuesSecond[`${i}`]})
-
-        //     helpsArrayReps= helpsArrayReps?.slice(Object.keys(inputValuesSecond).length)
-        //     helpsArrayWeights=helpsArrayWeights?.slice(Object.keys(inputWeightValuesSecond).length)
-
-
-            
-        //     for(let i=0;i<Object.keys(inputValuesThird).length;i++)
-        //         arrReps.push({field:`${helpsArrayReps![i]}`,score:inputValuesThird[`${i}`]})
-        //     for(let i=0; i<Object.keys(inputWeightValuesThird).length;i++)
-        //         arrWeight.push({field:`${helpsArrayWeights![i]}`,score:inputWeightValuesThird[`${i}`]})
-        //     helpsArrayReps = helpsArrayReps?.slice(Object.keys(inputValuesThird).length)
-        //     helpsArrayWeights = helpsArrayWeights?.slice(Object.keys(inputWeightValuesThird).length)
-
-        //     for(let i=0;i<arrReps.length;i++){
-        //       arr.push(arrReps[i])
-        //       arr.push(arrWeight[i])
-        //     }
-            
-              
-        //  }
         function processInputValues(values:any, weights:any, repsArray:any, weightArray:any) {
           for (let i = 0; i < Object.keys(values).length; i++) {
             repsArray.push({ field: `${helpsArrayReps![i]}`, score: values[i] });
@@ -819,7 +766,7 @@ const AddTraining:React.FC=()=>{
     const showLastTrainingSection:VoidFunction=async():Promise<void>=>{
       if(!lastTrainingSessionDate || lastTrainingSessionExercises?.length!<1 || !lastTrainingSessionExercises) return console.log('You dont have training sessions!')
       if(! await checkLastTrainingSession(dayToCheck!)) return console.log('You dont have training sessions!')
-      
+      setViewLoading(true)
       let count:number=0
       pickedDay?.map(ele=>{
           count+=ele.series
@@ -865,7 +812,7 @@ const AddTraining:React.FC=()=>{
           )
       })
       
-
+      setViewLoading(false)
   }
     const checkLastTrainingSession=async(day:string):Promise<boolean>=>{
       const id = await AsyncStorage.getItem('id')
@@ -880,7 +827,7 @@ const AddTraining:React.FC=()=>{
 
     
       if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
+        return <ViewLoading/>
     }
     return(
         <ImageBackground source={backgroundLogo} style={AddTrainingStyles.background}>
@@ -891,6 +838,8 @@ const AddTraining:React.FC=()=>{
                     <TouchableOpacity onPress={getInformationsAboutPlanDays}>
                         <Icon style={{fontSize:100,marginTop:'40%'}} name="plus-circle" />
                     </TouchableOpacity>
+                    {loading?<MiniLoading/>:''}
+                    {}
                     {chooseDay}
                     {isPopUpShowed?
                     <View style={AddTrainingStyles.popUp}>
@@ -901,7 +850,11 @@ const AddTraining:React.FC=()=>{
                     {showExercise?
                     <View style={AddTrainingStyles.buttonsSection}>
                             <TouchableOpacity onPress={submitYourTraining} style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:25}}>ADD TRAINING</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={showLastTrainingSection} style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:17}}>SHOW PREVIOUS SESSION</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={()=>{
+                              setViewLoading(true)
+                              showLastTrainingSection()
+                            }} style={AddTrainingStyles.buttonAtAddTrainingConfig}><Text style={{fontFamily:'Teko_400Regular',textAlign:'center',fontSize:17}}>SHOW PREVIOUS SESSION</Text></TouchableOpacity>
+                            
                     </View>
                         :''}
 
@@ -911,6 +864,7 @@ const AddTraining:React.FC=()=>{
                 <View style={AddTrainingStyles.withoutTraining}>
                     <Text style={{fontFamily:'Teko_400Regular',fontSize:25,textAlign:'center'}}>You cant add training, because you dont have plan!</Text>
                 </View>}
+                {viewLoading?<ViewLoading/>:''}
             </View>
         </ImageBackground>
     )

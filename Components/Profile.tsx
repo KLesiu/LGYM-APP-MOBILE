@@ -12,6 +12,7 @@ import ProfileRank from "./ProfileRank";
 import { useNavigation } from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import { RootStackParamList } from "./types/RootStackParamList";
+import ViewLoading from "./ViewLoading";
 
 const Profile:React.FC=()=>{
     const [yourProfile,setYourProfile]=useState<UserProfile>()
@@ -20,6 +21,7 @@ const Profile:React.FC=()=>{
     const [rankComponent,setRankComponent]=useState<JSX.Element>()
     const [id,setId]=useState<string>()
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+    const [viewLoading,setViewLoading]=useState<boolean>(false)
 
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
@@ -40,9 +42,11 @@ const Profile:React.FC=()=>{
       }, [fontsLoaded]);
       
     useEffect(()=>{
+        setViewLoading(true)
         getDataFromStorage()
         setRankComponent(<ProfileRank/>)
     },[])
+
     const getDataFromStorage=async():Promise<void>=>{
       const username =  await AsyncStorage.getItem('username')
       const email = await AsyncStorage.getItem('email')
@@ -50,6 +54,7 @@ const Profile:React.FC=()=>{
       setYourProfile({name:username!,email:email!})
       setId(id!)
       checkMoreUserInfo(id!)
+      
     }
     const checkMoreUserInfo=async(id:string):Promise<void>=>{
         const response: "Didnt find" | UserInfo = await fetch(`${process.env.REACT_APP_BACKEND}/api/userInfo/${id}`).then(res=>res.json()).then(res=>res)
@@ -59,6 +64,7 @@ const Profile:React.FC=()=>{
                 setMemberSince(response.createdAt.slice(0,10))
                 
              } 
+        setViewLoading(false)
              
              
      }
@@ -71,7 +77,7 @@ const Profile:React.FC=()=>{
         await AsyncStorage.removeItem(key)
     }
     if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
+        return <ViewLoading />
     }
     return(
         <ImageBackground source={backgroundLogo} style={ProfileStyles.background}>
@@ -93,7 +99,9 @@ const Profile:React.FC=()=>{
                 <TouchableOpacity onPress={logout} style={ProfileStyles.logoutButton}>
                     <Text style={{fontFamily:'Teko_700Bold',color:'white',fontSize:30}}>LOGOUT</Text>
                 </TouchableOpacity>
+                {viewLoading?<ViewLoading />:''}
             </View>
+            
         </ImageBackground>
     )
 }

@@ -11,9 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ErrorMsg from "./types/ErrorMsg";
 import SuccessMsg from "./types/SuccessMsg";
-// import CreateConfigPlan from "./CreateConfigPlan";
-// import CreatePlan from "./CreatePlan";
-// import CreateCurrentDayPlan from "./CreateCurrentDayPlan";
+import ViewLoading from "./ViewLoading";
 
 const TrainingPlan:React.FC=()=>{
     const [yourPlan,setYourPlan]=useState<JSX.Element>(
@@ -27,22 +25,10 @@ const TrainingPlan:React.FC=()=>{
             <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
         </TouchableOpacity>
     </View>)
-    // const [namePlan,setNamePlan]=useState<string>()
+    const [viewLoading,setViewLoading]=useState<boolean>(false)
     const [isPlanSet,setIsPlanSet]=useState<boolean>(false)
-    // const [planConfigSection,setplanConfigSection]=useState<boolean>(false)
     const [isPopUpDeleteShowed,setIsPopUpDeleteShowed]=useState<boolean>(false)
     const [popUp,setPopUp]=useState<JSX.Element>()
-    // const [planCreateSection , setplanCreateSection ]= useState<boolean>(false)
-    // const [formElements,setFormElements]=useState<JSX.Element>(<></>)
-    // const [currentDayCreateSection,setCurrentDayCreateSection]= useState<boolean>(false)
-    // const [currentDay,setCurrentDay]=useState<string>('')
-    // const [planACurrent,setPlanACurrent]=useState<Array<Exercise>>()
-    // const [planBCurrent,setPlanBCurrent]=useState<Array<Exercise>>()
-    // const [planCCurrent,setPlanCCurrent]=useState<Array<Exercise>>()
-    // const [planDCurrent,setPlanDCurrent]=useState<Array<Exercise>>()
-    // const [planECurrent,setPlanECurrent]=useState<Array<Exercise>>()
-    // const [planFCurrent,setPlanFCurrent]=useState<Array<Exercise>>()
-    // const [planGCurrent,setPlanGCurrent]=useState<Array<Exercise>>()
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular,
@@ -62,6 +48,7 @@ const TrainingPlan:React.FC=()=>{
         loadAsyncResources();
       }, [fontsLoaded]);
     useEffect(()=>{
+      setViewLoading(true)
       getUserPlan()
     },[])
     useEffect(()=>{
@@ -95,6 +82,7 @@ const TrainingPlan:React.FC=()=>{
                   <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
               </TouchableOpacity>
           </View>)
+           
             
         } 
         else{
@@ -210,6 +198,7 @@ const TrainingPlan:React.FC=()=>{
                 await AsyncStorage.setItem('plan','completed')
                 setIsPlanSet(true)
                 
+                
             }
             
             
@@ -217,6 +206,7 @@ const TrainingPlan:React.FC=()=>{
             
         
         }
+        setViewLoading(false)
     }
     const deletePlan=async():Promise<void>=>{
       const id = await AsyncStorage.getItem('id')
@@ -242,80 +232,12 @@ const TrainingPlan:React.FC=()=>{
       
       
   }
-  //   const setDayAndName = async(name:string,days:string):Promise<void>=>{
-  //     const id = await AsyncStorage.getItem('id')
-  //     const response:string = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`,{
-  //       method:"POST",
-  //       headers:{
-  //           "content-type": "application/json"
-  //       },
-  //       body:JSON.stringify({
-  //           name:name,
-  //           days:days
-  //       })
-  //   }).then(res=>res.json()).catch(err=>err).then(res=>res.msg)
-  //   if(response === 'Created'){
-  //     setNamePlan(name)
-  //     setplanConfigSection(false)
-  //     setplanCreateSection (true)
-  //     getPlanInfo()
-  // } 
-  //   }
-  //   const getPlanInfo = async():Promise<void>=>{
-  //     const id = await AsyncStorage.getItem('id')
-  //     const response:number = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`).then(res=>res.json()).catch(err=>err).then(res=>res.count)
-      
-  //     const planDays:Array<string> = []
-  //     const planDaysAll:Array<string> = ['planA','planB','planC','planD','planE','planF','planG']
-  //     for(let i=0;i<response;i++){
-  //         planDays.push(planDaysAll[i])
-  //     }
-  //     setFormElements(()=>{
-          
-  //         return(
-  //             <View style={TrainingPlanStyles.formPlanCreate}>
-  //                 <Text style={{fontFamily:'Teko_700Bold',borderBottomColor:'grey',margin:0,fontSize:30,textAlign:'center',paddingBottom:10,width:'100%'}}>Plan creator</Text>
-  //                 <View style={{width:'100%',height:'80%',}}>
-  //                 <ScrollView style={{width:'100%',height:'100%'}}>
-  //                 {planDays.map((ele,index:number)=>{
-  //                   return(
-  //                     <View style={TrainingPlanStyles.formPlanCreateDiv} key={index}>
-  //                        <Text style={{fontFamily:'Teko_400Regular',fontSize:20,textAlign:'center',width:'100%'}} >{ele}: </Text>
-
-  //                        {/* <TextInput style={{width:'80%',textAlign:'center'}}  value={'Uncompleted'} editable={false} /> */}
-  //                        {/* <TouchableOpacity style={TrainingPlanStyles.setTrainingButton}  onPress={()=>{
-  //                         setCurrentDayCreateSection(true)
-  //                         setCurrentDay(ele)
-  //                        }}>
-  //                           <Text style={{fontFamily:'Teko_400Regular',textAlign:'center'}}>Set training: <Text>{ele}</Text></Text>
-
-  //                        </TouchableOpacity> */}
-
-  //                     </View>
-  //                   )
-  //                 })}
-  //                 </ScrollView>
-  //                 </View>
-                  
-  //                   <TouchableOpacity style={TrainingPlanStyles.buttonCreate} onPress={()=>{
-
-  //                   }}>
-  //                       <Text style={{fontFamily:'Teko_700Bold',fontSize:25}}>CREATE</Text>
-  //                   </TouchableOpacity>
-
-  //             </View>
-  //         )
-  //     }
-          
-  //     )
-
-  // }
 
     
 
 
     if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
+        return <ViewLoading/>
     }
     return(
       <ImageBackground style={TrainingPlanStyles.backgroundIMG} source={backgroundLogo}>
@@ -324,9 +246,7 @@ const TrainingPlan:React.FC=()=>{
                   {yourPlan}
                    </>}
                 {popUp}
-                {/* {planConfigSection?<CreateConfigPlan setDayAndName={setDayAndName} />:''}
-                {planCreateSection?<CreatePlan formElements ={formElements} />:''} */}
-                {/* {currentDayCreateSection?<CreateCurrentDayPlan setCurrentPlanDay ={setCurrentPlanDay} day={currentDay} planA={planACurrent || null} planB={planBCurrent || null} planC={planCCurrent || null} planD={planDCurrent || null} planE={planECurrent || null} planF={planFCurrent || null} planG={planGCurrent || null} setPlanA = {setPlanACurrent} setPlanB={setPlanBCurrent} setPlanC = {setPlanCCurrent} setPlanD = {setPlanDCurrent} setPlanE ={setPlanECurrent} setPlanF = {setPlanFCurrent} setPlanG = {setPlanGCurrent} />:''} */}
+          {viewLoading?<ViewLoading/>:''}
           </View>
         </ImageBackground>
     )

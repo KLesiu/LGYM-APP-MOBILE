@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import { RootStackParamList } from "./types/RootStackParamList";
+import MiniLoading from './MiniLoading';
 
 
 
@@ -43,10 +44,10 @@ const Login:React.FC=()=>{
     }
     const login=async():Promise<string | void>=>{
         
-        // setLoading(true)
+        setLoading(true)
         if(!username || !password){
             setErrors([])
-            // setTimeout(()=>setLoading(false),1000)
+            setLoading(false)
             setErrors([{msg:'All fields are required!'}])
             return
         }
@@ -62,9 +63,11 @@ const Login:React.FC=()=>{
                 })
             }).then(res=>res.json()).catch(()=>'Unauthorized').then(async(res)=>{
                 if(res === 'Unauthorized'){
+                    setLoading(false)
                     setErrors([{msg:'We havent heard about you yet!  Please register'},{
                         msg: "Maybe you typed wrong password! Please check it"
                     }])
+                    
                     return 'Unauthorized'
                 }else{
                     await AsyncStorage.setItem('token',res.token)
@@ -80,7 +83,7 @@ const Login:React.FC=()=>{
             
             if(response==`${process.env.REACT_APP_MSG_LOGIN_AUTH}`){
                 setErrors([])
-                // setTimeout(()=>setLoading(false),1000)
+                setLoading(false)
                 navigation.navigate('Home')
             }
 
@@ -99,6 +102,7 @@ const Login:React.FC=()=>{
             <TouchableOpacity onPress={login} style={LoginStyles.buttonLogin}>
                 <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.buttonLoginText}}>LOGIN</Text>
             </TouchableOpacity>
+            {loading?<MiniLoading />:''}
             <View style={LoginStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={LoginStyles.errorText} key={index}>{ele.msg}</Text>):''}</View>
        </View>
     )

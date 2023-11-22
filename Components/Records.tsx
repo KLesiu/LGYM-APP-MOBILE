@@ -10,12 +10,14 @@ import benchPressIcon from './img/benchpressIcon.png'
 import squatIcon from './img/squatIcon.png'
 import RecordsPopUp from "./RecordsPopUp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ViewLoading from "./ViewLoading";
 const Records:React.FC=()=>{
     const [deadLift,setDeadLift]=useState<number>()
     const [squat,setSquat]=useState<number>()
     const [benchPress,setBenchPress]=useState<number>()
     const [total,setTotal]=useState<number>()
     const [popUp,setPopUp]=useState<boolean>(false)
+    const [viewLoading,setViewLoading]=useState<boolean>(true)
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular
@@ -50,9 +52,10 @@ const Records:React.FC=()=>{
         setBenchPress(bp?parseFloat(bp!):0)
         setSquat(sq?parseFloat(sq!):0)
         setTotal(parseFloat(dl!)+parseFloat(sq!)+parseFloat(bp!))
+        setViewLoading(false)
       }
       if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
+        return <ViewLoading/>
     }
     return(
         <ImageBackground source={backgroundLogo} style={RecordsStyles.background}>
@@ -76,6 +79,7 @@ const Records:React.FC=()=>{
                 <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.total}}>Your total is: {total || 0} kg</Text>
                 <TouchableOpacity onPress={()=>setPopUp(true)} style={RecordsStyles.buttonUpdateRecords}><Text  style={{fontFamily:'Teko_700Bold',...RecordsStyles.buttonText}}>Update Records</Text></TouchableOpacity>
                 {popUp?<RecordsPopUp offPopUp={chagePopUpValue}/>:''}
+                {viewLoading?<ViewLoading />:''}
             </View>
         </ImageBackground>
     )

@@ -12,6 +12,7 @@ import SuccessMsg from './types/SuccessMsg';
 import { useNavigation } from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import { RootStackParamList } from "./types/RootStackParamList";
+import MiniLoading from './MiniLoading';
 
 const Register:React.FC=()=>{
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -19,6 +20,7 @@ const Register:React.FC=()=>{
   const [password,setPassword]=useState<string>()
   const [rpassword,setRPassword]=useState<string>()
   const [email,setEmail]=useState<string>()
+  const [loading,setLoading]=useState<boolean>(false)
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const apiURL =`${process.env.REACT_APP_BACKEND}/api/register`
   const [fontsLoaded]=useFonts({
@@ -44,6 +46,7 @@ const Register:React.FC=()=>{
   const register = async():Promise<void>=>{
     if(password !== rpassword ) return setErrors([{msg:'Both passwords need to be same'}])
     if(!username || !email || !password || !rpassword) return setErrors([{msg:'All fields are required'}])
+    setLoading(true)
     const response:ErrorRegister|SuccessMsg= await fetch(apiURL,{
       method:'POST',
       headers:{
@@ -62,9 +65,11 @@ const Register:React.FC=()=>{
       }else return res
     })
     if(typeof response === 'object' && 'errors' in response){
+      setLoading(false)
       return setErrors(response.errors)
     }
     else{
+      setLoading(false)
       return navigation.navigate('Login')
     }
   }
@@ -83,6 +88,7 @@ const Register:React.FC=()=>{
             <TouchableOpacity onPress={register} style={RegisterStyles.buttonRegister}>
                 <Text style={{fontFamily:'Teko_700Bold',...RegisterStyles.buttonRegisterText}}>REGISTER</Text>
             </TouchableOpacity>
+            {loading?<MiniLoading />:""}
             <View style={RegisterStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={RegisterStyles.errorText}  key={index}>{ele.msg}</Text>):''}</View>
         </View>
     )
