@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "./types/RootStackParamList";
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import Loading from "./Loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Preload:React.FC=()=>{
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -32,6 +33,7 @@ const Preload:React.FC=()=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
+
     const handleLoginPress:VoidFunction=():void=>{
         navigation.navigate('Login')
     }
@@ -42,8 +44,9 @@ const Preload:React.FC=()=>{
         setIsLoading(false)
     }
 
+
     if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
+        return <View><Text>Loading fonts...</Text></View>
     }
     return(
         <View style={{backgroundColor:'black'}}>
