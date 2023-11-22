@@ -9,6 +9,9 @@ import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
 import UserInfo from "./types/UserInfo";
 import ProfileRank from "./ProfileRank";
+import { useNavigation } from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import { RootStackParamList } from "./types/RootStackParamList";
 
 const Profile:React.FC=()=>{
     const [yourProfile,setYourProfile]=useState<UserProfile>()
@@ -16,6 +19,8 @@ const Profile:React.FC=()=>{
     const [memberSince,setMemberSince]=useState<string>('')
     const [rankComponent,setRankComponent]=useState<JSX.Element>()
     const [id,setId]=useState<string>()
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular
@@ -57,6 +62,14 @@ const Profile:React.FC=()=>{
              
              
      }
+    const logout = async():Promise<void>=>{
+        const keys = await AsyncStorage.getAllKeys()
+        keys.forEach(ele=>deleteFromStorage(ele))
+        navigation.navigate('Preload')
+    }
+    const deleteFromStorage=async(key:string):Promise<void>=>{
+        await AsyncStorage.removeItem(key)
+    }
     if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
     }
@@ -77,7 +90,7 @@ const Profile:React.FC=()=>{
                         
                     </View>
                 </View>
-                <TouchableOpacity style={ProfileStyles.logoutButton}>
+                <TouchableOpacity onPress={logout} style={ProfileStyles.logoutButton}>
                     <Text style={{fontFamily:'Teko_700Bold',color:'white',fontSize:30}}>LOGOUT</Text>
                 </TouchableOpacity>
             </View>
