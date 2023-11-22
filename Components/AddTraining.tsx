@@ -52,7 +52,7 @@ const AddTraining:React.FC=()=>{
     const [inputWeightValues,dispatchWeight]=useReducer(inputReducer,{})
     const [lastTrainingSection,setLastTrainingSection]=useState<JSX.Element>()
     const [viewLoading,setViewLoading]=useState<boolean>(false)
-    const [loading,setLoading]=useState<boolean>(true)
+    const [loading,setLoading]=useState<boolean>(false)
 
 
     // Second

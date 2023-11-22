@@ -7,9 +7,11 @@ import CurrentTrainingHistorySessionProps from "./props/CurrentTrainingHistorySe
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
+import ViewLoading from "./ViewLoading";
 const CurrentTrainingHistorySession:React.FC<CurrentTrainingHistorySessionProps>=(props)=>{
     const [infoAboutSession,setInfoAboutSession]=useState<JSX.Element>()
     const [exercises,setExercises]=useState<ExerciseTraining[]>()
+    const [viewLoading,setViewLoading]=useState<boolean>(false)
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular
@@ -28,6 +30,7 @@ const CurrentTrainingHistorySession:React.FC<CurrentTrainingHistorySessionProps>
         loadAsyncResources();
       }, [fontsLoaded]);
     useEffect(()=>{
+        setViewLoading(true)
         getInformationAboutSession()
     },[])
     const getInformationAboutSession=async():Promise<void>=>{
@@ -42,6 +45,7 @@ const CurrentTrainingHistorySession:React.FC<CurrentTrainingHistorySessionProps>
             )
             
         }
+        setViewLoading(false)
     }
     if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
@@ -70,6 +74,7 @@ const CurrentTrainingHistorySession:React.FC<CurrentTrainingHistorySessionProps>
             )}
                 </View>
             </ScrollView>
+            {viewLoading?<ViewLoading/>:''}
         </View>
     )
 }
