@@ -788,7 +788,7 @@ const AddTraining:React.FC=()=>{
                       if(index !== 0 && index%2 !== 0) return
                       return(
                           <View style={AddTrainingStyles.lastSessionField} key={index}>
-                              {index===0||index%2==0?<Text style={{fontFamily:'Teko_400Regular',fontSize:20,marginTop:20,marginLeft:10}}>{ele.field.slice(0,ele.field.length-4)}</Text>:''}
+                              {index===0||index%2==0?<Text style={{fontFamily:'Teko_400Regular',fontSize:20,marginTop:20,marginLeft:10,color:'white'}}>{ele.field.slice(0,ele.field.length-4)}</Text>:''}
                               
                           </View>
                           
