@@ -137,10 +137,12 @@ export const AddTrainingStyles=StyleSheet.create({
         borderBottomColor:'grey',
         borderBottomWidth:1,
         height:80,
+        color:'white'
     },
     lastSessionDate:{
         fontSize:30,
-        textAlign:'center'
+        textAlign:'center',
+        color:'white'
     },
     scrollViewLastSession:{
         width:'80%',
@@ -155,7 +157,8 @@ export const AddTrainingStyles=StyleSheet.create({
         height:80,
         paddingLeft:'10%',
         backgroundColor:"rgba(20,20,20,0.7)",
-        paddingTop:20
+        paddingTop:20,
+        color:'white'
     },
     ViewLastSessionInsideScroll:{
         width:'100%',
