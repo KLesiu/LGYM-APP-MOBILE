@@ -1,8 +1,8 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
+import { Text,View} from "react-native";
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 import { ViewLoadingStyles } from "./styles/ViewLoadingStyles";
 const ViewLoading:React.FC = ()=>{
     const [fontsLoaded]=useFonts({
@@ -22,7 +22,7 @@ const ViewLoading:React.FC = ()=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
-      if(!fontsLoaded){
+    if(!fontsLoaded){
         return <View style={ViewLoadingStyles.viewLoadingDiv}>
             <Text style={{fontSize:20,color:'white'}}>Loading fonts...</Text>
         </View>

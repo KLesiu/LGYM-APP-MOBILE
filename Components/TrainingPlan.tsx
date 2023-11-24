@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity, ScrollView,Alert, TextInput,Linking } from "react-native";
+import { Text,View,ImageBackground,TouchableOpacity, ScrollView,Linking } from "react-native";
 import { TrainingPlanStyles } from "./styles/TrainingPlanStyles";
 import backgroundLogo from './img/backgroundLGYMApp500.png'
 import {useState,useEffect} from 'react'
@@ -231,11 +231,7 @@ const TrainingPlan:React.FC=()=>{
       }
       
       
-  }
-
-    
-
-
+    }
     if(!fontsLoaded){
         return <ViewLoading/>
     }

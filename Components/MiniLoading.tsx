@@ -1,9 +1,9 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
+import { Text,View} from "react-native";
 import { MiniLoadingStyles } from "./styles/MiniLoadingStyles";
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 
 const MiniLoading:React.FC=()=>{
     const [fontsLoaded]=useFonts({
@@ -23,7 +23,7 @@ const MiniLoading:React.FC=()=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
-      if(!fontsLoaded){
+    if(!fontsLoaded){
         return <View></View>
     }
     return(

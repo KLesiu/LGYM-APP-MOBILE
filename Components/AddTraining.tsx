@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity, TextInput, ScrollView,KeyboardAvoidingView,Button } from "react-native";
+import { Text,View,ImageBackground,TouchableOpacity, TextInput, ScrollView} from "react-native";
 import backgroundLogo from './img/backgroundLGYMApp500.png'
 import { AddTrainingStyles } from "./styles/AddTrainingStyles";
 import { useState,useEffect,useReducer } from "react";
@@ -11,7 +11,6 @@ import Exercise from "./types/Exercise";
 import Data from "./types/DataPlansArrays";
 import LastTrainingSession from "./types/LastTrainingSession";
 import ExerciseTraining from "./types/ExerciseTraining";
-import KeyboardAwareScrollView from 'react-native-keyboard-aware-scroll-view';
 import addTrainingFetchType from "./types/AddTrainingFetchAnsw";
 import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
@@ -826,7 +825,7 @@ const AddTraining:React.FC=()=>{
 }
 
     
-      if(!fontsLoaded){
+    if(!fontsLoaded){
         return <ViewLoading/>
     }
     return(
@@ -857,8 +856,6 @@ const AddTraining:React.FC=()=>{
                             
                     </View>
                         :''}
-
-            
                 </View>
                 :
                 <View style={AddTrainingStyles.withoutTraining}>

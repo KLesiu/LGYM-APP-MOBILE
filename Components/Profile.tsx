@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
+import { Text,View,ImageBackground,TouchableOpacity } from "react-native";
 import backgroundLogo from './img/backgroundLGYMApp500.png'
 import { ProfileStyles } from "./styles/ProfileStyles";
 import {useState,useEffect} from 'react'

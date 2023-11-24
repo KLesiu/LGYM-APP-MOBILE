@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import uniqd from 'uniqid'
+import { View, Text, TextInput,Image, TouchableOpacity } from 'react-native';
 import logoLGYM from './img/logoLGYM.png'
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
@@ -40,9 +39,6 @@ const Register:React.FC=()=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
-      if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
-    }
   const register = async():Promise<void>=>{
     if(password !== rpassword ) return setErrors([{msg:'Both passwords need to be same'}])
     if(!username || !email || !password || !rpassword) return setErrors([{msg:'All fields are required'}])
@@ -73,6 +69,9 @@ const Register:React.FC=()=>{
       return navigation.navigate('Login')
     }
   }
+  if(!fontsLoaded){
+    return <View><Text>Loading...</Text></View>
+}
     
     return (
         <View style={RegisterStyles.container}>

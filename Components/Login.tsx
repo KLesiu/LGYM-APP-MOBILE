@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Image, TouchableOpacity} from 'react-native';
 import { LoginStyles } from './styles/LoginStyles';
 import logoLGYM from './img/logoLGYM.png'
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
@@ -11,8 +11,6 @@ import { useNavigation } from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import { RootStackParamList } from "./types/RootStackParamList";
 import MiniLoading from './MiniLoading';
-
-
 
 const Login:React.FC=()=>{
     const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -39,11 +37,10 @@ const Login:React.FC=()=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
-      if(!fontsLoaded){
+    if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
     }
     const login=async():Promise<string | void>=>{
-        
         setLoading(true)
         if(!username || !password){
             setErrors([])

@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity,ScrollView } from "react-native";
+import { Text,View,ScrollView } from "react-native";
 import Training from "./types/Training";
 import ExerciseTraining from "./types/ExerciseTraining";
 import {useState,useEffect} from 'react'
@@ -50,32 +50,32 @@ const CurrentTrainingHistorySession:React.FC<CurrentTrainingHistorySessionProps>
     if(!fontsLoaded){
         return <View><Text>Loading...</Text></View>
     }
-    return(
-        <View style={CurrentTrainingHistorySessionStyles.currentTrainingHistorySession} >
-            <Text style={{fontFamily:'Teko_700Bold',...CurrentTrainingHistorySessionStyles.date}}>Date: {props.date.slice(0,25)}</Text>
-            {infoAboutSession}
-            <ScrollView style={{height:10000}}>
-                <View style={CurrentTrainingHistorySessionStyles.container}>
-            {exercises?.map((ele,index:number)=>
-                <View key={index} style={CurrentTrainingHistorySessionStyles.exerciseDiv}>
-                    <View style={CurrentTrainingHistorySessionStyles.exerciseDivSpan}>
-                        {index%2?
-                        <Text style={{fontSize:0,width:0}}> {ele.field}</Text>
-                        :
-                        <Text style={{fontFamily:'Teko_400Regular',...CurrentTrainingHistorySessionStyles.exerciseDivSpanP}}>{ele.field.slice(0,ele.field.length-3)}</Text>
-                        }
-                        {index%2?
-                        <Text style={{fontFamily:'Teko_400Regular',...CurrentTrainingHistorySessionStyles.exerciseDivSpanSpanWeight}}>x {ele.score}kg</Text>
-                        :
-                        <Text style={{fontFamily:'Teko_400Regular',...CurrentTrainingHistorySessionStyles.exerciseDivSpanSpan}}>{ele.score}</Text>}
+    return  ( 
+            <View style={CurrentTrainingHistorySessionStyles.currentTrainingHistorySession} >
+                <Text style={{fontFamily:'Teko_700Bold',...CurrentTrainingHistorySessionStyles.date}}>Date: {props.date.slice(0,25)}</Text>
+                {infoAboutSession}
+                <ScrollView style={{height:10000}}>
+                    <View style={CurrentTrainingHistorySessionStyles.container}>
+                {exercises?.map((ele,index:number)=>
+                    <View key={index} style={CurrentTrainingHistorySessionStyles.exerciseDiv}>
+                        <View style={CurrentTrainingHistorySessionStyles.exerciseDivSpan}>
+                            {index%2?
+                            <Text style={{fontSize:0,width:0}}> {ele.field}</Text>
+                            :
+                            <Text style={{fontFamily:'Teko_400Regular',...CurrentTrainingHistorySessionStyles.exerciseDivSpanP}}>{ele.field.slice(0,ele.field.length-3)}</Text>
+                            }
+                            {index%2?
+                            <Text style={{fontFamily:'Teko_400Regular',...CurrentTrainingHistorySessionStyles.exerciseDivSpanSpanWeight}}>x {ele.score}kg</Text>
+                            :
+                            <Text style={{fontFamily:'Teko_400Regular',...CurrentTrainingHistorySessionStyles.exerciseDivSpanSpan}}>{ele.score}</Text>}
+                        </View>
                     </View>
-                </View>
 
-            )}
-                </View>
-            </ScrollView>
-            {viewLoading?<ViewLoading/>:''}
-        </View>
-    )
+                )}
+                    </View>
+                </ScrollView>
+                {viewLoading?<ViewLoading/>:''}
+            </View>
+            )
 }
 export default CurrentTrainingHistorySession

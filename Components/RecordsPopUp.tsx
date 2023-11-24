@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity,TextInput } from "react-native";
+import { Text,View,TouchableOpacity,TextInput } from "react-native";
 import RecordsPopUpProps from "./props/RecordsPopUpProps";
 import ErrorMsg from "./types/ErrorMsg";
 import {useState,useEffect} from 'react';
@@ -29,9 +29,6 @@ const RecordsPopUp:React.FC<RecordsPopUpProps>=(props)=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
-    if(!fontsLoaded){
-        return <View><Text>Loading...</Text></View>
-    }
     const setRecords = async():Promise<void>=>{
         const dlValue = parseFloat(deadLiftValue!)
         const sqValue = parseFloat(squatValue!)
@@ -59,7 +56,9 @@ const RecordsPopUp:React.FC<RecordsPopUpProps>=(props)=>{
         } 
     
     }
-
+    if(!fontsLoaded){
+        return <View><Text>Loading...</Text></View>
+    }
     return(
         <View style={RecordsPopUpStyles.recordsPopUpContainer}>
             <Text style={{fontFamily:'Teko_700Bold',...RecordsPopUpStyles.h2}}>Set Your Records!</Text>

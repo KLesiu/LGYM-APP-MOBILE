@@ -54,7 +54,7 @@ const Records:React.FC=()=>{
         setTotal(parseFloat(dl!)+parseFloat(sq!)+parseFloat(bp!))
         setViewLoading(false)
       }
-      if(!fontsLoaded){
+    if(!fontsLoaded){
         return <ViewLoading/>
     }
     return(
@@ -65,7 +65,7 @@ const Records:React.FC=()=>{
                     <Image style={RecordsStyles.icon} source={deadLiftIcon}/>
                     <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.lift}}>Dead Lift:</Text>
                 </View>
-                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>{benchPress || 0} kg</Text>
+                <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.span}}>{deadLift || 0} kg</Text>
                 <View style={RecordsStyles.titleOfLift}>
                     <Image style={RecordsStyles.icon} source={squatIcon} />
                     <Text style={{fontFamily:'Teko_700Bold',...RecordsStyles.lift}}>Squat:</Text>

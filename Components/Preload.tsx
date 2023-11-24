@@ -2,7 +2,6 @@ import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
 import logoLGYM from './img/logoLGYM.png'
 import backgroundLGYM from './img/backgroundLGYMApp500.png'
 import { PreloadStyles } from "./styles/PreloadStyles";
-import Login from "./Login";
 import {useState,useEffect} from 'react'
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
@@ -11,7 +10,6 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "./types/RootStackParamList";
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import Loading from "./Loading";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Preload:React.FC=()=>{
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -43,8 +41,6 @@ const Preload:React.FC=()=>{
     const offLoading=()=>{
         setIsLoading(false)
     }
-
-
     if(!fontsLoaded){
         return <View><Text>Loading fonts...</Text></View>
     }

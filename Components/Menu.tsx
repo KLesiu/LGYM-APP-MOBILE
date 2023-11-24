@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
+import {View,TouchableOpacity } from "react-native";
 import { MenuStyles } from "./styles/MenuStyles";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MenuProps from "./props/MenuProps";

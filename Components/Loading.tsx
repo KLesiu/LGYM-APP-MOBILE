@@ -1,5 +1,5 @@
 import logoLGYM from './img/logoLGYM.png'
-import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
+import { Text,Image,View} from "react-native";
 import { LoadingStyles } from './styles/LoadingStyles';
 import { useState,useEffect } from 'react';
 import { useFonts,Teko_700Bold,Teko_400Regular } from "@expo-google-fonts/teko";

@@ -1,6 +1,6 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useEffect,useState} from 'react'
+import {Image,View } from "react-native";
+
+import {useState} from 'react'
 import TrainingPlan from "./TrainingPlan";
 import { HomeStyles } from "./styles/HomeStyles";
 import logo300 from './img/logo300.png'

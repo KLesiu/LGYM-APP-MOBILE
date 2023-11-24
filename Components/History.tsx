@@ -1,4 +1,4 @@
-import { Text,Image,View,ImageBackground,TouchableOpacity,ScrollView } from "react-native";
+import { Text,View,ImageBackground,TouchableOpacity,ScrollView } from "react-native";
 import backgroundLogo from './img/backgroundLGYMApp500.png'
 import { HistoryStyles } from "./styles/HistoryStyles";
 import {useState,useEffect} from 'react'
@@ -64,21 +64,18 @@ const History:React.FC=()=>{
         else setViewLoading(false)
         
     }
-    const showCurrentTrainingHistorySession=(id:string,date:string):void=>{
-        setCurrentHistoryTrainingSession(<CurrentTrainingHistorySession getInformationAboutHistorySession={getInformationAboutHistorySession} offCurrentTrainingHistorySession={offCurrentTrainingHistorySession}  id={id} date={date}/>)
-
-        
-     }
-     const offCurrentTrainingHistorySession:VoidFunction=():void=>{
+    const showCurrentTrainingHistorySession=(id:string,date:string):void=>
+        setCurrentHistoryTrainingSession(<CurrentTrainingHistorySession getInformationAboutHistorySession={getInformationAboutHistorySession} offCurrentTrainingHistorySession={offCurrentTrainingHistorySession}  id={id} date={date}/>) 
+     
+    const offCurrentTrainingHistorySession:VoidFunction=():void=>
         setCurrentHistoryTrainingSession(<View></View>)
-    }
+    
     const getInformationAboutHistorySession=async(id:string):Promise<Training|string>=>{
-        
         const response:ErrorMsg|{training:Training}= await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getTrainingSession`).then(res=>res.json()).catch(err=>err).then(res=>res)
         if('msg' in response) return response.msg
         else return response.training
     }
-      if(!fontsLoaded){
+    if(!fontsLoaded){
         return <ViewLoading/>
     }
 
