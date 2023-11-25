@@ -54,7 +54,7 @@ const TrainingPlan:React.FC=()=>{
     useEffect(()=>{
       if(isPopUpDeleteShowed){
         setPopUp(<View style={TrainingPlanStyles.popUpDelete}>
-          <Text style={{fontFamily:'Teko_400Regular',fontSize:50}}>Are you sure?</Text>
+          <Text style={{fontFamily:'Teko_400Regular',fontSize:50,color:'grey'}}>Are you sure?</Text>
           <TouchableOpacity onPress={deletePlan} style={TrainingPlanStyles.buttonYes}>
             <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>YES</Text>
             </TouchableOpacity>

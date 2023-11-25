@@ -13,11 +13,13 @@ export const RecordsPopUpStyles = StyleSheet.create({
         backgroundColor:'rgba(0, 0, 0, 0.956)'
     },
     h2:{
-        fontSize:30
+        fontSize:30,
+        color:'white'
     },
     label:{
         fontSize:20,
-        marginTop:15
+        marginTop:15,
+        color:'white'
     },
     input:{
         borderRadius:10,
@@ -28,7 +30,7 @@ export const RecordsPopUpStyles = StyleSheet.create({
         borderWidth:2,
         marginTop:5,
         paddingLeft:15,
-        color:'black'
+        color:'white'
     },
     buttonUpdateRecordsPopUp:{
         width:'50%',

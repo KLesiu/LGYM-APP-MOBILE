@@ -98,7 +98,7 @@ export const TrainingPlanStyles = StyleSheet.create({
         position:'absolute',
         height:'100%',
         width:'100%',
-        backgroundColor:'rgba(0,0,0,0.7)',
+        backgroundColor:'rgba(0,0,0,0.95)',
         zIndex:3,
         display:'flex',
         paddingTop:'30%',
