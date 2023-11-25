@@ -778,7 +778,7 @@ const AddTraining:React.FC=()=>{
           return(
               <View style={AddTrainingStyles.lastSessionTrainingSection} >
                   <TouchableOpacity onPress={hideLastTrainingSection}>
-                      <Icon style={{fontSize:40}} name="close" />
+                      <Icon style={{fontSize:40,color:'white'}} name="close" />
                   </TouchableOpacity>
                   <Text style={{fontFamily:'Teko_400Regular',...AddTrainingStyles.lastSessionDate}}>Date: {lastTrainingSessionDate}</Text>
                   <ScrollView style={AddTrainingStyles.scrollViewLastSession}>
