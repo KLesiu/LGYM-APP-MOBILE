@@ -773,7 +773,7 @@ const AddTraining:React.FC=()=>{
       })
       
       let scoreAndFieldsCount = count*2
-      if(lastTrainingSessionExercises.length !== scoreAndFieldsCount) return console.log('You dont have training sessions!')
+      if(lastTrainingSessionExercises.length !== scoreAndFieldsCount) return setViewLoading(false)
       setLastTrainingSection(()=>{
           return(
               <View style={AddTrainingStyles.lastSessionTrainingSection} >
