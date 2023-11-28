@@ -90,7 +90,7 @@ const History:React.FC=()=>{
                         <View style={HistoryStyles.session} key={index}>
                         <Text style={{fontFamily:'Teko_700Bold',borderWidth:1,borderBottomColor:'white',marginBottom:10,paddingLeft:5,borderLeftColor:'white',borderBottomLeftRadius:3}}>Training symbol {ele.symbol}</Text>
                         <Text style={{fontFamily:'Teko_700Bold'}}>Date: <Text style={{fontFamily:'Teko_400Regular'}}>{ele.date.slice(0,25)}</Text></Text>
-                        <Text style={{fontFamily:'Teko_700Bold'}}>Series: <Text style={{fontFamily:'Teko_400Regular'}}> {ele.exercises.length}</Text></Text>
+                        <Text style={{fontFamily:'Teko_700Bold'}}>Series: <Text style={{fontFamily:'Teko_400Regular'}}> {ele.exercises.length/2}</Text></Text>
                         <Text style={{fontFamily:'Teko_700Bold'}}>Id: <Text style={{fontFamily:'Teko_400Regular'}}>{ele.id}</Text></Text>
                         <TouchableOpacity onPress={()=>showCurrentTrainingHistorySession(ele.id!,ele.date!)} style={HistoryStyles.buttonRead}>
                             <Icon style={{fontSize:40}}  name="book-outline"/>

@@ -763,9 +763,8 @@ const AddTraining:React.FC=()=>{
 
     }
     const showLastTrainingSection:VoidFunction=async():Promise<void>=>{
-      if(!lastTrainingSessionDate || lastTrainingSessionExercises?.length!<1 || !lastTrainingSessionExercises) return console.log('You dont have training sessions!')
-      if(! await checkLastTrainingSession(dayToCheck!)) return console.log('You dont have training sessions!')
-      setViewLoading(true)
+      if(!lastTrainingSessionDate || lastTrainingSessionExercises?.length!<1 || !lastTrainingSessionExercises) return setViewLoading(false)
+      if(! await checkLastTrainingSession(dayToCheck!)) return setViewLoading(false)
       let count:number=0
       pickedDay?.map(ele=>{
           count+=ele.series
