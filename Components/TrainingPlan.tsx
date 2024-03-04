@@ -14,21 +14,27 @@ import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 
 const TrainingPlan:React.FC=()=>{
+  const withoutPlan = ()=>{
+    return(
+      <View style={TrainingPlanStyles.withoutPlanContainer}>
+      <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>Training Plan</Text>
+      <Text style={{fontFamily:'Teko_700Bold',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
+      <TouchableOpacity onPress={()=>{
+        const url = "https://lgym-app.vercel.app"
+        Linking.openURL(url)
+      }}  style={TrainingPlanStyles.withoutPlanButton}>
+          <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
+      </TouchableOpacity>
+  </View>
+    )
+  }
     const [yourPlan,setYourPlan]=useState<JSX.Element>(
-    <View style={TrainingPlanStyles.withoutPlanContainer}>
-        <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>Training Plan</Text>
-        <Text style={{fontFamily:'Teko_700Bold',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
-        <TouchableOpacity onPress={()=>{
-          const url = "https://lgym-app.vercel.app"
-          Linking.openURL(url)
-        }}  style={TrainingPlanStyles.withoutPlanButton}>
-            <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
-        </TouchableOpacity>
-    </View>)
+    withoutPlan)
     const [viewLoading,setViewLoading]=useState<boolean>(false)
     const [isPlanSet,setIsPlanSet]=useState<boolean>(false)
     const [isPopUpDeleteShowed,setIsPopUpDeleteShowed]=useState<boolean>(false)
     const [popUp,setPopUp]=useState<JSX.Element>()
+    
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
         Caveat_400Regular,
@@ -72,18 +78,7 @@ const TrainingPlan:React.FC=()=>{
         const response:{data:Data|string}  = await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getPlan`).then(res=>res.json()).catch(err=>err).then(res=>res)
         if(response.data === 'Didnt find'){
             setIsPlanSet(false)
-            setYourPlan(<View style={TrainingPlanStyles.withoutPlanContainer}>
-              <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>Training Plan</Text>
-              <Text style={{fontFamily:'Teko_700Bold',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
-              <TouchableOpacity onPress={()=>{
-          const url = "https://lgym-app.vercel.app"
-          Linking.openURL(url)
-        }}  style={TrainingPlanStyles.withoutPlanButton}>
-                  <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
-              </TouchableOpacity>
-          </View>)
-           
-            
+            setYourPlan(withoutPlan)       
         } 
         else{
             
@@ -200,11 +195,6 @@ const TrainingPlan:React.FC=()=>{
                 
                 
             }
-            
-            
-
-            
-        
         }
         setViewLoading(false)
     }

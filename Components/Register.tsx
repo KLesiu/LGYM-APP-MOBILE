@@ -88,7 +88,7 @@ const Register:React.FC=()=>{
                 <Text style={{fontFamily:'Teko_700Bold',...RegisterStyles.buttonRegisterText}}>REGISTER</Text>
             </TouchableOpacity>
             {loading?<MiniLoading />:""}
-            <View style={RegisterStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={RegisterStyles.errorText}  key={index}>{ele.msg}</Text>):''}</View>
+            <View style={RegisterStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={{fontFamily:'Caveat_400Regular',...RegisterStyles.errorText}}  key={index}>{ele.msg}</Text>):''}</View>
         </View>
     )
 }

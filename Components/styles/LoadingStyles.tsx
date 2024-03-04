@@ -28,7 +28,7 @@ export const LoadingStyles = StyleSheet.create({
         borderColor:'grey',
         width:'100%',
         borderRadius:10,
-        height:'10%'
+        height:20,
     },
     loadingDivP:{
         fontSize:40,

@@ -22,10 +22,11 @@ export const RegisterStyles=StyleSheet.create({
     },
     input:{
         borderRadius:10,
-        height:'6%',
-        fontSize:15,
+        height:50,
+        fontSize:17,
         width:'80%',
         backgroundColor:'rgb(60,60,60)',
+        color: 'white',
         marginTop:5,
         paddingLeft:15
 
@@ -55,6 +56,7 @@ export const RegisterStyles=StyleSheet.create({
         color:'red',
         width:'100%',
         textAlign:'center',
-        marginTop:'2%'
+        marginTop:'2%',
+        fontSize:25
     }
 })
