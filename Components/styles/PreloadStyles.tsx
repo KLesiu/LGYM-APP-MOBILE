@@ -24,6 +24,7 @@ export const PreloadStyles = StyleSheet.create({
         alignItems:'center',
         backgroundColor: 'rgba(0, 0, 0, 0.897)',
         justifyContent: 'center',
+        height:'100%',
         gap:20
     },
     login:{

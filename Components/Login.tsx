@@ -78,7 +78,7 @@ const Login:React.FC=()=>{
                 }  
             })
             
-            if(response==`${process.env.REACT_APP_MSG_LOGIN_AUTH}`){
+            if(response===`${process.env.REACT_APP_MSG_LOGIN_AUTH}`){
                 setErrors([])
                 setLoading(false)
                 navigation.navigate('Home')
@@ -93,14 +93,14 @@ const Login:React.FC=()=>{
        <View style={LoginStyles.container}>
             <Image style={LoginStyles.logo} source={logoLGYM}/>
             <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.label}}>Username</Text>
-            <TextInput onChangeText={(text:string|'')=>setUsername(text)} style={LoginStyles.input} autoComplete="given-name" />
+            <TextInput onChangeText={(text:string)=>setUsername(text)} style={LoginStyles.input} autoComplete="given-name" />
             <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.label}}>Password</Text>
-            <TextInput onChangeText={(text:string|'')=>setPassword(text)} style={LoginStyles.input} secureTextEntry={true}></TextInput>
+            <TextInput onChangeText={(text:string)=>setPassword(text)} style={LoginStyles.input} secureTextEntry={true}></TextInput>
             <TouchableOpacity onPress={login} style={LoginStyles.buttonLogin}>
                 <Text style={{fontFamily:'Teko_700Bold',...LoginStyles.buttonLoginText}}>LOGIN</Text>
             </TouchableOpacity>
             {loading?<MiniLoading />:''}
-            <View style={LoginStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={LoginStyles.errorText} key={index}>{ele.msg}</Text>):''}</View>
+            <View style={LoginStyles.errorContainer}>{errors?errors.map((ele,index:number)=><Text style={{fontFamily:'Caveat_400Regular',...LoginStyles.errorText}} key={index}>{ele.msg}</Text>):''}</View>
        </View>
     )
 }

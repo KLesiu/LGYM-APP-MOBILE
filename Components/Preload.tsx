@@ -38,15 +38,15 @@ const Preload:React.FC=()=>{
     const handleRegisterPress:VoidFunction=():void=>{
         navigation.navigate('Register')
     }
-    const offLoading=()=>{
+    const offLoading:VoidFunction=():void=>{
         setIsLoading(false)
     }
     if(!fontsLoaded){
         return <View><Text>Loading fonts...</Text></View>
     }
     return(
-        <View style={{backgroundColor:'black'}}>
-            <ImageBackground source={backgroundLGYM}>
+        <View style={{backgroundColor:'black',height:'100%'}}>
+            <ImageBackground style={{height:'100%'}} source={backgroundLGYM}>
                         <View style={PreloadStyles.preLoadDiv}>
                             <View style={PreloadStyles.preLoadContainer}>
                                 <Image source={logoLGYM} style={PreloadStyles.logoLGYMAPP}/>
