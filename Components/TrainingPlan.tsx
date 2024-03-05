@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ErrorMsg from "./types/ErrorMsg";
 import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
+import ImportPlanPopUp from "./ImportPlanPopUp";
 
 const TrainingPlan:React.FC=()=>{
   const withoutPlan = ()=>{
@@ -25,6 +26,8 @@ const TrainingPlan:React.FC=()=>{
       }}  style={TrainingPlanStyles.withoutPlanButton}>
           <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={TrainingPlanStyles.withoutPlanButton} onPress={()=>showImportPlanPopUpFn()} ><Text  style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Import plan!</Text></TouchableOpacity>
+      
   </View>
     )
   }
@@ -34,6 +37,7 @@ const TrainingPlan:React.FC=()=>{
     const [isPlanSet,setIsPlanSet]=useState<boolean>(false)
     const [isPopUpDeleteShowed,setIsPopUpDeleteShowed]=useState<boolean>(false)
     const [popUp,setPopUp]=useState<JSX.Element>()
+    const [showImportPlanPopUp,setShowImportPlanPopUp]=useState<boolean>(false)
     
     const [fontsLoaded]=useFonts({
         Teko_700Bold,
@@ -56,7 +60,7 @@ const TrainingPlan:React.FC=()=>{
     useEffect(()=>{
       setViewLoading(true)
       getUserPlan()
-    },[])
+    },[isPlanSet])
     useEffect(()=>{
       if(isPopUpDeleteShowed){
         setPopUp(<View style={TrainingPlanStyles.popUpDelete}>
@@ -204,16 +208,7 @@ const TrainingPlan:React.FC=()=>{
           method:'DELETE'
       }).then(res=>res.json()).catch(err=>err).then(res=>res)
       if(response.msg==='Deleted!'){
-        setYourPlan(<View style={TrainingPlanStyles.withoutPlanContainer}>
-          <Text style={{fontFamily:'Teko_700Bold',fontSize:40}}>Training Plan</Text>
-          <Text style={{fontFamily:'Teko_700Bold',...TrainingPlanStyles.withoutPlanText,width:'100%'}}>You dont have any plans</Text>
-          <TouchableOpacity onPress={()=>{
-          const url = "https://lgym-app.vercel.app"
-          Linking.openURL(url)
-        }}  style={TrainingPlanStyles.withoutPlanButton}>
-              <Text style={{fontFamily:'Caveat_400Regular',...TrainingPlanStyles.withoutPlanButtonText}}>Create your plan now!</Text>
-          </TouchableOpacity>
-      </View>)
+        setYourPlan(withoutPlan)
         setIsPlanSet(false)
         setPopUp(<></>)
         setIsPopUpDeleteShowed(false)
@@ -222,6 +217,27 @@ const TrainingPlan:React.FC=()=>{
       
       
     }
+    const showImportPlanPopUpFn=():void=>{
+      setShowImportPlanPopUp(true)
+  }
+    const setImportPlan=async(userId:string):Promise<void>=>{
+      if(!userId) return
+      const id = await AsyncStorage.getItem('id')
+      await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/setSharedPlan`,{
+          method: "POST",
+          headers:{
+              "Content-Type": "application/json"
+          },
+          body:JSON.stringify({
+              userId:userId
+          })
+      }).then(res=>res).catch(err=>console.log(err))
+      setShowImportPlanPopUp(false)
+      setIsPlanSet(true)
+      
+    }
+      
+
     if(!fontsLoaded){
         return <ViewLoading/>
     }
@@ -233,6 +249,7 @@ const TrainingPlan:React.FC=()=>{
                    </>}
                 {popUp}
           {viewLoading?<ViewLoading/>:''}
+          {showImportPlanPopUp?<ImportPlanPopUp setImportPlan={setImportPlan} />:''}
           </View>
         </ImageBackground>
     )
