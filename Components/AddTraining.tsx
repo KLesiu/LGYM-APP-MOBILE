@@ -237,7 +237,14 @@ const AddTraining: React.FC = () => {
   useEffect(() => {
     setViewLoading(true);
     getFromStorage();
+    getSessionFromStorage()
+    
   }, []);
+  const getSessionFromStorage = async()=>{
+    const training = await AsyncStorage.getItem('currentTraining')
+    const parsedTraining = JSON.parse(training as string)
+    showDaySection(parsedTraining.day,true)
+  }
   const getFromStorage = async (): Promise<void> => {
     const plan: string | null | undefined =
       (await AsyncStorage.getItem("plan")) || "";
@@ -269,7 +276,7 @@ const AddTraining: React.FC = () => {
           </Text>
           {daysArray.map((ele, index: number) => (
             <TouchableOpacity
-              onPress={() => showDaySection(ele)}
+              onPress={() => showDaySection(ele,false)}
               style={AddTrainingStyles.button}
               key={index}
             >
@@ -289,7 +296,7 @@ const AddTraining: React.FC = () => {
       );
       setLoading(false);
     };
-  const showDaySection = async (day: string): Promise<void> => {
+  const showDaySection = async (day: string,session:boolean): Promise<void> => {
     setViewLoading(true);
     const id = await AsyncStorage.getItem("id");
     const planOfTheDay: Array<Exercise> | undefined = await fetch(
@@ -307,9 +314,7 @@ const AddTraining: React.FC = () => {
         else if (day === "F") return data.planF;
         else if (day === "G") return data.planG;
       });
-
-    // setCurrentDaySection(planOfTheDay!,day)
-    setCurrentDaySectionFromSession(planOfTheDay!, day);
+    session?setCurrentDaySectionFromSession(planOfTheDay!, day):setCurrentDaySection(planOfTheDay!,day)
     setDayToCheck(day);
     setChooseDay(<View></View>);
     setPickedDay(planOfTheDay);
@@ -453,8 +458,6 @@ const AddTraining: React.FC = () => {
     const parsedSessionTraining = JSON.parse(sessionTraining as string).training;
     const sessionTrainingReps = parsedSessionTraining.filter((ele:any,index:number)=>index%2===0)
     const sessionTrainingWeight = parsedSessionTraining.filter((ele:any,index:number)=>index%2 !==0)
-    console.log(sessionTrainingReps)
-    console.log(sessionTrainingWeight)
     const newHelpsArray = exercises.map((ele)=>{
       const prevReps = sessionTrainingReps.slice(0,ele.series)
       sessionTrainingReps.splice(0,ele.series)
@@ -890,7 +893,6 @@ const AddTraining: React.FC = () => {
         arrWeight
       );
     }
-    console.log(inputValues);
     for (let i = 0; i < arrReps.length; i++) {
       arr.push(arrReps[i]);
       arr.push(arrWeight[i]);
@@ -1120,7 +1122,7 @@ const AddTraining: React.FC = () => {
                       style={{
                         fontFamily: "Teko_400Regular",
                         textAlign: "center",
-                        fontSize: 25,
+                        fontSize: 20,
                       }}
                     >
                       SAVE TRAINING STATE
