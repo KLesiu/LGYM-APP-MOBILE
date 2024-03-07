@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "./types/RootStackParamList";
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import Loading from "./Loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Preload:React.FC=()=>{
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -18,6 +19,9 @@ const Preload:React.FC=()=>{
         Teko_700Bold,
         Caveat_400Regular
     })
+    useEffect(()=>{
+        checkUserSession()
+    },[])
     useEffect(() => {
         const loadAsyncResources = async () => {
           try {
@@ -31,7 +35,27 @@ const Preload:React.FC=()=>{
     
         loadAsyncResources();
       }, [fontsLoaded]);
+    const checkUserSession = async():Promise<void>=>{
+        const apiURL =`${process.env.REACT_APP_BACKEND}/api/checkToken`
+        const token = await AsyncStorage.getItem('token')
+        if(!token) return
+        const response = await fetch(apiURL,{
+            method: "GET",
+            headers:{
+                "Content-Type": "application/json",
+                "Authorization":`Bearer ${token} `
+            },
+        }).then(res=>res.json())
+        if(!response.isValid) return
+        await AsyncStorage.setItem('username',response.user.name)
+        await AsyncStorage.setItem('id',response.user._id)
+        await AsyncStorage.setItem('email',response.user.email)
+        await AsyncStorage.setItem('bp',`${response.user.Bp}` || '0')
+        await AsyncStorage.setItem('dl',`${response.user.Dl}` || '0')
+        await AsyncStorage.setItem('sq',`${response.user.Sq}` || '0')
+        navigation.navigate('Home')
 
+    }
     const handleLoginPress:VoidFunction=():void=>{
         navigation.navigate('Login')
     }
