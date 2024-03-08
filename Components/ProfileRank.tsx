@@ -1,6 +1,7 @@
 import {Image} from "react-native";
 import JuniorRank  from './img/Junior1.png'
+import { ProfileRankStyles } from "./styles/ProfileRankStyles";
 const ProfileRank:React.FC=()=>{
-    return <Image style={{width:'47%',height:'90%',marginRight:'5%',}} source={JuniorRank} />
+    return <Image style={ProfileRankStyles.image} source={JuniorRank} />
 }
 export default ProfileRank

@@ -237,14 +237,13 @@ const AddTraining: React.FC = () => {
   useEffect(() => {
     setViewLoading(true);
     getFromStorage();
-    getSessionFromStorage()
-    
+    getSessionFromStorage();
   }, []);
-  const getSessionFromStorage = async()=>{
-    const training = await AsyncStorage.getItem('currentTraining')
-    const parsedTraining = JSON.parse(training as string)
-    showDaySection(parsedTraining.day,true)
-  }
+  const getSessionFromStorage = async () => {
+    const training = await AsyncStorage.getItem("currentTraining");
+    const parsedTraining = JSON.parse(training as string);
+    showDaySection(parsedTraining.day, true);
+  };
   const getFromStorage = async (): Promise<void> => {
     const plan: string | null | undefined =
       (await AsyncStorage.getItem("plan")) || "";
@@ -276,7 +275,7 @@ const AddTraining: React.FC = () => {
           </Text>
           {daysArray.map((ele, index: number) => (
             <TouchableOpacity
-              onPress={() => showDaySection(ele,false)}
+              onPress={() => showDaySection(ele, false)}
               style={AddTrainingStyles.button}
               key={index}
             >
@@ -296,7 +295,10 @@ const AddTraining: React.FC = () => {
       );
       setLoading(false);
     };
-  const showDaySection = async (day: string,session:boolean): Promise<void> => {
+  const showDaySection = async (
+    day: string,
+    session: boolean
+  ): Promise<void> => {
     setViewLoading(true);
     const id = await AsyncStorage.getItem("id");
     const planOfTheDay: Array<Exercise> | undefined = await fetch(
@@ -314,7 +316,9 @@ const AddTraining: React.FC = () => {
         else if (day === "F") return data.planF;
         else if (day === "G") return data.planG;
       });
-    session?setCurrentDaySectionFromSession(planOfTheDay!, day):setCurrentDaySection(planOfTheDay!,day)
+    session
+      ? setCurrentDaySectionFromSession(planOfTheDay!, day)
+      : setCurrentDaySection(planOfTheDay!, day);
     setDayToCheck(day);
     setChooseDay(<View></View>);
     setPickedDay(planOfTheDay);
@@ -455,23 +459,28 @@ const AddTraining: React.FC = () => {
     }
     let arr: String[] = [];
     const sessionTraining = await AsyncStorage.getItem("currentTraining");
-    const parsedSessionTraining = JSON.parse(sessionTraining as string).training;
-    const sessionTrainingReps = parsedSessionTraining.filter((ele:any,index:number)=>index%2===0)
-    const sessionTrainingWeight = parsedSessionTraining.filter((ele:any,index:number)=>index%2 !==0)
-    const newHelpsArray = exercises.map((ele)=>{
-      const prevReps = sessionTrainingReps.slice(0,ele.series)
-      sessionTrainingReps.splice(0,ele.series)
-      const prevWeights = sessionTrainingWeight.slice(0,ele.series)
-      sessionTrainingWeight.splice(0,ele.series)
-      return{
-        name:ele.name,
-        reps:ele.reps,
-        series:ele.series,
+    const parsedSessionTraining = JSON.parse(
+      sessionTraining as string
+    ).training;
+    const sessionTrainingReps = parsedSessionTraining.filter(
+      (ele: any, index: number) => index % 2 === 0
+    );
+    const sessionTrainingWeight = parsedSessionTraining.filter(
+      (ele: any, index: number) => index % 2 !== 0
+    );
+    const newHelpsArray = exercises.map((ele) => {
+      const prevReps = sessionTrainingReps.slice(0, ele.series);
+      sessionTrainingReps.splice(0, ele.series);
+      const prevWeights = sessionTrainingWeight.slice(0, ele.series);
+      sessionTrainingWeight.splice(0, ele.series);
+      return {
+        name: ele.name,
+        reps: ele.reps,
+        series: ele.series,
         prevReps: prevReps,
-        prevWeights:prevWeights
-      }
-
-    })
+        prevWeights: prevWeights,
+      };
+    });
     setDaySection(
       <View style={AddTrainingStyles.daySection}>
         <Text
@@ -486,7 +495,7 @@ const AddTraining: React.FC = () => {
           Training <Text>{day}</Text>
         </Text>
         <ScrollView>
-          {newHelpsArray.map((ele:any, indexMain: number) => {
+          {newHelpsArray.map((ele: any, indexMain: number) => {
             let helpsArray: Array<string> = [];
             for (let i = 1; i < +ele.series + 1; i++) {
               helpsArray.push(`Series: ${i}`);
@@ -522,7 +531,11 @@ const AddTraining: React.FC = () => {
                       <TextInput
                         defaultValue={ele.prevReps[index].score}
                         onLayout={() =>
-                          handleInputChange(index, ele.prevReps[index].score, indexMain)
+                          handleInputChange(
+                            index,
+                            ele.prevReps[index].score,
+                            indexMain
+                          )
                         }
                         onChangeText={(text) =>
                           handleInputChange(index, text, indexMain)
@@ -543,7 +556,11 @@ const AddTraining: React.FC = () => {
                       <TextInput
                         defaultValue={ele.prevWeights[index].score}
                         onLayout={() =>
-                          handleInputWeightChange(index, ele.prevWeights[index].score, indexMain)
+                          handleInputWeightChange(
+                            index,
+                            ele.prevWeights[index].score,
+                            indexMain
+                          )
                         }
                         onChangeText={(text) =>
                           handleInputWeightChange(index, text, indexMain)
@@ -1122,7 +1139,7 @@ const AddTraining: React.FC = () => {
                       style={{
                         fontFamily: "Teko_400Regular",
                         textAlign: "center",
-                        fontSize: 20,
+                        fontSize: 17,
                       }}
                     >
                       SAVE TRAINING STATE

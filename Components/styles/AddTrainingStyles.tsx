@@ -97,9 +97,10 @@ export const AddTrainingStyles=StyleSheet.create({
         justifyContent:'center',
         flexDirection:'row',
         position:'absolute',
+        alignItems:'center',
         bottom:0,
         gap:50,
-        marginBottom:20
+        marginBottom:0
     },
     buttonAtAddTrainingConfig:{
         width:'30%',

@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { StyleSheet } from "react-native";
 
 
@@ -55,15 +56,14 @@ export const ProfileStyles=StyleSheet.create({
         alignItems:'center'
     },
     profileRankContainer:{
-        alignItems:'flex-start',
         display:'flex',
         width:'70%',
-        justifyContent:'flex-start',
+        justifyContent:'center',
         flexDirection:'column',
         flexWrap:'wrap',
         backgroundColor:'rgba(49,49,49,0.7)',
         borderRadius:3,
-        paddingLeft:5,
+        padding:'1rem',
         height:'40%'
     },
     h3:{

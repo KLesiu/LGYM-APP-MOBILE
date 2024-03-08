@@ -11,6 +11,7 @@ import { RootStackParamList } from "./types/RootStackParamList";
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import Loading from "./Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ViewLoading from "./ViewLoading";
 
 const Preload:React.FC=()=>{
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -66,7 +67,7 @@ const Preload:React.FC=()=>{
         setIsLoading(false)
     }
     if(!fontsLoaded){
-        return <View><Text>Loading fonts...</Text></View>
+        return <ViewLoading/>
     }
     return(
         <View style={{backgroundColor:'black',height:'100%'}}>

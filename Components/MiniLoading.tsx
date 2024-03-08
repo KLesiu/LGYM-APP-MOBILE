@@ -4,6 +4,7 @@ import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
 import React, { useEffect} from 'react';
+import ViewLoading from "./ViewLoading";
 
 const MiniLoading:React.FC=()=>{
     const [fontsLoaded]=useFonts({
@@ -24,7 +25,7 @@ const MiniLoading:React.FC=()=>{
         loadAsyncResources();
       }, [fontsLoaded]);
     if(!fontsLoaded){
-        return <View></View>
+        return <ViewLoading/>
     }
     return(
         <View style={MiniLoadingStyles.miniLoadingDiv}>
