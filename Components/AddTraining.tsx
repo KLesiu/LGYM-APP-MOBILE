@@ -1083,6 +1083,13 @@ const AddTraining: React.FC = () => {
     !isEnabled ? setIsAddTrainingActive(true) : setIsAddTrainingActive(false);
     setIsEnabled((previousState) => !previousState);
   };
+  const deleteCurrentSession=async()=>{
+    await AsyncStorage.removeItem('currentTraining')
+    setShowExercise(false)
+    setDaySection(<View></View>)
+    setChooseDay(<View></View>);
+    toggleSwitch()
+  }
 
   if (!fontsLoaded) {
     return <ViewLoading />;
@@ -1164,7 +1171,13 @@ const AddTraining: React.FC = () => {
                   onValueChange={toggleSwitch}
                   value={isEnabled}
                 ></Switch>
-                <TouchableOpacity
+                {isAddTrainingActive?<TouchableOpacity onPress={()=>deleteCurrentSession()} style={AddTrainingStyles.buttonAtAddTrainingConfig}>
+                        <Text style={{  fontFamily: "Teko_400Regular",
+                      textAlign: "center",
+                      fontSize: 17,}}>
+                          DELETE CURRENT SESSION
+                        </Text>
+                </TouchableOpacity>:<TouchableOpacity
                   onPress={() => {
                     setViewLoading(true);
                     showLastTrainingSection();
@@ -1180,7 +1193,8 @@ const AddTraining: React.FC = () => {
                   >
                     SHOW PREVIOUS SESSION
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity>}
+                
               </View>
             ) : (
               ""
