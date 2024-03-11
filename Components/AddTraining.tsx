@@ -27,6 +27,7 @@ import addTrainingFetchType from "./types/AddTrainingFetchAnsw";
 import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 import MiniLoading from "./MiniLoading";
+import { useInterval } from "react-use";
 type InputAction = {
   type: "UPDATE_INPUT";
   index: number;
@@ -221,6 +222,10 @@ const AddTraining: React.FC = () => {
     Caveat_400Regular,
     Teko_400Regular,
   });
+  useInterval(() => {
+    if(!showExercise) return
+    submitYourTraining(false);
+  }, 1000);
   useEffect(() => {
     const loadAsyncResources = async () => {
       try {
@@ -396,6 +401,7 @@ const AddTraining: React.FC = () => {
                         }
                         onChangeText={(text) =>
                           handleInputChange(index, text, indexMain)
+                        
                         }
                         style={AddTrainingStyles.input}
                       />
@@ -415,6 +421,7 @@ const AddTraining: React.FC = () => {
                         onLayout={() =>
                           handleInputWeightChange(index, "0", indexMain)
                         }
+
                         onChangeText={(text) =>
                           handleInputWeightChange(index, text, indexMain)
                         }
@@ -537,6 +544,7 @@ const AddTraining: React.FC = () => {
                             indexMain
                           )
                         }
+                        
                         onChangeText={(text) =>
                           handleInputChange(index, text, indexMain)
                         }
@@ -926,6 +934,7 @@ const AddTraining: React.FC = () => {
       day: day,
       training: training,
     };
+    await AsyncStorage.removeItem('currentTraining')
     await AsyncStorage.setItem(
       "currentTraining",
       JSON.stringify(trainingToStorage)
@@ -1078,6 +1087,8 @@ const AddTraining: React.FC = () => {
   if (!fontsLoaded) {
     return <ViewLoading />;
   }
+
+
   return (
     <ImageBackground
       source={backgroundLogo}
