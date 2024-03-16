@@ -28,6 +28,7 @@ import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 import MiniLoading from "./MiniLoading";
 import { useInterval } from "react-use";
+import UpdateRankPopUp from "./UpdateRankPopUp";
 type InputAction = {
   type: "UPDATE_INPUT";
   index: number;
@@ -69,6 +70,7 @@ const AddTraining: React.FC = () => {
   const [isAddTrainingActive, setIsAddTrainingActive] =
     useState<boolean>(false);
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
+  const [isPopUpRankShowed,setIsPopUpRankShowed] = useState<boolean>(false)
 
   // Second
   const [inputValuesSecond, dispatchSecond] = useReducer(inputReducer, {});
@@ -969,6 +971,7 @@ const AddTraining: React.FC = () => {
       setShowExercise(false);
       setIsPopUpShowed(true);
       popUpTurnOn();
+      setIsPopUpRankShowed(true)
       await AsyncStorage.removeItem("currentTraining");
     }
   };
@@ -1214,6 +1217,7 @@ const AddTraining: React.FC = () => {
           </View>
         )}
         {viewLoading ? <ViewLoading /> : ""}
+        {isPopUpRankShowed?<UpdateRankPopUp/>:''}
       </View>
     </ImageBackground>
   );
