@@ -24,15 +24,16 @@ const ViewLoading: React.FC = () => {
   }, [fontsLoaded]);
   if (!fontsLoaded) {
     return (
-      <View style={ViewLoadingStyles.viewLoadingDiv}>
-        <Text style={{ fontSize: 20, color: "white" }}>Loading fonts...</Text>
+      <View className="absolute w-full h-full bg-[rgb(40,41,42)] flex flex-row justify-center items-center">
+        <Text className="text-[20] text-white">Loading fonts...</Text>
       </View>
     );
   }
   return (
-    <View style={ViewLoadingStyles.viewLoadingDiv}>
+    <View className="absolute w-full h-full bg-[rgb(40,41,42)] flex flex-row justify-center items-center">
       <Text
-        style={{ fontFamily: "Teko_700Bold", fontSize: 30, color: "white" }}
+        className="text-[30] text-white"
+        style={{ fontFamily: "Teko_700Bold" }}
       >
         Loading...
       </Text>

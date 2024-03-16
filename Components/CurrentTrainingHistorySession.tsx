@@ -2,7 +2,6 @@ import { Text, View, ScrollView } from "react-native";
 import Training from "./types/Training";
 import ExerciseTraining from "./types/ExerciseTraining";
 import { useState, useEffect } from "react";
-import { CurrentTrainingHistorySessionStyles } from "./styles/CurrentTrainingHistorySessionStyles";
 import CurrentTrainingHistorySessionProps from "./props/CurrentTrainingHistorySessionProps";
 import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
@@ -43,12 +42,12 @@ const CurrentTrainingHistorySession: React.FC<
       setExercises(response.exercises);
       setInfoAboutSession(() => (
         <View
-          style={CurrentTrainingHistorySessionStyles.sessionTrainingContainer}
+        className="bg-[rgba(255, 255, 255, 0.349)] rounded-md mb-[2%] mt-[1%] h-[10%] text-white flex flex-wrap flex-row justify-center w-full"
         >
           <Text
+          className="m-1 w-full text-[25px] text-center"
             style={{
-              fontFamily: "Teko_700Bold",
-              ...CurrentTrainingHistorySessionStyles.h3,
+              fontFamily: "Teko_700Bold"
             }}
           >
             TrainingDay: {response.type}
@@ -63,33 +62,33 @@ const CurrentTrainingHistorySession: React.FC<
   }
   return (
     <View
-      style={CurrentTrainingHistorySessionStyles.currentTrainingHistorySession}
+      className="bg-black flex flex-wrap h-full w-full absolute justify-center"
     >
       <Text
         style={{
-          fontFamily: "Teko_700Bold",
-          ...CurrentTrainingHistorySessionStyles.date,
+          fontFamily: "Teko_700Bold"
         }}
+        className="text-white m-0 text-2xl h-[10%] w-full text-center"
       >
         Date: {props.date.slice(0, 25)}
       </Text>
       {infoAboutSession}
       <ScrollView style={{ height: 10000 }}>
-        <View style={CurrentTrainingHistorySessionStyles.container}>
+        <View className="flex flex-row w-full flex-wrap">
           {exercises?.map((ele, index: number) => (
             <View
               key={index}
-              style={CurrentTrainingHistorySessionStyles.exerciseDiv}
+              className="items-center flex justify-between text-center flex-row w-1/2 border-b-[1px] border-b-white "
             >
-              <View style={CurrentTrainingHistorySessionStyles.exerciseDivSpan}>
+              <View className="items-center flex justify-between flex-row h-full w-full text-left">
                 {index % 2 ? (
                   <Text style={{ fontSize: 0, width: 0 }}> {ele.field}</Text>
                 ) : (
                   <Text
                     style={{
-                      fontFamily: "Teko_400Regular",
-                      ...CurrentTrainingHistorySessionStyles.exerciseDivSpanP,
+                      fontFamily: "Teko_400Regular"
                     }}
+                    className="text-center w-[75%] text-[18px] h-full pl-[5%] pr-[5%] border-r-white border-r-[1px] bg-[rgba(150,150,150,0.1)] rounded-lg text-white"
                   >
                     {ele.field.slice(0, ele.field.length - 3)}
                   </Text>
@@ -97,18 +96,18 @@ const CurrentTrainingHistorySession: React.FC<
                 {index % 2 ? (
                   <Text
                     style={{
-                      fontFamily: "Teko_400Regular",
-                      ...CurrentTrainingHistorySessionStyles.exerciseDivSpanSpanWeight,
+                      fontFamily: "Teko_400Regular"
                     }}
+                    className="w-full text-3xl text-white"
                   >
                     x {ele.score}kg
                   </Text>
                 ) : (
                   <Text
                     style={{
-                      fontFamily: "Teko_400Regular",
-                      ...CurrentTrainingHistorySessionStyles.exerciseDivSpanSpan,
+                      fontFamily: "Teko_400Regular"
                     }}
+                    className="text-white text-3xl w-1/5 text-right"
                   >
                     {ele.score}
                   </Text>
