@@ -1093,6 +1093,9 @@ const AddTraining: React.FC = () => {
     setChooseDay(<View></View>);
     toggleSwitch()
   }
+  const closeRankPopUp = ()=>{
+    setIsPopUpRankShowed(false)
+  }
 
   if (!fontsLoaded) {
     return <ViewLoading />;
@@ -1217,7 +1220,7 @@ const AddTraining: React.FC = () => {
           </View>
         )}
         {viewLoading ? <ViewLoading /> : ""}
-        {isPopUpRankShowed?<UpdateRankPopUp/>:''}
+        {isPopUpRankShowed?<UpdateRankPopUp closePopUp={closeRankPopUp}/>:''}
       </View>
     </ImageBackground>
   );
