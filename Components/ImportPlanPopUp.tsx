@@ -33,17 +33,17 @@ const ImportPlanPopUp: React.FC<ImportPlanPopUpProps> = (props) => {
     return <ViewLoading />;
   }
   return (
-    <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[rgba(0, 0, 0, 0.956)]">
+    <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[#000000f4]">
       <Text className="text-white text-[20px] text-center" style={{ fontFamily: "Teko_700Bold"}}>
         If you want to copy someone plan you need to have a userId!
       </Text>
       <TextInput
-        className="rounded-xl h-[6%] text-[15px] w-4/5 border-[rgb(60,60,60)] border-[2px] mt-[5px] pl-[15px] text-white"
+        className="rounded-xl h-[6%] text-[15px] w-4/5 border-[#3c3c3c] border-[2px] mt-[5px] pl-[15px] text-white"
         placeholder="UserID"
         onChangeText={(text: string | "") => setUserId(text)}
       ></TextInput>
       <TouchableOpacity
-      className="w-1/2 h-[10%] rounded-xl bg-[rgb(170,180,189)] flex justify-center items-center mt-[5%]"
+      className="w-1/2 h-[10%] rounded-xl bg-[#aab4bd] flex justify-center items-center mt-[5%]"
 
         onPress={() => importPlan()}
       >

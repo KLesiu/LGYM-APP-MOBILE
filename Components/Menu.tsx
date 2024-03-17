@@ -16,7 +16,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           onPress={() => props.viewChange(<TrainingPlan />)}
           style={MenuStyles.button}
         >
-          <Icon name="note-outline" size={40} color={`rgb(204, 204, 204)`} />
+          <Icon name="note-outline" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
       <View style={MenuStyles.containerForButtonMenu}>
@@ -24,7 +24,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           onPress={() => props.viewChange(<History />)}
           style={MenuStyles.button}
         >
-          <Icon name="calendar" size={40} color={`rgb(204, 204, 204)`} />
+          <Icon name="calendar" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
       <View style={MenuStyles.containerForButtonMenu}>
@@ -32,7 +32,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           onPress={() => props.viewChange(<AddTraining />)}
           style={MenuStyles.button}
         >
-          <Icon name="plus" size={40} color={`rgb(204, 204, 204)`} />
+          <Icon name="plus" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
       <View style={MenuStyles.containerForButtonMenu}>
@@ -40,7 +40,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           onPress={() => props.viewChange(<Records />)}
           style={MenuStyles.button}
         >
-          <Icon name="trophy" size={40} color={`rgb(204, 204, 204)`} />
+          <Icon name="trophy" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
       <View style={MenuStyles.containerForButtonMenu}>
@@ -48,7 +48,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           onPress={() => props.viewChange(<Profile />)}
           style={MenuStyles.button}
         >
-          <Icon name="account" size={40} color={`rgb(204, 204, 204)`} />
+          <Icon name="account" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
     </View>

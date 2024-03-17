@@ -107,7 +107,7 @@ const History: React.FC = () => {
 
   return (
     <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 " styles={HistoryStyles.background} source={backgroundLogo}>
-      <View className="bg-[rgba(255,255,255,0.97)] h-[99%] w-full z-[2]" style={HistoryStyles.historyContainer}>
+      <View className="bg-[#fffffff7] h-[99%] w-full z-[2]" style={HistoryStyles.historyContainer}>
         <Text className="text-4xl text-center" style={{ fontFamily: "Teko_700Bold"}}>
           Training History
         </Text>

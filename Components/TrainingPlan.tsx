@@ -29,7 +29,7 @@ const TrainingPlan: React.FC = () => {
   const withoutPlan = () => {
     return (
       <View
-        className="items-center flex flex-col justify-start	h-full w-full bg-[rgba(255,255,255,0.97)]	"
+        className="items-center flex flex-col justify-start	h-full w-full bg-[#fffffff7]	"
         style={TrainingPlanStyles.withoutPlanContainer}
       >
         <Text style={{ fontFamily: "Teko_700Bold", fontSize: 40 }}>
@@ -48,7 +48,7 @@ const TrainingPlan: React.FC = () => {
             const url = "https://lgym-app.vercel.app";
             Linking.openURL(url);
           }}
-          className="bg-[rgb(194,194,194)] w-[50%] h-[10%] flex items-center justify-center rounded-[10px] mt-[5%]"
+          className="bg-[#c2c2c2] w-[50%] h-[10%] flex items-center justify-center rounded-[10px] mt-[5%]"
         >
           <Text
             className="text-[20px] w-full text-center"
@@ -60,7 +60,7 @@ const TrainingPlan: React.FC = () => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="bg-[rgb(194,194,194)] w-[50%] h-[10%] flex items-center justify-center rounded-[10px] mt-[5%]"
+          className="bg-[#c2c2c2] w-[50%] h-[10%] flex items-center justify-center rounded-[10px] mt-[5%]"
           onPress={() => showImportPlanPopUpFn()}
         >
           <Text
@@ -109,7 +109,7 @@ const TrainingPlan: React.FC = () => {
   useEffect(() => {
     if (isPopUpDeleteShowed) {
       setPopUp(
-        <View className="absolute h-full w-full bg-[rgba(0,0,0,0.95)] z-[3] flex pt-[30%] flex-column items-center">
+        <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
           <Text
             style={{
               fontFamily: "Teko_400Regular",
@@ -158,7 +158,7 @@ const TrainingPlan: React.FC = () => {
           data.planA.length > 0
             ? data.planA.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[rgba(255,255,255,0.7)] mt-[5px]"
+                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
                   key={index}
                 >
                   <Text
@@ -180,7 +180,7 @@ const TrainingPlan: React.FC = () => {
           data.planB.length > 0
             ? data.planB.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[rgba(255,255,255,0.7)] mt-[5px]"
+                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
                   key={index}
                 >
                   <Text
@@ -202,7 +202,7 @@ const TrainingPlan: React.FC = () => {
           data.planC.length > 0
             ? data.planC.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[rgba(255,255,255,0.7)] mt-[5px]"
+                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
                   key={index}
                 >
                   <Text
@@ -224,7 +224,7 @@ const TrainingPlan: React.FC = () => {
           data.planD.length > 0
             ? data.planD.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[rgba(255,255,255,0.7)] mt-[5px]"
+                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
                   key={index}
                 >
                   <Text
@@ -246,7 +246,7 @@ const TrainingPlan: React.FC = () => {
           data.planE.length > 0
             ? data.planE.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[rgba(255,255,255,0.7)] mt-[5px]"
+                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
                   key={index}
                 >
                   <Text
@@ -268,7 +268,7 @@ const TrainingPlan: React.FC = () => {
           data.planF.length > 0
             ? data.planF.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[rgba(255,255,255,0.7)] mt-[5px]"
+                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
                   key={index}
                 >
                   <Text
@@ -290,7 +290,7 @@ const TrainingPlan: React.FC = () => {
           data.planG.length > 0
             ? data.planG.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[rgba(255,255,255,0.7)] mt-[5px]"
+                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
                   key={index}
                 >
                   <Text
@@ -310,7 +310,7 @@ const TrainingPlan: React.FC = () => {
             : "";
         setYourPlan(() => {
           return (
-            <View className="bg-[rgba(255,255,255,0.95)] flex flex-column h-full w-full text-center z-[2]">
+            <View className="bg-[#fffffff2] flex flex-column h-full w-full text-center z-[2]">
               <Text
                 style={{
                   fontFamily: "Teko_700Bold",
@@ -326,7 +326,7 @@ const TrainingPlan: React.FC = () => {
                 className="absolute top-[5px] right-[5px]"
               >
                 <Icon
-                  className="text-[40px] text-[rgb(186,87,87)]"
+                style={{color:'#de161d',fontSize:40}}
                   name="delete"
                 />
               </TouchableOpacity>
@@ -457,7 +457,7 @@ const TrainingPlan: React.FC = () => {
   }
   return (
     <ImageBackground
-      className="flex-1 justify-center items-center oppacity-100 w-[98%] mx-[1%] h-[79%]"
+      className="flex-1 justify-center items-center opacity-100 w-[98%] mx-[1%] h-[79%]"
       style={TrainingPlanStyles.backgroundIMG}
       source={backgroundLogo}
     >

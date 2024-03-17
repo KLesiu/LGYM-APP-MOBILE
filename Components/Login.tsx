@@ -95,27 +95,27 @@ const Login: React.FC = () => {
     }
   };
   return (
-    <View className="flex items-center flex-col h-full justify-start bg-[rgba(25,25,25,1)]">
-      <Image className="w-3/5 h-[30%}" source={logoLGYM} />
-      <Text className="text-[rgb(185, 177, 162)] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
+    <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
+      <Image className="w-3/5 h-[30%]" source={logoLGYM} />
+      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
         Username
       </Text>
       <TextInput
         onChangeText={(text: string) => setUsername(text)}
-        className="rounded-xl h-12 text-base w-4/5 bg-[rgb(60,60,60)] text-white mt-1 pl-4"
+        className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
         autoComplete="given-name"
       />
-      <Text className="text-[rgb(185, 177, 162)] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
+      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
         Password
       </Text>
       <TextInput
         onChangeText={(text: string) => setPassword(text)}
-        className="rounded-xl h-12 text-base w-4/5 bg-[rgb(60,60,60)] text-white mt-1 pl-4"
+        className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
         secureTextEntry={true}
       ></TextInput>
-      <TouchableOpacity className="mt-3 w-1/2 bg-[rgb(134,134,134)] flex items-center justify-center rounded-xl h-14" onPress={login} >
+      <TouchableOpacity className="mt-3 w-1/2 bg-[#868686] flex items-center justify-center rounded-xl h-14" onPress={login} >
         <Text
-          className="text-3xl text-[rgb(226,226,226)]"
+          className="text-3xl text-[#e2e2e2]"
           style={{ fontFamily: "Teko_700Bold"}}
         >
           LOGIN

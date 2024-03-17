@@ -33,7 +33,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
   }, [fontsLoaded]);
   useEffect(() => {
     if (width === 100) return props.offLoading();
-    setTimeout(() => changeWidth(width), 100);
+    setTimeout(() => changeWidth(width), 300);
   }, [width]);
   const changeWidth = (width: number) => {
     setWidth(width + 10);
@@ -42,7 +42,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
     return <ViewLoading />;
   }
   return (
-    <View className="bg-[rgb(19,19,19)] h-full w-full absolute flex flex-col items-center z-[6]" >
+    <View className="bg-black h-full w-full absolute flex flex-col items-center z-[6]" >
       <Image source={logoLGYM} className="w-[70%] h-[40%]" />
       <View className="flex flex-col mx-[5%] mt-[40%] w-[90%]">
         <View className="border-[2px] border-gray-500 w-full rounded-xl h-1/5">
@@ -50,7 +50,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
             style={{
               width: `${width}%`,
             }}
-            className="bg-gray-500 rounded-xl h-full z-[7px]"
+            className="bg-gray-500 rounded-xl h-full z-[7]"
           ></View>
         </View>
         <Text

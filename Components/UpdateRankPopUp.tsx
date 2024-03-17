@@ -71,7 +71,7 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
   }
   return (
     <View
-      className="h-full w-full absolute top-[0px] bg-[rgba(0, 0, 0, 0.956)]	flex flex-col	items-center justify-center"
+      className="h-full w-full absolute top-[0px] bg-[#000000f4]	flex flex-col	items-center justify-center"
       style={UpdateRankPopUpStyles.updateRankSection}
     >
       <TouchableOpacity

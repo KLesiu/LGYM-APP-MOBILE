@@ -274,7 +274,7 @@ const AddTraining: React.FC = () => {
       }
 
       setChooseDay(
-        <View className="items-center bg-[rgba(0,0,0,0.94)] flex flex-col justify-start gap-10 h-full absolute w-full top-0">
+        <View className="items-center bg-[#000000f0] flex flex-col justify-start gap-10 h-full absolute w-full top-0">
           <Text
           className="text-[40px] text-white"
             style={{ fontFamily: "Teko_700Bold"}}
@@ -284,7 +284,7 @@ const AddTraining: React.FC = () => {
           {daysArray.map((ele, index: number) => (
             <TouchableOpacity
               onPress={() => showDaySection(ele, false)}
-              className="items-center border-[rgb(134,134,134)] border-[1px] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
+              className="items-center border-[#868686] border-[1px] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
               key={index}
             >
               <Text
@@ -351,7 +351,7 @@ const AddTraining: React.FC = () => {
     }
     let arr: String[] = [];
     setDaySection(
-      <View className="absolute w-full h-full text-white bg-[rgba(0, 0, 0, 0.962)] flex flex-col pb-10">
+      <View className="absolute w-full h-full text-white bg-[#000000f5] flex flex-col pb-10">
         <Text
           style={{
             fontFamily: "Teko_700Bold",
@@ -406,7 +406,7 @@ const AddTraining: React.FC = () => {
                           handleInputChange(index, text, indexMain)
                         
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[rgb(60,60,60)] border-[2px] text-white pl-2"
+                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
                        
                       />
                       <Text
@@ -429,7 +429,7 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputWeightChange(index, text, indexMain)
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[rgb(60,60,60)] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
+                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
                        
                       />
                     </View>
@@ -490,7 +490,7 @@ const AddTraining: React.FC = () => {
       };
     });
     setDaySection(
-      <View className="absolute w-full h-full text-white bg-[rgba(0, 0, 0, 0.962)] flex-col flex pb-10">
+      <View className="absolute w-full h-full text-white bg-[#000000f5] flex-col flex pb-10">
         <Text
           style={{
             fontFamily: "Teko_700Bold",
@@ -549,7 +549,7 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputChange(index, text, indexMain)
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[rgb(60,60,60)] border-[2px] text-white pl-2"
+                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
                       />
                       <Text
                         style={{
@@ -574,7 +574,7 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputWeightChange(index, text, indexMain)
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[rgb(60,60,60)] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
+                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
                       
                       />
                     </View>
@@ -993,7 +993,7 @@ const AddTraining: React.FC = () => {
       return setViewLoading(false);
     setLastTrainingSection(() => {
       return (
-        <View className="bg-[rgba(0,0,0,0.98)] absolute w-full h-full flex flex-col z-[5]">
+        <View className="bg-[#000000fa] absolute w-full h-full flex flex-col z-[5]">
           <TouchableOpacity onPress={hideLastTrainingSection}>
             <Icon style={{ fontSize: 40, color: "white" }} name="close" />
           </TouchableOpacity>
@@ -1046,7 +1046,7 @@ const AddTraining: React.FC = () => {
                             fontFamily: "Teko_400Regular"
                           }}
                           className="w-1/2 border-b-gray-500 border-b-[1px] h-20 pl-[10%]
-                          bg-[rgba(20,20,20,0.7)] pt-5 text-white text-[20px]"
+                          bg-[#141414b3] pt-5 text-white text-[20px]"
                           key={index}
                         >
                           {ele.score}
@@ -1101,12 +1101,12 @@ const AddTraining: React.FC = () => {
   return (
     <ImageBackground
       source={backgroundLogo}
-      className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 resi"
+      className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100"
       style={AddTrainingStyles.background}
     >
-      <View className="bg-[rgba(255,255,255,0.97)] h-[99%] w-full z-[2]" style={AddTrainingStyles.addTrainingContainer}>
+      <View className="bg-[#9696961a] h-[99%] w-full z-[2]" style={AddTrainingStyles.addTrainingContainer}>
         {plan === "completed" ? (
-          <View className="relative flex flex-col justify-start items-center h-full w-full" >
+          <View className="relative bg-[#fffffff2] flex flex-col justify-start items-center h-full w-full" >
             <Text
               style={{
                 fontFamily: "Teko_400Regular",
@@ -1139,7 +1139,7 @@ const AddTraining: React.FC = () => {
                 {isAddTrainingActive ? (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(true)}
-                    className="w-[30%] h-12 rounded-lg bg-[rgb(170,180,189)] flex justify-center items-center"
+                    className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
 
                   >
                     <Text
@@ -1155,7 +1155,7 @@ const AddTraining: React.FC = () => {
                 ) : (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(false)}
-                    className="w-[30%] h-12 rounded-lg bg-[rgb(170,180,189)] flex justify-center items-center"
+                    className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
                
                   >
                     <Text
@@ -1177,7 +1177,7 @@ const AddTraining: React.FC = () => {
                   value={isEnabled}
                 ></Switch>
                 {isAddTrainingActive?<TouchableOpacity onPress={()=>deleteCurrentSession()}
-                className="w-[30%] h-12 rounded-lg bg-[rgb(170,180,189)] flex justify-center items-center">
+                className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center">
                         <Text style={{  fontFamily: "Teko_400Regular",
                       textAlign: "center",
                       fontSize: 17,}}>
@@ -1188,7 +1188,7 @@ const AddTraining: React.FC = () => {
                     setViewLoading(true);
                     showLastTrainingSection();
                   }}
-                  className="w-[30%] h-12 rounded-lg bg-[rgb(170,180,189)] flex justify-center items-center"
+                  className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
                  
                 >
                   <Text

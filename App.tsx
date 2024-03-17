@@ -6,6 +6,11 @@ import Login from './Components/Login';
 import Register from './Components/Register';
 import Home from './Components/Home';
 
+import { NativeWindStyleSheet } from "nativewind";
+
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
 const Stack = createNativeStackNavigator();
 

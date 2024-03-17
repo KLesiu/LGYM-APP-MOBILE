@@ -16,8 +16,8 @@ const Home:React.FC=()=>{
         setIsLoading(false)
     }
     return(
-        <View className="bg-[rgb(17,18,18)] flex flex-col justify-between relative h-full" >
-            <View className="bg-[rgba(44, 44, 44, 0.486)] flex justify-center w-full h-[10%]">
+        <View className="bg-[#111212] flex flex-col justify-between relative h-full" >
+            <View className="bg-[#2c2c2c7c] flex justify-center w-full h-[10%]">
                 <Image className="w-[15%] h-[90%] mx-[42.5%]" source={logo300}/>
             </View>
             {view}

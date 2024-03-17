@@ -24,13 +24,13 @@ const ViewLoading: React.FC = () => {
   }, [fontsLoaded]);
   if (!fontsLoaded) {
     return (
-      <View className="absolute w-full h-full bg-[rgb(40,41,42)] flex flex-row justify-center items-center">
+      <View className="absolute w-full h-full bg-[#28292a] flex flex-row justify-center items-center">
         <Text className="text-[20] text-white">Loading fonts...</Text>
       </View>
     );
   }
   return (
-    <View className="absolute w-full h-full bg-[rgb(40,41,42)] flex flex-row justify-center items-center">
+    <View className="absolute w-full h-full bg-[#28292a] flex flex-row justify-center items-center">
       <Text
         className="text-[30] text-white"
         style={{ fontFamily: "Teko_700Bold" }}
