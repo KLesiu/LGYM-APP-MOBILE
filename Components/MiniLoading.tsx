@@ -1,5 +1,4 @@
 import { Text,View} from "react-native";
-import { MiniLoadingStyles } from "./styles/MiniLoadingStyles";
 import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
 import {Caveat_400Regular} from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen'
@@ -28,8 +27,8 @@ const MiniLoading:React.FC=()=>{
         return <ViewLoading/>
     }
     return(
-        <View style={MiniLoadingStyles.miniLoadingDiv}>
-            <Text style={{fontFamily:'Teko_700Bold',...MiniLoadingStyles.text}}>Loading...</Text>
+        <View className="w-full flex flex-row items-center justify-center mt-5">
+            <Text className="text-xl text-white" style={{fontFamily:'Teko_700Bold'}}>Loading...</Text>
         </View>
     )
 }

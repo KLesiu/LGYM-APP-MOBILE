@@ -6,7 +6,6 @@ import {
   ScrollView,
 } from "react-native";
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
-import { HistoryStyles } from "./styles/HistoryStyles";
 import { useState, useEffect } from "react";
 import Session from "./types/Session";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -106,8 +105,8 @@ const History: React.FC = () => {
   }
 
   return (
-    <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 " styles={HistoryStyles.background} source={backgroundLogo}>
-      <View className="bg-[#fffffff7] h-[99%] w-full z-[2]" style={HistoryStyles.historyContainer}>
+    <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 "  source={backgroundLogo}>
+      <View className="bg-[#fffffff7] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
         <Text className="text-4xl text-center" style={{ fontFamily: "Teko_700Bold"}}>
           Training History
         </Text>

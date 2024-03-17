@@ -1,6 +1,5 @@
 import { Text, View, ImageBackground, TouchableOpacity } from "react-native";
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
-import { ProfileStyles } from "./styles/ProfileStyles";
 import { useState, useEffect } from "react";
 import UserProfile from "./types/UserProfile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -79,17 +78,17 @@ const Profile: React.FC = () => {
     return <ViewLoading />;
   }
   return (
-    <ImageBackground source={backgroundLogo} style={ProfileStyles.background}>
-      <View style={ProfileStyles.profileContainer}>
-        <Text style={{ fontFamily: "Teko_700Bold", ...ProfileStyles.h1 }}>
+    <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 flex justify-center items-center opacity-100 " source={backgroundLogo} >
+      <View className="rounded-tl-10 rounded-tr-10 bg-[#fffffff2] h-[99%] w-full flex flex-col z-[2] ">
+        <Text className="rounded-3xl m-0 text-4xl w-full text-center" style={{ fontFamily: "Teko_700Bold"}}>
           Your profile
         </Text>
-        <View style={ProfileStyles.containerForInfoProfile}>
-          <Text style={{ fontFamily: "Teko_700Bold", ...ProfileStyles.h2 }}>
+        <View className="items-center flex justify-center flex-row flex-wrap h-3/5 " >
+          <Text className="p-1 border-gray-500 border-2 w-[70%] rounded-sm text-2xl mb-10" style={{ fontFamily: "Teko_700Bold"}}>
             Name: {yourProfile?.name}
           </Text>
-          <View style={ProfileStyles.columnProfile}>
-            <View style={ProfileStyles.profileRankContainer}>
+          <View className="w-full flex flex-col h-full items-center">
+            <View className="flex w-[70%] justify-center flex-col flex-wrap bg-[#313131b3] rounded p-4 h-2/5 " >
               <Text
                 style={{
                   fontFamily: "Teko_700Bold",
@@ -111,15 +110,15 @@ const Profile: React.FC = () => {
               </Text>
               {rankComponent}
             </View>
-            <Text style={{ fontFamily: "Teko_700Bold", ...ProfileStyles.h3 }}>
+            <Text className="p-1 border-gray-500 border-2 w-[70%] rounded text-xl mt-5" style={{ fontFamily: "Teko_700Bold"}}>
               Email: {yourProfile?.email}
             </Text>
-            <Text style={{ fontFamily: "Teko_700Bold", ...ProfileStyles.h3 }}>
+            <Text className="p-1 border-gray-500 border-2 w-[70%] rounded text-xl mt-5" style={{ fontFamily: "Teko_700Bold"}}>
               Member since: {memberSince}
             </Text>
           </View>
         </View>
-        <TouchableOpacity onPress={logout} style={ProfileStyles.logoutButton}>
+        <TouchableOpacity className="w-1/2 h-[10%] bg-[#bd1212e1] border-black border-1 rounded-xl flex justify-center flex-row items-center ml-[25%] mt-[20%] " onPress={logout}>
           <Text
             style={{ fontFamily: "Teko_700Bold", color: "white", fontSize: 30 }}
           >

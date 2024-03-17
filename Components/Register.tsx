@@ -4,7 +4,6 @@ import logoLGYM from "./img/logoLGYM.png";
 import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
 import * as SplashScreen from "expo-splash-screen";
-import { RegisterStyles } from "./styles/RegisterStyles";
 import ErrorMsg from "./types/ErrorMsg";
 import ErrorRegister from "./types/ErrorRegister";
 import SuccessMsg from "./types/SuccessMsg";
@@ -81,60 +80,61 @@ const Register: React.FC = () => {
   }
 
   return (
-    <View style={RegisterStyles.container}>
-      <Image style={RegisterStyles.logo} source={logoLGYM} />
-      <Text style={{ fontFamily: "Teko_700Bold", ...RegisterStyles.label }}>
+    <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
+      <Image className="w-2/5 h-1/5 mb-[5%]" source={logoLGYM} />
+      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
         Username
       </Text>
       <TextInput
         onChangeText={(text) => setUsername(text)}
-        style={RegisterStyles.input}
+        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
       />
-      <Text style={{ fontFamily: "Teko_700Bold", ...RegisterStyles.label }}>
+      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
         Email
       </Text>
       <TextInput
         onChangeText={(text) => setEmail(text)}
-        style={RegisterStyles.input}
+        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
       />
-      <Text style={{ fontFamily: "Teko_700Bold", ...RegisterStyles.label }}>
+      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
         Password
       </Text>
       <TextInput
         secureTextEntry={true}
         onChangeText={(text) => setPassword(text)}
-        style={RegisterStyles.input}
+        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
       />
-      <Text style={{ fontFamily: "Teko_700Bold", ...RegisterStyles.label }}>
+      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
         Repeat password
       </Text>
       <TextInput
         secureTextEntry={true}
         onChangeText={(text) => setRPassword(text)}
-        style={RegisterStyles.input}
+        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
       />
       <TouchableOpacity
         onPress={register}
-        style={RegisterStyles.buttonRegister}
+        className="mt-3 w-1/2 bg-[#868686] flex items-center justify-center rounded-xl h-[7%]"
       >
         <Text
           style={{
             fontFamily: "Teko_700Bold",
-            ...RegisterStyles.buttonRegisterText,
+            
           }}
+          className="text-3xl text-[#e2e2e2]"
         >
           REGISTER
         </Text>
       </TouchableOpacity>
       {loading ? <MiniLoading /> : ""}
-      <View style={RegisterStyles.errorContainer}>
+      <View className="flex flex-col text-center w-[90%]">
         {errors
           ? errors.map((ele, index: number) => (
               <Text
                 style={{
-                  fontFamily: "Caveat_400Regular",
-                  ...RegisterStyles.errorText,
+                  fontFamily: "Caveat_400Regular"
                 }}
+                className="text-red-500 w-full text-center mt-[2%] text-2xl"
                 key={index}
               >
                 {ele.msg}

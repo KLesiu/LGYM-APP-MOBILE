@@ -6,7 +6,6 @@ import {
   ScrollView,
   Linking,
 } from "react-native";
-import { TrainingPlanStyles } from "./styles/TrainingPlanStyles";
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
 import {
@@ -29,8 +28,7 @@ const TrainingPlan: React.FC = () => {
   const withoutPlan = () => {
     return (
       <View
-        className="items-center flex flex-col justify-start	h-full w-full bg-[#fffffff7]	"
-        style={TrainingPlanStyles.withoutPlanContainer}
+        className="items-center flex flex-col justify-start	h-full w-full bg-[#fffffff7] rounded-tl-10 rounded-tr-10	"
       >
         <Text style={{ fontFamily: "Teko_700Bold", fontSize: 40 }}>
           Training Plan
@@ -457,8 +455,7 @@ const TrainingPlan: React.FC = () => {
   }
   return (
     <ImageBackground
-      className="flex-1 justify-center items-center opacity-100 w-[98%] mx-[1%] h-[79%]"
-      style={TrainingPlanStyles.backgroundIMG}
+      className="flex-1 flex justify-center items-center opacity-100 w-[98%] mx-[1%] h-[79%]"
       source={backgroundLogo}
     >
       <View className="h-[99%] relative w-full">

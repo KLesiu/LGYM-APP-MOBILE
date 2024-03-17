@@ -8,7 +8,6 @@ import {
   Switch,
 } from "react-native";
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
-import { AddTrainingStyles } from "./styles/AddTrainingStyles";
 import { useState, useEffect, useReducer } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -1101,10 +1100,11 @@ const AddTraining: React.FC = () => {
   return (
     <ImageBackground
       source={backgroundLogo}
+      
       className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100"
-      style={AddTrainingStyles.background}
+      
     >
-      <View className="bg-[#9696961a] h-[99%] w-full z-[2]" style={AddTrainingStyles.addTrainingContainer}>
+      <View className="bg-[#9696961a] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
         {plan === "completed" ? (
           <View className="relative bg-[#fffffff2] flex flex-col justify-start items-center h-full w-full" >
             <Text

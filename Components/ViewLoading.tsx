@@ -3,7 +3,6 @@ import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
-import { ViewLoadingStyles } from "./styles/ViewLoadingStyles";
 const ViewLoading: React.FC = () => {
   const [fontsLoaded] = useFonts({
     Teko_700Bold,

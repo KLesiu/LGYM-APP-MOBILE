@@ -3,10 +3,8 @@ import {
   Text,
   Image,
   ImageProps,
-  DeviceEventEmitter,
   TouchableOpacity,
 } from "react-native";
-import { UpdateRankPopUpStyles } from "./styles/UpdateRankPopUpStyles";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SuccessMsg from "./types/SuccessMsg";
@@ -71,8 +69,7 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
   }
   return (
     <View
-      className="h-full w-full absolute top-[0px] bg-[#000000f4]	flex flex-col	items-center justify-center"
-      style={UpdateRankPopUpStyles.updateRankSection}
+      className="h-full w-full absolute top-0 bg-[#000000f4]	flex flex-col	items-center justify-center"
     >
       <TouchableOpacity
         className="w-[100px] h-[50px] p-[5px] absolute top-0 right-0 mr-[10px] border-white border-[1px] border-solid rounded-[10px]"

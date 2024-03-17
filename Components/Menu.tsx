@@ -1,5 +1,4 @@
 import { View, TouchableOpacity } from "react-native";
-import { MenuStyles } from "./styles/MenuStyles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MenuProps from "./props/MenuProps";
 import TrainingPlan from "./TrainingPlan";
@@ -10,43 +9,43 @@ import Profile from "./Profile";
 
 const Menu: React.FC<MenuProps> = (props) => {
   return (
-    <View style={MenuStyles.nav}>
-      <View style={MenuStyles.containerForButtonMenu}>
+    <View className="bg-[#28292a] flex justify-between flex-row h-[10%] w-full">
+      <View className="flex flex-col justify-center w-[19.9%]">
         <TouchableOpacity
           onPress={() => props.viewChange(<TrainingPlan />)}
-          style={MenuStyles.button}
+          className="items-center bg-[#595959] flex h-full justify-center flex-row w-full"
         >
           <Icon name="note-outline" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
-      <View style={MenuStyles.containerForButtonMenu}>
+      <View className="flex flex-col justify-center w-[19.9%]">
         <TouchableOpacity
           onPress={() => props.viewChange(<History />)}
-          style={MenuStyles.button}
+          className="items-center bg-[#595959] flex h-full justify-center flex-row w-full"
         >
           <Icon name="calendar" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
-      <View style={MenuStyles.containerForButtonMenu}>
+      <View className="flex flex-col justify-center w-[19.9%]">
         <TouchableOpacity
           onPress={() => props.viewChange(<AddTraining />)}
-          style={MenuStyles.button}
+          className="items-center bg-[#595959] flex h-full justify-center flex-row w-full"
         >
           <Icon name="plus" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
-      <View style={MenuStyles.containerForButtonMenu}>
+      <View className="flex flex-col justify-center w-[19.9%]">
         <TouchableOpacity
           onPress={() => props.viewChange(<Records />)}
-          style={MenuStyles.button}
+          className="items-center bg-[#595959] flex h-full justify-center flex-row w-full"
         >
           <Icon name="trophy" size={40} color={`#cccccc`} />
         </TouchableOpacity>
       </View>
-      <View style={MenuStyles.containerForButtonMenu}>
+      <View className="flex flex-col justify-center w-[19.9%]">
         <TouchableOpacity
           onPress={() => props.viewChange(<Profile />)}
-          style={MenuStyles.button}
+          className="items-center bg-[#595959] flex h-full justify-center flex-row w-full"
         >
           <Icon name="account" size={40} color={`#cccccc`} />
         </TouchableOpacity>
