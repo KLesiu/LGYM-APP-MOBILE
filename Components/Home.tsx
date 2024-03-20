@@ -2,7 +2,6 @@ import {Image,View } from "react-native";
 
 import {useState} from 'react'
 import TrainingPlan from "./TrainingPlan";
-import { HomeStyles } from "./styles/HomeStyles";
 import logo300 from './img/logo300.png'
 import Menu from "./Menu";
 import Loading from "./Loading";
@@ -17,9 +16,9 @@ const Home:React.FC=()=>{
         setIsLoading(false)
     }
     return(
-        <View style={HomeStyles.main}>
-            <View style={HomeStyles.holderForLogo}>
-                <Image style={HomeStyles.logoOfHome} source={logo300}/>
+        <View className="bg-[#111212] flex flex-col justify-between relative h-full" >
+            <View className="bg-[#2c2c2c7c] flex justify-center w-full h-[10%]">
+                <Image className="w-[15%] h-[90%] mx-[42.5%]" source={logo300}/>
             </View>
             {view}
             <Menu viewChange={changeView}/>

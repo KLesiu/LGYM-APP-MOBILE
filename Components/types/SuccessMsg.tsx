@@ -1,4 +1,5 @@
 type SuccessMsg={
-    msg: string
+    msg: string,
+    isNew?:boolean
 }
 export default SuccessMsg
