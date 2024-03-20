@@ -6,7 +6,6 @@ import {
   ScrollView,
 } from "react-native";
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
-import { HistoryStyles } from "./styles/HistoryStyles";
 import { useState, useEffect } from "react";
 import Session from "./types/Session";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -106,16 +105,16 @@ const History: React.FC = () => {
   }
 
   return (
-    <ImageBackground style={HistoryStyles.background} source={backgroundLogo}>
-      <View style={HistoryStyles.historyContainer}>
-        <Text style={{ fontFamily: "Teko_700Bold", ...HistoryStyles.h1 }}>
+    <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 "  source={backgroundLogo}>
+      <View className="bg-[#fffffff7] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
+        <Text className="text-4xl text-center" style={{ fontFamily: "Teko_700Bold"}}>
           Training History
         </Text>
-        <ScrollView style={HistoryStyles.scrollView}>
+        <ScrollView className="p-1 flex flex-col">
           {currentSessions.length > 0 ? (
             currentSessions.map((ele, index: number) => {
               return (
-                <View style={HistoryStyles.session} key={index}>
+                <View className="items-start border-[3px] border-gray-500 flex flex-col justify-start relative mt-[2%] p-5 w-[90%] mx-[5%] rounded-xl mb-[2%]" key={index}>
                   <Text
                     style={{
                       fontFamily: "Teko_700Bold",
@@ -152,20 +151,20 @@ const History: React.FC = () => {
                     onPress={() =>
                       showCurrentTrainingHistorySession(ele.id!, ele.date!)
                     }
-                    style={HistoryStyles.buttonRead}
+                    className="absolute right-[10%] top-[30%]"
                   >
-                    <Icon style={{ fontSize: 40 }} name="book-outline" />
+                    <Icon size={30} name="book-outline" />
                   </TouchableOpacity>
                 </View>
               );
             })
           ) : (
-            <View style={HistoryStyles.withoutTrainingContainer}>
+            <View className="flex w-full h-full justify-center items-center">
               <Text
                 style={{
-                  fontFamily: "Teko_700Bold",
-                  ...HistoryStyles.withoutTrainingText,
+                  fontFamily: "Teko_700Bold"
                 }}
+                className="text-xl"
               >
                 You dont have training history!
               </Text>

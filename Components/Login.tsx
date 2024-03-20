@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
-import { LoginStyles } from "./styles/LoginStyles";
 import logoLGYM from "./img/logoLGYM.png";
 import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
@@ -96,39 +95,40 @@ const Login: React.FC = () => {
     }
   };
   return (
-    <View style={LoginStyles.container}>
-      <Image style={LoginStyles.logo} source={logoLGYM} />
-      <Text style={{ fontFamily: "Teko_700Bold", ...LoginStyles.label }}>
+    <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
+      <Image className="w-3/5 h-[30%]" source={logoLGYM} />
+      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
         Username
       </Text>
       <TextInput
         onChangeText={(text: string) => setUsername(text)}
-        style={LoginStyles.input}
+        className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
         autoComplete="given-name"
       />
-      <Text style={{ fontFamily: "Teko_700Bold", ...LoginStyles.label }}>
+      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
         Password
       </Text>
       <TextInput
         onChangeText={(text: string) => setPassword(text)}
-        style={LoginStyles.input}
+        className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
         secureTextEntry={true}
       ></TextInput>
-      <TouchableOpacity onPress={login} style={LoginStyles.buttonLogin}>
+      <TouchableOpacity className="mt-3 w-1/2 bg-[#868686] flex items-center justify-center rounded-xl h-14" onPress={login} >
         <Text
-          style={{ fontFamily: "Teko_700Bold", ...LoginStyles.buttonLoginText }}
+          className="text-3xl text-[#e2e2e2]"
+          style={{ fontFamily: "Teko_700Bold"}}
         >
           LOGIN
         </Text>
       </TouchableOpacity>
       {loading ? <MiniLoading /> : ""}
-      <View style={LoginStyles.errorContainer}>
+      <View className="flex flex-col text-center w-[90%]">
         {errors
           ? errors.map((ele, index: number) => (
               <Text
+                className="text-red-500 w-full text-center mt-[2%] text-2xl"
                 style={{
-                  fontFamily: "Caveat_400Regular",
-                  ...LoginStyles.errorText,
+                  fontFamily: "Caveat_400Regular"
                 }}
                 key={index}
               >

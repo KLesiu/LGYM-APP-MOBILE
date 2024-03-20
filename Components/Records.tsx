@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
 } from "react-native";
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
-import { RecordsStyles } from "./styles/RecordsStyles";
 import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
 import * as SplashScreen from "expo-splash-screen";
@@ -62,47 +61,48 @@ const Records: React.FC = () => {
     return <ViewLoading />;
   }
   return (
-    <ImageBackground source={backgroundLogo} style={RecordsStyles.background}>
-      <View style={RecordsStyles.recordsContainer}>
-        <Text style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.titleh2 }}>
+    <ImageBackground source={backgroundLogo} className="h-[79%] w-[98%] mx-[1%] flex-1 flex justify-center items-center opacity-100 ">
+      <View className="rounded-tl-10 rounded-tr-10 bg-[#fffffff7] h-[99%] w-full z-[2] flex flex-row flex-wrap justify-center">
+        <Text className="border-b-white border-b-2 pb-[2px] text-center w-[70%] text-2xl" style={{ fontFamily: "Teko_700Bold"}}>
           Records in powerlifting:
         </Text>
-        <View style={RecordsStyles.titleOfLift}>
-          <Image style={RecordsStyles.icon} source={deadLiftIcon} />
-          <Text style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.lift }}>
+        <View className="items-center w-full mt-[5%] flex justify-center flex-row bg-[#b8babd]">
+          <Image className="w-[7%] h-[70%] mb-[1%]" source={deadLiftIcon} />
+          <Text style={{ fontFamily: "Teko_700Bold"}} className="ml-[1%] text-xl">
             Dead Lift:
           </Text>
         </View>
-        <Text style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.span }}>
+        <Text style={{ fontFamily: "Teko_700Bold"}} className="w-full text-center text-[40px]">
           {deadLift || 0} kg
         </Text>
-        <View style={RecordsStyles.titleOfLift}>
-          <Image style={RecordsStyles.icon} source={squatIcon} />
-          <Text style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.lift }}>
+        <View className="items-center w-full mt-[5%] flex justify-center flex-row bg-[#b8babd]">
+          <Image className="w-[7%] h-[70%] mb-[1%]" source={squatIcon} />
+          <Text style={{ fontFamily: "Teko_700Bold"}} className="ml-[1%] text-xl">
             Squat:
           </Text>
         </View>
-        <Text style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.span }}>
+        <Text style={{ fontFamily: "Teko_700Bold"}} className="w-full text-center text-[40px]">
           {squat || 0} kg
         </Text>
-        <View style={RecordsStyles.titleOfLift}>
-          <Image style={RecordsStyles.icon} source={benchPressIcon} />
-          <Text style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.lift }}>
+        <View className="items-center w-full mt-[5%] flex justify-center flex-row bg-[#b8babd]">
+          <Image className="w-[7%] h-[70%] mb-[1%]" source={benchPressIcon} />
+          <Text style={{ fontFamily: "Teko_700Bold"}} className="ml-[1%] text-xl">
             Bench Press:
           </Text>
         </View>
-        <Text style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.span }}>
+        <Text style={{ fontFamily: "Teko_700Bold"}} className="w-full text-center text-[40px]">
           {benchPress || 0} kg
         </Text>
-        <Text style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.total }}>
+        <Text className="w-[70%] text-2xl border-b-white border-b-2 text-center" style={{ fontFamily: "Teko_700Bold"}}>
           Your total is: {total || 0} kg
         </Text>
         <TouchableOpacity
           onPress={() => setPopUp(true)}
-          style={RecordsStyles.buttonUpdateRecords}
+          className="w-3/5 h-[10%] mt-[15%] rounded-xl bg-[#aab4bd] flex justify-center items-center"
         >
           <Text
-            style={{ fontFamily: "Teko_700Bold", ...RecordsStyles.buttonText }}
+          className="text-2xl"
+            style={{ fontFamily: "Teko_700Bold"}}
           >
             Update Records
           </Text>

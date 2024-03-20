@@ -1,7 +1,6 @@
 import { TextInput, TouchableOpacity, View, Text } from "react-native";
 import ImportPlanPopUpProps from "./props/ImportPlanPopUpProps";
 import { useEffect, useState } from "react";
-import { ImportPlanPopUpStyles } from "./styles/ImportPlanPopUpStyles";
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -34,17 +33,18 @@ const ImportPlanPopUp: React.FC<ImportPlanPopUpProps> = (props) => {
     return <ViewLoading />;
   }
   return (
-    <View style={ImportPlanPopUpStyles.importPlanPopUp}>
-      <Text style={{ fontFamily: "Teko_700Bold", ...ImportPlanPopUpStyles.h2 }}>
+    <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[#000000f4]">
+      <Text className="text-white text-[20px] text-center" style={{ fontFamily: "Teko_700Bold"}}>
         If you want to copy someone plan you need to have a userId!
       </Text>
       <TextInput
-        style={ImportPlanPopUpStyles.input}
+        className="rounded-xl h-[6%] text-[15px] w-4/5 border-[#3c3c3c] border-[2px] mt-[5px] pl-[15px] text-white"
         placeholder="UserID"
         onChangeText={(text: string | "") => setUserId(text)}
       ></TextInput>
       <TouchableOpacity
-        style={ImportPlanPopUpStyles.button}
+      className="w-1/2 h-[10%] rounded-xl bg-[#aab4bd] flex justify-center items-center mt-[5%]"
+
         onPress={() => importPlan()}
       >
         <Text style={{ fontFamily: "Teko_700Bold", fontSize: 25 }}>COPY!</Text>

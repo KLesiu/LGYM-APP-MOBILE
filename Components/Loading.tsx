@@ -1,6 +1,5 @@
 import logoLGYM from "./img/logoLGYM.png";
 import { Text, Image, View } from "react-native";
-import { LoadingStyles } from "./styles/LoadingStyles";
 import { useState, useEffect } from "react";
 import {
   useFonts,
@@ -34,7 +33,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
   }, [fontsLoaded]);
   useEffect(() => {
     if (width === 100) return props.offLoading();
-    setTimeout(() => changeWidth(width), 200);
+    setTimeout(() => changeWidth(width), 300);
   }, [width]);
   const changeWidth = (width: number) => {
     setWidth(width + 10);
@@ -43,25 +42,22 @@ const Loading: React.FC<LoadingProps> = (props) => {
     return <ViewLoading />;
   }
   return (
-    <View style={LoadingStyles.loadingContainer}>
-      <Image source={logoLGYM} style={LoadingStyles.logoLGYMAPP} />
-      <View style={LoadingStyles.loadingDiv}>
-        <View style={LoadingStyles.loadingHolder}>
+    <View className="bg-black h-full w-full absolute flex flex-col items-center z-[6]" >
+      <Image source={logoLGYM} className="w-[70%] h-[40%]" />
+      <View className="flex flex-col mx-[5%] mt-[40%] w-[90%]">
+        <View className="border-[2px] border-gray-500 w-full rounded-xl h-1/5">
           <View
             style={{
-              backgroundColor: "grey",
-              borderRadius: 10,
-              height: "100%",
               width: `${width}%`,
-              zIndex: 7,
             }}
+            className="bg-gray-500 rounded-xl h-full z-[7]"
           ></View>
         </View>
         <Text
           style={{
-            fontFamily: "Teko_400Regular",
-            ...LoadingStyles.loadingDivP,
+            fontFamily: "Teko_400Regular"
           }}
+          className="text-[40px] text-white text-center w-full mt-12"
         >
           Loading...
         </Text>

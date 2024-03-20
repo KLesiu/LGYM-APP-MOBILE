@@ -8,7 +8,6 @@ import {
   Switch,
 } from "react-native";
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
-import { AddTrainingStyles } from "./styles/AddTrainingStyles";
 import { useState, useEffect, useReducer } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -274,16 +273,17 @@ const AddTraining: React.FC = () => {
       }
 
       setChooseDay(
-        <View style={AddTrainingStyles.chooseDaySection}>
+        <View className="items-center bg-[#000000f0] flex flex-col justify-start gap-10 h-full absolute m-0 w-full top-0">
           <Text
-            style={{ fontFamily: "Teko_700Bold", fontSize: 40, color: "white" }}
+          className="text-[40px] text-white"
+            style={{ fontFamily: "Teko_700Bold"}}
           >
             Choose training day!
           </Text>
           {daysArray.map((ele, index: number) => (
             <TouchableOpacity
               onPress={() => showDaySection(ele, false)}
-              style={AddTrainingStyles.button}
+              className="items-center border-[#868686] border-[1px] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
               key={index}
             >
               <Text
@@ -350,7 +350,7 @@ const AddTraining: React.FC = () => {
     }
     let arr: String[] = [];
     setDaySection(
-      <View style={AddTrainingStyles.daySection}>
+      <View className="absolute w-full h-full text-white bg-[#000000f5] flex flex-col pb-10">
         <Text
           style={{
             fontFamily: "Teko_700Bold",
@@ -385,7 +385,7 @@ const AddTraining: React.FC = () => {
                   arr.push(`${ele.name} ${s}: Rep`);
                   arr.push(`${ele.name} ${s}: Weight (kg)`);
                   return (
-                    <View style={AddTrainingStyles.exerciseDiv} key={index}>
+                    <View className="flex flex-row justify-center items-center border-b-gray-500 border-b-1 mt-1"  key={index}>
                       <Text
                         style={{
                           fontFamily: "Teko_400Regular",
@@ -405,7 +405,8 @@ const AddTraining: React.FC = () => {
                           handleInputChange(index, text, indexMain)
                         
                         }
-                        style={AddTrainingStyles.input}
+                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
+                       
                       />
                       <Text
                         style={{
@@ -427,11 +428,8 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputWeightChange(index, text, indexMain)
                         }
-                        style={{
-                          borderBottomColor: "grey",
-                          borderBottomWidth: 2,
-                          ...AddTrainingStyles.input,
-                        }}
+                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
+                       
                       />
                     </View>
                   );
@@ -491,7 +489,7 @@ const AddTraining: React.FC = () => {
       };
     });
     setDaySection(
-      <View style={AddTrainingStyles.daySection}>
+      <View className="absolute w-full h-full text-white bg-[#000000f5] flex-col flex pb-10">
         <Text
           style={{
             fontFamily: "Teko_700Bold",
@@ -526,7 +524,7 @@ const AddTraining: React.FC = () => {
                   arr.push(`${ele.name} ${s}: Rep`);
                   arr.push(`${ele.name} ${s}: Weight (kg)`);
                   return (
-                    <View style={AddTrainingStyles.exerciseDiv} key={index}>
+                    <View className="flex flex-row justify-center items-center border-b-gray-500 border-b-1 mt-1"key={index}>
                       <Text
                         style={{
                           fontFamily: "Teko_400Regular",
@@ -550,7 +548,7 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputChange(index, text, indexMain)
                         }
-                        style={AddTrainingStyles.input}
+                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
                       />
                       <Text
                         style={{
@@ -575,11 +573,8 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputWeightChange(index, text, indexMain)
                         }
-                        style={{
-                          borderBottomColor: "grey",
-                          borderBottomWidth: 2,
-                          ...AddTrainingStyles.input,
-                        }}
+                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
+                      
                       />
                     </View>
                   );
@@ -997,27 +992,27 @@ const AddTraining: React.FC = () => {
       return setViewLoading(false);
     setLastTrainingSection(() => {
       return (
-        <View style={AddTrainingStyles.lastSessionTrainingSection}>
+        <View className="bg-[#000000fa] absolute w-full h-full flex flex-col z-[5]">
           <TouchableOpacity onPress={hideLastTrainingSection}>
             <Icon style={{ fontSize: 40, color: "white" }} name="close" />
           </TouchableOpacity>
           <Text
+          className="text-2xl text-center text-white"
             style={{
-              fontFamily: "Teko_400Regular",
-              ...AddTrainingStyles.lastSessionDate,
+              fontFamily: "Teko_400Regular"
             }}
           >
             Date: {lastTrainingSessionDate}
           </Text>
-          <ScrollView style={AddTrainingStyles.scrollViewLastSession}>
-            <View style={AddTrainingStyles.ViewLastSessionInsideScroll}>
-              <View style={AddTrainingStyles.containerForFieldsAtLastSession}>
+          <ScrollView className="w-4/5 ml-[10%] h-[70%] ">
+            <View className="w-full flex flex-row">
+              <View className="w-[60%]" >
                 {lastTrainingSessionExercises.length > 0
                   ? lastTrainingSessionExercises.map((ele, index: number) => {
                       if (index !== 0 && index % 2 !== 0) return;
                       return (
                         <View
-                          style={AddTrainingStyles.lastSessionField}
+                        className="w-full border-b-gray-500 border-b-[1px] h-20 text-white"
                           key={index}
                         >
                           {index === 0 || index % 2 == 0 ? (
@@ -1041,16 +1036,16 @@ const AddTraining: React.FC = () => {
                   : ""}
               </View>
 
-              <View style={AddTrainingStyles.containerForScoresAtLastSession}>
+              <View className="w-[40%] flex flex-row flex-wrap">
                 {lastTrainingSessionExercises.length > 0
                   ? lastTrainingSessionExercises.map((ele, index) => {
                       return (
                         <Text
                           style={{
-                            fontFamily: "Teko_400Regular",
-                            fontSize: 20,
-                            ...AddTrainingStyles.lastSessionScore,
+                            fontFamily: "Teko_400Regular"
                           }}
+                          className="w-1/2 border-b-gray-500 border-b-[1px] h-20 pl-[10%]
+                          bg-[#141414b3] pt-5 text-white text-[20px]"
                           key={index}
                         >
                           {ele.score}
@@ -1105,11 +1100,13 @@ const AddTraining: React.FC = () => {
   return (
     <ImageBackground
       source={backgroundLogo}
-      style={AddTrainingStyles.background}
+      
+      className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100"
+      
     >
-      <View style={AddTrainingStyles.addTrainingContainer}>
+      <View className="bg-[#9696961a] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
         {plan === "completed" ? (
-          <View style={AddTrainingStyles.addTrainingSection}>
+          <View className="relative bg-[#fffffff2] flex flex-col justify-start items-center h-full w-full" >
             <Text
               style={{
                 fontFamily: "Teko_400Regular",
@@ -1129,7 +1126,7 @@ const AddTraining: React.FC = () => {
             {}
             {chooseDay}
             {isPopUpShowed ? (
-              <View style={AddTrainingStyles.popUp}>
+              <View className="items-center bg-green-600 rounded-[50px] flex flex-row justify-center w-1/2 h-1/3 top-[30%] absolute" >
                 <Icon style={{ fontSize: 100 }} name="check" />
               </View>
             ) : (
@@ -1138,11 +1135,12 @@ const AddTraining: React.FC = () => {
             {daySection}
             {lastTrainingSection}
             {showExercise ? (
-              <View style={AddTrainingStyles.buttonsSection}>
+              <View className="w-full flex justify-center flex-row absolute items-center bottom-0 gap-12 mb-0">
                 {isAddTrainingActive ? (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(true)}
-                    style={AddTrainingStyles.buttonAtAddTrainingConfig}
+                    className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+
                   >
                     <Text
                       style={{
@@ -1157,7 +1155,8 @@ const AddTraining: React.FC = () => {
                 ) : (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(false)}
-                    style={AddTrainingStyles.buttonAtAddTrainingConfig}
+                    className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+               
                   >
                     <Text
                       style={{
@@ -1177,7 +1176,8 @@ const AddTraining: React.FC = () => {
                   onValueChange={toggleSwitch}
                   value={isEnabled}
                 ></Switch>
-                {isAddTrainingActive?<TouchableOpacity onPress={()=>deleteCurrentSession()} style={AddTrainingStyles.buttonAtAddTrainingConfig}>
+                {isAddTrainingActive?<TouchableOpacity onPress={()=>deleteCurrentSession()}
+                className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center">
                         <Text style={{  fontFamily: "Teko_400Regular",
                       textAlign: "center",
                       fontSize: 17,}}>
@@ -1188,7 +1188,8 @@ const AddTraining: React.FC = () => {
                     setViewLoading(true);
                     showLastTrainingSection();
                   }}
-                  style={AddTrainingStyles.buttonAtAddTrainingConfig}
+                  className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+                 
                 >
                   <Text
                     style={{
@@ -1207,7 +1208,7 @@ const AddTraining: React.FC = () => {
             )}
           </View>
         ) : (
-          <View style={AddTrainingStyles.withoutTraining}>
+          <View className="w-full h-full flex flex-row justify-center pt-[40%]">
             <Text
               style={{
                 fontFamily: "Teko_400Regular",
