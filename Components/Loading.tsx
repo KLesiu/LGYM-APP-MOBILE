@@ -34,7 +34,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
   }, [fontsLoaded]);
   useEffect(() => {
     if (width === 100) return props.offLoading();
-    setTimeout(() => changeWidth(width), 100);
+    setTimeout(() => changeWidth(width), 200);
   }, [width]);
   const changeWidth = (width: number) => {
     setWidth(width + 10);
