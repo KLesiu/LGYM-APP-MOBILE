@@ -273,7 +273,7 @@ const AddTraining: React.FC = () => {
       }
 
       setChooseDay(
-        <View className="items-center bg-[#000000f0] flex flex-col justify-start gap-10 h-full absolute w-full top-0">
+        <View className="items-center bg-[#000000f0] flex flex-col justify-start gap-10 h-full absolute m-0 w-full top-0">
           <Text
           className="text-[40px] text-white"
             style={{ fontFamily: "Teko_700Bold"}}

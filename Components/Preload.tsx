@@ -74,13 +74,13 @@ const Preload:React.FC=()=>{
                         <View className="bg-[#5c5c5cb3] h-full w-full">
                             <View className="flex-1 items-center flex bg-[#000000e5] justify-center h-full gap-5">
                                 <Image source={logoLGYM} className="w-[70%] h-2/5" />
-                                <TouchableOpacity className="items-center bg-[rgb(134,134,134)] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%] " onPress={handleLoginPress} >
-                                    <Text className="text-[rgb(226,226,226)] text-[35px] no-underline text-shadow text-shadow-black text-shadow-offset text-shadow-offset-1 text-shadow-radius text-shadow-radius-1 tracking-wider"  style={{fontFamily:'Teko_700Bold'}}>LOGIN</Text>
+                                <TouchableOpacity className="items-center bg-[#868686] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%] " onPress={handleLoginPress} >
+                                    <Text className="text-[#e2e2e2] text-[35px] no-underline text-shadow text-shadow-black text-shadow-offset text-shadow-offset-1 text-shadow-radius text-shadow-radius-1 tracking-wider"  style={{fontFamily:'Teko_700Bold'}}>LOGIN</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity className="items-center bg-[rgb(134,134,134)] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%] " onPress={handleRegisterPress}>
-                                    <Text className="text-[rgb(226,226,226)] text-[35px] no-underline text-shadow text-shadow-black text-shadow-offset text-shadow-offset-1 text-shadow-radius text-shadow-radius-1 tracking-wider" style={{fontFamily:'Teko_700Bold'}}>REGISTER</Text>
+                                <TouchableOpacity className="items-center bg-[#868686] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%] " onPress={handleRegisterPress}>
+                                    <Text className="text-[#e2e2e2] text-[35px] no-underline text-shadow text-shadow-black text-shadow-offset text-shadow-offset-1 text-shadow-radius text-shadow-radius-1 tracking-wider" style={{fontFamily:'Teko_700Bold'}}>REGISTER</Text>
                                 </TouchableOpacity>
-                               <Text className="items-center w-[90%] text-white" style={{fontFamily:'Caveat_400Regular'}}>'Strength does not come from winning. Your struggles develop your strengths. When you go through hardships and decide not to surrender, that is strength. When you make an impasse passable, that is strength. But you must have ego, the kind of ego which makes you think of yourself in terms of superlatives. You must want to be the greatest. We are all starved for compliments. So we do things that get positive feedback.' (Arnold Schwarzenegger, 1982)</Text>
+                               <Text className="items-center w-[90%] text-white text-center" style={{fontFamily:'Caveat_400Regular'}}>'Strength does not come from winning. Your struggles develop your strengths. When you go through hardships and decide not to surrender, that is strength. When you make an impasse passable, that is strength. But you must have ego, the kind of ego which makes you think of yourself in terms of superlatives. You must want to be the greatest. We are all starved for compliments. So we do things that get positive feedback.' (Arnold Schwarzenegger, 1982)</Text>
                             </View>
                                 
                         </View>

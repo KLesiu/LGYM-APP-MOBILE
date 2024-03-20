@@ -88,7 +88,7 @@ const Profile: React.FC = () => {
             Name: {yourProfile?.name}
           </Text>
           <View className="w-full flex flex-col h-full items-center">
-            <View className="flex w-[70%] justify-center flex-col flex-wrap bg-[#313131b3] rounded p-4 h-2/5 " >
+            <View className="flex w-[70%] justify-center flex-col flex-wrap bg-[#000000c0] rounded p-4 h-2/5 " >
               <Text
                 style={{
                   fontFamily: "Teko_700Bold",

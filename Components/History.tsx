@@ -153,7 +153,7 @@ const History: React.FC = () => {
                     }
                     className="absolute right-[10%] top-[30%]"
                   >
-                    <Icon className="text-[40px]" name="book-outline" />
+                    <Icon size={30} name="book-outline" />
                   </TouchableOpacity>
                 </View>
               );
