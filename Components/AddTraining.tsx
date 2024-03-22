@@ -26,7 +26,7 @@ import addTrainingFetchType from "./types/AddTrainingFetchAnsw";
 import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 import MiniLoading from "./MiniLoading";
-import { useInterval } from "react-use";
+import useInterval from "./helpers/hooks/useInterval";
 import UpdateRankPopUp from "./UpdateRankPopUp";
 type InputAction = {
   type: "UPDATE_INPUT";

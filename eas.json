@@ -3,6 +3,11 @@
     "preview": {
       "android": {
         "buildType": "apk",
+        "env":{
+          "REACT_APP_BACKEND" : "https://lgym-app-api-v2.vercel.app/",
+          "REACT_APP_MSG_REGISTER_CREATE" : "User created successfully!",
+          "REACT_APP_MSG_LOGIN_AUTH" : "Authorized"
+        }
 
       }
     },
