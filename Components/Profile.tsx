@@ -88,21 +88,7 @@ const Profile: React.FC = () => {
             Name: {yourProfile?.name}
           </Text>
           <View className="w-full flex flex-col h-full items-center">
-            <View className="flex w-full justify-center flex-col items-center flex-wrap bg-[#d8d8d84f] rounded pl-2 h-2/5 " >
-              <Text className="text-black w-1/4 text-2xl"
-                style={{
-                  fontFamily: "Teko_700Bold",
-                }}
-              >
-                Profile Rank :
-              </Text>
-              <Text className="text-black  text-2xl w-1/4"
-                style={{
-                  fontFamily: "Teko_700Bold",
-                }}
-              >
-                {profileRank}
-              </Text>
+            <View className="flex w-[100%] justify-center flex-col items-center flex-wrap bg-[#d8d8d84f] rounded pl-2 h-2/5 ">
               {rankComponent}
             </View>
             <Text className="p-1 border-gray-500 border-2 w-[70%] rounded text-xl mt-5" style={{ fontFamily: "Teko_700Bold"}}>

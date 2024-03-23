@@ -1135,7 +1135,7 @@ const AddTraining: React.FC = () => {
             {daySection}
             {lastTrainingSection}
             {showExercise ? (
-              <View className="w-full flex justify-center flex-row absolute items-center bottom-0 gap-12 mb-0">
+              <View className="w-full flex justify-around flex-row absolute items-center bottom-0  mb-0">
                 {isAddTrainingActive ? (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(true)}
