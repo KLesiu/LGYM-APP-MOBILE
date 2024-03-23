@@ -88,22 +88,17 @@ const Profile: React.FC = () => {
             Name: {yourProfile?.name}
           </Text>
           <View className="w-full flex flex-col h-full items-center">
-            <View className="flex w-[70%] justify-center flex-col flex-wrap bg-[#000000c0] rounded p-4 h-2/5 " >
-              <Text
+            <View className="flex w-full justify-center flex-col items-center flex-wrap bg-[#d8d8d84f] rounded pl-2 h-2/5 " >
+              <Text className="text-black w-1/4 text-2xl"
                 style={{
                   fontFamily: "Teko_700Bold",
-                  color: "white",
-                  width: "50%",
-                  fontSize: 25,
                 }}
               >
                 Profile Rank :
               </Text>
-              <Text
+              <Text className="text-black  text-2xl w-1/4"
                 style={{
                   fontFamily: "Teko_700Bold",
-                  color: "white",
-                  fontSize: 25,
                 }}
               >
                 {profileRank}
@@ -119,8 +114,8 @@ const Profile: React.FC = () => {
           </View>
         </View>
         <TouchableOpacity className="w-1/2 h-[10%] bg-[#bd1212e1] border-black border-1 rounded-xl flex justify-center flex-row items-center ml-[25%] mt-[20%] " onPress={logout}>
-          <Text
-            style={{ fontFamily: "Teko_700Bold", color: "white", fontSize: 30 }}
+          <Text className="text-white text-3xl"
+            style={{ fontFamily: "Teko_700Bold"}}
           >
             LOGOUT
           </Text>

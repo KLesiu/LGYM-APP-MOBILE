@@ -42,10 +42,10 @@ const CurrentTrainingHistorySession: React.FC<
       setExercises(response.exercises);
       setInfoAboutSession(() => (
         <View
-        className="bg-[#9696961a] rounded-md mb-[2%] mt-[1%] h-[10%] text-white flex flex-wrap flex-row justify-center w-full"
+        className="bg-[#e6e6e627] rounded-md mb-[2%] mt-[1%] h-[10%]  flex flex-wrap flex-row justify-center w-full"
         >
           <Text
-          className="m-1 w-full text-[25px] text-center"
+          className="m-1 w-full text-[25px] text-center text-white"
             style={{
               fontFamily: "Teko_700Bold"
             }}

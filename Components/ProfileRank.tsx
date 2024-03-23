@@ -27,6 +27,6 @@ const ProfileRank:React.FC=()=>{
         getRank()
     },[])
    
-    return   <Image className="w-28 h-28"  source={rankSrc as ImageProps} />
+    return   <Image className="w-36 h-36"  source={rankSrc as ImageProps} />
 }
 export default ProfileRank
