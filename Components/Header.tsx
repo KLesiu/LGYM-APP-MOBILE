@@ -7,8 +7,10 @@ import {
     useFonts,
     Teko_700Bold,
     Teko_400Regular,
-    Teko_300Light
+    Teko_300Light,
+    
   } from "@expo-google-fonts/teko";
+import { OpenSans_400Regular,OpenSans_700Bold } from "@expo-google-fonts/open-sans"
 import * as SplashScreen from "expo-splash-screen";
 
 const Header:React.FC =()=>{
@@ -16,7 +18,9 @@ const Header:React.FC =()=>{
     const [fontsLoaded] = useFonts({
         Teko_700Bold,
         Teko_400Regular,
-        Teko_300Light
+        Teko_300Light,
+        OpenSans_400Regular,
+        OpenSans_700Bold
       });
       useEffect(() => {
         const loadAsyncResources = async () => {
@@ -41,11 +45,11 @@ const Header:React.FC =()=>{
         <View className="bg-[#131313] h-20 px-8 py-4 flex flex-row justify-between items-center">
             <View className="flex flex-row  justify-around">
                 <View className="flex flex-col">
-                    <Text className=" leading-4 text-base text-white" style={{
-                      fontFamily: "Teko_300Light",
+                    <Text className=" leading-4 text-sm text-white" style={{
+                      fontFamily: "OpenSans_400Regular",
                     }}>Welcome back</Text>
-                    <Text  className="text-lg leading-6  text-white" style={{
-                      fontFamily: "Teko_700Bold",
+                    <Text  className="text-base leading-6  text-white" style={{
+                      fontFamily: "OpenSans_700Bold",
                     }}>{name}</Text>
                 </View>
             </View>

@@ -1,28 +1,50 @@
 import { View, TouchableOpacity,Image,Text } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MenuProps from "./props/MenuProps";
 import TrainingPlan from "./TrainingPlan";
 import History from "./History";
 import AddTraining from "./AddTraining";
-import Records from "./Records";
 import Profile from "./Profile";
 import home from './img/icons/home.png'
 import profile from './img/icons/profile.png'
 import history from './img/icons/history.png'
 import addTraining from './img/icons/add.png'
 import plan from './img/icons/plan.png'
+import { OpenSans_400Regular,OpenSans_700Bold,OpenSans_300Light,useFonts } from "@expo-google-fonts/open-sans"
+import { useEffect } from "react";
+import * as SplashScreen from "expo-splash-screen";
+
+
 
 const Menu: React.FC<MenuProps> = (props) => {
+  const [fontsLoaded] = useFonts({
+
+    OpenSans_400Regular,
+    OpenSans_700Bold,
+    OpenSans_300Light
+  });
+  useEffect(() => {
+    const loadAsyncResources = async () => {
+      try {
+        SplashScreen.preventAutoHideAsync();
+        await fontsLoaded;
+        SplashScreen.hideAsync();
+      } catch (error) {
+        console.error("Błąd ładowania zasobów:", error);
+      }
+    };
+
+    loadAsyncResources();
+  }, [fontsLoaded]);
   return (
-    <View className="bg-[#131313] h-32 py-3 px-6 w-full">
-      <View className="flex justify-between h-14 flex-row">
+    <View className="bg-[#131313] h-32 py-3  w-full">
+      <View className="flex justify-between  h-14 flex-row">
         <View className="flex flex-col justify-center w-[19.9%]">
           <TouchableOpacity
             onPress={() => props.viewChange(<TrainingPlan />)}
             className="items-center  flex h-full justify-center flex-col w-full"
           >
             <Image className="w-6 h-6"  source={home}/>
-            <Text  className="text-xs  text-gray-200/80 font-light leading-4 font-sans">Start</Text>
+            <Text  className="text-xs  text-gray-200/80 font-light leading-4" style={{fontFamily:"OpenSans_300Light"}}>Start</Text>
           </TouchableOpacity>
         </View>
         <View className="flex flex-col justify-center w-[19.9%]">
@@ -31,7 +53,7 @@ const Menu: React.FC<MenuProps> = (props) => {
             className="items-center  flex h-full justify-center flex-col w-full"
           >
             <Image  source={plan} className="w-6 h-6"/>
-            <Text className="text-xs text-gray-200/80 font-light leading-4 font-sans">Plan</Text>
+            <Text className="text-xs text-gray-200/80 font-light leading-4" style={{fontFamily:"OpenSans_300Light"}}>Plan</Text>
           </TouchableOpacity>
         </View>
         <View className="flex flex-col justify-center w-[19.9%]">
@@ -48,7 +70,7 @@ const Menu: React.FC<MenuProps> = (props) => {
             className="items-center  flex h-full justify-center flex-col w-full"
           >
             <Image  source={history} className="w-6 h-6"/>
-            <Text className="text-gray-200/80 text-xs font-light leading-4 font-sans">History</Text>
+            <Text className="text-gray-200/80 text-xs font-light leading-4" style={{fontFamily:"OpenSans_300Light"}}>History</Text>
           </TouchableOpacity>
         </View>
         <View className="flex flex-col justify-center w-[19.9%]">
@@ -57,7 +79,7 @@ const Menu: React.FC<MenuProps> = (props) => {
             className="items-center  flex h-full justify-center flex-col w-full"
           >
            <Image  source={profile} className="w-6 h-6"/>
-           <Text className="leading-4 font-sans text-xs text-gray-200/80 font-light">Profile</Text>
+           <Text className="leading-4 text-xs text-gray-200/80 font-light" style={{fontFamily:"OpenSans_300Light"}}>Profile</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -13,6 +13,8 @@ import {
   Teko_700Bold,
   Teko_400Regular,
 } from "@expo-google-fonts/teko";
+import { OpenSans_400Regular,OpenSans_700Bold,OpenSans_300Light} from "@expo-google-fonts/open-sans"
+
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
 import * as SplashScreen from "expo-splash-screen";
 import Data from "./types/DataPlansArrays";
@@ -35,9 +37,12 @@ const TrainingPlan: React.FC = () => {
     useState<boolean>(false);
 
   const [fontsLoaded] = useFonts({
-    Teko_700Bold,
+    OpenSans_700Bold,
     Caveat_400Regular,
     Teko_400Regular,
+    OpenSans_400Regular,
+    Teko_700Bold,
+    OpenSans_300Light
   });
   useEffect(() => {
     const loadAsyncResources = async () => {
@@ -62,7 +67,7 @@ const TrainingPlan: React.FC = () => {
         <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
           <Text
             style={{
-              fontFamily: "Teko_400Regular",
+              fontFamily: "OpenSans_300Light",
               fontSize: 50,
               color: "grey",
             }}
@@ -73,7 +78,7 @@ const TrainingPlan: React.FC = () => {
             onPress={deletePlan}
             className="w-1/2 h-[10%] bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
           >
-            <Text style={{ fontFamily: "Teko_700Bold", fontSize: 40 }}>
+            <Text style={{ fontFamily: "OpenSans_700Bold", fontSize: 40 }}>
               YES
             </Text>
           </TouchableOpacity>
@@ -84,7 +89,7 @@ const TrainingPlan: React.FC = () => {
             }}
             className="w-1/2 h-[10%] bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
           >
-            <Text style={{ fontFamily: "Teko_700Bold", fontSize: 40 }}>NO</Text>
+            <Text style={{ fontFamily: "OpenSans_700Bold", fontSize: 40 }}>NO</Text>
           </TouchableOpacity>
         </View>
       );
@@ -111,17 +116,17 @@ const TrainingPlan: React.FC = () => {
                   key={index}
                 >
                   <Text
-                    className="text-base text-gray-200/80 leading-4 "
+                    className="text-[12px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
                     }}
                   >
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-base"
-                    style={{ fontFamily: "Teko_400Regular" }}
+                    className="text-gray-200/80 text-[12px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
@@ -136,17 +141,17 @@ const TrainingPlan: React.FC = () => {
                   key={index}
                 >
                   <Text
-                    className="text-base text-gray-200/80 leading-4 "
+                    className="text-[12px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
                     }}
                   >
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-base"
-                    style={{ fontFamily: "Teko_400Regular" }}
+                    className="text-gray-200/80 text-[12px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
@@ -161,17 +166,17 @@ const TrainingPlan: React.FC = () => {
                   key={index}
                 >
                   <Text
-                    className="text-base text-gray-200/80 leading-4 "
+                    className="text-[12px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
                     }}
                   >
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-base"
-                    style={{ fontFamily: "Teko_400Regular" }}
+                    className="text-gray-200/80 text-[12px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
@@ -186,17 +191,17 @@ const TrainingPlan: React.FC = () => {
                   key={index}
                 >
                   <Text
-                    className="text-base text-gray-200/80 leading-4 "
+                    className="text-[12px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
                     }}
                   >
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-base"
-                    style={{ fontFamily: "Teko_400Regular" }}
+                    className="text-gray-200/80 text-[12px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
@@ -211,17 +216,17 @@ const TrainingPlan: React.FC = () => {
                   key={index}
                 >
                   <Text
-                    className="text-base text-gray-200/80 leading-4 "
+                    className="text-[12px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
                     }}
                   >
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-base"
-                    style={{ fontFamily: "Teko_400Regular" }}
+                    className="text-gray-200/80 text-[12px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
@@ -236,17 +241,17 @@ const TrainingPlan: React.FC = () => {
                   key={index}
                 >
                   <Text
-                    className="text-base text-gray-200/80 leading-4 "
+                    className="text-[12px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
                     }}
                   >
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-base"
-                    style={{ fontFamily: "Teko_400Regular" }}
+                    className="text-gray-200/80 text-[12px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
@@ -261,17 +266,17 @@ const TrainingPlan: React.FC = () => {
                   key={index}
                 >
                   <Text
-                    className="text-base text-gray-200/80 leading-4 "
+                    className="text-[12px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
                     }}
                   >
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-base"
-                    style={{ fontFamily: "Teko_400Regular" }}
+                    className="text-gray-200/80 text-[12px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
@@ -284,8 +289,8 @@ const TrainingPlan: React.FC = () => {
               {planA ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] text-sm font-bold"
-                    style={{ fontFamily: "Teko_700Bold" }}
+                    className="text-[#4CD964] mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan A
                   </Text>
@@ -297,8 +302,8 @@ const TrainingPlan: React.FC = () => {
               {planB ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] text-sm font-bold"
-                    style={{ fontFamily: "Teko_700Bold" }}
+                    className="text-[#4CD964] mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan B
                   </Text>
@@ -310,8 +315,8 @@ const TrainingPlan: React.FC = () => {
               {planC ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] text-sm font-bold"
-                    style={{ fontFamily: "Teko_700Bold" }}
+                    className="text-[#4CD964] mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan C
                   </Text>
@@ -323,8 +328,8 @@ const TrainingPlan: React.FC = () => {
               {planD ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] text-sm font-bold"
-                    style={{ fontFamily: "Teko_700Bold" }}
+                    className="text-[#4CD964] mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan D
                   </Text>
@@ -336,8 +341,8 @@ const TrainingPlan: React.FC = () => {
               {planE ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] text-sm font-bold"
-                    style={{ fontFamily: "Teko_700Bold" }}
+                    className="text-[#4CD964] mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan E
                   </Text>
@@ -349,8 +354,8 @@ const TrainingPlan: React.FC = () => {
               {planF ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] text-sm font-bold"
-                    style={{ fontFamily: "Teko_700Bold" }}
+                    className="text-[#4CD964] mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan F
                   </Text>
@@ -362,8 +367,8 @@ const TrainingPlan: React.FC = () => {
               {planG ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] text-sm font-bold"
-                    style={{ fontFamily: "Teko_700Bold" }}
+                    className="text-[#4CD964] mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan G
                   </Text>
@@ -433,9 +438,9 @@ const TrainingPlan: React.FC = () => {
       <View className="bg-[#131313] flex flex-column p-4 h-full w-full text-center z-[2]">
         <View className="w-full flex flex-col gap-4">
           <Text
-            className="w-full text-3xl text-white font-bold "
+            className="w-full text-2xl text-white font-bold "
             style={{
-              fontFamily: "Teko_700Bold",
+              fontFamily: "OpenSans_700Bold",
             }}
           >
             Training Plan
@@ -449,9 +454,9 @@ const TrainingPlan: React.FC = () => {
               className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
             >
               <Text
-                className="text-black text-lg w-full text-center"
+                className="text-black text-md w-full text-center"
                 style={{
-                  fontFamily: "Teko_700Bold",
+                  fontFamily: "OpenSans_700Bold",
                 }}
               >
                 Create plan
@@ -462,9 +467,9 @@ const TrainingPlan: React.FC = () => {
               onPress={() => showImportPlanPopUpFn()}
             >
               <Text
-                className="text-black text-lg w-full text-center"
+                className="text-black text-md w-full text-center"
                 style={{
-                  fontFamily: "Teko_700Bold",
+                  fontFamily: "OpenSans_700Bold",
                 }}
               >
                 Import plan
@@ -474,9 +479,9 @@ const TrainingPlan: React.FC = () => {
           {isPlanSet?
           <View className="flex flex-row w-full justify-around items-center">
             <Text
-              className="w-full text-xl text-white  font-bold "
+              className="w-full text-lg text-white  font-bold "
               style={{
-                fontFamily: "Teko_700Bold",
+                fontFamily: "OpenSans_700Bold",
               }}
             >
               Current training plan
