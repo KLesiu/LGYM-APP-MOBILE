@@ -394,31 +394,35 @@ const TrainingPlan: React.FC = () => {
       .catch((err) => err)
       .then((res) => res);
     if (response.msg === "Deleted!") {
+      await AsyncStorage.removeItem("plan");
       setIsPlanSet(false);
       setPopUp(<></>);
       setIsPopUpDeleteShowed(false);
-      await AsyncStorage.removeItem("plan");
+      
     }
   };
   const showImportPlanPopUpFn = (): void => {
     setShowImportPlanPopUp(true);
   };
-  const setImportPlan = async (userId: string): Promise<void> => {
-    if (!userId) return;
+  const setImportPlan = async (userName: string): Promise<void> => {
+    if (!userName) return;
     const id = await AsyncStorage.getItem("id");
+    
     await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/setSharedPlan`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: userId,
+        userName: userName,
       }),
     })
-      .then((res) => res)
-      .catch((err) => console.log(err));
-    setShowImportPlanPopUp(false);
-    setIsPlanSet(true);
+      .then(() =>{
+        setShowImportPlanPopUp(false);
+        setIsPlanSet(true);
+      })
+      .catch((err) =>err );
+
   };
 
   if (!fontsLoaded) {

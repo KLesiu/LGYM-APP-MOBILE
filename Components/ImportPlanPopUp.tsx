@@ -39,7 +39,7 @@ const ImportPlanPopUp: React.FC<ImportPlanPopUpProps> = (props) => {
       </Text>
       <TextInput
         className="rounded-xl h-[6%] text-[15px] w-4/5 border-[#3c3c3c] border-[2px] mt-[5px] pl-[15px] text-white"
-        placeholder="UserID"
+        placeholder="Username"
         onChangeText={(text: string | "") => setUserId(text)}
       ></TextInput>
       <TouchableOpacity

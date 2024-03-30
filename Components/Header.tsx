@@ -7,6 +7,7 @@ import {
     useFonts,
     Teko_700Bold,
     Teko_400Regular,
+    Teko_300Light
   } from "@expo-google-fonts/teko";
 import * as SplashScreen from "expo-splash-screen";
 
@@ -15,6 +16,7 @@ const Header:React.FC =()=>{
     const [fontsLoaded] = useFonts({
         Teko_700Bold,
         Teko_400Regular,
+        Teko_300Light
       });
       useEffect(() => {
         const loadAsyncResources = async () => {
@@ -40,9 +42,9 @@ const Header:React.FC =()=>{
             <View className="flex flex-row  justify-around">
                 <View className="flex flex-col">
                     <Text className=" leading-4 text-base text-white" style={{
-                      fontFamily: "Teko_700Bold",
+                      fontFamily: "Teko_300Light",
                     }}>Welcome back</Text>
-                    <Text  className="text-lg leading-4  text-white" style={{
+                    <Text  className="text-lg leading-6  text-white" style={{
                       fontFamily: "Teko_700Bold",
                     }}>{name}</Text>
                 </View>
