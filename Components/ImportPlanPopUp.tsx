@@ -33,7 +33,7 @@ const ImportPlanPopUp: React.FC<ImportPlanPopUpProps> = (props) => {
     return <ViewLoading />;
   }
   return (
-    <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[#000000f4]">
+    <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[#000000f4] p-6 z-50">
       <Text className="text-white text-[20px] text-center" style={{ fontFamily: "Teko_700Bold"}}>
         If you want to copy someone plan you need to have a userId!
       </Text>
