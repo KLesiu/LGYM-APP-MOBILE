@@ -36,7 +36,7 @@ const Menu: React.FC<MenuProps> = (props) => {
     loadAsyncResources();
   }, [fontsLoaded]);
   return (
-    <View className="bg-[#131313] h-32 py-3  w-full">
+    <View className="bg-[#131313] h-32 py-3  w-[99%]">
       <View className="flex justify-between  h-14 flex-row">
         <View className="flex flex-col justify-center w-[19.9%]">
           <TouchableOpacity

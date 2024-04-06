@@ -6,6 +6,7 @@ import logo300 from './img/logo300.png'
 import Menu from "./Menu";
 import Loading from "./Loading";
 import Header from "./Header";
+import Profile from "./Profile";
 
 const Home:React.FC=()=>{
     const [view,setView]=useState<JSX.Element>(<TrainingPlan/>)
@@ -17,8 +18,8 @@ const Home:React.FC=()=>{
         setIsLoading(false)
     }
     return(
-        <View className="bg-[#e0e0e0] flex flex-col justify-between relative h-full" >
-            <Header />
+        <View className="bg-[#131313] flex flex-col justify-between relative h-full" >
+            {view.type.name === 'Profile'?'':<Header />}
             {view}
             <Menu viewChange={changeView}/>
             {isLoading?<Loading offLoading={offLoading} />:''}

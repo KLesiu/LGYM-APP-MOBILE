@@ -1,5 +1,5 @@
 type UserProfile ={
     email: string,
-    name:string
+    name:string,
 }
 export default UserProfile

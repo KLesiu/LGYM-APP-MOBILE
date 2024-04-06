@@ -1,4 +1,4 @@
-import { Text, View, ImageBackground, TouchableOpacity } from "react-native";
+import { Text, View, ImageBackground, TouchableOpacity, Pressable } from "react-native";
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
 import UserProfile from "./types/UserProfile";
@@ -12,6 +12,10 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types/RootStackParamList";
 import ViewLoading from "./ViewLoading";
+import { OpenSans_400Regular,OpenSans_700Bold,OpenSans_300Light} from "@expo-google-fonts/open-sans"
+import Records from "./Records";
+import MainProfileInfo from "./MainProfileInfo";
+
 
 const Profile: React.FC = () => {
   const [yourProfile, setYourProfile] = useState<UserProfile>();
@@ -21,10 +25,17 @@ const Profile: React.FC = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
+  const logout = async (): Promise<void> => {
+    const keys = await AsyncStorage.getAllKeys();
+    keys.forEach((ele) => deleteFromStorage(ele));
+    navigation.navigate("Preload");
+  };
+  const [currentTab,setCurrentTab]=useState<JSX.Element>(<MainProfileInfo logout={logout}/>)
 
   const [fontsLoaded] = useFonts({
     Teko_700Bold,
     Caveat_400Regular,
+    OpenSans_700Bold,OpenSans_400Regular,OpenSans_300Light
   });
   useEffect(() => {
     const loadAsyncResources = async () => {
@@ -53,6 +64,10 @@ const Profile: React.FC = () => {
     setYourProfile({ name: username!, email: email! });
     checkMoreUserInfo(id!);
   };
+  const styleCurrentTab = (tab:JSX.Element,cssRule:string):string=>{
+    if(cssRule==='border') return currentTab.type.name===tab.type.name?'#4CD964':'#131313'
+    return currentTab.type.name===tab.type.name?'#4CD964':'#E5E7EB'
+  }
   const checkMoreUserInfo = async (id: string): Promise<void> => {
     const response: "Didnt find" | UserInfo = await fetch(
       `${process.env.REACT_APP_BACKEND}/api/userInfo/${id}`
@@ -66,11 +81,7 @@ const Profile: React.FC = () => {
       }
     setViewLoading(false);
   };
-  const logout = async (): Promise<void> => {
-    const keys = await AsyncStorage.getAllKeys();
-    keys.forEach((ele) => deleteFromStorage(ele));
-    navigation.navigate("Preload");
-  };
+
   const deleteFromStorage = async (key: string): Promise<void> => {
     await AsyncStorage.removeItem(key);
   };
@@ -78,19 +89,41 @@ const Profile: React.FC = () => {
     return <ViewLoading />;
   }
   return (
-    <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 flex justify-center items-center opacity-100 " source={backgroundLogo} >
-      <View className="rounded-tl-10 rounded-tr-10 bg-[#fffffff2] h-[99%] w-full flex flex-col z-[2] ">
-        <Text className="rounded-3xl m-0 text-4xl w-full text-center" style={{ fontFamily: "Teko_700Bold"}}>
-          Your profile
-        </Text>
-        <View className="items-center flex justify-center flex-row flex-wrap h-3/5 " >
-          <Text className="p-1 border-gray-500 border-2 w-[70%] rounded-sm text-2xl mb-10" style={{ fontFamily: "Teko_700Bold"}}>
-            Name: {yourProfile?.name}
+      <View className=" relative w-full p-4 flex gap-4 flex-col bg-[#131313]">
+        <View className="flex h-8 px-6">
+          <Text className=" m-0 text-2xl text-white" style={{ fontFamily: "OpenSans_700Bold"}}>
+            Profile
           </Text>
-          <View className="w-full flex flex-col h-full items-center">
-            <View className="flex  justify-center flex-col items-center flex-wrap  rounded pl-2 h-2/5 ">
+        </View>
+        <View className="flex justify-center flex-col py-3 px-6 gap-3">
+            <View className="flex  justify-center flex-col items-center flex-wrap  rounded pl-2  ">
               {rankComponent}
             </View>
+            <View className="flex flex-col items-center  gap-1  ">
+              <Text className="text-[#4CD964] font-bold w-full text-center text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>
+                  {yourProfile?.name}
+              </Text>
+              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4">
+                  {profileRank}
+              </Text>
+              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4"> 
+                  Member since: {memberSince}
+              </Text>
+            </View>
+        </View>
+        <View className="w-full h-12 flex flex-row m-0 justify-between pr-6">
+            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<MainProfileInfo/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<MainProfileInfo logout={logout}/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<MainProfileInfo/>,'text')}`}}>Data</Text></Pressable>
+            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Records/>,'border')}`,borderBottomWidth:1}} onPress={()=>setCurrentTab(<Records/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Records/>,'text')}`}}>Records</Text></Pressable>
+            <Pressable className="flex flex-row justify-center items-center"><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm" style={{fontFamily:'OpenSans_300Light'}}>Measurements</Text></Pressable>
+        </View>
+        <View className="w-full h-2/3">
+          {currentTab}
+          
+        </View>
+        {/* <View className="items-center flex justify-center flex-row flex-wrap h-3/5 " >
+          
+          <View className="w-full flex flex-col h-full items-center">
+
             <Text className="p-1 border-gray-500 border-2 w-[70%] rounded text-xl mt-5" style={{ fontFamily: "Teko_700Bold"}}>
               Email: {yourProfile?.email}
             </Text>
@@ -98,17 +131,10 @@ const Profile: React.FC = () => {
               Member since: {memberSince}
             </Text>
           </View>
-        </View>
-        <TouchableOpacity className="w-1/2 h-[10%] bg-[#bd1212e1] border-black border-1 rounded-xl flex justify-center flex-row items-center ml-[25%] mt-[20%] " onPress={logout}>
-          <Text className="text-white text-3xl"
-            style={{ fontFamily: "Teko_700Bold"}}
-          >
-            LOGOUT
-          </Text>
-        </TouchableOpacity>
+        </View> */}
+
         {viewLoading ? <ViewLoading /> : ""}
       </View>
-    </ImageBackground>
   );
 };
 export default Profile;

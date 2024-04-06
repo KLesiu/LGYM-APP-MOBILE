@@ -10,12 +10,15 @@ import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import deadLiftIcon from "./img/dlIcon.png";
-import benchPressIcon from "./img/benchpressIcon.png";
-import squatIcon from "./img/squatIcon.png";
 import RecordsPopUp from "./RecordsPopUp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "./ViewLoading";
+import {
+  OpenSans_400Regular,
+  OpenSans_700Bold,
+  OpenSans_300Light,
+} from "@expo-google-fonts/open-sans";
+
 const Records: React.FC = () => {
   const [deadLift, setDeadLift] = useState<number>();
   const [squat, setSquat] = useState<number>();
@@ -26,6 +29,8 @@ const Records: React.FC = () => {
   const [fontsLoaded] = useFonts({
     Teko_700Bold,
     Caveat_400Regular,
+    OpenSans_300Light,
+    OpenSans_700Bold,
   });
   useEffect(() => {
     const loadAsyncResources = async () => {
@@ -61,56 +66,85 @@ const Records: React.FC = () => {
     return <ViewLoading />;
   }
   return (
-    <ImageBackground source={backgroundLogo} className="h-[79%] w-[98%] mx-[1%] flex-1 flex justify-center items-center opacity-100 ">
-      <View className="rounded-tl-10 rounded-tr-10 bg-[#fffffff7] h-[99%] w-full z-[2] flex flex-row flex-wrap justify-center">
-        <Text className="border-b-white border-b-2 pb-[2px] text-center w-[70%] text-2xl" style={{ fontFamily: "Teko_700Bold"}}>
-          Records in powerlifting:
-        </Text>
-        <View className="items-center w-full mt-[5%] flex justify-center flex-row bg-[#b8babd]">
-          <Image className="w-[7%] h-[70%] mb-[1%]" source={deadLiftIcon} />
-          <Text style={{ fontFamily: "Teko_700Bold"}} className="ml-[1%] text-xl">
-            Dead Lift:
-          </Text>
-        </View>
-        <Text style={{ fontFamily: "Teko_700Bold"}} className="w-full text-center text-[40px]">
-          {deadLift || 0} kg
-        </Text>
-        <View className="items-center w-full mt-[5%] flex justify-center flex-row bg-[#b8babd]">
-          <Image className="w-[7%] h-[70%] mb-[1%]" source={squatIcon} />
-          <Text style={{ fontFamily: "Teko_700Bold"}} className="ml-[1%] text-xl">
-            Squat:
-          </Text>
-        </View>
-        <Text style={{ fontFamily: "Teko_700Bold"}} className="w-full text-center text-[40px]">
-          {squat || 0} kg
-        </Text>
-        <View className="items-center w-full mt-[5%] flex justify-center flex-row bg-[#b8babd]">
-          <Image className="w-[7%] h-[70%] mb-[1%]" source={benchPressIcon} />
-          <Text style={{ fontFamily: "Teko_700Bold"}} className="ml-[1%] text-xl">
-            Bench Press:
-          </Text>
-        </View>
-        <Text style={{ fontFamily: "Teko_700Bold"}} className="w-full text-center text-[40px]">
-          {benchPress || 0} kg
-        </Text>
-        <Text className="w-[70%] text-2xl border-b-white border-b-2 text-center" style={{ fontFamily: "Teko_700Bold"}}>
-          Your total is: {total || 0} kg
-        </Text>
-        <TouchableOpacity
-          onPress={() => setPopUp(true)}
-          className="w-3/5 h-[10%] mt-[15%] rounded-xl bg-[#aab4bd] flex justify-center items-center"
+    <View className="bg-[#131313] flex flex-col gap-2 px-1">
+      <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
+        <Text
+          style={{ fontFamily: "OpenSans_300Light" }}
+          className="text-gray-200/80 font-light leading-4 text-sm"
         >
+          Dead Lift
+        </Text>
+        <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
           <Text
-          className="text-2xl"
-            style={{ fontFamily: "Teko_700Bold"}}
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="text-gray-200/80 font-base leading-4 text-md"
           >
-            Update Records
+            {deadLift || 0} kg
           </Text>
-        </TouchableOpacity>
-        {popUp ? <RecordsPopUp offPopUp={chagePopUpValue} /> : ""}
-        {viewLoading ? <ViewLoading /> : ""}
+        </View>
       </View>
-    </ImageBackground>
+      <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
+        <Text
+          style={{ fontFamily: "OpenSans_300Light" }}
+          className="text-gray-200/80 font-light leading-4 text-sm"
+        >
+          Squat
+        </Text>
+        <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
+          <Text
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="text-gray-200/80 font-base leading-4 text-md"
+          >
+            {squat || 0} kg
+          </Text>
+        </View>
+      </View>
+      <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
+        <Text
+          style={{ fontFamily: "OpenSans_300Light" }}
+          className="text-gray-200/80 font-light leading-4 text-sm"
+        >
+          Bench Press
+        </Text>
+        <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
+          <Text
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="text-gray-200/80 font-base leading-4 text-md"
+          >
+            {benchPress || 0} kg
+          </Text>
+        </View>
+      </View>
+      <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
+        <Text
+          style={{ fontFamily: "OpenSans_700Bold" }}
+          className="text-white font-bold text-lg"
+        >
+          Summary
+        </Text>
+        <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
+          <Text
+            style={{ fontFamily: "OpenSans_700Bold" }}
+            className="text-[#4CD964] font-bold text-lg"
+          >
+            {total || 0} kg
+          </Text>
+        </View>
+      </View>
+      <TouchableOpacity
+        onPress={() => setPopUp(true)}
+        className="w-full rounded-lg py-4 px-6 gap-1 m-0  bg-[#4CD964] flex justify-center items-center"
+      >
+        <Text
+        className="text-xl text-black"
+          style={{ fontFamily: "OpenSans_700Bold"}}
+        >
+          Update Records
+        </Text>
+      </TouchableOpacity>
+      {popUp ? <RecordsPopUp offPopUp={chagePopUpValue} /> : ""}
+      {viewLoading ? <ViewLoading /> : ""}
+    </View>
   );
 };
 export default Records;
