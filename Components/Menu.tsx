@@ -4,6 +4,7 @@ import TrainingPlan from "./TrainingPlan";
 import History from "./History";
 import AddTraining from "./AddTraining";
 import Profile from "./Profile";
+import Start from "./Start";
 import home from './img/icons/home.png'
 import profile from './img/icons/profile.png'
 import history from './img/icons/history.png'
@@ -40,7 +41,7 @@ const Menu: React.FC<MenuProps> = (props) => {
       <View className="flex justify-between  h-14 flex-row">
         <View className="flex flex-col justify-center w-[19.9%]">
           <TouchableOpacity
-            onPress={() => props.viewChange(<TrainingPlan />)}
+            onPress={() => props.viewChange(<Start />)}
             className="items-center  flex h-full justify-center flex-col w-full"
           >
             <Image className="w-6 h-6"  source={home}/>

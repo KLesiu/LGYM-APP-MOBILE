@@ -435,7 +435,7 @@ const TrainingPlan: React.FC = () => {
   }
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
-      <View className="bg-[#131313] flex flex-column p-4 h-full w-full text-center z-[2]">
+      <View className="bg-[#131313] flex flex-col p-4 h-full w-full text-center z-[2]">
         <View className="w-full flex flex-col gap-4">
           <Text
             className="w-full text-2xl text-white font-bold "

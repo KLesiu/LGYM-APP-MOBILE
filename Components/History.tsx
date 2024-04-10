@@ -9,6 +9,8 @@ import backgroundLogo from "./img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
 import Session from "./types/Session";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { OpenSans_400Regular,OpenSans_700Bold,OpenSans_300Light} from "@expo-google-fonts/open-sans"
+
 import {
   useFonts,
   Teko_700Bold,
@@ -22,6 +24,7 @@ import CurrentTrainingHistorySession from "./CurrentTrainingHistorySession";
 import ErrorMsg from "./types/ErrorMsg";
 import Training from "./types/Training";
 import ViewLoading from "./ViewLoading";
+import ReactNativeCalendarStrip from "react-native-calendar-strip";
 const History: React.FC = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [currentSessions, setCurrentSessions] = useState<Session[]>([]);
@@ -29,9 +32,9 @@ const History: React.FC = () => {
     useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-    Teko_400Regular,
+    OpenSans_400Regular,
+    OpenSans_700Bold,
+    OpenSans_300Light
   });
   useEffect(() => {
     const loadAsyncResources = async () => {
@@ -105,76 +108,92 @@ const History: React.FC = () => {
   }
 
   return (
-    <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 "  source={backgroundLogo}>
-      <View className="bg-[#fffffff7] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
-        <Text className="text-4xl text-center pt-2" style={{ fontFamily: "Teko_700Bold"}}>
-          Training History
-        </Text>
-        <ScrollView className="p-1 flex flex-col">
-          {currentSessions.length > 0 ? (
-            currentSessions.map((ele, index: number) => {
-              return (
-                <View className="items-start border-[3px] border-gray-500 flex flex-col justify-start relative mt-[2%] p-5 w-[90%] mx-[5%] rounded-xl mb-[2%]" key={index}>
-                  <Text
-                    style={{
-                      fontFamily: "Teko_700Bold",
-                      borderWidth: 1,
-                      borderBottomColor: "white",
-                      marginBottom: 10,
-                      paddingLeft: 5,
-                      borderLeftColor: "white",
-                      borderBottomLeftRadius: 3,
-                    }}
-                  >
-                    Training symbol {ele.symbol}
-                  </Text>
-                  <Text style={{ fontFamily: "Teko_700Bold" }}>
-                    Date:{" "}
-                    <Text style={{ fontFamily: "Teko_400Regular" }}>
-                      {ele.date.slice(0, 25)}
-                    </Text>
-                  </Text>
-                  <Text style={{ fontFamily: "Teko_700Bold" }}>
-                    Series:{" "}
-                    <Text style={{ fontFamily: "Teko_400Regular" }}>
-                      {" "}
-                      {ele.exercises.length / 2}
-                    </Text>
-                  </Text>
-                  <Text style={{ fontFamily: "Teko_700Bold" }}>
-                    Id:{" "}
-                    <Text style={{ fontFamily: "Teko_400Regular" }}>
-                      {ele.id}
-                    </Text>
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() =>
-                      showCurrentTrainingHistorySession(ele.id!, ele.date!)
-                    }
-                    className="absolute right-[10%] top-[30%]"
-                  >
-                    <Icon size={30} name="book-outline" />
-                  </TouchableOpacity>
-                </View>
-              );
-            })
-          ) : (
-            <View className="flex w-full h-full justify-center items-center">
-              <Text
-                style={{
-                  fontFamily: "Teko_700Bold"
-                }}
-                className="text-xl"
-              >
-                You dont have training history!
-              </Text>
-            </View>
-          )}
-        </ScrollView>
-        {currentHistoryTrainingSession}
-        {viewLoading ? <ViewLoading /> : ""}
-      </View>
-    </ImageBackground>
+    <View className="flex flex-col h-[78%] p-4 ">
+      <Text style={{fontFamily:'OpenSans_700Bold'}} className="w-full text-2xl text-white font-bold py-6">Training history</Text>
+      <ReactNativeCalendarStrip       
+      iconLeftStyle={{backgroundColor:"#4CD964",height:20,width:20,borderRadius:5}}
+      iconRightStyle={{backgroundColor:"#4CD964",height:20,width:20,borderRadius:5}}
+      scrollable
+      style={{height:100}}
+      calendarColor={'#131313'}
+      calendarHeaderStyle={{color: 'white'}}
+      dateNumberStyle={{color: '#5A5A5A'}}
+      dateNameStyle={{color: '#5A5A5A'}}
+  
+      highlightDateContainerStyle={{backgroundColor:'#4CD964',borderRadius:5}}
+      highlightDateNumberContainerStyle={{backgroundColor:'#4CD964',borderRadius:5}}
+      iconContainer={{flex: 0.1}}/>
+    </View>
+    // <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 "  source={backgroundLogo}>
+    //   <View className="bg-[#fffffff7] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
+    //     <Text className="text-4xl text-center pt-2" style={{ fontFamily: "Teko_700Bold"}}>
+    //       Training History
+    //     </Text>
+    //     <ScrollView className="p-1 flex flex-col">
+    //       {currentSessions.length > 0 ? (
+    //         currentSessions.map((ele, index: number) => {
+    //           return (
+    //             <View className="items-start border-[3px] border-gray-500 flex flex-col justify-start relative mt-[2%] p-5 w-[90%] mx-[5%] rounded-xl mb-[2%]" key={index}>
+    //               <Text
+    //                 style={{
+    //                   fontFamily: "Teko_700Bold",
+    //                   borderWidth: 1,
+    //                   borderBottomColor: "white",
+    //                   marginBottom: 10,
+    //                   paddingLeft: 5,
+    //                   borderLeftColor: "white",
+    //                   borderBottomLeftRadius: 3,
+    //                 }}
+    //               >
+    //                 Training symbol {ele.symbol}
+    //               </Text>
+    //               <Text style={{ fontFamily: "Teko_700Bold" }}>
+    //                 Date:{" "}
+    //                 <Text style={{ fontFamily: "Teko_400Regular" }}>
+    //                   {ele.date.slice(0, 25)}
+    //                 </Text>
+    //               </Text>
+    //               <Text style={{ fontFamily: "Teko_700Bold" }}>
+    //                 Series:{" "}
+    //                 <Text style={{ fontFamily: "Teko_400Regular" }}>
+    //                   {" "}
+    //                   {ele.exercises.length / 2}
+    //                 </Text>
+    //               </Text>
+    //               <Text style={{ fontFamily: "Teko_700Bold" }}>
+    //                 Id:{" "}
+    //                 <Text style={{ fontFamily: "Teko_400Regular" }}>
+    //                   {ele.id}
+    //                 </Text>
+    //               </Text>
+    //               <TouchableOpacity
+    //                 onPress={() =>
+    //                   showCurrentTrainingHistorySession(ele.id!, ele.date!)
+    //                 }
+    //                 className="absolute right-[10%] top-[30%]"
+    //               >
+    //                 <Icon size={30} name="book-outline" />
+    //               </TouchableOpacity>
+    //             </View>
+    //           );
+    //         })
+    //       ) : (
+    //         <View className="flex w-full h-full justify-center items-center">
+    //           <Text
+    //             style={{
+    //               fontFamily: "Teko_700Bold"
+    //             }}
+    //             className="text-xl"
+    //           >
+    //             You dont have training history!
+    //           </Text>
+    //         </View>
+    //       )}
+    //     </ScrollView>
+    //     {currentHistoryTrainingSession}
+    //     {viewLoading ? <ViewLoading /> : ""}
+    //   </View>
+    // </ImageBackground>
   );
 };
 export default History;
