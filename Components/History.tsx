@@ -5,18 +5,14 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import backgroundLogo from "./img/backgroundLGYMApp500.png";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Session from "./types/Session";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { OpenSans_400Regular,OpenSans_700Bold,OpenSans_300Light} from "@expo-google-fonts/open-sans"
-
 import {
-  useFonts,
-  Teko_700Bold,
-  Teko_400Regular,
-} from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
+  OpenSans_400Regular,
+  OpenSans_700Bold,
+  OpenSans_300Light,
+  useFonts
+} from "@expo-google-fonts/open-sans";
 import * as SplashScreen from "expo-splash-screen";
 import TrainingHistory from "./types/TrainingHistory";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,11 +26,12 @@ const History: React.FC = () => {
   const [currentSessions, setCurrentSessions] = useState<Session[]>([]);
   const [currentHistoryTrainingSession, setCurrentHistoryTrainingSession] =
     useState<JSX.Element>();
+  const calendar = useRef(null)
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [fontsLoaded] = useFonts({
     OpenSans_400Regular,
     OpenSans_700Bold,
-    OpenSans_300Light
+    OpenSans_300Light,
   });
   useEffect(() => {
     const loadAsyncResources = async () => {
@@ -103,26 +100,66 @@ const History: React.FC = () => {
     if ("msg" in response) return response.msg;
     else return response.training;
   };
+
+  const getTrainingByDate = async(dateObject:any):Promise<void>=>{
+    const date:Date = new Date(dateObject._d)
+    if(!date) return
+    const id = await AsyncStorage.getItem("id")
+    console.log(date)
+    const response:ErrorMsg|{training:Training}=await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getTraining`,      {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+       createdAt:date
+      }),
+    }).then((res=>res.json())).catch(err=>err).then(res=>res)
+  }
   if (!fontsLoaded) {
     return <ViewLoading />;
   }
 
   return (
     <View className="flex flex-col h-[78%] p-4 ">
-      <Text style={{fontFamily:'OpenSans_700Bold'}} className="w-full text-2xl text-white font-bold py-6">Training history</Text>
-      <ReactNativeCalendarStrip       
-      iconLeftStyle={{backgroundColor:"#4CD964",height:20,width:20,borderRadius:5}}
-      iconRightStyle={{backgroundColor:"#4CD964",height:20,width:20,borderRadius:5}}
-      scrollable
-      style={{height:100}}
-      calendarColor={'#131313'}
-      calendarHeaderStyle={{color: 'white'}}
-      dateNumberStyle={{color: '#5A5A5A'}}
-      dateNameStyle={{color: '#5A5A5A'}}
-  
-      highlightDateContainerStyle={{backgroundColor:'#4CD964',borderRadius:5}}
-      highlightDateNumberContainerStyle={{backgroundColor:'#4CD964',borderRadius:5}}
-      iconContainer={{flex: 0.1}}/>
+      <Text
+        style={{ fontFamily: "OpenSans_700Bold" }}
+        className="w-full text-2xl text-white font-bold py-6"
+      >
+        Training history
+      </Text>
+      <ReactNativeCalendarStrip
+      onDateSelected={getTrainingByDate}
+        ref={calendar}
+        iconLeftStyle={{
+          backgroundColor: "#4CD964",
+          height: 20,
+          width: 20,
+          borderRadius: 5,
+        }}
+        iconRightStyle={{
+          backgroundColor: "#4CD964",
+          height: 20,
+          width: 20,
+          borderRadius: 5,
+        }}
+        scrollable
+        style={{ height: 100 }}
+        calendarColor={"#131313"}
+        calendarHeaderStyle={{ color: "white" }}
+        dateNumberStyle={{ color: "#5A5A5A" }}
+        dateNameStyle={{ color: "#5A5A5A" }}
+        highlightDateContainerStyle={{
+          backgroundColor: "#4CD964",
+          borderRadius: 5,
+        }}
+        highlightDateNumberContainerStyle={{
+          backgroundColor: "#4CD964",
+          borderRadius: 5,
+        }}
+        iconContainer={{ flex: 0.1 }}
+        
+      />
     </View>
     // <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 "  source={backgroundLogo}>
     //   <View className="bg-[#fffffff7] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
