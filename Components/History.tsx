@@ -11,7 +11,7 @@ import {
   OpenSans_400Regular,
   OpenSans_700Bold,
   OpenSans_300Light,
-  useFonts
+  useFonts,
 } from "@expo-google-fonts/open-sans";
 import * as SplashScreen from "expo-splash-screen";
 import TrainingHistory from "./types/TrainingHistory";
@@ -21,18 +21,20 @@ import ErrorMsg from "./types/ErrorMsg";
 import Training from "./types/Training";
 import ViewLoading from "./ViewLoading";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
+import TrainingSession from "./TrainingSession";
 const History: React.FC = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [currentSessions, setCurrentSessions] = useState<Session[]>([]);
   const [currentHistoryTrainingSession, setCurrentHistoryTrainingSession] =
     useState<JSX.Element>();
-  const calendar = useRef(null)
+  const calendar = useRef(null);
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [fontsLoaded] = useFonts({
     OpenSans_400Regular,
     OpenSans_700Bold,
     OpenSans_300Light,
   });
+  const [session,setSession]=useState<Training>()
   useEffect(() => {
     const loadAsyncResources = async () => {
       try {
@@ -101,21 +103,29 @@ const History: React.FC = () => {
     else return response.training;
   };
 
-  const getTrainingByDate = async(dateObject:any):Promise<void>=>{
-    const date:Date = new Date(dateObject._d)
-    if(!date) return
-    const id = await AsyncStorage.getItem("id")
-    console.log(date)
-    const response:ErrorMsg|{training:Training}=await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/getTraining`,      {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-       createdAt:date
-      }),
-    }).then((res=>res.json())).catch(err=>err).then(res=>res)
-  }
+  const getTrainingByDate = async (dateObject: any): Promise<void> => {
+    const date: Date = new Date(dateObject._d);
+    if (!date) return;
+    const id = await AsyncStorage.getItem("id");
+    const response: ErrorMsg | Training = await fetch(
+      `${process.env.REACT_APP_BACKEND}/api/${id}/getTraining`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          createdAt: date,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .catch((err) => err)
+      .then((res) => res);
+      if('exercises' in response)setSession(response as Training)
+      
+      
+    };
   if (!fontsLoaded) {
     return <ViewLoading />;
   }
@@ -129,7 +139,7 @@ const History: React.FC = () => {
         Training history
       </Text>
       <ReactNativeCalendarStrip
-      onDateSelected={getTrainingByDate}
+        onDateSelected={getTrainingByDate}
         ref={calendar}
         iconLeftStyle={{
           backgroundColor: "#4CD964",
@@ -158,8 +168,8 @@ const History: React.FC = () => {
           borderRadius: 5,
         }}
         iconContainer={{ flex: 0.1 }}
-        
       />
+      {session?<TrainingSession training={session.exercises}/>:''}
     </View>
     // <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100 "  source={backgroundLogo}>
     //   <View className="bg-[#fffffff7] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
