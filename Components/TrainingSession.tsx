@@ -17,6 +17,7 @@ import ExerciseTraining from "./types/ExerciseTraining";
         OpenSans_300Light,
       });
       const [viewLoading,setViewLoading]=useState<boolean>(false)
+      const [exercises,setExercises]=useState({})
       useEffect(() => {
         const loadAsyncResources = async () => {
           try {
@@ -30,6 +31,27 @@ import ExerciseTraining from "./types/ExerciseTraining";
     
         loadAsyncResources();
       }, [fontsLoaded]);
+      useEffect(()=>{
+        const exercisesData:any = {};
+
+        props.training.forEach(item => {
+            const [name] = item.field.split('Series');
+            const exerciseName = name.trim();
+            const score = parseFloat(item.score);
+        
+            if (!exercisesData[exerciseName]) {
+                exercisesData[exerciseName] = {
+                    name: exerciseName,
+                    exercises: []
+                };
+            }
+        
+            exercisesData[exerciseName].exercises.push({ field: item.field, score });
+        });
+        
+        const exercisesArray = Object.values(exercisesData);
+        setExercises(exercisesArray)
+      },[])
     return(
         <View className="h-3/4 p-1">
       <ScrollView className="w-full h-96">
@@ -45,17 +67,39 @@ import ExerciseTraining from "./types/ExerciseTraining";
                 ) : (
                   <Text
                     style={{
-                      fontFamily: "Teko_400Regular"
+                      fontFamily: "OpenSans_400Regular"
                     }}
                     className="text-center w-[75%] text-[18px] h-full pl-[5%] pr-[5%] border-r-white border-r-[1px] bg-[#9696961a] rounded-lg text-white"
                   >
-                    {ele.field.slice(0, ele.field.length - 3)}
+                    {/* {ele.field.slice(0, ele.field.length - 3)} */}
+                    {
+                    (()=>{
+                      const  text = ele.field.slice(0, ele.field.length - 3)
+                      const seriesIndex = text.indexOf("Series");
+                      if(text.includes('1')){
+                        const result = text.slice(0,seriesIndex).trim();
+                        return  result
+                      }
+                      return ''
+                    })()
+                    }
+                    {'\n'}
+                    {
+                    (()=>{
+                      const  text = ele.field.slice(0, ele.field.length - 3)
+                      const seriesIndex = text.indexOf("Series");
+                      const result = text.slice(seriesIndex).trim();
+                      
+                      return  result
+                    })()
+                    }
+
                   </Text>
                 )}
                 {index % 2 ? (
                   <Text
                     style={{
-                      fontFamily: "Teko_400Regular"
+                      fontFamily: "OpenSans_400Regular"
                     }}
                     className="w-full text-3xl text-white"
                   >
@@ -64,7 +108,7 @@ import ExerciseTraining from "./types/ExerciseTraining";
                 ) : (
                   <Text
                     style={{
-                      fontFamily: "Teko_400Regular"
+                      fontFamily: "OpenSans_400Regular"
                     }}
                     className="text-white text-3xl w-1/5 text-right"
                   >
