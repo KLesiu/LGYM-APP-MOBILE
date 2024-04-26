@@ -63,7 +63,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
     return scaledData;
 }
   return (
-    <View className="h-3/4 p-6">
+    <View className="h-3/4 px-6">
       <View className="flex py-6 flex-col gap--2">
         <Text
           style={{ fontFamily: "OpenSans_700Bold" }}
