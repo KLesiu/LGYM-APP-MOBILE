@@ -25,6 +25,8 @@ import ErrorMsg from "./types/ErrorMsg";
 import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 import ImportPlanPopUp from "./ImportPlanPopUp";
+import CreatePlanConfig from "./CreatePlanConfig";
+import CreatePlanBody from "./CreatePlanBody";
 
 const TrainingPlan: React.FC = () => {
   const [yourPlan, setYourPlan] = useState<JSX.Element>();
@@ -35,7 +37,8 @@ const TrainingPlan: React.FC = () => {
   const [popUp, setPopUp] = useState<JSX.Element>();
   const [showImportPlanPopUp, setShowImportPlanPopUp] =
     useState<boolean>(false);
-
+  const [showPlanConfig,setShowPlanConfig]= useState<boolean>(false)
+  const [showPlanSet,setShowPlanSet]=useState<boolean>(false)
   const [fontsLoaded] = useFonts({
     OpenSans_700Bold,
     Caveat_400Regular,
@@ -409,6 +412,13 @@ const TrainingPlan: React.FC = () => {
   const showImportPlanPopUpFn = (): void => {
     setShowImportPlanPopUp(true);
   };
+  const showPlanConfigPopUp = ():void=>{
+    setShowPlanConfig(true)
+  }
+  const showPlanSetPopUp = ():void=>{
+    setShowPlanConfig(false)
+    setShowPlanSet(true)
+  }
   const setImportPlan = async (userName: string): Promise<void> => {
     if (!userName) return;
     const id = await AsyncStorage.getItem("id");
@@ -447,10 +457,7 @@ const TrainingPlan: React.FC = () => {
           </Text>
           <View className="flex flex-row w-full justify-around">
             <TouchableOpacity
-              onPress={() => {
-                const url = "https://lgym-app.vercel.app";
-                Linking.openURL(url);
-              }}
+              onPress={showPlanConfigPopUp}
               className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
             >
               <Text
@@ -501,7 +508,11 @@ const TrainingPlan: React.FC = () => {
       ) : (
         ""
       )}
+      {showPlanConfig  ? <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} /> : ''}
+      {showPlanSet ? <CreatePlanBody/> : ''}
     </View>
   );
 };
 export default TrainingPlan;
+
+
