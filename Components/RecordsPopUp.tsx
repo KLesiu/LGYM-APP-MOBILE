@@ -40,30 +40,30 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   };
   return (
     <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[#000000f4] ">
-      <Text className="text-3xl text-white" style={{ fontFamily: "Teko_700Bold"}}>
+      <Text className="text-3xl text-white" style={{ fontFamily: "OpenSans_700Bold"}}>
         Set Your Records!
       </Text>
-      <Text style={{ fontFamily: "Teko_700Bold"}} className="text-xl mt-4 text-white">
+      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-xl mt-4 text-white">
         DeadLift:
       </Text>
       <TextInput
-        placeholder="number or float (for example 1 or 1.0)"
+        
         onChangeText={(text: string | "") => setDeadLiftValue(text)}
         className="rounded-xl h-[6%] text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
       />
-      <Text style={{ fontFamily: "Teko_700Bold"}} className="text-xl mt-4 text-white">
+      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-xl mt-4 text-white">
         Squat:
       </Text>
       <TextInput
-        placeholder="number or float (for example 1 or 1.0)"
+        
         onChangeText={(text: string | "") => setSquatValue(text)}
         className="rounded-xl h-[6%] text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
       />
-      <Text style={{ fontFamily: "Teko_700Bold"}} className="text-xl mt-4 text-white">
+      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-xl mt-4 text-white">
         BenchPress:
       </Text>
       <TextInput
-        placeholder="number or float (for example 1 or 1.0)"
+        
         onChangeText={(text: string | "") => setBenchPressValue(text)}
         className="rounded-xl h-[6%] text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
       />
@@ -72,11 +72,11 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         className="w-1/2 h-[10%] rounded-xl bg-[#aab4bd] flex justify-center items-center mt-[5%]"
         
       >
-        <Text style={{ fontFamily: "Teko_700Bold", fontSize: 30 }}>
+        <Text style={{ fontFamily: "OpenSans_700Bold", fontSize: 30 }}>
           Update!
         </Text>
       </TouchableOpacity>
-      <Text style={{ fontFamily: "Teko_700Bold" }}>
+      <Text style={{ fontFamily: "OpenSans_700Bold" }}>
         {error ? error.msg : ""}
       </Text>
     </View>

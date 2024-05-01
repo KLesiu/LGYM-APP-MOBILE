@@ -2,16 +2,12 @@ import { Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import UserProfile from "./types/UserProfile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import UserInfo from "./types/UserInfo";
 import ProfileRank from "./ProfileRank";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types/RootStackParamList";
 import ViewLoading from "./ViewLoading";
-import { OpenSans_400Regular,OpenSans_700Bold,OpenSans_300Light} from "@expo-google-fonts/open-sans"
 import Records from "./Records";
 import MainProfileInfo from "./MainProfileInfo";
 
@@ -20,6 +16,7 @@ const Profile: React.FC = () => {
   const [yourProfile, setYourProfile] = useState<UserProfile>();
   const [profileRank, setProfileRank] = useState<string>("");
   const [memberSince, setMemberSince] = useState<string>("");
+  const [profileElo,setProfileElo]= useState<number>()
   const [rankComponent, setRankComponent] = useState<JSX.Element>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -35,6 +32,7 @@ const Profile: React.FC = () => {
     setViewLoading(true);
     getDataFromStorage();
     setRankComponent(<ProfileRank />);
+    getUserEloPoints()
   }, []);
 
   const getDataFromStorage = async (): Promise<void> => {
@@ -44,6 +42,15 @@ const Profile: React.FC = () => {
     setYourProfile({ name: username!, email: email! });
     checkMoreUserInfo(id!);
   };
+  const getUserEloPoints = async():Promise<void> =>{
+    const id = await AsyncStorage.getItem('id')
+    const response =  await fetch(
+      `${process.env.REACT_APP_BACKEND}/api/userInfo/${id}/getUserEloPoints`).then(res=>res.json()).catch(err=>err)
+    if("elo" in response){
+      setProfileElo(response.elo)
+    }
+    
+  }
   const styleCurrentTab = (tab:JSX.Element,cssRule:string):string=>{
     if(cssRule==='border') return currentTab.type.name===tab.type.name?'#4CD964':'#131313'
     return currentTab.type.name===tab.type.name?'#4CD964':'#E5E7EB'
@@ -84,6 +91,9 @@ const Profile: React.FC = () => {
               <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4">
                   {profileRank}
               </Text>
+              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4">
+                  {profileElo} Elo
+              </Text>
               <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4"> 
                   Member since: {memberSince}
               </Text>
@@ -98,19 +108,6 @@ const Profile: React.FC = () => {
           {currentTab}
           
         </View>
-        {/* <View className="items-center flex justify-center flex-row flex-wrap h-3/5 " >
-          
-          <View className="w-full flex flex-col h-full items-center">
-
-            <Text className="p-1 border-gray-500 border-2 w-[70%] rounded text-xl mt-5" style={{ fontFamily: "Teko_700Bold"}}>
-              Email: {yourProfile?.email}
-            </Text>
-            <Text className="p-1 border-gray-500 border-2 w-[70%] rounded text-xl mt-5" style={{ fontFamily: "Teko_700Bold"}}>
-              Member since: {memberSince}
-            </Text>
-          </View>
-        </View> */}
-
         {viewLoading ? <ViewLoading /> : ""}
       </View>
   );
