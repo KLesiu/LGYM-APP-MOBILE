@@ -10,32 +10,10 @@ import profile from './img/icons/profile.png'
 import history from './img/icons/history.png'
 import addTraining from './img/icons/add.png'
 import plan from './img/icons/plan.png'
-import { OpenSans_400Regular,OpenSans_700Bold,OpenSans_300Light,useFonts } from "@expo-google-fonts/open-sans"
-import { useEffect } from "react";
-import * as SplashScreen from "expo-splash-screen";
 
 
 
 const Menu: React.FC<MenuProps> = (props) => {
-  const [fontsLoaded] = useFonts({
-
-    OpenSans_400Regular,
-    OpenSans_700Bold,
-    OpenSans_300Light
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   return (
     <View className="bg-[#131313] h-32 py-3  w-[99%]">
       <View className="flex justify-between  h-14 flex-row">

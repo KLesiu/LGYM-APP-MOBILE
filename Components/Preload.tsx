@@ -2,39 +2,18 @@ import { Text,Image,View,ImageBackground,TouchableOpacity } from "react-native";
 import logoLGYM from './img/logoLGYM.png'
 import backgroundLGYM from './img/backgroundLGYMApp500.png'
 import {useState,useEffect} from 'react'
-import { useFonts,Teko_700Bold } from "@expo-google-fonts/teko";
-import {Caveat_400Regular} from '@expo-google-fonts/caveat';
-import * as SplashScreen from 'expo-splash-screen'
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "./types/RootStackParamList";
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import Loading from "./Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ViewLoading from "./ViewLoading";
 
 const Preload:React.FC=()=>{
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
     const [isLoading,setIsLoading]=useState<boolean>(true)
-    const [fontsLoaded]=useFonts({
-        Teko_700Bold,
-        Caveat_400Regular
-    })
     useEffect(()=>{
         checkUserSession()
     },[])
-    useEffect(() => {
-        const loadAsyncResources = async () => {
-          try {
-            SplashScreen.preventAutoHideAsync();
-            await fontsLoaded;
-            SplashScreen.hideAsync();
-          } catch (error) {
-            console.error('Błąd ładowania zasobów:', error);
-          }
-        };
-    
-        loadAsyncResources();
-      }, [fontsLoaded]);
     const checkUserSession = async():Promise<void>=>{
         const apiURL =`${process.env.REACT_APP_BACKEND}/api/checkToken`
         const token = await AsyncStorage.getItem('token')
@@ -64,9 +43,6 @@ const Preload:React.FC=()=>{
     }
     const offLoading:VoidFunction=():void=>{
         setIsLoading(false)
-    }
-    if(!fontsLoaded){
-        return <ViewLoading/>
     }
     return(
         <View style={{backgroundColor:'black',height:'100%'}}>

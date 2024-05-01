@@ -3,13 +3,6 @@ import {
   View,
 } from "react-native";
 import { useState, useEffect, useRef } from "react";
-import {
-  OpenSans_400Regular,
-  OpenSans_700Bold,
-  OpenSans_300Light,
-  useFonts,
-} from "@expo-google-fonts/open-sans";
-import * as SplashScreen from "expo-splash-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorMsg from "./types/ErrorMsg";
 import Training from "./types/Training";
@@ -18,25 +11,8 @@ import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import TrainingSession from "./TrainingSession";
 const History: React.FC = () => {
   const calendar = useRef(null);
-  const [fontsLoaded] = useFonts({
-    OpenSans_400Regular,
-    OpenSans_700Bold,
-    OpenSans_300Light,
-  });
   const [session,setSession]=useState<Training>()
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
 
-    loadAsyncResources();
-  }, [fontsLoaded]);
   const getTrainingByDate = async (dateObject: any): Promise<void> => {
     const date: Date = new Date(dateObject._d);
     setSession(undefined)
@@ -64,10 +40,6 @@ const History: React.FC = () => {
       
       
     };
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
-
   return (
     <View className="flex flex-col h-[78%] p-4 ">
       <Text

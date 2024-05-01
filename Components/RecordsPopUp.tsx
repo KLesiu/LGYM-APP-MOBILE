@@ -1,34 +1,13 @@
 import { Text, View, TouchableOpacity, TextInput } from "react-native";
 import RecordsPopUpProps from "./props/RecordsPopUpProps";
 import ErrorMsg from "./types/ErrorMsg";
-import { useState, useEffect } from "react";
-import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
+import { useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ViewLoading from "./ViewLoading";
 const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const [error, setError] = useState<ErrorMsg>();
   const [benchPressValue, setBenchPressValue] = useState<string>();
   const [deadLiftValue, setDeadLiftValue] = useState<string>();
   const [squatValue, setSquatValue] = useState<string>();
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   const setRecords = async (): Promise<void> => {
     const dlValue = parseFloat(deadLiftValue!);
     const sqValue = parseFloat(squatValue!);
@@ -59,9 +38,6 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       props.offPopUp();
     }
   };
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
   return (
     <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[#000000f4] ">
       <Text className="text-3xl text-white" style={{ fontFamily: "Teko_700Bold"}}>

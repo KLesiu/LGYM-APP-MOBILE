@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
-import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import ErrorMsg from "./types/ErrorMsg";
 import ErrorRegister from "./types/ErrorRegister";
 import SuccessMsg from "./types/SuccessMsg";
@@ -11,7 +8,6 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types/RootStackParamList";
 import MiniLoading from "./MiniLoading";
-import ViewLoading from "./ViewLoading";
 
 const Register: React.FC = () => {
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -23,23 +19,6 @@ const Register: React.FC = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const apiURL = `${process.env.REACT_APP_BACKEND}/api/register`;
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   const register = async (): Promise<void> => {
     if (password !== rpassword)
       return setErrors([{ msg: "Both passwords need to be same" }]);
@@ -74,10 +53,7 @@ const Register: React.FC = () => {
       return navigation.navigate("Login");
     }
   };
-  if (!fontsLoaded) {
-    return <ViewLoading />
-    
-  }
+
 
   return (
     <View className="flex items-center flex-col h-full justify-start bg-[#191919]">

@@ -8,14 +8,6 @@ import {
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SuccessMsg from "./types/SuccessMsg";
-import ViewLoading from "./ViewLoading";
-import {
-  useFonts,
-  Teko_700Bold,
-  Teko_400Regular,
-} from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import Ranks from "./helpers/rankStore";
 import UpdateRankPopUpProps from "./props/UpdateRankPopUpProps";
 
@@ -43,30 +35,9 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
     else if (response.msg === "Champ") setSrcRank(Ranks.Champ);
     if (response.isNew) setRankMessage("You have new rank!");
   };
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-    Teko_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   useEffect(() => {
     getRank();
   }, []);
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
   return (
     <View
       className="h-full w-full absolute top-0 bg-[#000000f4]	flex flex-col	items-center justify-center"

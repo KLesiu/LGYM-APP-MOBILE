@@ -1,12 +1,9 @@
-import {Image,View } from "react-native";
-
+import {View } from "react-native";
 import {useState} from 'react'
 import TrainingPlan from "./TrainingPlan";
-import logo300 from './img/logo300.png'
 import Menu from "./Menu";
 import Loading from "./Loading";
 import Header from "./Header";
-import Profile from "./Profile";
 
 const Home:React.FC=()=>{
     const [view,setView]=useState<JSX.Element>(<TrainingPlan/>)

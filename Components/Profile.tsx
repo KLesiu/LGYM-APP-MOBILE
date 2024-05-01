@@ -1,5 +1,4 @@
-import { Text, View, ImageBackground, TouchableOpacity, Pressable } from "react-native";
-import backgroundLogo from "./img/backgroundLGYMApp500.png";
+import { Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import UserProfile from "./types/UserProfile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,25 +30,6 @@ const Profile: React.FC = () => {
     navigation.navigate("Preload");
   };
   const [currentTab,setCurrentTab]=useState<JSX.Element>(<MainProfileInfo logout={logout}/>)
-
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-    OpenSans_700Bold,OpenSans_400Regular,OpenSans_300Light
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
 
   useEffect(() => {
     setViewLoading(true);
@@ -85,9 +65,7 @@ const Profile: React.FC = () => {
   const deleteFromStorage = async (key: string): Promise<void> => {
     await AsyncStorage.removeItem(key);
   };
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
+
   return (
       <View className=" relative w-full p-4 flex gap-4 flex-col bg-[#131313]">
         <View className="flex h-8 px-6">

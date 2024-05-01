@@ -10,13 +10,6 @@ import {
 import backgroundLogo from "./img/backgroundLGYMApp500.png";
 import { useState, useEffect, useReducer } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  useFonts,
-  Teko_700Bold,
-  Teko_400Regular,
-} from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Exercise from "./types/Exercise";
 import Data from "./types/DataPlansArrays";
@@ -218,28 +211,11 @@ const AddTraining: React.FC = () => {
     {}
   );
 
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-    Teko_400Regular,
-  });
+
   useInterval(() => {
     if(!showExercise) return
     submitYourTraining(false);
   }, 1000);
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   useEffect(() => {
     setViewLoading(true);
     getFromStorage();
@@ -1091,12 +1067,6 @@ const AddTraining: React.FC = () => {
   const closeRankPopUp = ()=>{
     setIsPopUpRankShowed(false)
   }
-
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
-
-
   return (
     <ImageBackground
       source={backgroundLogo}

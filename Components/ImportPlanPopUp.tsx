@@ -1,37 +1,11 @@
 import { TextInput, TouchableOpacity, View, Text } from "react-native";
 import ImportPlanPopUpProps from "./props/ImportPlanPopUpProps";
-import { useEffect, useState } from "react";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
-
-import { Teko_700Bold } from "@expo-google-fonts/teko";
-import { useFonts } from "expo-font";
-import ViewLoading from "./ViewLoading";
+import { useState } from "react";
 const ImportPlanPopUp: React.FC<ImportPlanPopUpProps> = (props) => {
   const [userId, setUserId] = useState<string>();
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   const importPlan = (): void => {
     props.setImportPlan(userId as string);
   };
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
   return (
     <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[#000000f4] p-6 z-50">
       <Text className="text-white text-[20px] text-center" style={{ fontFamily: "Teko_700Bold"}}>

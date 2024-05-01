@@ -13,23 +13,6 @@ const CurrentTrainingHistorySession: React.FC<
   const [infoAboutSession, setInfoAboutSession] = useState<JSX.Element>();
   const [exercises, setExercises] = useState<ExerciseTraining[]>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   useEffect(() => {
     setViewLoading(true);
     getInformationAboutSession();
@@ -57,9 +40,7 @@ const CurrentTrainingHistorySession: React.FC<
     }
     setViewLoading(false);
   };
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
+
   return (
     <View
       className="bg-black flex flex-wrap h-full w-full absolute justify-center"

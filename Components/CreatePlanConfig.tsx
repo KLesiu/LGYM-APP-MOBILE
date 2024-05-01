@@ -1,38 +1,15 @@
-import {
-  OpenSans_700Bold,
-  OpenSans_400Regular,
-  OpenSans_300Light,
-} from "@expo-google-fonts/open-sans";
-import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
-import { View, Text ,TextInput, Button, Pressable} from "react-native";
+import { View, Text ,TextInput,  Pressable} from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "./helpers/numberValidator";
 import CreatePlanConfigProps from "./props/CreatePlanConfigProps";
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
-  const [fontsLoaded] = useFonts({
-    OpenSans_700Bold,
-    OpenSans_400Regular,
-    OpenSans_300Light,
-  });
   const [planName,setPlanName]=useState<string>('')
   const [numberOfDays,setNumberOfDays]=useState<string>('')
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
+  const [error,setError]=useState<string>()
   const sendConfig = async ():Promise<void>=>{
-    if(!planName || !numberOfDays) return
+    if(!planName || !numberOfDays) return setError("All fields are required")
     const id = await  AsyncStorage.getItem("id")
     const response: { msg:string } = await fetch(
         `${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`
@@ -47,8 +24,11 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           }),
         
       }).then(res=>res.json()).catch(err=>console.log(err))
-    if(response){
-        props.showPlanSetPopUp()
+    if(response.msg === "Created"
+    ){
+       return props.showPlanSetPopUp()
+    }else{
+      return setError(response.msg)
     }
   }
   const validator = (input:string):void=>{
@@ -80,6 +60,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             <Text className="text-xl" style={{fontFamily:'OpenSans_700Bold'}}>Next</Text>
         </Pressable>
       </View>
+        {error? <Text className="text-red-500 text-lg">{error}</Text> : ''}
     </View>
   );
 };

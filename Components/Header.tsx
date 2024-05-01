@@ -3,38 +3,9 @@ import Notification from './img/icons/notification.png'
 import logo300 from './img/logo300.png'
 import { useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import {
-    useFonts,
-    Teko_700Bold,
-    Teko_400Regular,
-    Teko_300Light,
-    
-  } from "@expo-google-fonts/teko";
-import { OpenSans_400Regular,OpenSans_700Bold } from "@expo-google-fonts/open-sans"
-import * as SplashScreen from "expo-splash-screen";
 
 const Header:React.FC =()=>{
     const [name,setName]= useState<string>()
-    const [fontsLoaded] = useFonts({
-        Teko_700Bold,
-        Teko_400Regular,
-        Teko_300Light,
-        OpenSans_400Regular,
-        OpenSans_700Bold
-      });
-      useEffect(() => {
-        const loadAsyncResources = async () => {
-          try {
-            SplashScreen.preventAutoHideAsync();
-            await fontsLoaded;
-            SplashScreen.hideAsync();
-          } catch (error) {
-            console.error("Błąd ładowania zasobów:", error);
-          }
-        };
-    
-        loadAsyncResources();
-      }, [fontsLoaded]);
     const getName = async()=>{
         setName(await AsyncStorage.getItem("username") as string)
     }

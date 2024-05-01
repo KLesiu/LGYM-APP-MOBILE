@@ -1,37 +1,12 @@
 import { View, Text, ScrollView } from "react-native";
 import TrainingSessionProps from "./props/TrainingSessionProps";
-import {
-  OpenSans_400Regular,
-  OpenSans_700Bold,
-  OpenSans_300Light,
-  useFonts,
-} from "@expo-google-fonts/open-sans";
-import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import ViewLoading from "./ViewLoading";
 import {ExerciseTrainingScaledSession, ExerciseTrainingSession,ScaledExerciseTraining} from './types/Session'
 import ExerciseTraining from "./types/ExerciseTraining";
 const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
-  const [fontsLoaded] = useFonts({
-    OpenSans_400Regular,
-    OpenSans_700Bold,
-    OpenSans_300Light,
-  });
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [exercises, setExercises] = useState<ExerciseTrainingScaledSession[]>();
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   useEffect(() => {
     const exercisesData: any = {};
     props.training.exercises.forEach((item) => {

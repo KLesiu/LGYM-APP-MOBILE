@@ -1,5 +1,4 @@
 import {Image, ImageProps} from "react-native";
-import JuniorRank  from './img/Junior1.png'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SuccessMsg from "./types/SuccessMsg";
 import { useEffect, useState } from "react";

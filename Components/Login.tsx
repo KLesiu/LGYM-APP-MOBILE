@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
-import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import ErrorMsg from "./types/ErrorMsg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types/RootStackParamList";
 import MiniLoading from "./MiniLoading";
-import ViewLoading from "./ViewLoading";
 
 const Login: React.FC = () => {
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -21,26 +17,6 @@ const Login: React.FC = () => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
   const login = async (): Promise<string | void> => {
     setLoading(true);
     if (!username || !password) {

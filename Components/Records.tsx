@@ -1,23 +1,13 @@
 import {
   Text,
-  Image,
   View,
-  ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import backgroundLogo from "./img/backgroundLGYMApp500.png";
-import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import RecordsPopUp from "./RecordsPopUp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "./ViewLoading";
-import {
-  OpenSans_400Regular,
-  OpenSans_700Bold,
-  OpenSans_300Light,
-} from "@expo-google-fonts/open-sans";
+
 
 const Records: React.FC = () => {
   const [deadLift, setDeadLift] = useState<number>();
@@ -26,25 +16,6 @@ const Records: React.FC = () => {
   const [total, setTotal] = useState<number>();
   const [popUp, setPopUp] = useState<boolean>(false);
   const [viewLoading, setViewLoading] = useState<boolean>(true);
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-    OpenSans_300Light,
-    OpenSans_700Bold,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   useEffect(() => {
     getDataFromStorage();
   }, [popUp]);
@@ -62,9 +33,6 @@ const Records: React.FC = () => {
     setTotal(parseFloat(dl!) + parseFloat(sq!) + parseFloat(bp!));
     setViewLoading(false);
   };
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
   return (
     <View className="bg-[#131313] flex flex-col gap-2 px-1">
       <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">

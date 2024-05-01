@@ -1,22 +1,10 @@
 import {
   Text,
   View,
-  ImageBackground,
   TouchableOpacity,
   ScrollView,
-  Linking,
 } from "react-native";
-import backgroundLogo from "./img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
-import {
-  useFonts,
-  Teko_700Bold,
-  Teko_400Regular,
-} from "@expo-google-fonts/teko";
-import { OpenSans_400Regular,OpenSans_700Bold,OpenSans_300Light} from "@expo-google-fonts/open-sans"
-
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import Data from "./types/DataPlansArrays";
 import Exercise from "./types/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -39,27 +27,6 @@ const TrainingPlan: React.FC = () => {
     useState<boolean>(false);
   const [showPlanConfig,setShowPlanConfig]= useState<boolean>(false)
   const [showPlanSet,setShowPlanSet]=useState<boolean>(false)
-  const [fontsLoaded] = useFonts({
-    OpenSans_700Bold,
-    Caveat_400Regular,
-    Teko_400Regular,
-    OpenSans_400Regular,
-    Teko_700Bold,
-    OpenSans_300Light
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
   useEffect(() => {
     setViewLoading(true);
     getUserPlan();
@@ -440,9 +407,6 @@ const TrainingPlan: React.FC = () => {
 
   };
 
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
       <View className="bg-[#131313] flex flex-col p-4 h-full w-full text-center z-[2]">
