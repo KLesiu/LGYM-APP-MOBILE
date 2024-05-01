@@ -28,7 +28,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
         </View>
         <Text
           style={{
-            fontFamily: "Teko_400Regular"
+            fontFamily: "Caveat_400Regular"
           }}
           className="text-[40px] text-white text-center w-full mt-12"
         >

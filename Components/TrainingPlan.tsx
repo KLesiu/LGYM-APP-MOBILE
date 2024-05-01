@@ -386,6 +386,9 @@ const TrainingPlan: React.FC = () => {
     setShowPlanConfig(false)
     setShowPlanSet(true)
   }
+  const hideShowPlanSetPopUp = ():void =>{
+    setShowPlanSet(false)
+  }
   const setImportPlan = async (userName: string): Promise<void> => {
     if (!userName) return;
     const id = await AsyncStorage.getItem("id");
@@ -419,6 +422,7 @@ const TrainingPlan: React.FC = () => {
           >
             Training Plan
           </Text>
+          {!isPlanSet?
           <View className="flex flex-row w-full justify-around">
             <TouchableOpacity
               onPress={showPlanConfigPopUp}
@@ -446,7 +450,7 @@ const TrainingPlan: React.FC = () => {
                 Import plan
               </Text>
             </TouchableOpacity>
-          </View>
+          </View>:''}
           {isPlanSet?
           <View className="flex flex-row w-full justify-around items-center">
             <Text
@@ -473,7 +477,7 @@ const TrainingPlan: React.FC = () => {
         ""
       )}
       {showPlanConfig  ? <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} /> : ''}
-      {showPlanSet ? <CreatePlanBody/> : ''}
+      {showPlanSet ? <CreatePlanBody hideShowPlanSetPopUp={hideShowPlanSetPopUp}/> : ''}
     </View>
   );
 };

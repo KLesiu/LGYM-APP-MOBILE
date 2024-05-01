@@ -17,4 +17,8 @@ export type ExerciseTrainingScaledSession = {
     exercises: ScaledExerciseTraining[],
     name:string 
 }
+export type CompletedDaysInPlan = {
+    count: number,
+    completed: string[]
+}
 export default Session

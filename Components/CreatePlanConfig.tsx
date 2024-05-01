@@ -60,7 +60,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             <Text className="text-xl" style={{fontFamily:'OpenSans_700Bold'}}>Next</Text>
         </Pressable>
       </View>
-        {error? <Text className="text-red-500 text-lg">{error}</Text> : ''}
+        {error? <Text style={{fontFamily:'OpenSans_300Light'}} className="text-red-500 text-lg">{error}</Text> : ''}
     </View>
   );
 };

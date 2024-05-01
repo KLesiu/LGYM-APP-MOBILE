@@ -1,4 +1,5 @@
 export default interface CreateDaySectionProps{
-    day: string
+    day: string,
+    hideConfigCurrentDay: (day:string)=>void
 }
 

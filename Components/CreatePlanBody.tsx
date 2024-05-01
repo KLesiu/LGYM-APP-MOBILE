@@ -2,11 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useEffect, useState } from "react"
 import { View,Text, Pressable } from "react-native"
 import CreateDaySection from "./CreateDaySection"
-
-const CreatePlanBody:React.FC = ()=>{
+import {CompletedDaysInPlan} from './types/Session'
+import CreatePlanBodyProps from "./props/CreatePlanBodyProps"
+import Exercise from "./types/Exercise"
+const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
     const [days,setDays]=useState<number>()
     const [showDaySection,setShowDaySection]=useState<boolean>(false)
     const [currentDay,setCurrentDay]=useState<string>('')
+    const [completedDays,setCompletedDays]=useState<CompletedDaysInPlan>({count:0,completed:[]})
+    const [error,setError]=useState<string>('')
+    const trainingDays:string[]=["A","B","C","D","E","F","G"]
     useEffect(()=>{
         getPlanConfig()
     },[])
@@ -20,8 +25,47 @@ const CreatePlanBody:React.FC = ()=>{
         setCurrentDay(day)
         setShowDaySection(true)
     }
+    const hideConfigCurrentDay= async(day:string)=>{
+        setShowDaySection(false)
+        const checkDay:Exercise[] = JSON.parse(await AsyncStorage.getItem(day) as string)
+        if(checkDay.length < 1) return
+        
+        if(completedDays.completed.includes(day)) return
+        const helperDays = completedDays.completed
+        helperDays.push(day)
+        const actualStateOfCompletedDays:CompletedDaysInPlan={
+            count:completedDays.count+1,
+            completed: helperDays
+        }
+        setCompletedDays(actualStateOfCompletedDays)
+        
+    }
+    const setPlan = async()=>{
+        const id = await AsyncStorage.getItem("id")
+        const daysToSend = []
+        for(let i =0;i<days!;i++){
+            daysToSend.push({trainingDay:`plan${trainingDays[i]}`,exercises: JSON.parse(await AsyncStorage.getItem(trainingDays[i]) as string)})
+        }
+        const response:{msg:string} =  await fetch(
+            `${process.env.REACT_APP_BACKEND}/api/${id}/setPlan`,{
+                method:'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    days: {
+                        days:daysToSend
+                    }
+                    
+                  }),
+            }).then(res=>res.json()).catch(err=>err)
+        if(response.msg==='Updated'){
+            props.hideShowPlanSetPopUp()
+        }else{
+            setError('Error! Try again')
+        }
+    }
     const generateDaysSections = (numberOfDays:number)=>{
-        const trainingDays:string[]=["A","B","C","D","E","F","G"]
         const helpSections:JSX.Element[]=[]
         for(let i=0;i<numberOfDays;i++){
             helpSections.push(<Pressable className="h-20 w-[45%] flex justify-center items-center m-2 rounded-lg border-2 border-[#4CD964]" onPress={()=>configCurrentyDay(trainingDays[i])}>
@@ -33,12 +77,16 @@ const CreatePlanBody:React.FC = ()=>{
     }
     return(
         <View  className="absolute h-full w-full flex flex-col  justify-around  bg-black items-center top-0 z-30 p-4 ">
-            <Text className="text-2xl text-white">Plan creator!</Text>
+            <Text className="text-2xl text-white">Plan creator</Text>
             <View className="w-full p-4 h-80 flex flex-row flex-wrap justify-around">
             {days?generateDaysSections(days):''}
             </View>
-            <Text className="text-sm text-white">Choose for which day you want to set exercises!</Text>
-            {showDaySection ? <CreateDaySection day={currentDay} /> : ''}
+            <Pressable disabled={completedDays.count !== days} onPress={setPlan} className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"><Text style={{fontFamily:'OpenSans_400Regular'}} className="text-white text-2xl">DONE</Text></Pressable>
+            <Text className="text-sm text-gray-300">Choose for which day you want to set exercises!</Text>
+            {showDaySection ? <CreateDaySection day={currentDay} hideConfigCurrentDay={hideConfigCurrentDay} /> : ''}
+            <Text className="text-sm text-white">Completed sections: {completedDays.completed.map(ele=><Text>{ele}, </Text>)}</Text>
+            <Text className="text-sm text-white">Completed: {completedDays.count}/{days}</Text>
+            {error? <Text>{error}</Text>:''}
         </View>
     )
 }
