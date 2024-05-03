@@ -1,5 +1,5 @@
 import React, {  useState } from "react";
-import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
 import ErrorMsg from "./types/ErrorMsg";
 import ErrorRegister from "./types/ErrorRegister";
@@ -53,26 +53,32 @@ const Register: React.FC = () => {
       return navigation.navigate("Login");
     }
   };
+  const goToPreload = ()=>{
+    return navigation.navigate("Preload")
+  }
 
 
   return (
     <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
-      <Image className="w-2/5 h-1/5 mb-[5%]" source={logoLGYM} />
-      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
+      <Image  className="w-full h-full mb-[5%]" source={logoLGYM} />
+      </Pressable>
+
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
         Username
       </Text>
       <TextInput
         onChangeText={(text) => setUsername(text)}
         className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
       />
-      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
         Email
       </Text>
       <TextInput
         onChangeText={(text) => setEmail(text)}
         className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
       />
-      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
         Password
       </Text>
       <TextInput
@@ -80,7 +86,7 @@ const Register: React.FC = () => {
         onChangeText={(text) => setPassword(text)}
         className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
       />
-      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
         Repeat password
       </Text>
       <TextInput
@@ -88,20 +94,20 @@ const Register: React.FC = () => {
         onChangeText={(text) => setRPassword(text)}
         className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
       />
-      <TouchableOpacity
+      <Pressable
         onPress={register}
-        className="mt-3 w-1/2 bg-[#868686] flex items-center justify-center rounded-xl h-[7%]"
+        className="mt-10 w-80 bg-[#868686] flex items-center justify-center rounded-xl h-[7%]"
       >
         <Text
           style={{
-            fontFamily: "Teko_700Bold",
+            fontFamily: "OpenSans_700Bold",
             
           }}
           className="text-3xl text-[#e2e2e2]"
         >
           REGISTER
         </Text>
-      </TouchableOpacity>
+      </Pressable>
       {loading ? <MiniLoading /> : ""}
       <View className="flex flex-col text-center w-[90%]">
         {errors

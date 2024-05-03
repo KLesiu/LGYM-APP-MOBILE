@@ -18,18 +18,30 @@ const Measurements: React.FC = () => {
   }
   const renderMeasurementsTemplates = async () => {
     const id = await AsyncStorage.getItem("id");
+    let holderForResponse:MeasurementForm
     const response: MeasurementForm = await fetch(
       `${process.env.REACT_APP_BACKEND}/api/measurements/${id}/getLast`
     )
       .then((res) => res.json())
       .catch((err) => err);
     if ("msg" in response){
-        setMeasurementsObject(undefined)
-        return setMeasurements([]);
+        holderForResponse={
+          weight:0,
+          neck:0,
+          chest:0,
+          biceps:0,
+          waist:0,
+          abdomen:0,
+          hips:0,
+          thigh:0,
+          calf:0
+        }
+    }else{
+      holderForResponse=response
     } 
-    const keys = Object.keys(response);
-    const values = Object.values(response);
-    setMeasurementsObject(response)
+    const keys = Object.keys(holderForResponse);
+    const values = Object.values(holderForResponse);
+    setMeasurementsObject(holderForResponse)
     setMeasurements(
       keys.map((ele: string, index: number) => {
         return (
@@ -55,11 +67,11 @@ const Measurements: React.FC = () => {
   };
   return (
     <View className="bg-[#131313] flex flex-col gap-2 px-1">
-        <ScrollView className="w-full  smh:h-60 mdh:h-72 lgh:h-80" >
+        <ScrollView className="w-full  smh:h-56 mdh:h-80 lgh:h-96" >
         {measurements.length > 0?measurements:''}
         </ScrollView>
 
-      <Pressable onPress={()=>setIsFormShow(true)} className="w-full rounded-lg py-4 px-6 gap-1 m-0  bg-[#4CD964] flex justify-center items-center">
+      <Pressable onPress={()=>setIsFormShow(true)} className="w-full rounded-lg smh:py-2 smh:px-4 mdh:py-4 mdh:px-6 gap-1 m-0  bg-[#4CD964] flex justify-center items-center">
         <Text
           className="text-xl text-black"
           style={{ fontFamily: "OpenSans_700Bold" }}

@@ -15,8 +15,8 @@ import plan from './img/icons/plan.png'
 
 const Menu: React.FC<MenuProps> = (props) => {
   return (
-    <View className="bg-[#131313] h-32 py-3  w-[99%]">
-      <View className="flex justify-between  h-14 flex-row">
+    <View className="bg-[#131313] smh:h-20 lgh:h-32 py-3  w-[99%]">
+      <View className="flex justify-between h-14 flex-row">
         <View className="flex flex-col justify-center w-[19.9%]">
           <TouchableOpacity
             onPress={() => props.viewChange(<Start />)}

@@ -13,7 +13,7 @@ const Header:React.FC =()=>{
         getName()
     },[])
     return(
-        <View className="bg-[#131313] h-20 px-8 py-4 flex flex-row justify-between items-center">
+        <View className="bg-[#131313] smh:h-14 lgh:h-20 px-8 py-4 flex flex-row justify-between items-center">
             <View className="flex flex-row  justify-around">
                 <View className="flex flex-col">
                     <Text className=" leading-4 text-sm text-white" style={{

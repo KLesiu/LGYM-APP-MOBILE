@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Image,  Pressable } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
 import ErrorMsg from "./types/ErrorMsg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -70,10 +70,17 @@ const Login: React.FC = () => {
       console.log(err);
     }
   };
+  const goToPreload = ()=>{
+    return navigation.navigate("Preload")
+  }
   return (
     <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
-      <Image className="w-3/5 h-[30%]" source={logoLGYM} />
-      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
+      <Pressable onPress={goToPreload} className="w-3/5 h-[30%]">
+      <Image className="w-full h-full" source={logoLGYM} />
+      </Pressable>
+
+      <View className="w-full flex flex-col items-center justify-start">
+      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Username
       </Text>
       <TextInput
@@ -81,7 +88,7 @@ const Login: React.FC = () => {
         className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
         autoComplete="given-name"
       />
-      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
+      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Password
       </Text>
       <TextInput
@@ -89,14 +96,16 @@ const Login: React.FC = () => {
         className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
         secureTextEntry={true}
       ></TextInput>
-      <TouchableOpacity className="mt-3 w-1/2 bg-[#868686] flex items-center justify-center rounded-xl h-14" onPress={login} >
+      </View>
+      
+      <Pressable className="mt-10 w-80 bg-[#868686] flex items-center justify-center rounded-xl h-14" onPress={login} >
         <Text
           className="text-3xl text-[#e2e2e2]"
-          style={{ fontFamily: "Teko_700Bold"}}
+          style={{ fontFamily: "OpenSans_700Bold"}}
         >
           LOGIN
         </Text>
-      </TouchableOpacity>
+      </Pressable>
       {loading ? <MiniLoading /> : ""}
       <View className="flex flex-col text-center w-[90%]">
         {errors
