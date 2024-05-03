@@ -10,6 +10,7 @@ import { RootStackParamList } from "./types/RootStackParamList";
 import ViewLoading from "./ViewLoading";
 import Records from "./Records";
 import MainProfileInfo from "./MainProfileInfo";
+import Measurements from "./Measurements";
 
 
 const Profile: React.FC = () => {
@@ -102,7 +103,7 @@ const Profile: React.FC = () => {
         <View className="w-full h-12 flex flex-row m-0 justify-between pr-6">
             <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<MainProfileInfo/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<MainProfileInfo logout={logout}/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<MainProfileInfo/>,'text')}`}}>Data</Text></Pressable>
             <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Records/>,'border')}`,borderBottomWidth:1}} onPress={()=>setCurrentTab(<Records/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Records/>,'text')}`}}>Records</Text></Pressable>
-            <Pressable className="flex flex-row justify-center items-center"><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm" style={{fontFamily:'OpenSans_300Light'}}>Measurements</Text></Pressable>
+            <Pressable className="flex flex-row justify-center items-center" onPress={()=>setCurrentTab(<Measurements/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm" style={{fontFamily:'OpenSans_300Light'}}>Measurements</Text></Pressable>
         </View>
         <View className="w-full h-2/3">
           {currentTab}

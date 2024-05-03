@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { View, Text ,TextInput,  Pressable} from "react-native";
-import * as SplashScreen from "expo-splash-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "./helpers/numberValidator";
 import CreatePlanConfigProps from "./props/CreatePlanConfigProps";
