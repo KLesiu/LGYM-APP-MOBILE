@@ -249,10 +249,10 @@ const AddTraining: React.FC = () => {
       }
 
       setChooseDay(
-        <View className="items-center bg-[#000000f0] flex flex-col justify-start gap-y-5  h-full absolute m-0 w-full top-0">
+        <View className="items-center bg-[#131313] flex flex-col justify-start gap-y-5  h-full absolute m-0 w-full top-0">
           <Text
-          className="text-[40px] text-white"
-            style={{ fontFamily: "Teko_700Bold"}}
+          className="text-3xl text-white"
+            style={{ fontFamily: "OpenSans_700Bold"}}
           >
             Choose training day!
           </Text>
@@ -263,10 +263,9 @@ const AddTraining: React.FC = () => {
               key={index}
             >
               <Text
+              className="text-white text-3xl"
                 style={{
-                  fontFamily: "Teko_700Bold",
-                  fontSize: 30,
-                  color: "white",
+                  fontFamily: "OpenSans_700Bold",
                 }}
               >
                 {ele}
@@ -329,7 +328,7 @@ const AddTraining: React.FC = () => {
       <View className="absolute w-full h-full text-white bg-[#000000f5] flex flex-col pb-10">
         <Text
           style={{
-            fontFamily: "Teko_700Bold",
+            fontFamily: "OpenSans_700Bold",
             width: "100%",
             textAlign: "center",
             fontSize: 30,
@@ -347,12 +346,9 @@ const AddTraining: React.FC = () => {
             return (
               <View style={{ marginBottom: 50 }} key={indexMain}>
                 <Text
+                 className='mb-7 ml-1 text-md text-[#4CD964] '
                   style={{
-                    fontFamily: "Teko_700Bold",
-                    fontSize: 20,
-                    marginBottom: 30,
-                    marginLeft: 5,
-                    color: "white",
+                    fontFamily: "OpenSans_700Bold",
                   }}
                 >
                   {ele.name}
@@ -363,14 +359,12 @@ const AddTraining: React.FC = () => {
                   return (
                     <View className="flex flex-row justify-center items-center border-b-gray-500 border-b-1 mt-1"  key={index}>
                       <Text
+                      className="text-[11px] w-1/5 text-white"
                         style={{
-                          fontFamily: "Teko_400Regular",
-                          fontSize: 15,
-                          width: "20%",
-                          color: "white",
+                          fontFamily: "OpenSans_400Regular",
                         }}
                       >
-                        <Text>{ele.name}</Text> {s}: Rep
+                      {s}: Rep
                       </Text>
                       <TextInput
                         defaultValue="0"
@@ -381,19 +375,16 @@ const AddTraining: React.FC = () => {
                           handleInputChange(index, text, indexMain)
                         
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
+                        className="rounded-xl text-sm w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
                        
                       />
                       <Text
+                       className="text-[11px] w-1/5 ml-[10%] text-white"
                         style={{
-                          fontFamily: "Teko_400Regular",
-                          fontSize: 15,
-                          width: "20%",
-                          marginLeft: "10%",
-                          color: "white",
+                          fontFamily: "OpenSans_400Regular",
                         }}
                       >
-                        <Text>{ele.name}</Text> {s}: Weight (kg)
+                        {s}: Weight (kg)
                       </Text>
                       <TextInput
                         defaultValue="0"
@@ -465,17 +456,14 @@ const AddTraining: React.FC = () => {
       };
     });
     setDaySection(
-      <View className="absolute w-full h-full text-white bg-[#000000f5] flex-col flex pb-10">
+      <View className="absolute w-full h-full text-white bg-[#131313] flex-col flex p-4 pb-10">
         <Text
+        className="w-full text-3xl text-center text-white"
           style={{
-            fontFamily: "Teko_700Bold",
-            width: "100%",
-            textAlign: "center",
-            fontSize: 30,
-            color: "white",
+            fontFamily: "OpenSans_700Bold",
           }}
         >
-          Training <Text>{day}</Text>
+          Training <Text className="text-[#4CD964]">{day}</Text>
         </Text>
         <ScrollView>
           {newHelpsArray.map((ele: any, indexMain: number) => {
@@ -486,12 +474,9 @@ const AddTraining: React.FC = () => {
             return (
               <View style={{ marginBottom: 50 }} key={indexMain}>
                 <Text
+                className='mb-7 ml-1 text-md text-[#4CD964] '
                   style={{
-                    fontFamily: "Teko_700Bold",
-                    fontSize: 20,
-                    marginBottom: 30,
-                    marginLeft: 5,
-                    color: "white",
+                    fontFamily: "OpenSans_400Regular",
                   }}
                 >
                   {ele.name}
@@ -502,14 +487,12 @@ const AddTraining: React.FC = () => {
                   return (
                     <View className="flex flex-row justify-center items-center border-b-gray-500 border-b-1 mt-1"key={index}>
                       <Text
+                      className="text-[11px] w-1/5 text-white"
                         style={{
-                          fontFamily: "Teko_400Regular",
-                          fontSize: 15,
-                          width: "20%",
-                          color: "white",
+                          fontFamily: "OpenSans_400Regular",
                         }}
                       >
-                        <Text>{ele.name}</Text> {s}: Rep
+                         {s}: Rep
                       </Text>
                       <TextInput
                         defaultValue={ele.prevReps[index].score}
@@ -524,18 +507,15 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputChange(index, text, indexMain)
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
+                        className="rounded-xl text-sm w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
                       />
                       <Text
+                      className="text-[11px] w-1/5 ml-[10%] text-white"
                         style={{
-                          fontFamily: "Teko_400Regular",
-                          fontSize: 15,
-                          width: "20%",
-                          marginLeft: "10%",
-                          color: "white",
+                          fontFamily: "OpenSans_400Regular",
                         }}
                       >
-                        <Text>{ele.name}</Text> {s}: Weight (kg)
+                  {s}: Weight
                       </Text>
                       <TextInput
                         defaultValue={ele.prevWeights[index].score}
@@ -549,7 +529,7 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputWeightChange(index, text, indexMain)
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
+                        className="rounded-xl text-sm w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
                       
                       />
                     </View>
@@ -973,12 +953,12 @@ const AddTraining: React.FC = () => {
             <Icon style={{ fontSize: 40, color: "white" }} name="close" />
           </TouchableOpacity>
           <Text
-          className="text-2xl text-center text-white"
+          className="text-2xl text-center mb-5 text-white"
             style={{
-              fontFamily: "Teko_400Regular"
+              fontFamily: "OpenSans_400Regular"
             }}
           >
-            Date: {lastTrainingSessionDate}
+            Date:  <Text className="text-[#4CD964]" style={{fontFamily:'OpenSans_400Regular'}}>{lastTrainingSessionDate}</Text> 
           </Text>
           <ScrollView className="w-4/5 ml-[10%] h-[70%] ">
             <View className="w-full flex flex-row">
@@ -988,17 +968,14 @@ const AddTraining: React.FC = () => {
                       if (index !== 0 && index % 2 !== 0) return;
                       return (
                         <View
-                        className="w-full border-b-gray-500 border-b-[1px] h-20 text-white"
+                        className="w-full  border-b-[1px] h-20 text-white"
                           key={index}
                         >
                           {index === 0 || index % 2 == 0 ? (
                             <Text
+                              className="text-sm mt-5 ml-2 text-white"
                               style={{
-                                fontFamily: "Teko_400Regular",
-                                fontSize: 20,
-                                marginTop: 20,
-                                marginLeft: 10,
-                                color: "white",
+                                fontFamily: "OpenSans_400Regular",
                               }}
                             >
                               {ele.field.slice(0, ele.field.length - 4)}
@@ -1018,10 +995,10 @@ const AddTraining: React.FC = () => {
                       return (
                         <Text
                           style={{
-                            fontFamily: "Teko_400Regular"
+                            fontFamily: "OpenSans_400Regular"
                           }}
-                          className="w-1/2 border-b-gray-500 border-b-[1px] h-20 pl-[10%]
-                          bg-[#141414b3] pt-5 text-white text-[20px]"
+                          className="w-1/2  border-b-[1px] h-20 pl-[10%]
+                          bg-[#4cd96309] pt-5 text-white text-base"
                           key={index}
                         >
                           {ele.score}
@@ -1068,27 +1045,20 @@ const AddTraining: React.FC = () => {
     setIsPopUpRankShowed(false)
   }
   return (
-    <ImageBackground
-      source={backgroundLogo}
-      
-      className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100"
-      
-    >
-      <View className="bg-[#9696961a] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
+      <View className="bg-[#131313] h-[78%] w-full z-[2]">
         {plan === "completed" ? (
-          <View className="relative bg-[#fffffff2] flex flex-col justify-start items-center h-full w-full" >
+          <View className="relative  flex flex-col justify-start items-center h-full w-full" >
             <Text
+            className=" text-center text-white text-3xl "
               style={{
-                fontFamily: "Teko_400Regular",
-                fontSize: 45,
-                textAlign: "center",
+                fontFamily: "OpenSans_700Bold",
               }}
             >
               Add Training!
             </Text>
             <TouchableOpacity onPress={getInformationsAboutPlanDays}>
               <Icon
-                style={{ fontSize: 100, marginTop: "40%" }}
+                style={{ fontSize: 100, marginTop: "40%",color:'#4CD964' }}
                 name="plus-circle"
               />
             </TouchableOpacity>
@@ -1109,14 +1079,13 @@ const AddTraining: React.FC = () => {
                 {isAddTrainingActive ? (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(true)}
-                    className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+                    className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center"
 
                   >
                     <Text
+                    className="text-center text-lg"
                       style={{
-                        fontFamily: "Teko_400Regular",
-                        textAlign: "center",
-                        fontSize: 25,
+                        fontFamily: "OpenSans_400Regular",
                       }}
                     >
                       ADD TRAINING
@@ -1125,14 +1094,13 @@ const AddTraining: React.FC = () => {
                 ) : (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(false)}
-                    className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+                    className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center"
                
                   >
                     <Text
+                    className="text-center text-sm"
                       style={{
-                        fontFamily: "Teko_400Regular",
-                        textAlign: "center",
-                        fontSize: 17,
+                        fontFamily: "OpenSans_400Regular",
                       }}
                     >
                       SAVE TRAINING STATE
@@ -1147,10 +1115,8 @@ const AddTraining: React.FC = () => {
                   value={isEnabled}
                 ></Switch>
                 {isAddTrainingActive?<TouchableOpacity onPress={()=>deleteCurrentSession()}
-                className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center">
-                        <Text style={{  fontFamily: "Teko_400Regular",
-                      textAlign: "center",
-                      fontSize: 17,}}>
+                className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center">
+                        <Text className="text-center text-sm" style={{  fontFamily: "OpenSans_400Regular"}}>
                           DELETE CURRENT SESSION
                         </Text>
                 </TouchableOpacity>:<TouchableOpacity
@@ -1158,14 +1124,13 @@ const AddTraining: React.FC = () => {
                     setViewLoading(true);
                     showLastTrainingSection();
                   }}
-                  className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+                  className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center"
                  
                 >
                   <Text
+                  className="text-center text-sm"
                     style={{
-                      fontFamily: "Teko_400Regular",
-                      textAlign: "center",
-                      fontSize: 17,
+                      fontFamily: "OpenSans_400Regular",
                     }}
                   >
                     SHOW PREVIOUS SESSION
@@ -1178,12 +1143,10 @@ const AddTraining: React.FC = () => {
             )}
           </View>
         ) : (
-          <View className="w-full h-full flex flex-row justify-center pt-[40%]">
+          <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center">
             <Text
               style={{
-                fontFamily: "Teko_400Regular",
-                fontSize: 25,
-                textAlign: "center",
+                fontFamily: "OpenSans_400Regular"
               }}
             >
               You cant add training, because you dont have plan!
@@ -1193,7 +1156,7 @@ const AddTraining: React.FC = () => {
         {viewLoading ? <ViewLoading /> : ""}
         {isPopUpRankShowed?<UpdateRankPopUp closePopUp={closeRankPopUp}/>:''}
       </View>
-    </ImageBackground>
+
   );
 };
 export default AddTraining;
