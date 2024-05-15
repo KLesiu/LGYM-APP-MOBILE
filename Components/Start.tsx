@@ -1,10 +1,148 @@
-import { View } from "react-native"
+import { useEffect, useState } from "react";
+import { View, Text, Pressable } from "react-native";
+import LastTrainingSession from "./types/LastTrainingSession";
+import ErrorMsg from "./types/ErrorMsg";
+import Training from "./types/Training";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import StartProps from "./props/StartProps";
+import AddTraining from "./AddTraining";
+//@ts-ignore
+import ProgressBar from "react-native-progress/Bar";
+import { RankInfo } from "./types/UserInfo";
+import ProfileRank from "./ProfileRank";
 
-const Start:React.FC = ()=>{
-    return(
-        <View className="w-full m-0 px-2 py-1 h-[78%] bg-[#1E1E1E73] ">
-
-        </View>
+const Start: React.FC<StartProps> = (props) => {
+  const [lastTrainingInfo, setLastTrainingInfo] =
+    useState<LastTrainingSession>();
+  const [rankInfo, setRankInfo] = useState<RankInfo>();
+  const [error, setError] = useState<string>("");
+  const [progress, setProgress] = useState<number>();
+  useEffect(() => {
+    getTrainingInfo();
+    getRankInfo();
+  }, []);
+  const getTrainingInfo = async () => {
+    const id = await AsyncStorage.getItem("id");
+    const response: ErrorMsg | Training = await fetch(
+      `${process.env.REACT_APP_BACKEND}/api/${id}/getLastTraining`
     )
-}
-export default Start
+      .then((res) => res.json())
+      .catch((err) => err);
+    if ("msg" in response) return setError(response.msg);
+    setLastTrainingInfo(response);
+  };
+  const getRankInfo = async () => {
+    const id = await AsyncStorage.getItem("id");
+    const response: RankInfo = await fetch(
+      `${process.env.REACT_APP_BACKEND}/api/${id}/getInfoAboutRankAndElo`
+    )
+      .then((res) => res.json())
+      .catch((err) => err);
+    if (!response) return;
+    setRankInfo(response);
+    const scale: number = response.nextRankElo - response.startRankElo;
+    const upperElo: number = response.elo - response.startRankElo;
+    setProgress(upperElo / scale);
+  };
+  const navigateTo = (component: JSX.Element) => {
+    props.viewChange(component);
+  };
+  return (
+    <View className="w-full m-0   h-[78%] bg-[#131313] p-4 flex ">
+      <View className="flex h-full w-full gap-8 flex-col">
+        <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg">
+          <View>
+            <Text
+              className="text-[#4CD964] text-xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              Last Training:
+            </Text>
+            {error ? (
+              <Text
+                className="text-white"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                {error}
+              </Text>
+            ) : (
+              <View className="flex">
+                <Text
+                  className="text-white"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  Date:{" "}
+                  {new Date(lastTrainingInfo?.createdAt!).toLocaleString()}
+                </Text>
+                <Text
+                  className="text-white"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  Type: {lastTrainingInfo?.type}
+                </Text>{" "}
+              </View>
+            )}
+          </View>
+
+          <Pressable
+            onPress={() => navigateTo(<AddTraining />)}
+            className="h-full w-24 bg-[#4CD964] rounded-xl flex items-center justify-center"
+          >
+            <Text
+              className="text-white text-lg text-center"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              ADD NEW
+            </Text>
+          </Pressable>
+        </View>
+        <View className="flex w-full flex-row justify-between bg-[#1E1E1E73] items-center p-4 rounded-lg" >
+          <View>
+            <Text
+              className="text-[#4CD964] text-xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              Progress
+            </Text>
+            <View className="flex flex-col h-32 justify-around">
+              <View className="flex flex-col gap-2">
+                <Text
+                  className="text-white"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  Current Rank: {rankInfo?.rank} ({rankInfo?.elo} elo)
+                </Text>
+                <Text
+                  className="text-white"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  Next Rank: {rankInfo?.nextRank}
+                </Text>
+              </View>
+              {rankInfo && progress ? (
+                <ProgressBar
+                  progress={progress}
+                  width={200}
+                  height={10}
+                  borderWidth={5}
+                  borderColor={"#4CD964"}
+                  color={"white"}
+                />
+              ) : (
+                ""
+              )}
+              <Text
+                className="text-white"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                Completed: {progress ? Math.round(progress * 100) : ""}%
+              </Text>
+            </View>
+          </View>
+          <ProfileRank />
+        </View>
+      </View>
+    </View>
+  );
+};
+export default Start;

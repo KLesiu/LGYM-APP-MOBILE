@@ -14,3 +14,11 @@ type UserInfo={
     plan?:string
 }
 export default UserInfo
+
+export type RankInfo = {
+    rank:string,
+    elo:number,
+    nextRank:string,
+    nextRankElo:number,
+    startRankElo:number
+}

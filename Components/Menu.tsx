@@ -19,7 +19,7 @@ const Menu: React.FC<MenuProps> = (props) => {
       <View className="flex justify-between h-14 flex-row">
         <View className="flex flex-col justify-center w-[19.9%]">
           <TouchableOpacity
-            onPress={() => props.viewChange(<Start />)}
+            onPress={() => props.viewChange(<Start viewChange={props.viewChange} />)}
             className="items-center  flex h-full justify-center flex-col w-full"
           >
             <Image className="w-6 h-6"  source={home}/>
