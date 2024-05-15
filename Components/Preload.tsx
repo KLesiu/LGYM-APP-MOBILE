@@ -45,7 +45,7 @@ const Preload: React.FC = () => {
     setIsLoading(false);
   };
   return (
-    <View style={{ backgroundColor: "black", height: "100%" }}>
+    <View className="h-full bg-black">
       <ImageBackground
         className="h-full"
         style={{ height: "100%" }}

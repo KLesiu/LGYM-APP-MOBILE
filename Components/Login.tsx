@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Image,  Pressable } from "react-native";
+import { View, Text, TextInput, Image,  Pressable,  } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
 import ErrorMsg from "./types/ErrorMsg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,6 +13,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [secureTextEntry,setSecureTextEntry]=useState<boolean>(true)
   const apiURL = `${process.env.REACT_APP_BACKEND}/api/login`;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -91,11 +92,19 @@ const Login: React.FC = () => {
       <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Password
       </Text>
+      <View className="flex w-4/5 h-12 items-center justify-center">
       <TextInput
         onChangeText={(text: string) => setPassword(text)}
-        className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
-        secureTextEntry={true}
-      ></TextInput>
+        className="rounded-xl h-full  text-base  bg-[#3c3c3c] text-white  pl-4 w-full"
+        secureTextEntry={secureTextEntry}
+      >
+
+      </TextInput>
+      <Pressable className="absolute w-16 h-full text-sm flex items-center justify-center bg-[#6b6b6b7e] rounded-xl  right-0" onPress={() => setSecureTextEntry(!secureTextEntry)}>
+          <Text className="text-white text-lg ">{secureTextEntry?'SHOW':'HIDE'}</Text>
+        </Pressable>
+      </View>
+
       </View>
       
       <Pressable className="mt-10 w-80 bg-[#868686] flex items-center justify-center rounded-xl h-14" onPress={login} >

@@ -51,6 +51,7 @@ const History: React.FC = () => {
       <ReactNativeCalendarStrip
         onDateSelected={getTrainingByDate}
         ref={calendar}
+        selectedDate={new Date()}
         iconLeftStyle={{
           backgroundColor: "#4CD964",
           height: 20,
