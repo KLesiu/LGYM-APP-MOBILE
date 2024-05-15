@@ -6,10 +6,9 @@ import Training from "./types/Training";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import StartProps from "./props/StartProps";
 import AddTraining from "./AddTraining";
-//@ts-ignore
-import ProgressBar from "react-native-progress/Bar";
 import { RankInfo } from "./types/UserInfo";
 import ProfileRank from "./ProfileRank";
+import ProgressBar from "./ProgressBar";
 
 const Start: React.FC<StartProps> = (props) => {
   const [lastTrainingInfo, setLastTrainingInfo] =
@@ -42,7 +41,7 @@ const Start: React.FC<StartProps> = (props) => {
     setRankInfo(response);
     const scale: number = response.nextRankElo - response.startRankElo;
     const upperElo: number = response.elo - response.startRankElo;
-    setProgress(upperElo / scale);
+    setProgress(Math.round((upperElo / scale)*100));
   };
   const navigateTo = (component: JSX.Element) => {
     props.viewChange(component);
@@ -121,12 +120,7 @@ const Start: React.FC<StartProps> = (props) => {
               </View>
               {rankInfo && progress ? (
                 <ProgressBar
-                  progress={progress}
-                  width={200}
-                  height={10}
-                  borderWidth={5}
-                  borderColor={"#4CD964"}
-                  color={"white"}
+                width={progress}
                 />
               ) : (
                 ""
@@ -135,7 +129,7 @@ const Start: React.FC<StartProps> = (props) => {
                 className="text-white"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
-                Completed: {progress ? Math.round(progress * 100) : ""}%
+                Completed: {progress ? progress : ""}%
               </Text>
             </View>
           </View>

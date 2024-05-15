@@ -1083,7 +1083,7 @@ const AddTraining: React.FC = () => {
 
                   >
                     <Text
-                    className="text-center text-lg"
+                    className="text-center text-sm"
                       style={{
                         fontFamily: "OpenSans_400Regular",
                       }}
