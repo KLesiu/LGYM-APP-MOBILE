@@ -12,7 +12,10 @@ import TrainingSession from "./TrainingSession";
 const History: React.FC = () => {
   const calendar = useRef(null);
   const [session,setSession]=useState<Training>()
-
+  useEffect(()=>{
+    const initialDateObj = {_d:new Date()}
+    getTrainingByDate(initialDateObj)
+  },[])
   const getTrainingByDate = async (dateObject: any): Promise<void> => {
     const date: Date = new Date(dateObject._d);
     setSession(undefined)
