@@ -78,7 +78,7 @@ const Start: React.FC<StartProps> = (props) => {
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Type: {lastTrainingInfo?.type}
-                </Text>
+                </Text>{" "}
               </View>
             )}
           </View>
