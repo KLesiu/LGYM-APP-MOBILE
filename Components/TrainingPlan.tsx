@@ -388,6 +388,8 @@ const TrainingPlan: React.FC = () => {
   }
   const hideShowPlanSetPopUp = ():void =>{
     setShowPlanSet(false)
+    setViewLoading(true);
+    getUserPlan();
   }
   const setImportPlan = async (userName: string): Promise<void> => {
     if (!userName) return;
@@ -470,14 +472,12 @@ const TrainingPlan: React.FC = () => {
         {isPlanSet?yourPlan:''}
       </View>
       {popUp}
-      {viewLoading ? <ViewLoading /> : ""}
+      {viewLoading ? <ViewLoading /> :<Text></Text>}
       {showImportPlanPopUp ? (
         <ImportPlanPopUp setImportPlan={setImportPlan} />
-      ) : (
-        ""
-      )}
-      {showPlanConfig  ? <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} /> : ''}
-      {showPlanSet ? <CreatePlanBody hideShowPlanSetPopUp={hideShowPlanSetPopUp}/> : ''}
+      ) : <Text></Text>}
+      {showPlanConfig  ? <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} /> : <Text></Text>}
+      {showPlanSet ? <CreatePlanBody hideShowPlanSetPopUp={hideShowPlanSetPopUp}/> :<Text></Text>}
     </View>
   );
 };

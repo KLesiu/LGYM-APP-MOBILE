@@ -9,6 +9,7 @@ import AddTraining from "./AddTraining";
 import { RankInfo } from "./types/UserInfo";
 import ProfileRank from "./ProfileRank";
 import ProgressBar from "./ProgressBar";
+import ViewLoading from "./ViewLoading";
 
 const Start: React.FC<StartProps> = (props) => {
   const [lastTrainingInfo, setLastTrainingInfo] =
@@ -16,7 +17,9 @@ const Start: React.FC<StartProps> = (props) => {
   const [rankInfo, setRankInfo] = useState<RankInfo>();
   const [error, setError] = useState<string>("");
   const [progress, setProgress] = useState<number>();
+  const [viewLoading,setViewLoading]=useState<boolean>(false)
   useEffect(() => {
+    setViewLoading(true)
     getTrainingInfo();
     getRankInfo();
   }, []);
@@ -42,13 +45,15 @@ const Start: React.FC<StartProps> = (props) => {
     const scale: number = response.nextRankElo - response.startRankElo;
     const upperElo: number = response.elo - response.startRankElo;
     setProgress(Math.round((upperElo / scale)*100));
+    setViewLoading(false)
+
   };
   const navigateTo = (component: JSX.Element) => {
     props.viewChange(component);
   };
   return (
-    <View className="w-full m-0   h-[78%] bg-[#131313] p-4 flex ">
-      <View className="flex h-full w-full gap-8 flex-col">
+    <View className="w-full m-0 h-[78%] bg-[#131313] ">
+      <View className="flex h-full w-full gap-8 flex-col  p-4">
         <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg">
           <View>
             <Text
@@ -85,7 +90,7 @@ const Start: React.FC<StartProps> = (props) => {
 
           <Pressable
             onPress={() => navigateTo(<AddTraining />)}
-            className="h-full w-24 bg-[#4CD964] rounded-xl flex items-center justify-center"
+            className="h-16 w-24 bg-[#4CD964] rounded-xl flex items-center justify-center"
           >
             <Text
               className="text-white text-lg text-center"
@@ -103,16 +108,17 @@ const Start: React.FC<StartProps> = (props) => {
             >
               Progress
             </Text>
-            <View className="flex flex-col h-32 justify-around">
+            <View className="flex flex-col h-36 justify-around">
               <View className="flex flex-col gap-2">
                 <Text
-                  className="text-white"
+                  className="text-white text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
-                  Current Rank: {rankInfo?.rank} ({rankInfo?.elo} elo)
+                  Current Rank: {rankInfo?.rank} 
                 </Text>
+                <Text className="text-white text-sm" style={{fontFamily:'OpenSans_400Regular'}}>Elo: ({rankInfo?.elo})</Text>
                 <Text
-                  className="text-white"
+                  className="text-white text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Next Rank: {rankInfo?.nextRank}
@@ -136,6 +142,7 @@ const Start: React.FC<StartProps> = (props) => {
           <ProfileRank />
         </View>
       </View>
+      {viewLoading?<ViewLoading/>:<Text></Text>}
     </View>
   );
 };

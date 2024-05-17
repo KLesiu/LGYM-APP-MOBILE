@@ -3,10 +3,10 @@ import React, { useEffect } from "react";
 const ViewLoading: React.FC = () => {
 
   return (
-    <View className=" w-full h-full bg-[#28292a] absolute top-0 right-[-16px] flex flex-row justify-center items-center">
+    <View className=" w-full h-full bg-[#28292a] absolute top-0  flex flex-row justify-center items-center z-50">
       <Text
-        className="text-[30] text-white"
-        style={{ fontFamily: "Teko_700Bold" }}
+        className="text-xl text-white"
+        style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Loading...
       </Text>

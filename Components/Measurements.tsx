@@ -67,7 +67,7 @@ const Measurements: React.FC = () => {
   };
   return (
     <View className="bg-[#131313] flex flex-col gap-2 px-1">
-        <ScrollView className="w-full  smh:h-56 mdh:h-80 lgh:h-96" >
+        <ScrollView className="w-full  smh:h-56 xsmh:h-72 mdh:h-80 lgh:h-96" >
         {measurements.length > 0?measurements:''}
         </ScrollView>
 

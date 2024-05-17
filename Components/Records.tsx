@@ -36,7 +36,7 @@ const Records: React.FC = () => {
   };
   return (
     <View className="bg-[#131313] flex flex-col gap-2 px-1">
-      <ScrollView className="w-full smh:h-32 mdh:h-72">
+      <ScrollView className="w-full smh:h-32 xsmh:h-48 mdh:h-72">
       <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
         <Text
           style={{ fontFamily: "OpenSans_300Light" }}

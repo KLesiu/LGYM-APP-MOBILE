@@ -28,13 +28,21 @@ const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
     const hideConfigCurrentDay= async(day:string)=>{
         setShowDaySection(false)
         const checkDay:Exercise[] = JSON.parse(await AsyncStorage.getItem(day) as string)
-        if(checkDay.length < 1) return
-        
-        if(completedDays.completed.includes(day)) return
-        const helperDays = completedDays.completed
-        helperDays.push(day)
+        let helperDays:string[]=[]
+        let count=0;
+        if(checkDay.length < 1){
+            helperDays = completedDays.completed.filter(item=>item !== day)
+            count = completedDays.count === 0 ? 0 : -1
+        }
+        else if(completedDays.completed.includes(day)) return
+        else{
+            helperDays = completedDays.completed
+            helperDays.push(day)
+            count=1
+        }
+
         const actualStateOfCompletedDays:CompletedDaysInPlan={
-            count:completedDays.count+1,
+            count:completedDays.count+count,
             completed: helperDays
         }
         setCompletedDays(actualStateOfCompletedDays)
@@ -44,6 +52,9 @@ const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
         const id = await AsyncStorage.getItem("id")
         const daysToSend = []
         for(let i =0;i<days!;i++){
+            const exercises:any[] = JSON.parse(await AsyncStorage.getItem(trainingDays[i]) as string)
+            if(exercises.length ===0){
+                return setError('All days must be completed!')}
             daysToSend.push({trainingDay:`plan${trainingDays[i]}`,exercises: JSON.parse(await AsyncStorage.getItem(trainingDays[i]) as string)})
         }
         const response:{msg:string} =  await fetch(
@@ -86,7 +97,7 @@ const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
             {showDaySection ? <CreateDaySection day={currentDay} hideConfigCurrentDay={hideConfigCurrentDay} /> : ''}
             <Text className="text-sm text-white">Completed sections: {completedDays.completed.map(ele=><Text>{ele}, </Text>)}</Text>
             <Text className="text-sm text-white">Completed: {completedDays.count}/{days}</Text>
-            {error? <Text>{error}</Text>:''}
+            {error? <Text className="text-red-400 text-sm">{error}</Text>:''}
         </View>
     )
 }

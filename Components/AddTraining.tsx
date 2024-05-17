@@ -220,6 +220,7 @@ const AddTraining: React.FC = () => {
     setViewLoading(true);
     getFromStorage();
     getSessionFromStorage();
+    setViewLoading(false)
   }, []);
   const getSessionFromStorage = async () => {
     const training = await AsyncStorage.getItem("currentTraining");
@@ -229,8 +230,8 @@ const AddTraining: React.FC = () => {
   const getFromStorage = async (): Promise<void> => {
     const plan: string | null | undefined =
       (await AsyncStorage.getItem("plan")) || "";
-    setViewLoading(false);
     setPlan(plan);
+    setViewLoading(false);
   };
   const getInformationsAboutPlanDays: VoidFunction =
     async (): Promise<void> => {
@@ -304,6 +305,7 @@ const AddTraining: React.FC = () => {
     setDayToCheck(day);
     setChooseDay(<View></View>);
     setPickedDay(planOfTheDay);
+    setViewLoading(false)
   };
   const setCurrentDaySection = async (
     exercises: Array<Exercise>,
@@ -1046,7 +1048,7 @@ const AddTraining: React.FC = () => {
   }
   return (
       <View className="bg-[#131313] h-[78%] w-full z-[2]">
-        {plan === "completed" ? (
+        {plan === "completed" && plan ? (
           <View className="relative  flex flex-col justify-start items-center h-full w-full" >
             <Text
             className=" text-center text-white text-3xl "
@@ -1144,7 +1146,7 @@ const AddTraining: React.FC = () => {
           </View>
         ) : (
           <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center">
-            <Text
+            <Text className="text-white text-xl text-center"
               style={{
                 fontFamily: "OpenSans_400Regular"
               }}

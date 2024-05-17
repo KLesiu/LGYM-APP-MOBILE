@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       screens:{
         'smh':{'raw': '(min-height: 600px)'},
+        'xsmh':{'raw': '(min-height: 700px)'},
         'mdh':{'raw': '(min-height: 800px)'},
         'lgh':{'raw': '(min-height: 900px)'}
       }

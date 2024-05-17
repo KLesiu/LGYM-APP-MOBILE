@@ -107,9 +107,9 @@ const Login: React.FC = () => {
 
       </View>
       
-      <Pressable className="mt-10 w-80 bg-[#868686] flex items-center justify-center rounded-xl h-14" onPress={login} >
+      <Pressable className="mt-10 w-80 h-20 bg-[#868686] flex items-center justify-center rounded-xl" onPress={login} >
         <Text
-          className="text-2xl text-[#e2e2e2]"
+          className="text-4xl text-[#e2e2e2]"
           style={{ fontFamily: "OpenSans_700Bold"}}
         >
           LOGIN

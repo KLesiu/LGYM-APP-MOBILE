@@ -96,7 +96,7 @@ const Register: React.FC = () => {
       />
       <Pressable
         onPress={register}
-        className="mt-10 w-80 bg-[#868686] flex items-center justify-center rounded-xl h-[7%]"
+        className="mt-10 w-80 bg-[#868686] flex items-center justify-center rounded-xl h-12"
       >
         <Text
           style={{

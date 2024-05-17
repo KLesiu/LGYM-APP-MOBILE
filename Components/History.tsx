@@ -6,13 +6,15 @@ import { useState, useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorMsg from "./types/ErrorMsg";
 import Training from "./types/Training";
-import ViewLoading from "./ViewLoading";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import TrainingSession from "./TrainingSession";
+import ViewLoading from "./ViewLoading";
 const History: React.FC = () => {
   const calendar = useRef(null);
   const [session,setSession]=useState<Training>()
+  const [viewLoading,setViewLoading]=useState<boolean>(false)
   useEffect(()=>{
+    setViewLoading(true)
     const initialDateObj = {_d:new Date()}
     getTrainingByDate(initialDateObj)
   },[])
@@ -38,13 +40,11 @@ const History: React.FC = () => {
       .then((res) => res);
       if('exercises' in response)setSession(response as Training)
       else setSession(undefined)
-        
-      
-      
-      
+    setViewLoading(false)
     };
   return (
-    <View className="flex flex-col h-[78%] p-4 ">
+    <View className="relative h-[78%]">
+      <View className="flex flex-col h-full p-4">
       <Text
         style={{ fontFamily: "OpenSans_700Bold" }}
         className="w-full text-2xl text-white font-bold py-6"
@@ -87,6 +87,8 @@ const History: React.FC = () => {
       <View className="flex justify-center w-full h-1/2 items-center p-4">
           <Text style={{fontFamily:'OpenSans_700Bold'}} className="text-white text-xl text-center">You dont have training session this day!</Text>
         </View>}
+      </View>
+      {viewLoading?<ViewLoading/>:<Text></Text>}
     </View>
   );
 };
