@@ -87,17 +87,21 @@ const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
         return helpSections
     }
     return(
-        <View  className="absolute h-full w-full flex flex-col  justify-around  bg-black items-center top-0 z-30 p-4 ">
+        <View  className="absolute h-full w-screen  bg-black  top-0 z-30  ">
+           
+            {error? <Text className="text-red-400 text-sm">{error}</Text>:''}
+            {showDaySection ? <CreateDaySection day={currentDay} hideConfigCurrentDay={hideConfigCurrentDay} /> :
+            <View className="flex flex-col  justify-around items-center p-4 h-full">
             <Text className="text-2xl text-white">Plan creator</Text>
             <View className="w-full p-4 h-80 flex flex-row flex-wrap justify-around">
             {days?generateDaysSections(days):''}
             </View>
             <Pressable disabled={completedDays.count !== days} onPress={setPlan} className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"><Text style={{fontFamily:'OpenSans_400Regular'}} className="text-white text-2xl">DONE</Text></Pressable>
             <Text className="text-sm text-gray-300">Choose for which day you want to set exercises!</Text>
-            {showDaySection ? <CreateDaySection day={currentDay} hideConfigCurrentDay={hideConfigCurrentDay} /> : ''}
             <Text className="text-sm text-white">Completed sections: {completedDays.completed.map(ele=><Text>{ele}, </Text>)}</Text>
             <Text className="text-sm text-white">Completed: {completedDays.count}/{days}</Text>
-            {error? <Text className="text-red-400 text-sm">{error}</Text>:''}
+            </View>
+            }
         </View>
     )
 }

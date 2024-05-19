@@ -35,20 +35,19 @@ const TrainingPlan: React.FC = () => {
     if (isPopUpDeleteShowed) {
       setPopUp(
         <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
-          <Text
+          <Text className="text-4xl text-gray-200"
             style={{
               fontFamily: "OpenSans_300Light",
-              fontSize: 50,
-              color: "grey",
+
             }}
           >
             Are you sure?
           </Text>
           <TouchableOpacity
             onPress={deletePlan}
-            className="w-1/2 h-[10%] bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
+            className="w-1/2 h-24 bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
           >
-            <Text style={{ fontFamily: "OpenSans_700Bold", fontSize: 40 }}>
+            <Text className="text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>
               YES
             </Text>
           </TouchableOpacity>
@@ -57,9 +56,9 @@ const TrainingPlan: React.FC = () => {
               setPopUp(<></>);
               setIsPopUpDeleteShowed(false);
             }}
-            className="w-1/2 h-[10%] bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
+            className="w-1/2 h-24 bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
           >
-            <Text style={{ fontFamily: "OpenSans_700Bold", fontSize: 40 }}>NO</Text>
+            <Text  className="text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>NO</Text>
           </TouchableOpacity>
         </View>
       );
@@ -255,7 +254,7 @@ const TrainingPlan: React.FC = () => {
             : "";
         setYourPlan(() => {
           return (
-            <ScrollView className="flex flex-col h-full gap-2 px-1 py-4">
+            <ScrollView className="flex flex-col h-full gap-2 px-1 py-4 pb-8">
               {planA ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
@@ -415,9 +414,9 @@ const TrainingPlan: React.FC = () => {
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
       <View className="bg-[#131313] flex flex-col p-4 h-full w-full text-center z-[2]">
-        <View className="w-full flex flex-col gap-4">
+        <View className="w-full flex flex-col">
           <Text
-            className="w-full text-2xl text-white font-bold "
+            className="w-full text-2xl text-white font-bold mb-2 "
             style={{
               fontFamily: "OpenSans_700Bold",
             }}

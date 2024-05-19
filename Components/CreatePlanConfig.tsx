@@ -46,13 +46,13 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
       </Text>
       <View className="flex h-2/3 w-4/5 items-center flex-col justify-around ">
         <View>
-        <View className="flex justify-flex items-center w-full gap-2 ">
+        <View className="flex justify-flex items-center w-full ">
           <Text style={{fontFamily:'OpenSans_700Bold'}} className="text-white text-xl">Plan name:</Text>
-          <TextInput style={{fontFamily:'OpenSans_400Regular'}} className="bg-white h-8 w-full text-black " onChangeText={(text:string)=>setPlanName(text)} value={planName}/>
+          <TextInput style={{fontFamily:'OpenSans_400Regular'}} className="bg-white h-8 w-72 text-black " onChangeText={(text:string)=>setPlanName(text)} value={planName}/>
         </View>
-        <View className="flex justify-flex items-center w-full gap-2 ">
+        <View className="flex justify-flex items-center w-full ">
           <Text  style={{fontFamily:'OpenSans_700Bold'}} className=" px-4 text-white text-center text-lg" >How many days per week do you want to train?</Text>
-          <TextInput style={{fontFamily:'OpenSans_400Regular'}} className="bg-white h-8 w-full text-black " keyboardType = 'numeric' onChangeText={validator} value={numberOfDays}/>
+          <TextInput style={{fontFamily:'OpenSans_400Regular'}} className="bg-white h-8 w-72 text-black " keyboardType = 'numeric' onChangeText={validator} value={numberOfDays}/>
         </View>
         </View>
         <Pressable onPress={sendConfig} className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg">

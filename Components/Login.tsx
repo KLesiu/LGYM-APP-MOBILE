@@ -111,8 +111,7 @@ const Login: React.FC = () => {
         <Text
           className="text-4xl text-[#e2e2e2]"
           style={{ fontFamily: "OpenSans_700Bold"}}
-        >
-          LOGIN
+        >LOGIN
         </Text>
       </Pressable>
       {loading ? <MiniLoading /> : <Text></Text>}

@@ -75,7 +75,8 @@ const Profile: React.FC = () => {
   };
 
   return (
-      <View className=" relative w-full p-4 flex gap-4 flex-col bg-[#131313]">
+      <View className=" relative w-full bg-[#131313]">
+        <View className="w-full p-4 flex flex-col">
         <View className="flex h-8 px-6">
           <Text className=" m-0 text-2xl text-white" style={{ fontFamily: "OpenSans_700Bold"}}>
             Profile
@@ -105,10 +106,12 @@ const Profile: React.FC = () => {
             <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Records/>,'border')}`,borderBottomWidth:1}} onPress={()=>setCurrentTab(<Records/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Records/>,'text')}`}}>Records</Text></Pressable>
             <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Measurements/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<Measurements/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm"  style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Measurements/>,'text')}`}}>Measurements</Text></Pressable>
         </View>
-        <View className="w-full">
+        <View className="w-full mt-4">
           {currentTab}
           
         </View>
+        </View>
+       
         {viewLoading ? <ViewLoading /> : <Text></Text>}
       </View>
   );

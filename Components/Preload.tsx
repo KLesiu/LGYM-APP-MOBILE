@@ -54,22 +54,21 @@ const Preload: React.FC = () => {
           <View className="flex-1 items-center flex bg-[#111111e2] justify-center h-full gap-5">
             <Image source={logoLGYM} className="w-[70%] h-2/5" />
             <Pressable
-              className="w-80 h-20 rounded-lg py-4 px-6 gap-1 m-0  bg-[#868686] flex justify-center items-center"
+              className="w-80 h-20 rounded-lg py-4 px-4 m-0  bg-[#868686] flex justify-center items-center"
               onPress={handleLoginPress}
             >
               <Text
-                className="text-4xl text-white"
+                className="text-3xl text-white"
                 style={{ fontFamily: "OpenSans_700Bold" }}
-              >
-                LOGIN
+              >LOGIN
               </Text>
             </Pressable>
             <Pressable
-              className=" w-80 h-20 rounded-lg py-4 px-6 gap-1 m-0  bg-[#868686] flex justify-center items-center"
+              className=" w-80 h-20 rounded-lg py-4 px-4 m-0  bg-[#868686] flex justify-center items-center"
               onPress={handleRegisterPress}
             >
               <Text
-                className="text-4xl text-white"
+                className="text-3xl text-white"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
                 REGISTER

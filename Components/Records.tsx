@@ -3,6 +3,7 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Pressable,
 } from "react-native";
 import { useEffect, useState } from "react";
 import RecordsPopUp from "./RecordsPopUp";
@@ -35,8 +36,8 @@ const Records: React.FC = () => {
     setViewLoading(false);
   };
   return (
-    <View className="bg-[#131313] flex flex-col gap-2 px-1">
-      <ScrollView className="w-full smh:h-32 xsmh:h-48 mdh:h-72">
+    <View className="bg-[#131313] flex flex-col px-1">
+      <ScrollView className="w-full smh:h-24 xsmh:h-48 mdh:h-72">
       <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
         <Text
           style={{ fontFamily: "OpenSans_300Light" }}
@@ -103,17 +104,17 @@ const Records: React.FC = () => {
           </Text>
         </View>
       </View>
-      <TouchableOpacity
+      <Pressable
         onPress={() => setPopUp(true)}
-        className="w-full rounded-lg py-4 px-6 gap-1 m-0  bg-[#4CD964] flex justify-center items-center"
+        className="w-full h-12 rounded-lg py-4 px-6 gap-1 m-0  bg-[#4CD964] flex justify-center items-center"
       >
         <Text
-        className="text-xl text-black"
+        className="text-lg text-black"
           style={{ fontFamily: "OpenSans_700Bold"}}
         >
           Update Records
         </Text>
-      </TouchableOpacity>
+      </Pressable>
       {popUp ? <RecordsPopUp offPopUp={chagePopUpValue} /> : <Text></Text>}
       {viewLoading ? <ViewLoading /> :<Text></Text>}
     </View>
