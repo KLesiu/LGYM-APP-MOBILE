@@ -1,9 +1,4 @@
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import Data from "./types/DataPlansArrays";
 import Exercise from "./types/Exercise";
@@ -25,8 +20,8 @@ const TrainingPlan: React.FC = () => {
   const [popUp, setPopUp] = useState<JSX.Element>();
   const [showImportPlanPopUp, setShowImportPlanPopUp] =
     useState<boolean>(false);
-  const [showPlanConfig,setShowPlanConfig]= useState<boolean>(false)
-  const [showPlanSet,setShowPlanSet]=useState<boolean>(false)
+  const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
+  const [showPlanSet, setShowPlanSet] = useState<boolean>(false);
   useEffect(() => {
     setViewLoading(true);
     getUserPlan();
@@ -35,10 +30,10 @@ const TrainingPlan: React.FC = () => {
     if (isPopUpDeleteShowed) {
       setPopUp(
         <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
-          <Text className="text-4xl text-gray-200"
+          <Text
+            className="text-4xl text-gray-200"
             style={{
               fontFamily: "OpenSans_300Light",
-
             }}
           >
             Are you sure?
@@ -47,7 +42,10 @@ const TrainingPlan: React.FC = () => {
             onPress={deletePlan}
             className="w-1/2 h-24 bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
           >
-            <Text className="text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>
+            <Text
+              className="text-2xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
               YES
             </Text>
           </TouchableOpacity>
@@ -58,7 +56,12 @@ const TrainingPlan: React.FC = () => {
             }}
             className="w-1/2 h-24 bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
           >
-            <Text  className="text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>NO</Text>
+            <Text
+              className="text-2xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              NO
+            </Text>
           </TouchableOpacity>
         </View>
       );
@@ -254,7 +257,7 @@ const TrainingPlan: React.FC = () => {
             : "";
         setYourPlan(() => {
           return (
-            <ScrollView className="flex flex-col h-full gap-2 px-1 py-4 pb-8">
+            <ScrollView className="flex flex-col h-[120px]  gap-2 px-2 py-4 pb-12">
               {planA ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
@@ -372,28 +375,27 @@ const TrainingPlan: React.FC = () => {
       setIsPlanSet(false);
       setPopUp(<></>);
       setIsPopUpDeleteShowed(false);
-      
     }
   };
   const showImportPlanPopUpFn = (): void => {
     setShowImportPlanPopUp(true);
   };
-  const showPlanConfigPopUp = ():void=>{
-    setShowPlanConfig(true)
-  }
-  const showPlanSetPopUp = ():void=>{
-    setShowPlanConfig(false)
-    setShowPlanSet(true)
-  }
-  const hideShowPlanSetPopUp = ():void =>{
-    setShowPlanSet(false)
+  const showPlanConfigPopUp = (): void => {
+    setShowPlanConfig(true);
+  };
+  const showPlanSetPopUp = (): void => {
+    setShowPlanConfig(false);
+    setShowPlanSet(true);
+  };
+  const hideShowPlanSetPopUp = (): void => {
+    setShowPlanSet(false);
     setViewLoading(true);
     getUserPlan();
-  }
+  };
   const setImportPlan = async (userName: string): Promise<void> => {
     if (!userName) return;
     const id = await AsyncStorage.getItem("id");
-    
+
     await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/setSharedPlan`, {
       method: "POST",
       headers: {
@@ -403,27 +405,25 @@ const TrainingPlan: React.FC = () => {
         userName: userName,
       }),
     })
-      .then(() =>{
+      .then(() => {
         setShowImportPlanPopUp(false);
         setIsPlanSet(true);
       })
-      .catch((err) =>err );
-
+      .catch((err) => err);
   };
 
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
-      <View className="bg-[#131313] flex flex-col p-4 h-full w-full text-center z-[2]">
-        <View className="w-full flex flex-col">
-          <Text
-            className="w-full text-2xl text-white font-bold mb-2 "
-            style={{
-              fontFamily: "OpenSans_700Bold",
-            }}
-          >
-            Training Plan
-          </Text>
-          {!isPlanSet?
+      <View className="w-full h-[15%] px-4 flex flex-col">
+        <Text
+          className="w-full text-2xl text-white font-bold mb-2 "
+          style={{
+            fontFamily: "OpenSans_700Bold",
+          }}
+        >
+          Training Plan
+        </Text>
+        {!isPlanSet ? (
           <View className="flex flex-row w-full justify-around">
             <TouchableOpacity
               onPress={showPlanConfigPopUp}
@@ -451,8 +451,11 @@ const TrainingPlan: React.FC = () => {
                 Import plan
               </Text>
             </TouchableOpacity>
-          </View>:''}
-          {isPlanSet?
+          </View>
+        ) : (
+          ""
+        )}
+        {isPlanSet ? (
           <View className="flex flex-row w-full justify-around items-center">
             <Text
               className="w-full text-lg text-white  font-bold "
@@ -465,21 +468,31 @@ const TrainingPlan: React.FC = () => {
             <TouchableOpacity onPress={() => setIsPopUpDeleteShowed(true)}>
               <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete" />
             </TouchableOpacity>
-          </View>:''}
-
-        </View>
-        {isPlanSet?yourPlan:''}
+          </View>
+        ) : (
+          ""
+        )}
       </View>
+      {isPlanSet ? yourPlan : ""}
+
       {popUp}
-      {viewLoading ? <ViewLoading /> :<Text></Text>}
+      {viewLoading ? <ViewLoading /> : <Text></Text>}
       {showImportPlanPopUp ? (
         <ImportPlanPopUp setImportPlan={setImportPlan} />
-      ) : <Text></Text>}
-      {showPlanConfig  ? <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} /> : <Text></Text>}
-      {showPlanSet ? <CreatePlanBody hideShowPlanSetPopUp={hideShowPlanSetPopUp}/> :<Text></Text>}
+      ) : (
+        <Text></Text>
+      )}
+      {showPlanConfig ? (
+        <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} />
+      ) : (
+        <Text></Text>
+      )}
+      {showPlanSet ? (
+        <CreatePlanBody hideShowPlanSetPopUp={hideShowPlanSetPopUp} />
+      ) : (
+        <Text></Text>
+      )}
     </View>
   );
 };
 export default TrainingPlan;
-
-

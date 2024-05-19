@@ -39,7 +39,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     }
   };
   return (
-    <View  className="w-full absolute h-full top-0 flex flex-col items-center justify-center bg-[#000000f4] ">
+    <View  className="w-full  flex flex-col items-center justify-center bg-[#000000f4] ">
       <Text className="text-xl text-white" style={{ fontFamily: "OpenSans_700Bold"}}>
         Set Your Records!
       </Text>

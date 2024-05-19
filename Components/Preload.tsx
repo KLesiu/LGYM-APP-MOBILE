@@ -1,4 +1,4 @@
-import { Text, Image, View, ImageBackground, Pressable } from "react-native";
+import { Text, Image, View, ImageBackground, Pressable, TouchableOpacity } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
 import backgroundLGYM from "./img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
@@ -53,7 +53,7 @@ const Preload: React.FC = () => {
         <View className="bg-[#5c5c5cb3] h-full w-full">
           <View className="flex-1 items-center flex bg-[#111111e2] justify-center h-full gap-5">
             <Image source={logoLGYM} className="w-[70%] h-2/5" />
-            <Pressable
+            <TouchableOpacity
               className="w-80 h-20 rounded-lg py-4 px-4 m-0  bg-[#868686] flex justify-center items-center"
               onPress={handleLoginPress}
             >
@@ -62,8 +62,8 @@ const Preload: React.FC = () => {
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >LOGIN
               </Text>
-            </Pressable>
-            <Pressable
+            </TouchableOpacity>
+            <TouchableOpacity
               className=" w-80 h-20 rounded-lg py-4 px-4 m-0  bg-[#868686] flex justify-center items-center"
               onPress={handleRegisterPress}
             >
@@ -73,7 +73,7 @@ const Preload: React.FC = () => {
               >
                 REGISTER
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </ImageBackground>
