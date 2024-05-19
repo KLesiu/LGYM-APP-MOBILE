@@ -960,7 +960,7 @@ const AddTraining: React.FC = () => {
               fontFamily: "OpenSans_400Regular"
             }}
           >
-            Date:  <Text className="text-[#4CD964]" style={{fontFamily:'OpenSans_400Regular'}}>{lastTrainingSessionDate}</Text> 
+            Date:  <Text className="text-[#4CD964]" style={{fontFamily:'OpenSans_400Regular'}}>{new Date(lastTrainingSessionDate).toLocaleDateString()}</Text> 
           </Text>
           <ScrollView className="w-4/5 ml-[10%] h-[70%] ">
             <View className="w-full flex flex-row">
@@ -1119,7 +1119,7 @@ const AddTraining: React.FC = () => {
                 {isAddTrainingActive?<TouchableOpacity onPress={()=>deleteCurrentSession()}
                 className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center">
                         <Text className="text-center text-sm" style={{  fontFamily: "OpenSans_400Regular"}}>
-                          DELETE CURRENT SESSION
+                          DELETE CURRENT
                         </Text>
                 </TouchableOpacity>:<TouchableOpacity
                   onPress={() => {
@@ -1135,7 +1135,7 @@ const AddTraining: React.FC = () => {
                       fontFamily: "OpenSans_400Regular",
                     }}
                   >
-                    SHOW PREVIOUS SESSION
+                    SHOW PREVIOUS
                   </Text>
                 </TouchableOpacity>}
                 
@@ -1145,7 +1145,7 @@ const AddTraining: React.FC = () => {
             )}
           </View>
         ) : (
-          <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center">
+          <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center p-4">
             <Text className="text-white text-xl text-center"
               style={{
                 fontFamily: "OpenSans_400Regular"

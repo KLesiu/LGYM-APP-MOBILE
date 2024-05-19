@@ -38,17 +38,17 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
     return scaledData;
 }
   return (
-    <View className="h-3/4 px-6">
-      <View className="flex py-6 flex-col gap--2">
+    <View className="w-full h-3/4 px-6">
+      <View className="flex h-1/4 py-4 flex-col">
         <Text
           style={{ fontFamily: "OpenSans_700Bold" }}
-          className="text-xl text-[#4CD964]"
+          className="text-lg text-[#4CD964]"
         >
           Training {props.training.type}
         </Text>
         <Text style={{fontFamily:'OpenSans_300Light'}} className="text-sm text-[#5A5A5A]">Series: {props.training.exercises.length/2}</Text>
       </View>
-      <ScrollView className="w-full h-96 flex flex-col gap-3">
+      <ScrollView className="w-full h-3/4 flex flex-col gap-2 pb-8">
         {exercises?exercises.map(ele=>{
           return(
             <View className="flex flex-col  rounded-lg bg-[#1E1E1E73] p-3">

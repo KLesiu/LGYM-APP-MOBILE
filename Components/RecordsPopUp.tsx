@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, TextInput } from "react-native";
+import { Text, View, TouchableOpacity, TextInput, Pressable } from "react-native";
 import RecordsPopUpProps from "./props/RecordsPopUpProps";
 import ErrorMsg from "./types/ErrorMsg";
 import { useState} from "react";
@@ -39,7 +39,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     }
   };
   return (
-    <View className="absolute w-full h-full top-0 flex flex-col items-center justify-center bg-[#000000f4] ">
+    <View  className="w-full absolute h-full top-0 flex flex-col items-center justify-center bg-[#000000f4] ">
       <Text className="text-3xl text-white" style={{ fontFamily: "OpenSans_700Bold"}}>
         Set Your Records!
       </Text>
@@ -49,7 +49,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       <TextInput
         
         onChangeText={(text: string | "") => setDeadLiftValue(text)}
-        className="rounded-xl h-[6%] text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
+        className="rounded-xl h-10 text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
       />
       <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-xl mt-4 text-white">
         Squat:
@@ -57,7 +57,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       <TextInput
         
         onChangeText={(text: string | "") => setSquatValue(text)}
-        className="rounded-xl h-[6%] text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
+        className="rounded-xl h-10 text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
       />
       <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-xl mt-4 text-white">
         BenchPress:
@@ -65,17 +65,17 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       <TextInput
         
         onChangeText={(text: string | "") => setBenchPressValue(text)}
-        className="rounded-xl h-[6%] text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
+        className="rounded-xl h-10 text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
       />
-      <TouchableOpacity
+      <Pressable
         onPress={setRecords}
-        className="w-1/2 h-[10%] rounded-xl bg-[#aab4bd] flex justify-center items-center mt-[5%]"
+        className="h-16 w-36 bg-[#4CD964] rounded-xl mt-4 flex items-center justify-center"
         
       >
         <Text style={{ fontFamily: "OpenSans_700Bold", fontSize: 30 }}>
           Update!
         </Text>
-      </TouchableOpacity>
+      </Pressable>
       <Text style={{ fontFamily: "OpenSans_700Bold" }}>
         {error ? error.msg : ""}
       </Text>

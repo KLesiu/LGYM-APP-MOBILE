@@ -29,11 +29,11 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
         </Text>
       </Pressable> */}
       <Pressable
-        className="flex justify-center items-center rounded-lg h-14 w-full py-4 px-6 border border-solid border-1  border-[#4CD964] "
+        className="flex justify-center items-center rounded-lg h-16 w-full py-4 px-6 border border-solid border-1  border-[#4CD964] "
         onPress={props.logout}
       >
         <Text
-          className="text-[#4CD964] text-xl"
+          className="text-[#4CD964] text-lg"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Logout
