@@ -1,13 +1,16 @@
 import {View } from "react-native";
-import {useState} from 'react'
-import TrainingPlan from "./TrainingPlan";
+import {useEffect, useState} from 'react'
 import Menu from "./Menu";
 import Loading from "./Loading";
 import Header from "./Header";
+import Start from "./Start";
 
 const Home:React.FC=()=>{
-    const [view,setView]=useState<JSX.Element>(<TrainingPlan/>)
+    const [view,setView]=useState<JSX.Element>(<View></View>)
     const [isLoading,setIsLoading]=useState<boolean>(true)
+    useEffect(()=>{
+        changeView(<Start viewChange={changeView} />)
+    },[])
     const changeView=(view:JSX.Element)=>{
         setView(view)
     }

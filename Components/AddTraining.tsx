@@ -441,8 +441,6 @@ const AddTraining: React.FC = () => {
     );
     setLastTrainingSessionDate(lastTraining!);
     setLastTrainingSessionExercises(lastExercises!);
-    console.log(lastTraining!)
-    console.log(lastExercises!)
     setShowExercise(true);
     setFieldsArray(arr);
     setViewLoading(false);

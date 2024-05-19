@@ -40,10 +40,10 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   };
   return (
     <View  className="w-full absolute h-full top-0 flex flex-col items-center justify-center bg-[#000000f4] ">
-      <Text className="text-3xl text-white" style={{ fontFamily: "OpenSans_700Bold"}}>
+      <Text className="text-xl text-white" style={{ fontFamily: "OpenSans_700Bold"}}>
         Set Your Records!
       </Text>
-      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-xl mt-4 text-white">
+      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-base mt-4 text-white">
         DeadLift:
       </Text>
       <TextInput
@@ -51,7 +51,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         onChangeText={(text: string | "") => setDeadLiftValue(text)}
         className="rounded-xl h-10 text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
       />
-      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-xl mt-4 text-white">
+      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-base mt-4 text-white">
         Squat:
       </Text>
       <TextInput
@@ -59,7 +59,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         onChangeText={(text: string | "") => setSquatValue(text)}
         className="rounded-xl h-10 text-base w-4/5 border-[#3c3c3c] text-white border-2 mt-1 pl-4"
       />
-      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-xl mt-4 text-white">
+      <Text style={{ fontFamily: "OpenSans_700Bold"}} className="text-base mt-4 text-white">
         BenchPress:
       </Text>
       <TextInput
@@ -69,10 +69,10 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       />
       <Pressable
         onPress={setRecords}
-        className="h-16 w-36 bg-[#4CD964] rounded-xl mt-4 flex items-center justify-center"
+        className="h-12 w-24 bg-[#4CD964] rounded-xl mt-4 flex items-center justify-center"
         
       >
-        <Text style={{ fontFamily: "OpenSans_700Bold", fontSize: 30 }}>
+        <Text style={{ fontFamily: "OpenSans_700Bold", fontSize: 20 }}>
           Update!
         </Text>
       </Pressable>
