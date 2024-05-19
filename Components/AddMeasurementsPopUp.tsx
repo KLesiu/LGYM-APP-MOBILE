@@ -78,8 +78,8 @@ const AddMeasurementsPopUp:React.FC<AddMeasurementsPopUpProps>= (props)=>{
         
     }
     return(
-        <View className="h-full w-full flex flex-col justify-center  bg-black items-center">
-            <ScrollView className="w-full  smh:h-56 xsmh:h-72 mdh:h-80 lgh:h-96 p-2">
+        <View className="flex flex-col   bg-black px-1">
+            <ScrollView className="w-full  smh:h-56 xsmh:h-72 mdh:h-80 lgh:h-96">
             {elementsForm?elementsForm:''}
             </ScrollView>
             <Pressable onPress={sendForm} className="w-full rounded-lg py-4 px-6 gap-1 m-0  bg-[#4CD964] flex justify-center items-center">

@@ -60,7 +60,7 @@ const Preload: React.FC = () => {
               <Text
                 className="text-3xl text-white"
                 style={{ fontFamily: "OpenSans_700Bold" }}
-              >LOGIN
+              >SIGN IN
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -71,7 +71,7 @@ const Preload: React.FC = () => {
                 className="text-3xl text-white"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
-                REGISTER
+                SIGN UP
               </Text>
             </TouchableOpacity>
           </View>
