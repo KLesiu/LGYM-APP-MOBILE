@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { View, Text, TextInput, Image,  Pressable,  } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
 import ErrorMsg from "./types/ErrorMsg";
@@ -115,7 +115,7 @@ const Login: React.FC = () => {
           LOGIN
         </Text>
       </Pressable>
-      {loading ? <MiniLoading /> : ""}
+      {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
         {errors
           ? errors.map((ele, index: number) => (
@@ -129,7 +129,7 @@ const Login: React.FC = () => {
                 {ele.msg}
               </Text>
             ))
-          : ""}
+          : <Text></Text>}
       </View>
     </View>
   );

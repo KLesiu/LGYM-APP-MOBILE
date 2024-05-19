@@ -114,8 +114,8 @@ const Records: React.FC = () => {
           Update Records
         </Text>
       </TouchableOpacity>
-      {popUp ? <RecordsPopUp offPopUp={chagePopUpValue} /> : ""}
-      {viewLoading ? <ViewLoading /> : ""}
+      {popUp ? <RecordsPopUp offPopUp={chagePopUpValue} /> : <Text></Text>}
+      {viewLoading ? <ViewLoading /> :<Text></Text>}
     </View>
   );
 };

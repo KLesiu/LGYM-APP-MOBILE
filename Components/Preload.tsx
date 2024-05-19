@@ -48,7 +48,6 @@ const Preload: React.FC = () => {
     <View className="h-full bg-black">
       <ImageBackground
         className="h-full"
-        style={{ height: "100%" }}
         source={backgroundLGYM}
       >
         <View className="bg-[#5c5c5cb3] h-full w-full">
@@ -80,7 +79,7 @@ const Preload: React.FC = () => {
         </View>
       </ImageBackground>
 
-      {isLoading ? <Loading offLoading={offLoading} /> : ""}
+      {isLoading ? <Loading offLoading={offLoading} /> : <Text></Text>}
     </View>
   );
 };

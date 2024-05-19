@@ -1,13 +1,11 @@
 import {
   Text,
   View,
-  ImageBackground,
   TouchableOpacity,
   TextInput,
   ScrollView,
   Switch,
 } from "react-native";
-import backgroundLogo from "./img/backgroundLGYMApp500.png";
 import { useState, useEffect, useReducer } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -21,6 +19,7 @@ import ViewLoading from "./ViewLoading";
 import MiniLoading from "./MiniLoading";
 import useInterval from "./helpers/hooks/useInterval";
 import UpdateRankPopUp from "./UpdateRankPopUp";
+import { LastTrainingModel } from "./types/Training";
 type InputAction = {
   type: "UPDATE_INPUT";
   index: number;
@@ -273,7 +272,7 @@ const AddTraining: React.FC = () => {
               </Text>
             </TouchableOpacity>
           ))}
-          {loading ? <MiniLoading /> : ""}
+          {loading ? <MiniLoading /> :<Text></Text>}
         </View>
       );
       setLoading(false);
@@ -320,12 +319,33 @@ const AddTraining: React.FC = () => {
       .then((res) => res);
     let lastTraining: string;
     let lastExercises: Array<ExerciseTraining>;
-
+    let lastTrainingCompletedArray:Array<LastTrainingModel>=[];
     if ("prevSession" in response!) {
       lastTraining = response.prevSession.createdAt.slice(0, 24);
       lastExercises = response.prevSession.exercises.map((ele) => ele);
+      const sessionTrainingReps = lastExercises.filter(
+        (ele: any, index: number) => index % 2 === 0
+      );
+      const sessionTrainingWeight = lastExercises.filter(
+        (ele: any, index: number) => index % 2 !== 0
+      );
+       lastTrainingCompletedArray = exercises.map((ele) => {
+        const prevReps = sessionTrainingReps.slice(0, ele.series);
+        sessionTrainingReps.splice(0, ele.series);
+        const prevWeights = sessionTrainingWeight.slice(0, ele.series);
+        sessionTrainingWeight.splice(0, ele.series);
+        return {
+          name: ele.name,
+          reps: ele.reps,
+          series: ele.series,
+          prevReps: prevReps,
+          prevWeights: prevWeights,
+        };
+      });
+      
     }
     let arr: String[] = [];
+
     setDaySection(
       <View className="absolute w-full h-full text-white bg-[#000000f5] flex flex-col pb-10">
         <Text
@@ -341,20 +361,30 @@ const AddTraining: React.FC = () => {
         </Text>
         <ScrollView>
           {exercises.map((ele: Exercise, indexMain: number) => {
-            let helpsArray: Array<string> = [];
+            const helpsArray: Array<string> = [];
             for (let i = 1; i < +ele.series + 1; i++) {
               helpsArray.push(`Series: ${i}`);
             }
             return (
               <View style={{ marginBottom: 50 }} key={indexMain}>
+                <View className="flex flex-col mb-7 pl-1">
                 <Text
-                 className='mb-7 ml-1 text-md text-[#4CD964] '
+                 className='text-md text-[#4CD964] '
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
                 >
                   {ele.name}
                 </Text>
+                {lastTrainingCompletedArray.length > 0?<Text className="text-gray-300 text-[12px] mt-2 " style={{fontFamily:'OpenSans_300Light'}}>
+                  Last Training scores:
+                {lastTrainingCompletedArray[indexMain].prevReps.map((ele:ExerciseTraining,index:number)=>{
+                    return(
+                      ` ${ele.score}x${lastTrainingCompletedArray[indexMain].prevWeights[index].score}kg `
+                    )
+                  })}</Text>:<Text></Text>}
+                </View>
+
                 {helpsArray.map((s, index: number) => {
                   arr.push(`${ele.name} ${s}: Rep`);
                   arr.push(`${ele.name} ${s}: Weight (kg)`);
@@ -411,6 +441,8 @@ const AddTraining: React.FC = () => {
     );
     setLastTrainingSessionDate(lastTraining!);
     setLastTrainingSessionExercises(lastExercises!);
+    console.log(lastTraining!)
+    console.log(lastExercises!)
     setShowExercise(true);
     setFieldsArray(arr);
     setViewLoading(false);
@@ -428,10 +460,29 @@ const AddTraining: React.FC = () => {
       .then((res) => res);
     let lastTraining: string;
     let lastExercises: Array<ExerciseTraining>;
-
+    let lastTrainingCompletedArray:Array<LastTrainingModel>=[];
     if ("prevSession" in response!) {
       lastTraining = response.prevSession.createdAt.slice(0, 24);
       lastExercises = response.prevSession.exercises.map((ele) => ele);
+      const sessionTrainingReps = lastExercises.filter(
+        (ele: any, index: number) => index % 2 === 0
+      );
+      const sessionTrainingWeight = lastExercises.filter(
+        (ele: any, index: number) => index % 2 !== 0
+      );
+       lastTrainingCompletedArray = exercises.map((ele) => {
+        const prevReps = sessionTrainingReps.slice(0, ele.series);
+        sessionTrainingReps.splice(0, ele.series);
+        const prevWeights = sessionTrainingWeight.slice(0, ele.series);
+        sessionTrainingWeight.splice(0, ele.series);
+        return {
+          name: ele.name,
+          reps: ele.reps,
+          series: ele.series,
+          prevReps: prevReps,
+          prevWeights: prevWeights,
+        };
+      });
     }
     let arr: String[] = [];
     const sessionTraining = await AsyncStorage.getItem("currentTraining");
@@ -475,14 +526,25 @@ const AddTraining: React.FC = () => {
             }
             return (
               <View style={{ marginBottom: 50 }} key={indexMain}>
+                <View className="flex flex-col mb-7 pl-1">
                 <Text
-                className='mb-7 ml-1 text-md text-[#4CD964] '
+                 className='text-md text-[#4CD964] '
                   style={{
-                    fontFamily: "OpenSans_400Regular",
+                    fontFamily: "OpenSans_700Bold",
                   }}
                 >
                   {ele.name}
                 </Text>
+                {lastTrainingCompletedArray.length > 0?<Text className="text-gray-300 text-[12px] mt-2 " style={{fontFamily:'OpenSans_300Light'}}>
+                  Last Training scores:
+                {lastTrainingCompletedArray[indexMain].prevReps.map((ele:ExerciseTraining,index:number)=>{
+                    return(
+                      ` ${ele.score}x${lastTrainingCompletedArray[indexMain].prevWeights[index].score}kg `
+                    )
+                  })}</Text>:<Text></Text>}
+
+                </View>
+
                 {helpsArray.map((s, index: number) => {
                   arr.push(`${ele.name} ${s}: Rep`);
                   arr.push(`${ele.name} ${s}: Weight (kg)`);
@@ -983,12 +1045,12 @@ const AddTraining: React.FC = () => {
                               {ele.field.slice(0, ele.field.length - 4)}
                             </Text>
                           ) : (
-                            ""
+                            <Text></Text>
                           )}
                         </View>
                       );
                     })
-                  : ""}
+                  :<Text></Text>}
               </View>
 
               <View className="w-[40%] flex flex-row flex-wrap">
@@ -1007,7 +1069,7 @@ const AddTraining: React.FC = () => {
                         </Text>
                       );
                     })
-                  : ""}
+                  :<Text></Text>}
               </View>
             </View>
           </ScrollView>
@@ -1064,7 +1126,7 @@ const AddTraining: React.FC = () => {
                 name="plus-circle"
               />
             </TouchableOpacity>
-            {loading ? <MiniLoading /> : ""}
+            {loading ? <MiniLoading /> :<Text></Text>}
             {}
             {chooseDay}
             {isPopUpShowed ? (
@@ -1072,7 +1134,7 @@ const AddTraining: React.FC = () => {
                 <Icon style={{ fontSize: 100 }} name="check" />
               </View>
             ) : (
-              ""
+              <Text></Text>
             )}
             {daySection}
             {lastTrainingSection}
@@ -1141,7 +1203,7 @@ const AddTraining: React.FC = () => {
                 
               </View>
             ) : (
-              ""
+              <Text></Text>
             )}
           </View>
         ) : (
@@ -1155,7 +1217,7 @@ const AddTraining: React.FC = () => {
             </Text>
           </View>
         )}
-        {viewLoading ? <ViewLoading /> : ""}
+        {viewLoading ? <ViewLoading /> :<Text></Text>}
         {isPopUpRankShowed?<UpdateRankPopUp closePopUp={closeRankPopUp}/>:''}
       </View>
 

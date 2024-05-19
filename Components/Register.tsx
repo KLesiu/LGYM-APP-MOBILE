@@ -108,7 +108,7 @@ const Register: React.FC = () => {
           REGISTER
         </Text>
       </Pressable>
-      {loading ? <MiniLoading /> : ""}
+      {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
         {errors
           ? errors.map((ele, index: number) => (
@@ -122,7 +122,7 @@ const Register: React.FC = () => {
                 {ele.msg}
               </Text>
             ))
-          : ""}
+          : <Text></Text>}
       </View>
     </View>
   );

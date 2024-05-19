@@ -6,4 +6,11 @@ type Training={
     createdAt:string
     _id:string
 }
+export type LastTrainingModel = {
+    name:string,
+    prevReps:ExerciseTraining[]
+    prevWeights:ExerciseTraining[]
+    reps:string,
+    series:number
+}
 export default Training

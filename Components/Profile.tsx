@@ -109,7 +109,7 @@ const Profile: React.FC = () => {
           {currentTab}
           
         </View>
-        {viewLoading ? <ViewLoading /> : ""}
+        {viewLoading ? <ViewLoading /> : <Text></Text>}
       </View>
   );
 };

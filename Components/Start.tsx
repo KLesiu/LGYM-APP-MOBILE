@@ -129,13 +129,13 @@ const Start: React.FC<StartProps> = (props) => {
                 width={progress}
                 />
               ) : (
-                ""
+                <Text></Text>
               )}
               <Text
                 className="text-white"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
-                Completed: {progress ? progress : ""}%
+                Completed: {progress ? progress : <Text></Text>}%
               </Text>
             </View>
           </View>

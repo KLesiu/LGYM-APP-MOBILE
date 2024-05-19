@@ -98,7 +98,7 @@ const CurrentTrainingHistorySession: React.FC<
           ))}
         </View>
       </ScrollView>
-      {viewLoading ? <ViewLoading /> : ""}
+      {viewLoading ? <ViewLoading /> : <Text></Text>}
     </View>
   );
 };
