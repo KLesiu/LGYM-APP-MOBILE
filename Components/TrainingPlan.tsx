@@ -257,7 +257,7 @@ const TrainingPlan: React.FC = () => {
             : "";
         setYourPlan(() => {
           return (
-            <ScrollView className="flex flex-col  px-2 py-4 pb-12">
+            <ScrollView className="flex  px-2 py-4 pb-12">
               {planA ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
@@ -349,6 +349,7 @@ const TrainingPlan: React.FC = () => {
               ) : (
                 ""
               )}
+              <View className="h-36 w-20"></View>
             </ScrollView>
           );
         });
