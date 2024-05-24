@@ -51,24 +51,24 @@ const Preload: React.FC = () => {
         source={backgroundLGYM}
       >
         <View className="bg-[#5c5c5cb3] h-full w-full">
-          <View className="flex-1 items-center flex bg-[#111111e2] justify-center h-full gap-5">
+          <View style={{gap:16}} className="flex-1 items-center flex bg-[#111111e2] justify-center h-full">
             <Image source={logoLGYM} className="w-[70%] h-2/5" />
             <TouchableOpacity
-              className="w-96 h-20 rounded-lg py-4 px-2 m-0  bg-[#868686]"
+              className="w-96 h-20 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center"
               onPress={handleLoginPress}
             >
               <Text
-                className="text-3xl w-full text-center text-white"
+                className="text-xs w-full text-center text-white"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >SIGN IN
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className=" w-96 h-20 rounded-lg py-4 px-2 m-0  bg-[#868686]"
+              className=" w-96 h-20 rounded-lg py-4 px-2 m-0  border-[#4CD964] border-[1px]  flex justify-center items-center"
               onPress={handleRegisterPress}
             >
               <Text
-                className="text-3xl w-full text-center text-white"
+                className="text-xs w-full text-center text-white"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
                 SIGN UP
