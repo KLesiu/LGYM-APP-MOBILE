@@ -45,12 +45,6 @@ const History: React.FC = () => {
   return (
     <View className="relative h-[78%]">
       <View className="flex flex-col h-full p-4">
-      <Text
-        style={{ fontFamily: "OpenSans_700Bold" }}
-        className="w-full text-2xl text-white font-bold py-6"
-      >
-        Training history
-      </Text>
       <ReactNativeCalendarStrip
         onDateSelected={getTrainingByDate}
         ref={calendar}

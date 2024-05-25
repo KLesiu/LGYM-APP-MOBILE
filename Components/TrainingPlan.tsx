@@ -349,7 +349,7 @@ const TrainingPlan: React.FC = () => {
               ) : (
                 ""
               )}
-              <View className="h-36 w-20"></View>
+              <View className="h-16 w-20"></View>
             </ScrollView>
           );
         });
@@ -415,15 +415,7 @@ const TrainingPlan: React.FC = () => {
 
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
-      <View className="w-full h-[15%] px-4 flex flex-col">
-        <Text
-          className="w-full text-2xl text-white font-bold mb-2 "
-          style={{
-            fontFamily: "OpenSans_700Bold",
-          }}
-        >
-          Training Plan
-        </Text>
+      <View className="w-full h-16 px-4 flex flex-col">
         {!isPlanSet ? (
           <View className="flex flex-row w-full justify-around">
             <TouchableOpacity

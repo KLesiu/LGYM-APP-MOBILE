@@ -77,11 +77,6 @@ const Profile: React.FC = () => {
   return (
       <View className=" relative w-full bg-[#131313]">
         <View className="w-full p-4 flex flex-col">
-        <View className="flex h-8 px-6">
-          <Text className=" m-0 text-2xl text-white" style={{ fontFamily: "OpenSans_700Bold"}}>
-            Profile
-          </Text>
-        </View>
         <View className="flex justify-center flex-row py-3 px-6 gap-3">
             <View className="flex  justify-center flex-col items-center flex-wrap  rounded pl-2  ">
               {rankComponent}

@@ -1109,18 +1109,10 @@ const AddTraining: React.FC = () => {
   return (
       <View className="bg-[#131313] h-[78%] w-full z-[2]">
         {plan === "completed" && plan ? (
-          <View className="relative  flex flex-col justify-start items-center h-full w-full" >
-            <Text
-            className=" text-center text-white text-3xl "
-              style={{
-                fontFamily: "OpenSans_700Bold",
-              }}
-            >
-              Add Training!
-            </Text>
+          <View className="relative  flex flex-col justify-center items-center h-full w-full" >
             <TouchableOpacity onPress={getInformationsAboutPlanDays}>
               <Icon
-                style={{ fontSize: 100, marginTop: "40%",color:'#4CD964' }}
+                style={{ fontSize: 140,color:'#4CD964' }}
                 name="plus-circle"
               />
             </TouchableOpacity>
