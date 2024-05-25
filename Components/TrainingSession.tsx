@@ -39,7 +39,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
 }
   return (
     <View className="w-full h-3/4 px-6">
-      <View className="flex h-1/4 py-4 flex-col">
+      <View className="flex h-16 py-2 flex-col">
         <Text
           style={{ fontFamily: "OpenSans_700Bold" }}
           className="text-lg text-[#4CD964]"
@@ -67,6 +67,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
             </View>
           )
         }):''}
+        <View className="h-4 w-8"></View>
       </ScrollView>
       {viewLoading ? <ViewLoading /> : ""}
     </View>
