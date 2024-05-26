@@ -65,11 +65,11 @@ const History: React.FC<HistoryProps> = (props) => {
         }}
         markedDates={props.trainingsDates}
         scrollable
-        style={{ height: 100 }}
+        style={{ height: 150 }}
         calendarColor={"#131313"}
         dayContainerStyle={{height:40,width:40}}
         calendarHeaderStyle={{ color: "white",fontSize:22 }}
-        dateNumberStyle={{ color: "#5A5A5A",fontSize:18 }}
+        dateNumberStyle={{ color: "#5A5A5A",fontSize:14 }}
         dateNameStyle={{ color: "#5A5A5A",fontSize:11 }}
         highlightDateContainerStyle={{
           backgroundColor: "#4CD964",
@@ -84,7 +84,7 @@ const History: React.FC<HistoryProps> = (props) => {
 
         }}
         highlightDateNumberStyle={{
-          fontSize:16,
+          fontSize:14,
         }}
         iconContainer={{ flex: 0.1 }}
       />

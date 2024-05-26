@@ -104,7 +104,7 @@ const TrainingPlan: React.FC = () => {
                   </Text>
                 </View>
               ))
-            : "";
+            : undefined;
         const planB =
           data.planB.length > 0
             ? data.planB.map((element: Exercise, index: number) => (
@@ -129,7 +129,7 @@ const TrainingPlan: React.FC = () => {
                   </Text>
                 </View>
               ))
-            : "";
+            : undefined;
         const planC =
           data.planC.length > 0
             ? data.planC.map((element: Exercise, index: number) => (
@@ -154,7 +154,7 @@ const TrainingPlan: React.FC = () => {
                   </Text>
                 </View>
               ))
-            : "";
+            : undefined;
         const planD =
           data.planD.length > 0
             ? data.planD.map((element: Exercise, index: number) => (
@@ -179,7 +179,7 @@ const TrainingPlan: React.FC = () => {
                   </Text>
                 </View>
               ))
-            : "";
+            : undefined;
         const planE =
           data.planE.length > 0
             ? data.planE.map((element: Exercise, index: number) => (
@@ -204,7 +204,7 @@ const TrainingPlan: React.FC = () => {
                   </Text>
                 </View>
               ))
-            : "";
+            : undefined;
         const planF =
           data.planF.length > 0
             ? data.planF.map((element: Exercise, index: number) => (
@@ -229,7 +229,7 @@ const TrainingPlan: React.FC = () => {
                   </Text>
                 </View>
               ))
-            : "";
+            : undefined;
         const planG =
           data.planG.length > 0
             ? data.planG.map((element: Exercise, index: number) => (
@@ -254,7 +254,7 @@ const TrainingPlan: React.FC = () => {
                   </Text>
                 </View>
               ))
-            : "";
+            : undefined;
         setYourPlan(() => {
           return (
             <ScrollView className="flex  px-2 py-4 pb-12">
@@ -269,7 +269,7 @@ const TrainingPlan: React.FC = () => {
                   <View className="bg-[#1E1E1E73] py-4 w-full">{planA}</View>
                 </View>
               ) : (
-                ""
+                undefined
               )}
               {planB ? (
                 <View className="rounded w-full  flex flex-column items-start">
@@ -282,7 +282,7 @@ const TrainingPlan: React.FC = () => {
                   <View className="bg-[#1E1E1E73] py-4 w-full"> {planB}</View>
                 </View>
               ) : (
-                ""
+                undefined
               )}
               {planC ? (
                 <View className="rounded w-full  flex flex-column items-start">
@@ -295,7 +295,7 @@ const TrainingPlan: React.FC = () => {
                   <View className="bg-[#1E1E1E73] py-4 w-full"> {planC}</View>
                 </View>
               ) : (
-                ""
+                undefined
               )}
               {planD ? (
                 <View className="rounded w-full  flex flex-column items-start">
@@ -308,7 +308,7 @@ const TrainingPlan: React.FC = () => {
                   <View className="bg-[#1E1E1E73] py-4 w-full"> {planD}</View>
                 </View>
               ) : (
-                ""
+                undefined
               )}
               {planE ? (
                 <View className="rounded w-full  flex flex-column items-start">
@@ -321,7 +321,7 @@ const TrainingPlan: React.FC = () => {
                   <View className="bg-[#1E1E1E73] py-4 w-full"> {planE}</View>
                 </View>
               ) : (
-                ""
+                undefined
               )}
               {planF ? (
                 <View className="rounded w-full  flex flex-column items-start">
@@ -334,7 +334,7 @@ const TrainingPlan: React.FC = () => {
                   <View className="bg-[#1E1E1E73] py-4 w-full"> {planF}</View>
                 </View>
               ) : (
-                ""
+                undefined
               )}
               {planG ? (
                 <View className="rounded w-full  flex flex-column items-start">
@@ -347,7 +347,7 @@ const TrainingPlan: React.FC = () => {
                   <View className="bg-[#1E1E1E73] py-4 w-full"> {planG}</View>
                 </View>
               ) : (
-                ""
+                undefined
               )}
               <View className="h-16 w-20"></View>
             </ScrollView>
