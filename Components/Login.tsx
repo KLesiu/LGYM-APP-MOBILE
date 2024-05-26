@@ -76,40 +76,40 @@ const Login: React.FC = () => {
   }
   return (
     <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
-      <Pressable onPress={goToPreload} className="w-3/5 h-[30%]">
+      <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
       <Image className="w-full h-full" source={logoLGYM} />
       </Pressable>
 
       <View className="w-full flex flex-col items-center justify-start">
-      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
+      <Text className="text-[#4CD964] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Username
       </Text>
       <TextInput
         onChangeText={(text: string) => setUsername(text)}
-        className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
+        className="rounded-xl h-12 text-base w-80 bg-white text-black mt-1 pl-4"
         autoComplete="given-name"
       />
-      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
+      <Text className="text-[#4CD964] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Password
       </Text>
       <View className="flex w-4/5 h-12 items-center justify-center">
       <TextInput
         onChangeText={(text: string) => setPassword(text)}
-        className="rounded-xl h-full  text-base  bg-[#3c3c3c] text-white  pl-4 w-full"
+        className="rounded-xl h-full  text-base  bg-white text-black  pl-4 w-80"
         secureTextEntry={secureTextEntry}
       >
 
       </TextInput>
-      <Pressable className="absolute w-16 h-full text-sm flex items-center justify-center bg-[#6b6b6b7e] rounded-xl  right-0" onPress={() => setSecureTextEntry(!secureTextEntry)}>
+      <Pressable className="absolute w-16 h-full text-sm flex items-center justify-center bg-[#4CD964] rounded-xl  right-0" onPress={() => setSecureTextEntry(!secureTextEntry)}>
           <Text className="text-white text-lg ">{secureTextEntry?'SHOW':'HIDE'}</Text>
         </Pressable>
       </View>
 
       </View>
       
-      <Pressable className="mt-10 w-80 h-20 bg-[#868686] flex items-center justify-center rounded-xl" onPress={login} >
+      <Pressable  className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4" onPress={login} >
         <Text
-          className="text-4xl text-[#e2e2e2]"
+         className="text-xs w-full text-center text-white"
           style={{ fontFamily: "OpenSans_700Bold"}}
         >LOGIN
         </Text>

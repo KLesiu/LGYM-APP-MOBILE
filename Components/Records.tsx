@@ -39,7 +39,7 @@ const Records: React.FC = () => {
       {popUp ? (
         <RecordsPopUp offPopUp={chagePopUpValue} />
       ) : (
-        <View className="flex flex-col  px-1">
+        <View className="flex flex-col items-center  px-1">
           <ScrollView className="w-full smh:h-24 xsmh:h-48 mdh:h-72">
             <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
               <Text
@@ -108,10 +108,10 @@ const Records: React.FC = () => {
           </View>
           <TouchableOpacity
             onPress={() => setPopUp(true)}
-            className="w-full h-12 rounded-lg py-2 px-3  m-0  bg-[#4CD964] flex justify-center items-center"
+            className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4" 
           >
             <Text
-              className="text-lg text-black"
+         className="text-xs w-full text-center text-white"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Update Records

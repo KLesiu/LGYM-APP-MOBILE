@@ -64,46 +64,46 @@ const Register: React.FC = () => {
       <Image  className="w-full h-full mb-[5%]" source={logoLGYM} />
       </Pressable>
 
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
         Username
       </Text>
       <TextInput
         onChangeText={(text) => setUsername(text)}
-        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
+        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
         Email
       </Text>
       <TextInput
         onChangeText={(text) => setEmail(text)}
-        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
+        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
         Password
       </Text>
       <TextInput
         secureTextEntry={true}
         onChangeText={(text) => setPassword(text)}
-        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
+        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
         Repeat password
       </Text>
       <TextInput
         secureTextEntry={true}
         onChangeText={(text) => setRPassword(text)}
-        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
+        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
       <Pressable
         onPress={register}
-        className="mt-10 w-80 bg-[#868686] flex items-center justify-center rounded-xl h-12"
+        className="w-80 h-20 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4"
       >
         <Text
           style={{
             fontFamily: "OpenSans_700Bold",
             
           }}
-          className="text-3xl text-[#e2e2e2]"
+          className="text-xs w-full text-center text-black"
         >
           REGISTER
         </Text>

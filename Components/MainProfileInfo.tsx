@@ -19,7 +19,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
           <Text style={{fontFamily:'OpenSans_300Light'}} className="text-gray-200/80 font-light leading-4 text-sm">{email}</Text>
         </View>
       </View>
-      <View className="flex flex-col justify-around smh:h-28 lgh:h-36 w-full">
+      <View className="flex flex-col justify-around items-center w-full">
       {/* <Pressable className="flex justify-center items-center rounded-lg h-14 w-full py-4 px-6 bg-[#4CD964]">
       <Text
           className="text-black text-xl"
@@ -29,11 +29,10 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
         </Text>
       </Pressable> */}
       <Pressable
-        className="flex justify-center items-center rounded-lg h-20 w-full py-2 px-3 border border-solid border-1  border-[#4CD964] "
-        onPress={props.logout}
+ className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4"         onPress={props.logout}
       >
         <Text
-          className="text-[#4CD964] text-md"
+         className="text-xs w-full text-center text-white"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Logout
