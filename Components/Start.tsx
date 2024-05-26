@@ -53,7 +53,7 @@ const Start: React.FC<StartProps> = (props) => {
   };
   return (
     <View className="w-full m-0 h-[78%] bg-[#131313] ">
-      <View className="flex h-full w-full gap-8 flex-col  p-4">
+      <View className="flex h-full w-full gap-4 flex-col">
         <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg">
           <View>
             <Text

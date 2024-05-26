@@ -78,12 +78,13 @@ const AddMeasurementsPopUp:React.FC<AddMeasurementsPopUpProps>= (props)=>{
         
     }
     return(
-        <View className="flex flex-col   bg-black px-1">
+        <View className="flex flex-col items-center   bg-black px-1">
             <ScrollView className="w-full  smh:h-56 xsmh:h-72 mdh:h-80 lgh:h-96">
             {elementsForm?elementsForm:''}
             </ScrollView>
-            <Pressable onPress={sendForm} className="w-full rounded-lg py-4 px-6 gap-1 m-0  bg-[#4CD964] flex justify-center items-center">
-            <Text className="text-xl text-black" style={{fontFamily:'OpenSans_700Bold'}}>UPDATE</Text>
+            <Pressable onPress={sendForm} className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4" >
+            <Text className="text-xs w-full text-center text-white"
+              style={{ fontFamily: "OpenSans_700Bold" }}>UPDATE</Text>
             </Pressable>
             
         </View>

@@ -84,7 +84,7 @@ const TrainingPlan: React.FC = () => {
           data.planA.length > 0
             ? data.planA.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
                   key={index}
                 >
                   <Text
@@ -109,7 +109,7 @@ const TrainingPlan: React.FC = () => {
           data.planB.length > 0
             ? data.planB.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
                   key={index}
                 >
                   <Text
@@ -134,7 +134,7 @@ const TrainingPlan: React.FC = () => {
           data.planC.length > 0
             ? data.planC.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
                   key={index}
                 >
                   <Text
@@ -159,7 +159,7 @@ const TrainingPlan: React.FC = () => {
           data.planD.length > 0
             ? data.planD.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
                   key={index}
                 >
                   <Text
@@ -184,7 +184,7 @@ const TrainingPlan: React.FC = () => {
           data.planE.length > 0
             ? data.planE.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
                   key={index}
                 >
                   <Text
@@ -209,7 +209,7 @@ const TrainingPlan: React.FC = () => {
           data.planF.length > 0
             ? data.planF.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
                   key={index}
                 >
                   <Text
@@ -234,7 +234,7 @@ const TrainingPlan: React.FC = () => {
           data.planG.length > 0
             ? data.planG.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
                   key={index}
                 >
                   <Text
@@ -266,7 +266,7 @@ const TrainingPlan: React.FC = () => {
                   >
                     Plan A
                   </Text>
-                  {planA}
+                  <View className="bg-[#1E1E1E73] py-4 w-full">{planA}</View>
                 </View>
               ) : (
                 ""
@@ -279,7 +279,7 @@ const TrainingPlan: React.FC = () => {
                   >
                     Plan B
                   </Text>
-                  {planB}
+                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planB}</View>
                 </View>
               ) : (
                 ""
@@ -292,7 +292,7 @@ const TrainingPlan: React.FC = () => {
                   >
                     Plan C
                   </Text>
-                  {planC}
+                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planC}</View>
                 </View>
               ) : (
                 ""
@@ -305,7 +305,7 @@ const TrainingPlan: React.FC = () => {
                   >
                     Plan D
                   </Text>
-                  {planD}
+                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planD}</View>
                 </View>
               ) : (
                 ""
@@ -318,7 +318,7 @@ const TrainingPlan: React.FC = () => {
                   >
                     Plan E
                   </Text>
-                  {planE}
+                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planE}</View>
                 </View>
               ) : (
                 ""
@@ -331,7 +331,7 @@ const TrainingPlan: React.FC = () => {
                   >
                     Plan F
                   </Text>
-                  {planF}
+                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planF}</View>
                 </View>
               ) : (
                 ""
@@ -344,7 +344,7 @@ const TrainingPlan: React.FC = () => {
                   >
                     Plan G
                   </Text>
-                  {planG}
+                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planG}</View>
                 </View>
               ) : (
                 ""
@@ -445,7 +445,9 @@ const TrainingPlan: React.FC = () => {
               </Text>
             </TouchableOpacity>
           </View>
-        ) : <Text></Text>}
+        ) : (
+          <Text></Text>
+        )}
         {isPlanSet ? (
           <View className="flex flex-row w-full justify-around items-center">
             <Text
@@ -457,10 +459,15 @@ const TrainingPlan: React.FC = () => {
               Current training plan
             </Text>
             <TouchableOpacity onPress={() => setIsPopUpDeleteShowed(true)}>
-              <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete-outline" />
+              <Icon
+                style={{ color: "#de161d", fontSize: 30 }}
+                name="delete-outline"
+              />
             </TouchableOpacity>
           </View>
-        ) : <Text></Text>}
+        ) : (
+          <Text></Text>
+        )}
       </View>
       {isPlanSet ? yourPlan : <Text></Text>}
 

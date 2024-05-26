@@ -56,6 +56,8 @@ const Measurements: React.FC = () => {
               <Text
                 style={{ fontFamily: "OpenSans_400Regular" }}
                 className="text-gray-200/80 font-base leading-4 text-md"
+                onPress={()=>setIsFormShow(true)}
+
               >
                 {values[index]} {index===0?'kg':'cm'}
               </Text>

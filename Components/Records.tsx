@@ -52,6 +52,7 @@ const Records: React.FC = () => {
                 <Text
                   style={{ fontFamily: "OpenSans_400Regular" }}
                   className="text-gray-200/80 font-base leading-4 text-md"
+                  onPress={()=>setPopUp(true)}
                 >
                   {deadLift || 0} kg
                 </Text>
@@ -68,6 +69,8 @@ const Records: React.FC = () => {
                 <Text
                   style={{ fontFamily: "OpenSans_400Regular" }}
                   className="text-gray-200/80 font-base leading-4 text-md"
+                  onPress={()=>setPopUp(true)}
+
                 >
                   {squat || 0} kg
                 </Text>
@@ -77,6 +80,7 @@ const Records: React.FC = () => {
               <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
                 className="text-gray-200/80 font-light leading-4 text-sm"
+                
               >
                 Bench Press
               </Text>
@@ -84,6 +88,8 @@ const Records: React.FC = () => {
                 <Text
                   style={{ fontFamily: "OpenSans_400Regular" }}
                   className="text-gray-200/80 font-base leading-4 text-md"
+                  onPress={()=>setPopUp(true)}
+
                 >
                   {benchPress || 0} kg
                 </Text>

@@ -1,11 +1,10 @@
 import { View,Image,Text } from "react-native"
 import Notification from './img/icons/notification.png'
-import logo300 from './img/logo300.png'
 import { useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 const Header:React.FC =()=>{
-    const [name,setName]= useState<string>()
+    const [name,setName]= useState<string>('')
     const getName = async()=>{
         setName(await AsyncStorage.getItem("username") as string)
     }
@@ -13,9 +12,12 @@ const Header:React.FC =()=>{
         getName()
     },[])
     return(
-        <View className="bg-[#131313] smh:h-14 lgh:h-20 px-8 py-4 flex flex-row justify-between items-center">
-            <View className="flex flex-row  justify-around">
-                <View className="flex flex-col">
+        <View className="bg-[#131313] smh:h-14 lgh:h-20 px-4 py-4 flex flex-row justify-between items-center">
+            <View className="flex flex-row items-center">
+                <View className="flex items-center justify-center w-10 h-10 rounded-full bg-[#4CD964] ">
+                    <Text className="text-black text-xl font-bold" style={{fontFamily:'OpenSans_700Bold'}}>{name[0]}</Text>
+                </View>
+                <View className="flex flex-col ml-4">
                     <Text className=" leading-4 text-sm text-white" style={{
                       fontFamily: "OpenSans_400Regular",
                     }}>Welcome back</Text>
