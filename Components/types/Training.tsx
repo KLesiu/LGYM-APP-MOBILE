@@ -13,4 +13,12 @@ export type LastTrainingModel = {
     reps:string,
     series:number
 }
+export type TrainingsDates = {
+    dates: Date[]
+}
+
+export type MarkedDates = {
+    date:Date | string
+    dots: {color:string,selectedColor?:string}[]
+}
 export default Training

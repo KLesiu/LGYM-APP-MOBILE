@@ -5,11 +5,12 @@ import {
 import { useState, useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorMsg from "./types/ErrorMsg";
-import Training from "./types/Training";
+import Training,{TrainingsDates} from "./types/Training";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import TrainingSession from "./TrainingSession";
 import ViewLoading from "./ViewLoading";
-const History: React.FC = () => {
+import HistoryProps from "./props/HistoryProps";
+const History: React.FC<HistoryProps> = (props) => {
   const calendar = useRef(null);
   const [session,setSession]=useState<Training>()
   const [viewLoading,setViewLoading]=useState<boolean>(false)
@@ -18,6 +19,7 @@ const History: React.FC = () => {
     const initialDateObj = {_d:new Date()}
     getTrainingByDate(initialDateObj)
   },[])
+
   const getTrainingByDate = async (dateObject: any): Promise<void> => {
     const date: Date = new Date(dateObject._d);
     setSession(undefined)
@@ -51,22 +53,24 @@ const History: React.FC = () => {
         selectedDate={new Date()}
         iconLeftStyle={{
           backgroundColor: "#4CD964",
-          height: 20,
-          width: 20,
+          height: 25,
+          width: 25,
           borderRadius: 5,
         }}
         iconRightStyle={{
           backgroundColor: "#4CD964",
-          height: 20,
-          width: 20,
+          height: 25,
+          width: 25,
           borderRadius: 5,
         }}
+        markedDates={props.trainingsDates}
         scrollable
         style={{ height: 100 }}
         calendarColor={"#131313"}
-        calendarHeaderStyle={{ color: "white" }}
-        dateNumberStyle={{ color: "#5A5A5A" }}
-        dateNameStyle={{ color: "#5A5A5A" }}
+        dayContainerStyle={{height:40,width:40}}
+        calendarHeaderStyle={{ color: "white",fontSize:22 }}
+        dateNumberStyle={{ color: "#5A5A5A",fontSize:18 }}
+        dateNameStyle={{ color: "#5A5A5A",fontSize:11 }}
         highlightDateContainerStyle={{
           backgroundColor: "#4CD964",
           borderRadius: 5,
@@ -74,6 +78,13 @@ const History: React.FC = () => {
         highlightDateNumberContainerStyle={{
           backgroundColor: "#4CD964",
           borderRadius: 5,
+        }}
+        highlightDateNameStyle={{
+          fontSize:11,
+
+        }}
+        highlightDateNumberStyle={{
+          fontSize:16,
         }}
         iconContainer={{ flex: 0.1 }}
       />

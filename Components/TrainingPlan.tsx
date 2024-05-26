@@ -84,11 +84,11 @@ const TrainingPlan: React.FC = () => {
           data.planA.length > 0
             ? data.planA.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
+                    className="text-sm text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -97,7 +97,7 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-[11px]"
+                    className="text-gray-200/80 text-sm"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
@@ -109,11 +109,11 @@ const TrainingPlan: React.FC = () => {
           data.planB.length > 0
             ? data.planB.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
+                    className="text-sm text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -122,7 +122,7 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-[11px]"
+                    className="text-gray-200/80 text-sm"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
@@ -134,11 +134,11 @@ const TrainingPlan: React.FC = () => {
           data.planC.length > 0
             ? data.planC.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
+                    className="text-sm text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -147,7 +147,7 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-[11px]"
+                    className="text-gray-200/80 text-sm"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
@@ -159,11 +159,11 @@ const TrainingPlan: React.FC = () => {
           data.planD.length > 0
             ? data.planD.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
+                    className="text-sm text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -172,7 +172,7 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-[11px]"
+                    className="text-gray-200/80 text-sm"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
@@ -184,11 +184,11 @@ const TrainingPlan: React.FC = () => {
           data.planE.length > 0
             ? data.planE.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
+                    className="text-sm text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -197,7 +197,7 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-[11px]"
+                    className="text-gray-200/80 text-sm"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
@@ -209,11 +209,11 @@ const TrainingPlan: React.FC = () => {
           data.planF.length > 0
             ? data.planF.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
+                    className="text-sm text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -222,7 +222,7 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-[11px]"
+                    className="text-gray-200/80 text-sm"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
@@ -234,11 +234,11 @@ const TrainingPlan: React.FC = () => {
           data.planG.length > 0
             ? data.planG.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
+                    className="text-sm text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -247,7 +247,7 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-[11px]"
+                    className="text-gray-200/80 text-sm"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
@@ -261,7 +261,7 @@ const TrainingPlan: React.FC = () => {
               {planA ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan A
@@ -274,7 +274,7 @@ const TrainingPlan: React.FC = () => {
               {planB ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan B
@@ -287,7 +287,7 @@ const TrainingPlan: React.FC = () => {
               {planC ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan C
@@ -300,7 +300,7 @@ const TrainingPlan: React.FC = () => {
               {planD ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan D
@@ -313,7 +313,7 @@ const TrainingPlan: React.FC = () => {
               {planE ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan E
@@ -326,7 +326,7 @@ const TrainingPlan: React.FC = () => {
               {planF ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan F
@@ -339,7 +339,7 @@ const TrainingPlan: React.FC = () => {
               {planG ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan G
@@ -457,7 +457,7 @@ const TrainingPlan: React.FC = () => {
               Current training plan
             </Text>
             <TouchableOpacity onPress={() => setIsPopUpDeleteShowed(true)}>
-              <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete" />
+              <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete-outline" />
             </TouchableOpacity>
           </View>
         ) : <Text></Text>}
