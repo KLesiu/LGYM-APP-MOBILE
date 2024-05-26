@@ -84,11 +84,11 @@ const TrainingPlan: React.FC = () => {
           data.planA.length > 0
             ? data.planA.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
+                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-sm text-gray-200/80 leading-4 "
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -97,23 +97,23 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-sm"
+                    className="text-gray-200/80 text-[11px]"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
               ))
-            : undefined;
+            : "";
         const planB =
           data.planB.length > 0
             ? data.planB.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
+                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-sm text-gray-200/80 leading-4 "
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -122,23 +122,23 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-sm"
+                    className="text-gray-200/80 text-[11px]"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
               ))
-            : undefined;
+            : "";
         const planC =
           data.planC.length > 0
             ? data.planC.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
+                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-sm text-gray-200/80 leading-4 "
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -147,23 +147,23 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-sm"
+                    className="text-gray-200/80 text-[11px]"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
               ))
-            : undefined;
+            : "";
         const planD =
           data.planD.length > 0
             ? data.planD.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
+                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-sm text-gray-200/80 leading-4 "
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -172,23 +172,23 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-sm"
+                    className="text-gray-200/80 text-[11px]"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
               ))
-            : undefined;
+            : "";
         const planE =
           data.planE.length > 0
             ? data.planE.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
+                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-sm text-gray-200/80 leading-4 "
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -197,23 +197,23 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-sm"
+                    className="text-gray-200/80 text-[11px]"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
               ))
-            : undefined;
+            : "";
         const planF =
           data.planF.length > 0
             ? data.planF.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
+                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-sm text-gray-200/80 leading-4 "
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -222,23 +222,23 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-sm"
+                    className="text-gray-200/80 text-[11px]"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
               ))
-            : undefined;
+            : "";
         const planG =
           data.planG.length > 0
             ? data.planG.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full  px-2 py-1 flex flex-row flex-wrap justify-start "
+                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
-                    className="text-sm text-gray-200/80 leading-4 "
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
                       fontFamily: "OpenSans_300Light",
                       width: "60%",
@@ -247,109 +247,109 @@ const TrainingPlan: React.FC = () => {
                     {element.name}
                   </Text>
                   <Text
-                    className="text-gray-200/80 text-sm"
+                    className="text-gray-200/80 text-[11px]"
                     style={{ fontFamily: "OpenSans_300Light" }}
                   >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
               ))
-            : undefined;
+            : "";
         setYourPlan(() => {
           return (
             <ScrollView className="flex  px-2 py-4 pb-12">
               {planA ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan A
                   </Text>
-                  <View className="bg-[#1E1E1E73] py-4 w-full">{planA}</View>
+                  {planA}
                 </View>
               ) : (
-                undefined
+                ""
               )}
               {planB ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan B
                   </Text>
-                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planB}</View>
+                  {planB}
                 </View>
               ) : (
-                undefined
+                ""
               )}
               {planC ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan C
                   </Text>
-                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planC}</View>
+                  {planC}
                 </View>
               ) : (
-                undefined
+                ""
               )}
               {planD ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan D
                   </Text>
-                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planD}</View>
+                  {planD}
                 </View>
               ) : (
-                undefined
+                ""
               )}
               {planE ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan E
                   </Text>
-                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planE}</View>
+                  {planE}
                 </View>
               ) : (
-                undefined
+                ""
               )}
               {planF ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan F
                   </Text>
-                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planF}</View>
+                  {planF}
                 </View>
               ) : (
-                undefined
+                ""
               )}
               {planG ? (
                 <View className="rounded w-full  flex flex-column items-start">
                   <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-[16px] px-2 font-bold"
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
                     style={{ fontFamily: "OpenSans_700Bold" }}
                   >
                     Plan G
                   </Text>
-                  <View className="bg-[#1E1E1E73] py-4 w-full"> {planG}</View>
+                  {planG}
                 </View>
               ) : (
-                undefined
+                ""
               )}
-              <View className="h-16 w-20"></View>
+              <View className="h-36 w-20"></View>
             </ScrollView>
           );
         });
@@ -415,7 +415,7 @@ const TrainingPlan: React.FC = () => {
 
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
-      <View className="w-full h-16 px-4 flex flex-col">
+      <View className="w-full h-[15%] px-4 flex flex-col">
         {!isPlanSet ? (
           <View className="flex flex-row w-full justify-around">
             <TouchableOpacity
@@ -445,9 +445,7 @@ const TrainingPlan: React.FC = () => {
               </Text>
             </TouchableOpacity>
           </View>
-        ) : (
-          <Text></Text>
-        )}
+        ) : <Text></Text>}
         {isPlanSet ? (
           <View className="flex flex-row w-full justify-around items-center">
             <Text
@@ -459,15 +457,10 @@ const TrainingPlan: React.FC = () => {
               Current training plan
             </Text>
             <TouchableOpacity onPress={() => setIsPopUpDeleteShowed(true)}>
-              <Icon
-                style={{ color: "#de161d", fontSize: 30 }}
-                name="delete-outline"
-              />
+              <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete" />
             </TouchableOpacity>
           </View>
-        ) : (
-          <Text></Text>
-        )}
+        ) : <Text></Text>}
       </View>
       {isPlanSet ? yourPlan : <Text></Text>}
 
