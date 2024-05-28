@@ -7,5 +7,6 @@ type Data = {
     planE: Array<Exercise>
     planF: Array<Exercise>
     planG: Array<Exercise>
+    [key:string]:Array<Exercise>
 }
 export default Data

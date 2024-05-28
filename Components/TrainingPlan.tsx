@@ -78,13 +78,23 @@ const TrainingPlan: React.FC = () => {
     if (response.data === "Didnt find") {
       setIsPlanSet(false);
     } else {
-      const data = response.data;
+      const data:Data = response.data as Data;
+      const dataKeys = Object.keys(data)
+      let isPlanEmpty = true
+      dataKeys.forEach((ele:string)=>{
+        if(data[ele].length>0){
+          isPlanEmpty=false
+        }
+      })
+      isPlanEmpty?deletePlan():null
+      
+      
       if (typeof data !== "string") {
         const planA =
           data.planA.length > 0
             ? data.planA.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
@@ -109,7 +119,7 @@ const TrainingPlan: React.FC = () => {
           data.planB.length > 0
             ? data.planB.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
@@ -134,7 +144,7 @@ const TrainingPlan: React.FC = () => {
           data.planC.length > 0
             ? data.planC.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
@@ -159,7 +169,7 @@ const TrainingPlan: React.FC = () => {
           data.planD.length > 0
             ? data.planD.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
@@ -184,7 +194,7 @@ const TrainingPlan: React.FC = () => {
           data.planE.length > 0
             ? data.planE.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
@@ -209,7 +219,7 @@ const TrainingPlan: React.FC = () => {
           data.planF.length > 0
             ? data.planF.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
@@ -234,7 +244,7 @@ const TrainingPlan: React.FC = () => {
           data.planG.length > 0
             ? data.planG.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full mt-1 px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
+                  className="w-full px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
