@@ -35,9 +35,7 @@ const CreateDaySection:React.FC<CreateDaySectionProps> =(props)=>{
         <TextInput
         className="h-40 bg-white text-black w-full"
         multiline
-        placeholder="Dead Lift 3x8-12
-        Squat 4x9
-        "
+        placeholder={`Dead Lift 3x8-12\nSquat 4x9`}
         value={text}
         onChangeText={(text:string)=>setText(text)}
       />
