@@ -4,7 +4,7 @@
     "slug": "lgym-app-mobile",
     "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logoLGYM.png",
+    "icon": "./assets/logoLGYMPlay.png",
     "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo300.png",
+        "foregroundImage": "./assets/logoLGYMPlay.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.lesiuuu.lgymappmobile"
