@@ -1,5 +1,4 @@
 import {Image, ImageProps} from "react-native";
-import JuniorRank  from './img/Junior1.png'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SuccessMsg from "./types/SuccessMsg";
 import { useEffect, useState } from "react";
@@ -10,7 +9,7 @@ const ProfileRank:React.FC=()=>{
     const getRank = async()=>{
         const id = await AsyncStorage.getItem("id");
         const response: SuccessMsg = await fetch(
-          `${process.env.REACT_APP_BACKEND}/api/userInfo/${id}/userElo`
+          `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/userElo`
         ).then((res) => res.json());
         if (response.msg === "Junior 1") setSrcRank(Ranks.Junior1);
         else if (response.msg === "Junior 2") setSrcRank(Ranks.Junior2);
@@ -27,6 +26,6 @@ const ProfileRank:React.FC=()=>{
         getRank()
     },[])
    
-    return   <Image className="w-36 h-36"  source={rankSrc as ImageProps} />
+    return   <Image className="h-24 w-24"  source={rankSrc as ImageProps} />
 }
 export default ProfileRank

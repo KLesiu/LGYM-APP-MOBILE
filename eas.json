@@ -2,9 +2,8 @@
   "build": {
     "preview": {
       "android": {
-        "buildType": "apk",
+        "buildType": "app-bundle",
         "env":{
-
         }
 
       }

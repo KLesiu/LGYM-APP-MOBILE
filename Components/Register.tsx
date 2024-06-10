@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import React, {  useState } from "react";
+import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
-import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import ErrorMsg from "./types/ErrorMsg";
 import ErrorRegister from "./types/ErrorRegister";
 import SuccessMsg from "./types/SuccessMsg";
@@ -11,7 +8,6 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types/RootStackParamList";
 import MiniLoading from "./MiniLoading";
-import ViewLoading from "./ViewLoading";
 
 const Register: React.FC = () => {
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -22,24 +18,7 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const apiURL = `${process.env.REACT_APP_BACKEND}/api/register`;
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
+  const apiURL = `https://lgym-app-api-v2.vercel.app/api/register`;
   const register = async (): Promise<void> => {
     if (password !== rpassword)
       return setErrors([{ msg: "Both passwords need to be same" }]);
@@ -61,7 +40,7 @@ const Register: React.FC = () => {
       .then((res) => res.json())
       .catch((err) => err)
       .then((res) => {
-        if (res.msg === `${process.env.REACT_APP_MSG_REGISTER_CREATE}`) {
+        if (res.msg === `User created successfully!`) {
           setErrors([]);
           return res.msg;
         } else return res;
@@ -74,59 +53,62 @@ const Register: React.FC = () => {
       return navigation.navigate("Login");
     }
   };
-  if (!fontsLoaded) {
-    return <ViewLoading />
-    
+  const goToPreload = ()=>{
+    return navigation.navigate("Preload")
   }
+
 
   return (
     <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
-      <Image className="w-2/5 h-1/5 mb-[5%]" source={logoLGYM} />
-      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
+      <Image  className="w-full h-full mb-[5%]" source={logoLGYM} />
+      </Pressable>
+
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
         Username
       </Text>
       <TextInput
         onChangeText={(text) => setUsername(text)}
-        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
+        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
         Email
       </Text>
       <TextInput
         onChangeText={(text) => setEmail(text)}
-        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
+        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
         Password
       </Text>
       <TextInput
         secureTextEntry={true}
         onChangeText={(text) => setPassword(text)}
-        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
+        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "Teko_700Bold" }} className="text-[#b9b1a2] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
         Repeat password
       </Text>
       <TextInput
         secureTextEntry={true}
         onChangeText={(text) => setRPassword(text)}
-        className="rounded-xl h-12 text-lg w-4/5 text-white mt-1 pl-4 bg-[#3c3c3c]"
+        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <TouchableOpacity
+      <Pressable
         onPress={register}
-        className="mt-3 w-1/2 bg-[#868686] flex items-center justify-center rounded-xl h-[7%]"
+        className="w-80 h-20 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4"
       >
         <Text
           style={{
-            fontFamily: "Teko_700Bold",
+            fontFamily: "OpenSans_700Bold",
             
           }}
-          className="text-3xl text-[#e2e2e2]"
+          className="text-xs w-full text-center text-black"
         >
           REGISTER
         </Text>
-      </TouchableOpacity>
-      {loading ? <MiniLoading /> : ""}
+      </Pressable>
+      {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
         {errors
           ? errors.map((ele, index: number) => (
@@ -140,7 +122,7 @@ const Register: React.FC = () => {
                 {ele.msg}
               </Text>
             ))
-          : ""}
+          : <Text></Text>}
       </View>
     </View>
   );

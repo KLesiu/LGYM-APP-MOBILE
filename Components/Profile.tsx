@@ -1,49 +1,39 @@
-import { Text, View, ImageBackground, TouchableOpacity } from "react-native";
-import backgroundLogo from "./img/backgroundLGYMApp500.png";
+import { Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import UserProfile from "./types/UserProfile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import UserInfo from "./types/UserInfo";
 import ProfileRank from "./ProfileRank";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types/RootStackParamList";
 import ViewLoading from "./ViewLoading";
+import Records from "./Records";
+import MainProfileInfo from "./MainProfileInfo";
+import Measurements from "./Measurements";
+
 
 const Profile: React.FC = () => {
   const [yourProfile, setYourProfile] = useState<UserProfile>();
   const [profileRank, setProfileRank] = useState<string>("");
   const [memberSince, setMemberSince] = useState<string>("");
+  const [profileElo,setProfileElo]= useState<number>()
   const [rankComponent, setRankComponent] = useState<JSX.Element>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
-
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
+  const logout = async (): Promise<void> => {
+    const keys = await AsyncStorage.getAllKeys();
+    keys.forEach((ele) => deleteFromStorage(ele));
+    navigation.navigate("Preload");
+  };
+  const [currentTab,setCurrentTab]=useState<JSX.Element>(<MainProfileInfo logout={logout}/>)
 
   useEffect(() => {
     setViewLoading(true);
     getDataFromStorage();
     setRankComponent(<ProfileRank />);
+    getUserEloPoints()
   }, []);
 
   const getDataFromStorage = async (): Promise<void> => {
@@ -53,9 +43,22 @@ const Profile: React.FC = () => {
     setYourProfile({ name: username!, email: email! });
     checkMoreUserInfo(id!);
   };
+  const getUserEloPoints = async():Promise<void> =>{
+    const id = await AsyncStorage.getItem('id')
+    const response =  await fetch(
+      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/getUserEloPoints`).then(res=>res.json()).catch(err=>err)
+    if("elo" in response){
+      setProfileElo(response.elo)
+    }
+    
+  }
+  const styleCurrentTab = (tab:JSX.Element,cssRule:string):string=>{
+    if(cssRule==='border') return currentTab.type.name===tab.type.name?'#4CD964':'#131313'
+    return currentTab.type.name===tab.type.name?'#4CD964':'#E5E7EB'
+  }
   const checkMoreUserInfo = async (id: string): Promise<void> => {
     const response: "Didnt find" | UserInfo = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/userInfo/${id}`
+      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}`
     )
       .then((res) => res.json())
       .then((res) => res);
@@ -66,49 +69,46 @@ const Profile: React.FC = () => {
       }
     setViewLoading(false);
   };
-  const logout = async (): Promise<void> => {
-    const keys = await AsyncStorage.getAllKeys();
-    keys.forEach((ele) => deleteFromStorage(ele));
-    navigation.navigate("Preload");
-  };
+
   const deleteFromStorage = async (key: string): Promise<void> => {
     await AsyncStorage.removeItem(key);
   };
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
+
   return (
-    <ImageBackground className="h-[79%] w-[98%] mx-[1%] flex-1 flex justify-center items-center opacity-100 " source={backgroundLogo} >
-      <View className="rounded-tl-10 rounded-tr-10 bg-[#fffffff2] h-[99%] w-full flex flex-col z-[2] ">
-        <Text className="rounded-3xl m-0 text-4xl w-full text-center" style={{ fontFamily: "Teko_700Bold"}}>
-          Your profile
-        </Text>
-        <View className="items-center flex justify-center flex-row flex-wrap h-3/5 " >
-          <Text className="p-1 border-gray-500 border-2 w-[70%] rounded-sm text-2xl mb-10" style={{ fontFamily: "Teko_700Bold"}}>
-            Name: {yourProfile?.name}
-          </Text>
-          <View className="w-full flex flex-col h-full items-center">
-            <View className="flex  justify-center flex-col items-center flex-wrap  rounded pl-2 h-2/5 ">
+      <View className=" relative w-full bg-[#131313]">
+        <View className="w-full p-4 flex flex-col">
+        <View className="flex justify-center flex-row py-3 px-6 gap-3">
+            <View className="flex  justify-center flex-col items-center flex-wrap  rounded pl-2  ">
               {rankComponent}
             </View>
-            <Text className="p-1 border-gray-500 border-2 w-[70%] rounded text-xl mt-5" style={{ fontFamily: "Teko_700Bold"}}>
-              Email: {yourProfile?.email}
-            </Text>
-            <Text className="p-1 border-gray-500 border-2 w-[70%] rounded text-xl mt-5" style={{ fontFamily: "Teko_700Bold"}}>
-              Member since: {memberSince}
-            </Text>
-          </View>
+            <View className="flex flex-col items-center  gap-1  ">
+              <Text className="text-[#4CD964] font-bold w-full text-center text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>
+                  {yourProfile?.name}
+              </Text>
+              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4">
+                  {profileRank}
+              </Text>
+              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4">
+                  {profileElo} Elo
+              </Text>
+              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4"> 
+                  Member since: {memberSince}
+              </Text>
+            </View>
         </View>
-        <TouchableOpacity className="w-1/2 h-[10%] bg-[#bd1212e1] border-black border-1 rounded-xl flex justify-center flex-row items-center ml-[25%] mt-[20%] " onPress={logout}>
-          <Text className="text-white text-3xl"
-            style={{ fontFamily: "Teko_700Bold"}}
-          >
-            LOGOUT
-          </Text>
-        </TouchableOpacity>
-        {viewLoading ? <ViewLoading /> : ""}
+        <View className="w-full h-12 flex flex-row m-0 justify-between pr-6 mb-8">
+            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<MainProfileInfo/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<MainProfileInfo logout={logout}/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<MainProfileInfo/>,'text')}`}}>Data</Text></Pressable>
+            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Records/>,'border')}`,borderBottomWidth:1}} onPress={()=>setCurrentTab(<Records/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Records/>,'text')}`}}>Records</Text></Pressable>
+            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Measurements/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<Measurements/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm"  style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Measurements/>,'text')}`}}>Measurements</Text></Pressable>
+        </View>
+        <View className="w-full mt-4">
+          {currentTab}
+          
+        </View>
+        </View>
+       
+        {viewLoading ? <ViewLoading /> : <Text></Text>}
       </View>
-    </ImageBackground>
   );
 };
 export default Profile;

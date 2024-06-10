@@ -1,22 +1,13 @@
 import {
   Text,
   View,
-  ImageBackground,
   TouchableOpacity,
   TextInput,
   ScrollView,
   Switch,
 } from "react-native";
-import backgroundLogo from "./img/backgroundLGYMApp500.png";
 import { useState, useEffect, useReducer } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  useFonts,
-  Teko_700Bold,
-  Teko_400Regular,
-} from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Exercise from "./types/Exercise";
 import Data from "./types/DataPlansArrays";
@@ -28,6 +19,7 @@ import ViewLoading from "./ViewLoading";
 import MiniLoading from "./MiniLoading";
 import useInterval from "./helpers/hooks/useInterval";
 import UpdateRankPopUp from "./UpdateRankPopUp";
+import { LastTrainingModel } from "./types/Training";
 type InputAction = {
   type: "UPDATE_INPUT";
   index: number;
@@ -218,32 +210,16 @@ const AddTraining: React.FC = () => {
     {}
   );
 
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-    Teko_400Regular,
-  });
+
   useInterval(() => {
     if(!showExercise) return
     submitYourTraining(false);
   }, 1000);
   useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
-  useEffect(() => {
     setViewLoading(true);
     getFromStorage();
     getSessionFromStorage();
+    setViewLoading(false)
   }, []);
   const getSessionFromStorage = async () => {
     const training = await AsyncStorage.getItem("currentTraining");
@@ -253,15 +229,15 @@ const AddTraining: React.FC = () => {
   const getFromStorage = async (): Promise<void> => {
     const plan: string | null | undefined =
       (await AsyncStorage.getItem("plan")) || "";
-    setViewLoading(false);
     setPlan(plan);
+    setViewLoading(false);
   };
   const getInformationsAboutPlanDays: VoidFunction =
     async (): Promise<void> => {
       setLoading(true);
       const id = await AsyncStorage.getItem("id");
       const trainingDays: number = await fetch(
-        `${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`
+        `https://lgym-app-api-v2.vercel.app/api/${id}/configPlan`
       )
         .then((res) => res.json())
         .catch((err) => err)
@@ -273,10 +249,10 @@ const AddTraining: React.FC = () => {
       }
 
       setChooseDay(
-        <View className="items-center bg-[#000000f0] flex flex-col justify-start gap-y-5  h-full absolute m-0 w-full top-0">
+        <View className="items-center bg-[#131313] flex flex-col justify-start gap-y-5  h-full absolute m-0 w-full top-0">
           <Text
-          className="text-[40px] text-white"
-            style={{ fontFamily: "Teko_700Bold"}}
+          className="text-3xl text-white"
+            style={{ fontFamily: "OpenSans_700Bold"}}
           >
             Choose training day!
           </Text>
@@ -287,17 +263,16 @@ const AddTraining: React.FC = () => {
               key={index}
             >
               <Text
+              className="text-white text-3xl"
                 style={{
-                  fontFamily: "Teko_700Bold",
-                  fontSize: 30,
-                  color: "white",
+                  fontFamily: "OpenSans_700Bold",
                 }}
               >
                 {ele}
               </Text>
             </TouchableOpacity>
           ))}
-          {loading ? <MiniLoading /> : ""}
+          {loading ? <MiniLoading /> :<Text></Text>}
         </View>
       );
       setLoading(false);
@@ -309,7 +284,7 @@ const AddTraining: React.FC = () => {
     setViewLoading(true);
     const id = await AsyncStorage.getItem("id");
     const planOfTheDay: Array<Exercise> | undefined = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getPlan`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getPlan`
     )
       .then((res) => res.json())
       .catch((err) => err)
@@ -329,6 +304,7 @@ const AddTraining: React.FC = () => {
     setDayToCheck(day);
     setChooseDay(<View></View>);
     setPickedDay(planOfTheDay);
+    setViewLoading(false)
   };
   const setCurrentDaySection = async (
     exercises: Array<Exercise>,
@@ -336,24 +312,45 @@ const AddTraining: React.FC = () => {
   ): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: { prevSession: LastTrainingSession } | null = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getPrevSessionTraining/${day}`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getPrevSessionTraining/${day}`
     )
       .then((res) => res.json())
       .catch((err) => err)
       .then((res) => res);
     let lastTraining: string;
     let lastExercises: Array<ExerciseTraining>;
-
+    let lastTrainingCompletedArray:Array<LastTrainingModel>=[];
     if ("prevSession" in response!) {
       lastTraining = response.prevSession.createdAt.slice(0, 24);
       lastExercises = response.prevSession.exercises.map((ele) => ele);
+      const sessionTrainingReps = lastExercises.filter(
+        (ele: any, index: number) => index % 2 === 0
+      );
+      const sessionTrainingWeight = lastExercises.filter(
+        (ele: any, index: number) => index % 2 !== 0
+      );
+       lastTrainingCompletedArray = exercises.map((ele) => {
+        const prevReps = sessionTrainingReps.slice(0, ele.series);
+        sessionTrainingReps.splice(0, ele.series);
+        const prevWeights = sessionTrainingWeight.slice(0, ele.series);
+        sessionTrainingWeight.splice(0, ele.series);
+        return {
+          name: ele.name,
+          reps: ele.reps,
+          series: ele.series,
+          prevReps: prevReps,
+          prevWeights: prevWeights,
+        };
+      });
+      
     }
     let arr: String[] = [];
+
     setDaySection(
       <View className="absolute w-full h-full text-white bg-[#000000f5] flex flex-col pb-10">
         <Text
           style={{
-            fontFamily: "Teko_700Bold",
+            fontFamily: "OpenSans_700Bold",
             width: "100%",
             textAlign: "center",
             fontSize: 30,
@@ -364,37 +361,42 @@ const AddTraining: React.FC = () => {
         </Text>
         <ScrollView>
           {exercises.map((ele: Exercise, indexMain: number) => {
-            let helpsArray: Array<string> = [];
+            const helpsArray: Array<string> = [];
             for (let i = 1; i < +ele.series + 1; i++) {
               helpsArray.push(`Series: ${i}`);
             }
             return (
               <View style={{ marginBottom: 50 }} key={indexMain}>
+                <View className="flex flex-col mb-7 pl-1">
                 <Text
+                 className='text-md text-[#4CD964] '
                   style={{
-                    fontFamily: "Teko_700Bold",
-                    fontSize: 20,
-                    marginBottom: 30,
-                    marginLeft: 5,
-                    color: "white",
+                    fontFamily: "OpenSans_700Bold",
                   }}
                 >
                   {ele.name}
                 </Text>
+                {lastTrainingCompletedArray.length > 0?<Text className="text-gray-300 text-[12px] mt-2 " style={{fontFamily:'OpenSans_300Light'}}>
+                  Last Training scores:
+                {lastTrainingCompletedArray[indexMain].prevReps.map((ele:ExerciseTraining,index:number)=>{
+                    return(
+                      ` ${ele.score}x${lastTrainingCompletedArray[indexMain].prevWeights[index].score}kg `
+                    )
+                  })}</Text>:<Text></Text>}
+                </View>
+
                 {helpsArray.map((s, index: number) => {
                   arr.push(`${ele.name} ${s}: Rep`);
                   arr.push(`${ele.name} ${s}: Weight (kg)`);
                   return (
                     <View className="flex flex-row justify-center items-center border-b-gray-500 border-b-1 mt-1"  key={index}>
                       <Text
+                      className="text-[11px] w-1/5 text-white"
                         style={{
-                          fontFamily: "Teko_400Regular",
-                          fontSize: 15,
-                          width: "20%",
-                          color: "white",
+                          fontFamily: "OpenSans_400Regular",
                         }}
                       >
-                        <Text>{ele.name}</Text> {s}: Rep
+                      {s}: Rep
                       </Text>
                       <TextInput
                         defaultValue="0"
@@ -405,19 +407,16 @@ const AddTraining: React.FC = () => {
                           handleInputChange(index, text, indexMain)
                         
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
+                        className="rounded-xl text-sm w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
                        
                       />
                       <Text
+                       className="text-[11px] w-1/5 ml-[10%] text-white"
                         style={{
-                          fontFamily: "Teko_400Regular",
-                          fontSize: 15,
-                          width: "20%",
-                          marginLeft: "10%",
-                          color: "white",
+                          fontFamily: "OpenSans_400Regular",
                         }}
                       >
-                        <Text>{ele.name}</Text> {s}: Weight (kg)
+                        {s}: Weight (kg)
                       </Text>
                       <TextInput
                         defaultValue="0"
@@ -452,17 +451,36 @@ const AddTraining: React.FC = () => {
   ): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: { prevSession: LastTrainingSession } | null = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getPrevSessionTraining/${day}`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getPrevSessionTraining/${day}`
     )
       .then((res) => res.json())
       .catch((err) => err)
       .then((res) => res);
     let lastTraining: string;
     let lastExercises: Array<ExerciseTraining>;
-
+    let lastTrainingCompletedArray:Array<LastTrainingModel>=[];
     if ("prevSession" in response!) {
       lastTraining = response.prevSession.createdAt.slice(0, 24);
       lastExercises = response.prevSession.exercises.map((ele) => ele);
+      const sessionTrainingReps = lastExercises.filter(
+        (ele: any, index: number) => index % 2 === 0
+      );
+      const sessionTrainingWeight = lastExercises.filter(
+        (ele: any, index: number) => index % 2 !== 0
+      );
+       lastTrainingCompletedArray = exercises.map((ele) => {
+        const prevReps = sessionTrainingReps.slice(0, ele.series);
+        sessionTrainingReps.splice(0, ele.series);
+        const prevWeights = sessionTrainingWeight.slice(0, ele.series);
+        sessionTrainingWeight.splice(0, ele.series);
+        return {
+          name: ele.name,
+          reps: ele.reps,
+          series: ele.series,
+          prevReps: prevReps,
+          prevWeights: prevWeights,
+        };
+      });
     }
     let arr: String[] = [];
     const sessionTraining = await AsyncStorage.getItem("currentTraining");
@@ -489,17 +507,14 @@ const AddTraining: React.FC = () => {
       };
     });
     setDaySection(
-      <View className="absolute w-full h-full text-white bg-[#000000f5] flex-col flex pb-10">
+      <View className="absolute w-full h-full text-white bg-[#131313] flex-col flex p-4 pb-10">
         <Text
+        className="w-full text-3xl text-center text-white"
           style={{
-            fontFamily: "Teko_700Bold",
-            width: "100%",
-            textAlign: "center",
-            fontSize: 30,
-            color: "white",
+            fontFamily: "OpenSans_700Bold",
           }}
         >
-          Training <Text>{day}</Text>
+          Training <Text className="text-[#4CD964]">{day}</Text>
         </Text>
         <ScrollView>
           {newHelpsArray.map((ele: any, indexMain: number) => {
@@ -509,31 +524,37 @@ const AddTraining: React.FC = () => {
             }
             return (
               <View style={{ marginBottom: 50 }} key={indexMain}>
+                <View className="flex flex-col mb-7 pl-1">
                 <Text
+                 className='text-md text-[#4CD964] '
                   style={{
-                    fontFamily: "Teko_700Bold",
-                    fontSize: 20,
-                    marginBottom: 30,
-                    marginLeft: 5,
-                    color: "white",
+                    fontFamily: "OpenSans_700Bold",
                   }}
                 >
                   {ele.name}
                 </Text>
+                {lastTrainingCompletedArray.length > 0?<Text className="text-gray-300 text-[12px] mt-2 " style={{fontFamily:'OpenSans_300Light'}}>
+                  Last Training scores:
+                {lastTrainingCompletedArray[indexMain].prevReps.map((ele:ExerciseTraining,index:number)=>{
+                    return(
+                      ` ${ele.score}x${lastTrainingCompletedArray[indexMain].prevWeights[index].score}kg `
+                    )
+                  })}</Text>:<Text></Text>}
+
+                </View>
+
                 {helpsArray.map((s, index: number) => {
                   arr.push(`${ele.name} ${s}: Rep`);
                   arr.push(`${ele.name} ${s}: Weight (kg)`);
                   return (
                     <View className="flex flex-row justify-center items-center border-b-gray-500 border-b-1 mt-1"key={index}>
                       <Text
+                      className="text-[11px] w-1/5 text-white"
                         style={{
-                          fontFamily: "Teko_400Regular",
-                          fontSize: 15,
-                          width: "20%",
-                          color: "white",
+                          fontFamily: "OpenSans_400Regular",
                         }}
                       >
-                        <Text>{ele.name}</Text> {s}: Rep
+                         {s}: Rep
                       </Text>
                       <TextInput
                         defaultValue={ele.prevReps[index].score}
@@ -548,18 +569,15 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputChange(index, text, indexMain)
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
+                        className="rounded-xl text-sm w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2"
                       />
                       <Text
+                      className="text-[11px] w-1/5 ml-[10%] text-white"
                         style={{
-                          fontFamily: "Teko_400Regular",
-                          fontSize: 15,
-                          width: "20%",
-                          marginLeft: "10%",
-                          color: "white",
+                          fontFamily: "OpenSans_400Regular",
                         }}
                       >
-                        <Text>{ele.name}</Text> {s}: Weight (kg)
+                  {s}: Weight
                       </Text>
                       <TextInput
                         defaultValue={ele.prevWeights[index].score}
@@ -573,7 +591,7 @@ const AddTraining: React.FC = () => {
                         onChangeText={(text) =>
                           handleInputWeightChange(index, text, indexMain)
                         }
-                        className="rounded-xl text-[15px] w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
+                        className="rounded-xl text-sm w-[20%] border-[#3c3c3c] border-[2px] text-white pl-2 border-b-gray-500 border-b-2"
                       
                       />
                     </View>
@@ -944,7 +962,7 @@ const AddTraining: React.FC = () => {
   ): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: addTrainingFetchType = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/addTraining`,
+      `https://lgym-app-api-v2.vercel.app/api/${id}/addTraining`,
       {
         method: "POST",
         headers: {
@@ -997,12 +1015,12 @@ const AddTraining: React.FC = () => {
             <Icon style={{ fontSize: 40, color: "white" }} name="close" />
           </TouchableOpacity>
           <Text
-          className="text-2xl text-center text-white"
+          className="text-2xl text-center mb-5 text-white"
             style={{
-              fontFamily: "Teko_400Regular"
+              fontFamily: "OpenSans_400Regular"
             }}
           >
-            Date: {lastTrainingSessionDate}
+            Date:  <Text className="text-[#4CD964]" style={{fontFamily:'OpenSans_400Regular'}}>{new Date(lastTrainingSessionDate).toLocaleDateString()}</Text> 
           </Text>
           <ScrollView className="w-4/5 ml-[10%] h-[70%] ">
             <View className="w-full flex flex-row">
@@ -1012,28 +1030,25 @@ const AddTraining: React.FC = () => {
                       if (index !== 0 && index % 2 !== 0) return;
                       return (
                         <View
-                        className="w-full border-b-gray-500 border-b-[1px] h-20 text-white"
+                        className="w-full  border-b-[1px] h-20 text-white"
                           key={index}
                         >
                           {index === 0 || index % 2 == 0 ? (
                             <Text
+                              className="text-sm mt-5 ml-2 text-white"
                               style={{
-                                fontFamily: "Teko_400Regular",
-                                fontSize: 20,
-                                marginTop: 20,
-                                marginLeft: 10,
-                                color: "white",
+                                fontFamily: "OpenSans_400Regular",
                               }}
                             >
                               {ele.field.slice(0, ele.field.length - 4)}
                             </Text>
                           ) : (
-                            ""
+                            <Text></Text>
                           )}
                         </View>
                       );
                     })
-                  : ""}
+                  :<Text></Text>}
               </View>
 
               <View className="w-[40%] flex flex-row flex-wrap">
@@ -1042,17 +1057,17 @@ const AddTraining: React.FC = () => {
                       return (
                         <Text
                           style={{
-                            fontFamily: "Teko_400Regular"
+                            fontFamily: "OpenSans_400Regular"
                           }}
-                          className="w-1/2 border-b-gray-500 border-b-[1px] h-20 pl-[10%]
-                          bg-[#141414b3] pt-5 text-white text-[20px]"
+                          className="w-1/2  border-b-[1px] h-20 pl-[10%]
+                          bg-[#4cd96309] pt-5 text-white text-base"
                           key={index}
                         >
                           {ele.score}
                         </Text>
                       );
                     })
-                  : ""}
+                  :<Text></Text>}
               </View>
             </View>
           </ScrollView>
@@ -1065,7 +1080,7 @@ const AddTraining: React.FC = () => {
   const checkLastTrainingSession = async (day: string): Promise<boolean> => {
     const id = await AsyncStorage.getItem("id");
     const response: SuccessMsg = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/checkPrevSessionTraining/${day}`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/checkPrevSessionTraining/${day}`
     )
       .then((res) => res.json())
       .catch((err) => err)
@@ -1091,38 +1106,17 @@ const AddTraining: React.FC = () => {
   const closeRankPopUp = ()=>{
     setIsPopUpRankShowed(false)
   }
-
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
-
-
   return (
-    <ImageBackground
-      source={backgroundLogo}
-      
-      className="h-[79%] w-[98%] mx-[1%] flex-1 justify-center items-center opacity-100"
-      
-    >
-      <View className="bg-[#9696961a] h-[99%] w-full z-[2] rounded-tl-10 rounded-tr-10">
-        {plan === "completed" ? (
-          <View className="relative bg-[#fffffff2] flex flex-col justify-start items-center h-full w-full" >
-            <Text
-              style={{
-                fontFamily: "Teko_400Regular",
-                fontSize: 45,
-                textAlign: "center",
-              }}
-            >
-              Add Training!
-            </Text>
+      <View className="bg-[#131313] h-[78%] w-full z-[2]">
+        {plan === "completed" && plan ? (
+          <View className="relative  flex flex-col justify-center items-center h-full w-full" >
             <TouchableOpacity onPress={getInformationsAboutPlanDays}>
               <Icon
-                style={{ fontSize: 100, marginTop: "40%" }}
+                style={{ fontSize: 140,color:'#4CD964' }}
                 name="plus-circle"
               />
             </TouchableOpacity>
-            {loading ? <MiniLoading /> : ""}
+            {loading ? <MiniLoading /> :<Text></Text>}
             {}
             {chooseDay}
             {isPopUpShowed ? (
@@ -1130,7 +1124,7 @@ const AddTraining: React.FC = () => {
                 <Icon style={{ fontSize: 100 }} name="check" />
               </View>
             ) : (
-              ""
+              <Text></Text>
             )}
             {daySection}
             {lastTrainingSection}
@@ -1139,14 +1133,13 @@ const AddTraining: React.FC = () => {
                 {isAddTrainingActive ? (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(true)}
-                    className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+                    className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center"
 
                   >
                     <Text
+                    className="text-center text-sm"
                       style={{
-                        fontFamily: "Teko_400Regular",
-                        textAlign: "center",
-                        fontSize: 25,
+                        fontFamily: "OpenSans_400Regular",
                       }}
                     >
                       ADD TRAINING
@@ -1155,14 +1148,13 @@ const AddTraining: React.FC = () => {
                 ) : (
                   <TouchableOpacity
                     onPress={() => submitYourTraining(false)}
-                    className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+                    className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center"
                
                   >
                     <Text
+                    className="text-center text-sm"
                       style={{
-                        fontFamily: "Teko_400Regular",
-                        textAlign: "center",
-                        fontSize: 17,
+                        fontFamily: "OpenSans_400Regular",
                       }}
                     >
                       SAVE TRAINING STATE
@@ -1177,53 +1169,48 @@ const AddTraining: React.FC = () => {
                   value={isEnabled}
                 ></Switch>
                 {isAddTrainingActive?<TouchableOpacity onPress={()=>deleteCurrentSession()}
-                className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center">
-                        <Text style={{  fontFamily: "Teko_400Regular",
-                      textAlign: "center",
-                      fontSize: 17,}}>
-                          DELETE CURRENT SESSION
+                className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center">
+                        <Text className="text-center text-sm" style={{  fontFamily: "OpenSans_400Regular"}}>
+                          DELETE CURRENT
                         </Text>
                 </TouchableOpacity>:<TouchableOpacity
                   onPress={() => {
                     setViewLoading(true);
                     showLastTrainingSection();
                   }}
-                  className="w-[30%] h-12 rounded-lg bg-[#aab4bd] flex justify-center items-center"
+                  className="w-[30%] h-12 rounded-lg bg-[#4CD964] flex justify-center items-center"
                  
                 >
                   <Text
+                  className="text-center text-sm"
                     style={{
-                      fontFamily: "Teko_400Regular",
-                      textAlign: "center",
-                      fontSize: 17,
+                      fontFamily: "OpenSans_400Regular",
                     }}
                   >
-                    SHOW PREVIOUS SESSION
+                    SHOW PREVIOUS
                   </Text>
                 </TouchableOpacity>}
                 
               </View>
             ) : (
-              ""
+              <Text></Text>
             )}
           </View>
         ) : (
-          <View className="w-full h-full flex flex-row justify-center pt-[40%]">
-            <Text
+          <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center p-4">
+            <Text className="text-white text-xl text-center"
               style={{
-                fontFamily: "Teko_400Regular",
-                fontSize: 25,
-                textAlign: "center",
+                fontFamily: "OpenSans_400Regular"
               }}
             >
               You cant add training, because you dont have plan!
             </Text>
           </View>
         )}
-        {viewLoading ? <ViewLoading /> : ""}
+        {viewLoading ? <ViewLoading /> :<Text></Text>}
         {isPopUpRankShowed?<UpdateRankPopUp closePopUp={closeRankPopUp}/>:''}
       </View>
-    </ImageBackground>
+
   );
 };
 export default AddTraining;

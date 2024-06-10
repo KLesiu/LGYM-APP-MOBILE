@@ -1,46 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import React, {  useState } from "react";
+import { View, Text, TextInput, Image,  Pressable,  } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
-import { useFonts, Teko_700Bold } from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import ErrorMsg from "./types/ErrorMsg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./types/RootStackParamList";
 import MiniLoading from "./MiniLoading";
-import ViewLoading from "./ViewLoading";
 
 const Login: React.FC = () => {
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
-  const apiURL = `${process.env.REACT_APP_BACKEND}/api/login`;
+  const [secureTextEntry,setSecureTextEntry]=useState<boolean>(true)
+  const apiURL = `https://lgym-app-api-v2.vercel.app/api/login`;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
   const login = async (): Promise<string | void> => {
     setLoading(true);
     if (!username || !password) {
@@ -85,7 +62,7 @@ const Login: React.FC = () => {
           }
         });
 
-      if (response === `${process.env.REACT_APP_MSG_LOGIN_AUTH}`) {
+      if (response === `Authorized`) {
         setErrors([]);
         setLoading(false);
         navigation.navigate("Home");
@@ -94,34 +71,50 @@ const Login: React.FC = () => {
       console.log(err);
     }
   };
+  const goToPreload = ()=>{
+    return navigation.navigate("Preload")
+  }
   return (
     <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
-      <Image className="w-3/5 h-[30%]" source={logoLGYM} />
-      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
+      <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
+      <Image className="w-full h-full" source={logoLGYM} />
+      </Pressable>
+
+      <View className="w-full flex flex-col items-center justify-start">
+      <Text className="text-[#4CD964] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Username
       </Text>
       <TextInput
         onChangeText={(text: string) => setUsername(text)}
-        className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
+        className="rounded-xl h-12 text-base w-80 bg-white text-black mt-1 pl-4"
         autoComplete="given-name"
       />
-      <Text className="text-[#b9b1a2] text-3xl m-1" style={{ fontFamily: "Teko_700Bold"}}>
+      <Text className="text-[#4CD964] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Password
       </Text>
+      <View className="flex w-4/5 h-12 items-center justify-center">
       <TextInput
         onChangeText={(text: string) => setPassword(text)}
-        className="rounded-xl h-12 text-base w-4/5 bg-[#3c3c3c] text-white mt-1 pl-4"
-        secureTextEntry={true}
-      ></TextInput>
-      <TouchableOpacity className="mt-3 w-1/2 bg-[#868686] flex items-center justify-center rounded-xl h-14" onPress={login} >
+        className="rounded-xl h-full  text-base  bg-white text-black  pl-4 w-80"
+        secureTextEntry={secureTextEntry}
+      >
+
+      </TextInput>
+      <Pressable className="absolute w-16 h-full text-sm flex items-center justify-center bg-[#4CD964] rounded-xl  right-0" onPress={() => setSecureTextEntry(!secureTextEntry)}>
+          <Text className="text-white text-lg ">{secureTextEntry?'SHOW':'HIDE'}</Text>
+        </Pressable>
+      </View>
+
+      </View>
+      
+      <Pressable  className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4" onPress={login} >
         <Text
-          className="text-3xl text-[#e2e2e2]"
-          style={{ fontFamily: "Teko_700Bold"}}
-        >
-          LOGIN
+         className="text-xs w-full text-center text-white"
+          style={{ fontFamily: "OpenSans_700Bold"}}
+        >LOGIN
         </Text>
-      </TouchableOpacity>
-      {loading ? <MiniLoading /> : ""}
+      </Pressable>
+      {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
         {errors
           ? errors.map((ele, index: number) => (
@@ -135,7 +128,7 @@ const Login: React.FC = () => {
                 {ele.msg}
               </Text>
             ))
-          : ""}
+          : <Text></Text>}
       </View>
     </View>
   );

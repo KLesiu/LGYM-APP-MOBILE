@@ -1,20 +1,5 @@
-import {
-  Text,
-  View,
-  ImageBackground,
-  TouchableOpacity,
-  ScrollView,
-  Linking,
-} from "react-native";
-import backgroundLogo from "./img/backgroundLGYMApp500.png";
+import { Text, View, TouchableOpacity, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
-import {
-  useFonts,
-  Teko_700Bold,
-  Teko_400Regular,
-} from "@expo-google-fonts/teko";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import * as SplashScreen from "expo-splash-screen";
 import Data from "./types/DataPlansArrays";
 import Exercise from "./types/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -23,57 +8,11 @@ import ErrorMsg from "./types/ErrorMsg";
 import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 import ImportPlanPopUp from "./ImportPlanPopUp";
+import CreatePlanConfig from "./CreatePlanConfig";
+import CreatePlanBody from "./CreatePlanBody";
 
 const TrainingPlan: React.FC = () => {
-  const withoutPlan = () => {
-    return (
-      <View
-        className="items-center flex flex-col justify-start	h-full w-full bg-[#fffffff7] rounded-tl-10 rounded-tr-10	"
-      >
-        <Text style={{ fontFamily: "Teko_700Bold", fontSize: 40 }}>
-          Training Plan
-        </Text>
-        <Text
-          className="mt-[20%] text-[20px] text-center w-full"
-          style={{
-            fontFamily: "Teko_700Bold",
-          }}
-        >
-          You dont have any plans
-        </Text>
-        <TouchableOpacity
-          onPress={() => {
-            const url = "https://lgym-app.vercel.app";
-            Linking.openURL(url);
-          }}
-          className="bg-[#c2c2c2] w-[50%] h-[10%] flex items-center justify-center rounded-[10px] mt-[5%]"
-        >
-          <Text
-            className="text-[20px] w-full text-center"
-            style={{
-              fontFamily: "Caveat_400Regular",
-            }}
-          >
-            Create your plan now!
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className="bg-[#c2c2c2] w-[50%] h-[10%] flex items-center justify-center rounded-[10px] mt-[5%]"
-          onPress={() => showImportPlanPopUpFn()}
-        >
-          <Text
-            className="text-[20px] w-full text-center"
-            style={{
-              fontFamily: "Caveat_400Regular",
-            }}
-          >
-            Import plan!
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  };
-  const [yourPlan, setYourPlan] = useState<JSX.Element>(withoutPlan);
+  const [yourPlan, setYourPlan] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [isPlanSet, setIsPlanSet] = useState<boolean>(false);
   const [isPopUpDeleteShowed, setIsPopUpDeleteShowed] =
@@ -81,25 +20,8 @@ const TrainingPlan: React.FC = () => {
   const [popUp, setPopUp] = useState<JSX.Element>();
   const [showImportPlanPopUp, setShowImportPlanPopUp] =
     useState<boolean>(false);
-
-  const [fontsLoaded] = useFonts({
-    Teko_700Bold,
-    Caveat_400Regular,
-    Teko_400Regular,
-  });
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
-
-    loadAsyncResources();
-  }, [fontsLoaded]);
+  const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
+  const [showPlanSet, setShowPlanSet] = useState<boolean>(false);
   useEffect(() => {
     setViewLoading(true);
     getUserPlan();
@@ -109,19 +31,21 @@ const TrainingPlan: React.FC = () => {
       setPopUp(
         <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
           <Text
+            className="text-4xl text-gray-200"
             style={{
-              fontFamily: "Teko_400Regular",
-              fontSize: 50,
-              color: "grey",
+              fontFamily: "OpenSans_300Light",
             }}
           >
             Are you sure?
           </Text>
           <TouchableOpacity
             onPress={deletePlan}
-            className="w-1/2 h-[10%] bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
+            className="w-1/2 h-24 bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
           >
-            <Text style={{ fontFamily: "Teko_700Bold", fontSize: 40 }}>
+            <Text
+              className="text-2xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
               YES
             </Text>
           </TouchableOpacity>
@@ -130,9 +54,14 @@ const TrainingPlan: React.FC = () => {
               setPopUp(<></>);
               setIsPopUpDeleteShowed(false);
             }}
-            className="w-1/2 h-[10%] bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
+            className="w-1/2 h-24 bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
           >
-            <Text style={{ fontFamily: "Teko_700Bold", fontSize: 40 }}>NO</Text>
+            <Text
+              className="text-2xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              NO
+            </Text>
           </TouchableOpacity>
         </View>
       );
@@ -141,34 +70,46 @@ const TrainingPlan: React.FC = () => {
   const getUserPlan = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: { data: Data | string } = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getPlan`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getPlan`
     )
       .then((res) => res.json())
       .catch((err) => err)
       .then((res) => res);
     if (response.data === "Didnt find") {
       setIsPlanSet(false);
-      setYourPlan(withoutPlan);
     } else {
-      const data = response.data;
+      const data:Data = response.data as Data;
+      const dataKeys = Object.keys(data)
+      let isPlanEmpty = true
+      dataKeys.forEach((ele:string)=>{
+        if(data[ele].length>0){
+          isPlanEmpty=false
+        }
+      })
+      isPlanEmpty?deletePlan():null
+      
+      
       if (typeof data !== "string") {
         const planA =
           data.planA.length > 0
             ? data.planA.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
+                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
-                      fontSize: 20,
                     }}
                   >
                     {element.name}
                   </Text>
-                  <Text style={{ fontFamily: "Teko_400Regular", fontSize: 21 }}>
+                  <Text
+                    className="text-gray-200/80 text-[11px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
+                  >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
@@ -178,19 +119,22 @@ const TrainingPlan: React.FC = () => {
           data.planB.length > 0
             ? data.planB.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
+                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
-                      fontSize: 20,
                     }}
                   >
                     {element.name}
                   </Text>
-                  <Text style={{ fontFamily: "Teko_400Regular", fontSize: 21 }}>
+                  <Text
+                    className="text-gray-200/80 text-[11px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
+                  >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
@@ -200,19 +144,22 @@ const TrainingPlan: React.FC = () => {
           data.planC.length > 0
             ? data.planC.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
+                  className="w-full px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
-                      fontSize: 20,
                     }}
                   >
                     {element.name}
                   </Text>
-                  <Text style={{ fontFamily: "Teko_400Regular", fontSize: 21 }}>
+                  <Text
+                    className="text-gray-200/80 text-[11px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
+                  >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
@@ -222,19 +169,22 @@ const TrainingPlan: React.FC = () => {
           data.planD.length > 0
             ? data.planD.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
+                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
-                      fontSize: 20,
                     }}
                   >
                     {element.name}
                   </Text>
-                  <Text style={{ fontFamily: "Teko_400Regular", fontSize: 21 }}>
+                  <Text
+                    className="text-gray-200/80 text-[11px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
+                  >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
@@ -244,19 +194,22 @@ const TrainingPlan: React.FC = () => {
           data.planE.length > 0
             ? data.planE.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
+                  className="w-full px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
-                      fontSize: 20,
                     }}
                   >
                     {element.name}
                   </Text>
-                  <Text style={{ fontFamily: "Teko_400Regular", fontSize: 21 }}>
+                  <Text
+                    className="text-gray-200/80 text-[11px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
+                  >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
@@ -266,19 +219,22 @@ const TrainingPlan: React.FC = () => {
           data.planF.length > 0
             ? data.planF.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
+                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
-                      fontSize: 20,
                     }}
                   >
                     {element.name}
                   </Text>
-                  <Text style={{ fontFamily: "Teko_400Regular", fontSize: 21 }}>
+                  <Text
+                    className="text-gray-200/80 text-[11px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
+                  >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
@@ -288,19 +244,22 @@ const TrainingPlan: React.FC = () => {
           data.planG.length > 0
             ? data.planG.map((element: Exercise, index: number) => (
                 <View
-                  className="w-full flex flex-row flex-wrap justify-start bg-[#ffffffb3] mt-[5px]"
+                  className="w-full px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
                   key={index}
                 >
                   <Text
+                    className="text-[11px] text-gray-200/80 leading-4 "
                     style={{
-                      fontFamily: "Teko_400Regular",
+                      fontFamily: "OpenSans_300Light",
                       width: "60%",
-                      fontSize: 20,
                     }}
                   >
                     {element.name}
                   </Text>
-                  <Text style={{ fontFamily: "Teko_400Regular", fontSize: 21 }}>
+                  <Text
+                    className="text-gray-200/80 text-[11px]"
+                    style={{ fontFamily: "OpenSans_300Light" }}
+                  >
                     {element.series} x {element.reps}
                   </Text>
                 </View>
@@ -308,99 +267,100 @@ const TrainingPlan: React.FC = () => {
             : "";
         setYourPlan(() => {
           return (
-            <View className="bg-[#fffffff2] flex flex-column h-full w-full text-center z-[2]">
-              <Text
-                style={{
-                  fontFamily: "Teko_700Bold",
-                  fontSize: 30,
-                  width: "100%",
-                  textAlign: "center",
-                }}
-              >
-                Training Plan
-              </Text>
-              <TouchableOpacity
-                onPress={() => setIsPopUpDeleteShowed(true)}
-                className="absolute top-[5px] right-[5px]"
-              >
-                <Icon
-                style={{color:'#de161d',fontSize:40}}
-                  name="delete"
-                />
-              </TouchableOpacity>
-              <ScrollView>
-                {planA ? (
-                  <View className="w-full flex flex-column items-start pl-[5%] mt-[10px] mb-[5px] border-b-[1px] border-b-gray-500 pb-[5px]">
-                    <Text style={{ fontFamily: "Teko_700Bold", fontSize: 25 }}>
-                      Plan A
-                    </Text>
-                    {planA}
-                  </View>
-                ) : (
-                  ""
-                )}
-                {planB ? (
-                  <View className="w-full flex flex-column items-start pl-[5%] mt-[10px] mb-[5px] border-b-[1px] border-b-gray-500 pb-[5px]">
-                    <Text style={{ fontFamily: "Teko_700Bold", fontSize: 25 }}>
-                      Plan B
-                    </Text>
-                    {planB}
-                  </View>
-                ) : (
-                  ""
-                )}
-                {planC ? (
-                  <View className="w-full flex flex-column items-start pl-[5%] mt-[10px] mb-[5px] border-b-[1px] border-b-gray-500 pb-[5px]">
-                    <Text style={{ fontFamily: "Teko_700Bold", fontSize: 25 }}>
-                      Plan C
-                    </Text>
-                    {planC}
-                  </View>
-                ) : (
-                  ""
-                )}
-                {planD ? (
-                  <View className="w-full flex flex-column items-start pl-[5%] mt-[10px] mb-[5px] border-b-[1px] border-b-gray-500 pb-[5px]">
-                    <Text style={{ fontFamily: "Teko_700Bold", fontSize: 25 }}>
-                      Plan D
-                    </Text>
-                    {planD}
-                  </View>
-                ) : (
-                  ""
-                )}
-                {planE ? (
-                  <View className="w-full flex flex-column items-start pl-[5%] mt-[10px] mb-[5px] border-b-[1px] border-b-gray-500 pb-[5px]">
-                    <Text style={{ fontFamily: "Teko_700Bold", fontSize: 25 }}>
-                      Plan E
-                    </Text>
-                    {planE}
-                  </View>
-                ) : (
-                  ""
-                )}
-                {planF ? (
-                  <View className="w-full flex flex-column items-start pl-[5%] mt-[10px] mb-[5px] border-b-[1px] border-b-gray-500 pb-[5px]">
-                    <Text style={{ fontFamily: "Teko_700Bold", fontSize: 25 }}>
-                      Plan F
-                    </Text>
-                    {planF}
-                  </View>
-                ) : (
-                  ""
-                )}
-                {planG ? (
-                  <View className="w-full flex flex-column items-start pl-[5%] mt-[10px] mb-[5px] border-b-[1px] border-b-gray-500 pb-[5px]">
-                    <Text style={{ fontFamily: "Teko_700Bold", fontSize: 25 }}>
-                      Plan G
-                    </Text>
-                    {planG}
-                  </View>
-                ) : (
-                  ""
-                )}
-              </ScrollView>
-            </View>
+            <ScrollView className="flex  px-2 py-4 pb-12">
+              {planA ? (
+                <View className="rounded w-full  flex flex-column items-start">
+                  <Text
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    Plan A
+                  </Text>
+                  {planA}
+                </View>
+              ) : (
+                ""
+              )}
+              {planB ? (
+                <View className="rounded w-full  flex flex-column items-start">
+                  <Text
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    Plan B
+                  </Text>
+                  {planB}
+                </View>
+              ) : (
+                ""
+              )}
+              {planC ? (
+                <View className="rounded w-full  flex flex-column items-start">
+                  <Text
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    Plan C
+                  </Text>
+                  {planC}
+                </View>
+              ) : (
+                ""
+              )}
+              {planD ? (
+                <View className="rounded w-full  flex flex-column items-start">
+                  <Text
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    Plan D
+                  </Text>
+                  {planD}
+                </View>
+              ) : (
+                ""
+              )}
+              {planE ? (
+                <View className="rounded w-full  flex flex-column items-start">
+                  <Text
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    Plan E
+                  </Text>
+                  {planE}
+                </View>
+              ) : (
+                ""
+              )}
+              {planF ? (
+                <View className="rounded w-full  flex flex-column items-start">
+                  <Text
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    Plan F
+                  </Text>
+                  {planF}
+                </View>
+              ) : (
+                ""
+              )}
+              {planG ? (
+                <View className="rounded w-full  flex flex-column items-start">
+                  <Text
+                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    Plan G
+                  </Text>
+                  {planG}
+                </View>
+              ) : (
+                ""
+              )}
+              <View className="h-36 w-20"></View>
+            </ScrollView>
           );
         });
 
@@ -413,7 +373,7 @@ const TrainingPlan: React.FC = () => {
   const deletePlan = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: ErrorMsg | SuccessMsg = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/deletePlan`,
+      `https://lgym-app-api-v2.vercel.app/api/${id}/deletePlan`,
       {
         method: "DELETE",
       }
@@ -422,53 +382,116 @@ const TrainingPlan: React.FC = () => {
       .catch((err) => err)
       .then((res) => res);
     if (response.msg === "Deleted!") {
-      setYourPlan(withoutPlan);
+      await AsyncStorage.removeItem("plan");
       setIsPlanSet(false);
       setPopUp(<></>);
       setIsPopUpDeleteShowed(false);
-      await AsyncStorage.removeItem("plan");
     }
   };
   const showImportPlanPopUpFn = (): void => {
     setShowImportPlanPopUp(true);
   };
-  const setImportPlan = async (userId: string): Promise<void> => {
-    if (!userId) return;
+  const showPlanConfigPopUp = (): void => {
+    setShowPlanConfig(true);
+  };
+  const showPlanSetPopUp = (): void => {
+    setShowPlanConfig(false);
+    setShowPlanSet(true);
+  };
+  const hideShowPlanSetPopUp = (): void => {
+    setShowPlanSet(false);
+    setViewLoading(true);
+    getUserPlan();
+  };
+  const setImportPlan = async (userName: string): Promise<void> => {
+    if (!userName) return;
     const id = await AsyncStorage.getItem("id");
-    await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/setSharedPlan`, {
+
+    await fetch(`https://lgym-app-api-v2.vercel.app/api/${id}/setSharedPlan`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: userId,
+        userName: userName,
       }),
     })
-      .then((res) => res)
-      .catch((err) => console.log(err));
-    setShowImportPlanPopUp(false);
-    setIsPlanSet(true);
+      .then(() => {
+        setShowImportPlanPopUp(false);
+        setIsPlanSet(true);
+      })
+      .catch((err) => err);
   };
 
-  if (!fontsLoaded) {
-    return <ViewLoading />;
-  }
   return (
-    <ImageBackground
-      className="flex-1 flex justify-center items-center opacity-100 w-[98%] mx-[1%] h-[79%]"
-      source={backgroundLogo}
-    >
-      <View className="h-[99%] relative w-full">
-        {!isPlanSet ? <>{yourPlan}</> : <>{yourPlan}</>}
-        {popUp}
-        {viewLoading ? <ViewLoading /> : ""}
-        {showImportPlanPopUp ? (
-          <ImportPlanPopUp setImportPlan={setImportPlan} />
-        ) : (
-          ""
-        )}
+    <View className="h-[78%] relative w-full bg-[#131313]">
+      <View className="w-full h-[15%] px-4 flex flex-col">
+        {!isPlanSet ? (
+          <View className="flex flex-row w-full justify-around">
+            <TouchableOpacity
+              onPress={showPlanConfigPopUp}
+              className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
+            >
+              <Text
+                className="text-black text-md w-full text-center"
+                style={{
+                  fontFamily: "OpenSans_700Bold",
+                }}
+              >
+                Create plan
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
+              onPress={() => showImportPlanPopUpFn()}
+            >
+              <Text
+                className="text-black text-md w-full text-center"
+                style={{
+                  fontFamily: "OpenSans_700Bold",
+                }}
+              >
+                Import plan
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : <Text></Text>}
+        {isPlanSet ? (
+          <View className="flex flex-row w-full justify-around items-center">
+            <Text
+              className="w-full text-lg text-white  font-bold "
+              style={{
+                fontFamily: "OpenSans_700Bold",
+              }}
+            >
+              Current training plan
+            </Text>
+            <TouchableOpacity onPress={() => setIsPopUpDeleteShowed(true)}>
+              <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete" />
+            </TouchableOpacity>
+          </View>
+        ) : <Text></Text>}
       </View>
-    </ImageBackground>
+      {isPlanSet ? yourPlan : <Text></Text>}
+
+      {popUp}
+      {viewLoading ? <ViewLoading /> : <Text></Text>}
+      {showImportPlanPopUp ? (
+        <ImportPlanPopUp setImportPlan={setImportPlan} />
+      ) : (
+        <Text></Text>
+      )}
+      {showPlanConfig ? (
+        <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} />
+      ) : (
+        <Text></Text>
+      )}
+      {showPlanSet ? (
+        <CreatePlanBody hideShowPlanSetPopUp={hideShowPlanSetPopUp} />
+      ) : (
+        <Text></Text>
+      )}
+    </View>
   );
 };
 export default TrainingPlan;
