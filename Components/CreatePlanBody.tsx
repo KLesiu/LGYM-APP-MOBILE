@@ -18,7 +18,7 @@ const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
     const getPlanConfig = async():Promise<void>=>{
         const id = await AsyncStorage.getItem("id")
         const response:{count:number} =  await fetch(
-            `${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`).then(res=>res.json()).catch(err=>console.log(err))
+            `https://lgym-app-api-v2.vercel.app/api/${id}/configPlan`).then(res=>res.json()).catch(err=>console.log(err))
         setDays(response.count)
         }
     const configCurrentyDay = (day:string)=>{
@@ -58,7 +58,7 @@ const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
             daysToSend.push({trainingDay:`plan${trainingDays[i]}`,exercises: JSON.parse(await AsyncStorage.getItem(trainingDays[i]) as string)})
         }
         const response:{msg:string} =  await fetch(
-            `${process.env.REACT_APP_BACKEND}/api/${id}/setPlan`,{
+            `https://lgym-app-api-v2.vercel.app/api/${id}/setPlan`,{
                 method:'POST',
                 headers: {
                     "Content-Type": "application/json",

@@ -53,7 +53,7 @@ const AddMeasurementsPopUp:React.FC<AddMeasurementsPopUpProps>= (props)=>{
         if(!measurements) return
         const id = await AsyncStorage.getItem("id")
         const response:SuccessMsg | ErrorMsg = await fetch(
-            `${process.env.REACT_APP_BACKEND}/api/measurements/${id}/addNew`,{
+            `https://lgym-app-api-v2.vercel.app/api/measurements/${id}/addNew`,{
                 method:'POST',
                 headers: {
                     "Content-Type": "application/json",

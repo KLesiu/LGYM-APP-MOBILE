@@ -24,7 +24,7 @@ const Menu: React.FC<MenuProps> = (props) => {
   const dateScroll = async (date: any) => {
     const id = await AsyncStorage.getItem("id");
     const response: ErrorMsg | TrainingsDates = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getTrainingDates`,
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getTrainingDates`,
       {
         method: "POST",
         headers: {

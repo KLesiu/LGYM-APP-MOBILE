@@ -26,7 +26,7 @@ const Start: React.FC<StartProps> = (props) => {
   const getTrainingInfo = async () => {
     const id = await AsyncStorage.getItem("id");
     const response: ErrorMsg | Training = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getLastTraining`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getLastTraining`
     )
       .then((res) => res.json())
       .catch((err) => err);
@@ -36,7 +36,7 @@ const Start: React.FC<StartProps> = (props) => {
   const getRankInfo = async () => {
     const id = await AsyncStorage.getItem("id");
     const response: RankInfo = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getInfoAboutRankAndElo`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getInfoAboutRankAndElo`
     )
       .then((res) => res.json())
       .catch((err) => err);

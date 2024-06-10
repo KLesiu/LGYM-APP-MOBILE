@@ -237,7 +237,7 @@ const AddTraining: React.FC = () => {
       setLoading(true);
       const id = await AsyncStorage.getItem("id");
       const trainingDays: number = await fetch(
-        `${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`
+        `https://lgym-app-api-v2.vercel.app/api/${id}/configPlan`
       )
         .then((res) => res.json())
         .catch((err) => err)
@@ -284,7 +284,7 @@ const AddTraining: React.FC = () => {
     setViewLoading(true);
     const id = await AsyncStorage.getItem("id");
     const planOfTheDay: Array<Exercise> | undefined = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getPlan`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getPlan`
     )
       .then((res) => res.json())
       .catch((err) => err)
@@ -312,7 +312,7 @@ const AddTraining: React.FC = () => {
   ): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: { prevSession: LastTrainingSession } | null = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getPrevSessionTraining/${day}`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getPrevSessionTraining/${day}`
     )
       .then((res) => res.json())
       .catch((err) => err)
@@ -451,7 +451,7 @@ const AddTraining: React.FC = () => {
   ): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: { prevSession: LastTrainingSession } | null = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getPrevSessionTraining/${day}`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getPrevSessionTraining/${day}`
     )
       .then((res) => res.json())
       .catch((err) => err)
@@ -962,7 +962,7 @@ const AddTraining: React.FC = () => {
   ): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: addTrainingFetchType = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/addTraining`,
+      `https://lgym-app-api-v2.vercel.app/api/${id}/addTraining`,
       {
         method: "POST",
         headers: {
@@ -1080,7 +1080,7 @@ const AddTraining: React.FC = () => {
   const checkLastTrainingSession = async (day: string): Promise<boolean> => {
     const id = await AsyncStorage.getItem("id");
     const response: SuccessMsg = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/checkPrevSessionTraining/${day}`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/checkPrevSessionTraining/${day}`
     )
       .then((res) => res.json())
       .catch((err) => err)

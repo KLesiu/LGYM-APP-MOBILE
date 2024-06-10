@@ -16,7 +16,7 @@ const Preload: React.FC = () => {
     checkUserSession();
   }, []);
   const checkUserSession = async (): Promise<void> => {
-    const apiURL = `${process.env.REACT_APP_BACKEND}/api/checkToken`;
+    const apiURL = `https://lgym-app-api-v2.vercel.app/api/checkToken`;
     const token = await AsyncStorage.getItem("token");
     if (!token) return;
     const response = await fetch(apiURL, {

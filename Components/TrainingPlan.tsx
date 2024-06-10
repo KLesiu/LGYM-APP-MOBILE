@@ -70,7 +70,7 @@ const TrainingPlan: React.FC = () => {
   const getUserPlan = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: { data: Data | string } = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getPlan`
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getPlan`
     )
       .then((res) => res.json())
       .catch((err) => err)
@@ -373,7 +373,7 @@ const TrainingPlan: React.FC = () => {
   const deletePlan = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: ErrorMsg | SuccessMsg = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/deletePlan`,
+      `https://lgym-app-api-v2.vercel.app/api/${id}/deletePlan`,
       {
         method: "DELETE",
       }
@@ -407,7 +407,7 @@ const TrainingPlan: React.FC = () => {
     if (!userName) return;
     const id = await AsyncStorage.getItem("id");
 
-    await fetch(`${process.env.REACT_APP_BACKEND}/api/${id}/setSharedPlan`, {
+    await fetch(`https://lgym-app-api-v2.vercel.app/api/${id}/setSharedPlan`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

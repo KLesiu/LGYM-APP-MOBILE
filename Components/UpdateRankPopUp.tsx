@@ -20,7 +20,7 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
   const getRank = async () => {
     const id = await AsyncStorage.getItem("id");
     const response: SuccessMsg = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/userInfo/${id}/userElo`
+      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/userElo`
     ).then((res) => res.json());
     setRank(response.msg);
     if (response.msg === "Junior 1") setSrcRank(Ranks.Junior1);

@@ -18,7 +18,7 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const apiURL = `${process.env.REACT_APP_BACKEND}/api/register`;
+  const apiURL = `https://lgym-app-api-v2.vercel.app/api/register`;
   const register = async (): Promise<void> => {
     if (password !== rpassword)
       return setErrors([{ msg: "Both passwords need to be same" }]);
@@ -40,7 +40,7 @@ const Register: React.FC = () => {
       .then((res) => res.json())
       .catch((err) => err)
       .then((res) => {
-        if (res.msg === `${process.env.REACT_APP_MSG_REGISTER_CREATE}`) {
+        if (res.msg === `User created successfully!`) {
           setErrors([]);
           return res.msg;
         } else return res;

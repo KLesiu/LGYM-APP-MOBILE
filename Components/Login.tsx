@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [secureTextEntry,setSecureTextEntry]=useState<boolean>(true)
-  const apiURL = `${process.env.REACT_APP_BACKEND}/api/login`;
+  const apiURL = `https://lgym-app-api-v2.vercel.app/api/login`;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -62,7 +62,7 @@ const Login: React.FC = () => {
           }
         });
 
-      if (response === `${process.env.REACT_APP_MSG_LOGIN_AUTH}`) {
+      if (response === `Authorized`) {
         setErrors([]);
         setLoading(false);
         navigation.navigate("Home");

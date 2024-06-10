@@ -20,7 +20,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     const bpValue = parseFloat(benchPressValue!);
     const id = await AsyncStorage.getItem("id");
     const response: string = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/userRecords`,
+      `https://lgym-app-api-v2.vercel.app/api/userRecords`,
       {
         method: "POST",
         headers: {

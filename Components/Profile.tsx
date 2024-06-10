@@ -46,7 +46,7 @@ const Profile: React.FC = () => {
   const getUserEloPoints = async():Promise<void> =>{
     const id = await AsyncStorage.getItem('id')
     const response =  await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/userInfo/${id}/getUserEloPoints`).then(res=>res.json()).catch(err=>err)
+      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/getUserEloPoints`).then(res=>res.json()).catch(err=>err)
     if("elo" in response){
       setProfileElo(response.elo)
     }
@@ -58,7 +58,7 @@ const Profile: React.FC = () => {
   }
   const checkMoreUserInfo = async (id: string): Promise<void> => {
     const response: "Didnt find" | UserInfo = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/userInfo/${id}`
+      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}`
     )
       .then((res) => res.json())
       .then((res) => res);

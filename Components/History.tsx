@@ -26,7 +26,7 @@ const History: React.FC<HistoryProps> = (props) => {
     if (!date) return;
     const id = await AsyncStorage.getItem("id");
     const response: ErrorMsg | Training = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/getTraining`,
+      `https://lgym-app-api-v2.vercel.app/api/${id}/getTraining`,
       {
         method: "POST",
         headers: {

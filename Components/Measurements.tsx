@@ -20,7 +20,7 @@ const Measurements: React.FC = () => {
     const id = await AsyncStorage.getItem("id");
     let holderForResponse:MeasurementForm
     const response: MeasurementForm = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/measurements/${id}/getLast`
+      `https://lgym-app-api-v2.vercel.app/api/measurements/${id}/getLast`
     )
       .then((res) => res.json())
       .catch((err) => err);

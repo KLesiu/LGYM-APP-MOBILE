@@ -11,7 +11,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
     if(!planName || !numberOfDays) return setError("All fields are required")
     const id = await  AsyncStorage.getItem("id")
     const response: { msg:string } = await fetch(
-        `${process.env.REACT_APP_BACKEND}/api/${id}/configPlan`
+        `https://lgym-app-api-v2.vercel.app/api/${id}/configPlan`
       ,{
         method:'POST',
         headers: {
