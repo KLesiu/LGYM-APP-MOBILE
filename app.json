@@ -2,7 +2,7 @@
   "expo": {
     "name": "LGYM-APP",
     "slug": "lgym-app-mobile",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "orientation": "portrait",
     "icon": "./assets/logoLGYMPlay.png",
     "userInterfaceStyle": "dark",
@@ -24,7 +24,7 @@
         "backgroundColor": "#ffffff"
       },
       "buildToolsVersion": "34.0.0",
-      "versionCode": 3,
+      "versionCode": 4,
       "package": "com.lesiuuu.lgymappmobile"
     },
     "web": {
