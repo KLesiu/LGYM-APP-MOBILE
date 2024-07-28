@@ -10,6 +10,7 @@ import { RankInfo } from "./types/UserInfo";
 import ProfileRank from "./ProfileRank";
 import ProgressBar from "./ProgressBar";
 import ViewLoading from "./ViewLoading";
+import UsersRanking from "./UsersRanking";
 
 const Start: React.FC<StartProps> = (props) => {
   const [lastTrainingInfo, setLastTrainingInfo] =
@@ -17,9 +18,9 @@ const Start: React.FC<StartProps> = (props) => {
   const [rankInfo, setRankInfo] = useState<RankInfo>();
   const [error, setError] = useState<string>("");
   const [progress, setProgress] = useState<number>();
-  const [viewLoading,setViewLoading]=useState<boolean>(false)
+  const [viewLoading, setViewLoading] = useState<boolean>(false);
   useEffect(() => {
-    setViewLoading(true)
+    setViewLoading(true);
     getTrainingInfo();
     getRankInfo();
   }, []);
@@ -44,9 +45,8 @@ const Start: React.FC<StartProps> = (props) => {
     setRankInfo(response);
     const scale: number = response.nextRankElo - response.startRankElo;
     const upperElo: number = response.elo - response.startRankElo;
-    setProgress(Math.round((upperElo / scale)*100));
-    setViewLoading(false)
-
+    setProgress(Math.round((upperElo / scale) * 100));
+    setViewLoading(false);
   };
   const navigateTo = (component: JSX.Element) => {
     props.viewChange(component);
@@ -100,7 +100,7 @@ const Start: React.FC<StartProps> = (props) => {
             </Text>
           </Pressable>
         </View>
-        <View className="flex w-full flex-row justify-between bg-[#1E1E1E73] items-center p-4 rounded-lg" >
+        <View className="flex w-full flex-row justify-between bg-[#1E1E1E73] items-center p-4 rounded-lg">
           <View>
             <Text
               className="text-[#4CD964] text-xl"
@@ -114,9 +114,14 @@ const Start: React.FC<StartProps> = (props) => {
                   className="text-white text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
-                  Current Rank: {rankInfo?.rank} 
+                  Current Rank: {rankInfo?.rank}
                 </Text>
-                <Text className="text-white text-sm" style={{fontFamily:'OpenSans_400Regular'}}>Elo: ({rankInfo?.elo})</Text>
+                <Text
+                  className="text-white text-sm"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  Elo: ({rankInfo?.elo})
+                </Text>
                 <Text
                   className="text-white text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
@@ -125,9 +130,7 @@ const Start: React.FC<StartProps> = (props) => {
                 </Text>
               </View>
               {rankInfo && progress ? (
-                <ProgressBar
-                width={progress}
-                />
+                <ProgressBar width={progress} />
               ) : (
                 <Text></Text>
               )}
@@ -141,8 +144,11 @@ const Start: React.FC<StartProps> = (props) => {
           </View>
           <ProfileRank />
         </View>
+        <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg">
+          <UsersRanking />
+        </View>
       </View>
-      {viewLoading?<ViewLoading/>:<Text></Text>}
+      {viewLoading ? <ViewLoading /> : <Text></Text>}
     </View>
   );
 };
