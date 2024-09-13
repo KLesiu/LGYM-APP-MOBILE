@@ -12,6 +12,8 @@ import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanBody from "./CreatePlanBody";
 
 const TrainingPlan: React.FC = () => {
+  const apiURL = `${process.env.REACT_APP_BACKEND}`
+  const [planConfig,setPlanConfig]= useState<{name:string,trainingDays:number,_id:string}>()
   const [yourPlan, setYourPlan] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [isPlanSet, setIsPlanSet] = useState<boolean>(false);
@@ -21,12 +23,12 @@ const TrainingPlan: React.FC = () => {
   const [showImportPlanPopUp, setShowImportPlanPopUp] =
     useState<boolean>(false);
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
-  const [showPlanSet, setShowPlanSet] = useState<boolean>(false);
   useEffect(() => {
     setViewLoading(true);
     getUserPlan();
   }, [isPlanSet]);
   useEffect(() => {
+    getUserPlanConfig()
     if (isPopUpDeleteShowed) {
       setPopUp(
         <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
@@ -70,7 +72,7 @@ const TrainingPlan: React.FC = () => {
   const getUserPlan = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: { data: Data | string } = await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/${id}/getPlan`
+      `${apiURL}api/${id}/getPlan`
     )
       .then((res) => res.json())
       .catch((err) => err)
@@ -396,11 +398,6 @@ const TrainingPlan: React.FC = () => {
   };
   const showPlanSetPopUp = (): void => {
     setShowPlanConfig(false);
-    setShowPlanSet(true);
-  };
-  const hideShowPlanSetPopUp = (): void => {
-    setShowPlanSet(false);
-    setViewLoading(true);
     getUserPlan();
   };
   const setImportPlan = async (userName: string): Promise<void> => {
@@ -422,6 +419,12 @@ const TrainingPlan: React.FC = () => {
       })
       .catch((err) => err);
   };
+  const getUserPlanConfig = async():Promise<void>=>{
+    const id = await AsyncStorage.getItem("id");
+    const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`).then(res=>res.json()).catch(err=>err)
+    if(Object.keys(response)[0] === 'msg')return;
+    setPlanConfig(response)
+  }
 
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
@@ -472,8 +475,6 @@ const TrainingPlan: React.FC = () => {
           </View>
         ) : <Text></Text>}
       </View>
-      {isPlanSet ? yourPlan : <Text></Text>}
-
       {popUp}
       {viewLoading ? <ViewLoading /> : <Text></Text>}
       {showImportPlanPopUp ? (
@@ -483,11 +484,6 @@ const TrainingPlan: React.FC = () => {
       )}
       {showPlanConfig ? (
         <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} />
-      ) : (
-        <Text></Text>
-      )}
-      {showPlanSet ? (
-        <CreatePlanBody hideShowPlanSetPopUp={hideShowPlanSetPopUp} />
       ) : (
         <Text></Text>
       )}

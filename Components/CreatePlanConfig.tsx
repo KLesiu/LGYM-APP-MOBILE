@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { View, Text ,TextInput,  Pressable} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "./helpers/numberValidator";
@@ -7,18 +7,19 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   const [planName,setPlanName]=useState<string>('')
   const [numberOfDays,setNumberOfDays]=useState<string>('')
   const [error,setError]=useState<string>()
+  
   const sendConfig = async ():Promise<void>=>{
     if(!planName || !numberOfDays) return setError("All fields are required")
     const id = await  AsyncStorage.getItem("id")
     const response: { msg:string } = await fetch(
-        `https://lgym-app-api-v2.vercel.app/api/${id}/configPlan`
+        `${process.env.REACT_APP_BACKEND}/api/${id}/createPlan`
       ,{
         method:'POST',
         headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            days: numberOfDays,
+            trainingDays: numberOfDays,
             name:planName
           }),
         
