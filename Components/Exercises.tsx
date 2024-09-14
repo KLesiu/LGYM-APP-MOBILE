@@ -35,6 +35,11 @@ const Exercises: React.FC<StartProps> = (props) => {
     setSelectedExercise(exercise)
     setIsExerciseDetailsVisible(true)
   }
+  const closeExerciseDetails = async(): Promise<void> => {
+    setIsExerciseDetailsVisible(false)
+    setSelectedExercise(undefined)
+    await getAllUserExercises()
+  }
 
   const getAllUserExercises = async () => {
     const id = await AsyncStorage.getItem("id");
@@ -69,6 +74,7 @@ const Exercises: React.FC<StartProps> = (props) => {
                   return (
                     <Pressable
                       key={index}
+                      onPress={()=>showExerciseDetails(exercise)}
                       className="flex flex-col w-[48%] rounded-lg bg-[#4cd963b6] p-2  "
                     >
                       <Text
@@ -159,7 +165,7 @@ const Exercises: React.FC<StartProps> = (props) => {
       ) : (
         <Text></Text>
       )}
-      {isExerciseDetailsVisible && selectedExercise? <ExerciseDetails exercise={selectedExercise} /> : <Text></Text>}
+      {isExerciseDetailsVisible && selectedExercise? <ExerciseDetails hideDetails={closeExerciseDetails} exercise={selectedExercise} /> : <Text></Text>}
     </View>
   );
 };

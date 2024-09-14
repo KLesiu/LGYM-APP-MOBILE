@@ -13,11 +13,14 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [bodyPart, setBodyPart] = useState<BodyParts>();
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>();
+  const [isAdmin,setIsAdmin] = useState<boolean>(false)
   const [bodyPartsToSelect, setBodyPartsToSelect] = useState<DropdownItem[]>(
     []
   );
 
   useEffect(() => {
+    console.log(props.form)
+    checkIsAdmin()
     if (props.form) {
       setExerciseName(props.form.name);
       setBodyPart(props.form.bodyPart as BodyParts);
@@ -29,6 +32,20 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const handleSelectBodyPart = (item: { label: string; value: string }) => {
     setBodyPart(item.value as BodyParts);
   };
+
+  const checkIsAdmin = async (): Promise<void> => {
+    const id = await AsyncStorage.getItem("id");
+    const response = await fetch(`${API_URL}/api/isAdmin`,{
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ _id: id }),
+    })
+      .then((res) => res.json())
+      .catch((err) => err);
+    setIsAdmin(response)
+  }
 
   const createExercise = async (): Promise<void> => {
     if (!exerciseName || !bodyPart)
@@ -74,7 +91,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     )
       .then((res) => res.json())
       .catch((err) => err);
-    if (response.msg === Message.Updated) console.log("updated");
+    if (response.msg === Message.Updated && props.closeForm) props.closeForm();
     else setError(response.msg);
   };
 
@@ -90,12 +107,13 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
 
   return (
     <View>
-      <Text
+      {!props.form? <Text
         className="text-3xl text-white text-center border-b-2 border-[#4CD964] w-full p-4 "
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         New Exercise
-      </Text>
+      </Text>:<Text></Text>}
+     
       <View className="flex flex-col gap-2 p-2">
         <View className="flex flex-col gap-2">
           <Text
@@ -109,6 +127,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             className="bg-white h-8  text-black "
             onChangeText={(text: string) => setExerciseName(text)}
             value={exerciseName}
+         
           />
         </View>
         <View className="flex flex-col gap-2">
