@@ -9,7 +9,6 @@ import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 import ImportPlanPopUp from "./ImportPlanPopUp";
 import CreatePlanConfig from "./CreatePlanConfig";
-import CreatePlanBody from "./CreatePlanBody";
 
 const TrainingPlan: React.FC = () => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`
@@ -25,50 +24,51 @@ const TrainingPlan: React.FC = () => {
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
   useEffect(() => {
     setViewLoading(true);
-    getUserPlan();
-  }, [isPlanSet]);
-  useEffect(() => {
     getUserPlanConfig()
-    if (isPopUpDeleteShowed) {
-      setPopUp(
-        <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
-          <Text
-            className="text-4xl text-gray-200"
-            style={{
-              fontFamily: "OpenSans_300Light",
-            }}
-          >
-            Are you sure?
-          </Text>
-          <TouchableOpacity
-            onPress={deletePlan}
-            className="w-1/2 h-24 bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
-          >
-            <Text
-              className="text-2xl"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              YES
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setPopUp(<></>);
-              setIsPopUpDeleteShowed(false);
-            }}
-            className="w-1/2 h-24 bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
-          >
-            <Text
-              className="text-2xl"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              NO
-            </Text>
-          </TouchableOpacity>
-        </View>
-      );
-    }
-  }, [isPopUpDeleteShowed]);
+    // getUserPlan();
+  }, [isPlanSet]);
+  // useEffect(() => {
+  //   
+  //   if (isPopUpDeleteShowed) {
+  //     setPopUp(
+  //       <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
+  //         <Text
+  //           className="text-4xl text-gray-200"
+  //           style={{
+  //             fontFamily: "OpenSans_300Light",
+  //           }}
+  //         >
+  //           Are you sure?
+  //         </Text>
+  //         <TouchableOpacity
+  //           onPress={deletePlan}
+  //           className="w-1/2 h-24 bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
+  //         >
+  //           <Text
+  //             className="text-2xl"
+  //             style={{ fontFamily: "OpenSans_700Bold" }}
+  //           >
+  //             YES
+  //           </Text>
+  //         </TouchableOpacity>
+  //         <TouchableOpacity
+  //           onPress={() => {
+  //             setPopUp(<></>);
+  //             setIsPopUpDeleteShowed(false);
+  //           }}
+  //           className="w-1/2 h-24 bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
+  //         >
+  //           <Text
+  //             className="text-2xl"
+  //             style={{ fontFamily: "OpenSans_700Bold" }}
+  //           >
+  //             NO
+  //           </Text>
+  //         </TouchableOpacity>
+  //       </View>
+  //     );
+  //   }
+  // }, [isPopUpDeleteShowed]);
   const getUserPlan = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response: { data: Data | string } = await fetch(
@@ -424,12 +424,13 @@ const TrainingPlan: React.FC = () => {
     const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`).then(res=>res.json()).catch(err=>err)
     if(Object.keys(response)[0] === 'msg')return;
     setPlanConfig(response)
+    setViewLoading(false)
   }
 
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
       <View className="w-full h-[15%] px-4 flex flex-col">
-        {!isPlanSet ? (
+        {!planConfig ? (
           <View className="flex flex-row w-full justify-around">
             <TouchableOpacity
               onPress={showPlanConfigPopUp}
@@ -459,7 +460,7 @@ const TrainingPlan: React.FC = () => {
             </TouchableOpacity>
           </View>
         ) : <Text></Text>}
-        {isPlanSet ? (
+        {planConfig && Object.keys(planConfig).length ? (
           <View className="flex flex-row w-full justify-around items-center">
             <Text
               className="w-full text-lg text-white  font-bold "
