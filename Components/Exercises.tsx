@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { ExerciseForm } from "./interfaces/Exercise";
 import ViewLoading from "./ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CreateExercise from "./CreateExercise";
 
 const Exercises: React.FC<StartProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
   const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
   const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isExerciseFormVisible, setIsExerciseFormVisible] = useState<boolean>(false)
 
   useEffect(() => {
     setIsLoading(true);
@@ -35,8 +37,11 @@ const Exercises: React.FC<StartProps> = (props) => {
     setUserExercises(response);
     setIsLoading(false);
   };
+  const openExerciseForm=():void=>{
+    setIsExerciseFormVisible(true)
+  }
   return (
-    <View className="flex flex-1 flex-col gap-2 p-4">
+    <View className="flex flex-1 flex-col gap-2 p-4 relative">
       {isLoading ? <ViewLoading /> : <Text></Text>}
       <View className="flex flex-col gap-2">
         <Text
@@ -89,7 +94,7 @@ const Exercises: React.FC<StartProps> = (props) => {
           >
             User exercises:
           </Text>
-          <Pressable  className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg">
+          <Pressable onPress={openExerciseForm}  className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg">
             <Text
               className="text-base text-black  font-bold "
               style={{
@@ -131,6 +136,7 @@ const Exercises: React.FC<StartProps> = (props) => {
             </View>
           </ScrollView>
       </View>
+      {isExerciseFormVisible? <CreateExercise closeForm={()=>setIsExerciseFormVisible(false)}/> : <Text></Text>}
     </View>
   );
 };

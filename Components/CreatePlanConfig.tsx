@@ -3,6 +3,7 @@ import { View, Text ,TextInput,  Pressable} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "./helpers/numberValidator";
 import CreatePlanConfigProps from "./props/CreatePlanConfigProps";
+import ResponseMessage from "./interfaces/ResponseMessage";
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   const [planName,setPlanName]=useState<string>('')
   const [numberOfDays,setNumberOfDays]=useState<string>('')
@@ -11,7 +12,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   const sendConfig = async ():Promise<void>=>{
     if(!planName || !numberOfDays) return setError("All fields are required")
     const id = await  AsyncStorage.getItem("id")
-    const response: { msg:string } = await fetch(
+    const response: ResponseMessage = await fetch(
         `${process.env.REACT_APP_BACKEND}/api/${id}/createPlan`
       ,{
         method:'POST',
