@@ -18,6 +18,11 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   );
 
   useEffect(() => {
+    if (props.form) {
+      setExerciseName(props.form.name);
+      setBodyPart(props.form.bodyPart as BodyParts);
+      setDescription(props.form.description);
+    }
     getBodyParts();
   }, []);
 
@@ -45,9 +50,34 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     )
       .then((res) => res.json())
       .catch((err) => err);
-    if (response.msg === Message.Created) props.closeForm();
+    if (response.msg === Message.Created && props.closeForm) props.closeForm();
     else setError(response.msg);
   };
+
+  const updateExercise = async (): Promise<void> => {
+    if (!exerciseName || !bodyPart)
+      return setError("Name and body part are required!");
+    const response: ResponseMessage = await fetch(
+      `${API_URL}/api/exercise/updateExercise`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          _id: props.form?._id,
+          name: exerciseName,
+          bodyPart: bodyPart,
+          description: description,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .catch((err) => err);
+    if (response.msg === Message.Updated) console.log("updated");
+    else setError(response.msg);
+  };
+
   const getBodyParts = () => {
     const array: DropdownItem[] = Object.values(BodyParts).map((item) => {
       return {
@@ -59,7 +89,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   };
 
   return (
-    <View className="absolute h-full w-[95%] flex flex-col  bg-black  top-0 z-30 p-4 gap-2">
+    <View>
       <Text
         className="text-3xl text-white text-center border-b-2 border-[#4CD964] w-full p-4 "
         style={{ fontFamily: "OpenSans_700Bold" }}
@@ -90,6 +120,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           </Text>
           <View>
             <CustomDropdown
+            value={bodyPart}
               data={bodyPartsToSelect}
               onSelect={handleSelectBodyPart}
             />
@@ -112,16 +143,42 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         </View>
       </View>
       <View className="flex flex-row justify-center">
-        <Pressable
-          onPress={createExercise}
-          className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
-        >
-          <Text className="text-xl" style={{ fontFamily: "OpenSans_700Bold" }}>
-            Create
-          </Text>
-        </Pressable>
+        {props.form ? (
+          <Pressable
+            onPress={updateExercise}
+            className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
+          >
+            <Text
+              className="text-xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              Update
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            onPress={createExercise}
+            className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
+          >
+            <Text
+              className="text-xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              Create
+            </Text>
+          </Pressable>
+        )}
       </View>
-      {error?<Text style={{fontFamily:'OpenSans_300Light'}} className="text-red-500 text-lg">{error}</Text>:''}
+      {error ? (
+        <Text
+          style={{ fontFamily: "OpenSans_300Light" }}
+          className="text-red-500 text-lg"
+        >
+          {error}
+        </Text>
+      ) : (
+        ""
+      )}
     </View>
   );
 };

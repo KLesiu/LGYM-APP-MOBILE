@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
 
 // Typy dla elementów w dropdownie
@@ -9,13 +9,22 @@ export interface DropdownItem {
 
 // Typy dla propsów komponentu CustomDropdown
 interface CustomDropdownProps {
-  data: DropdownItem[];
-  onSelect: (item: DropdownItem) => void;
+  data: DropdownItem[];          // Lista dostępnych opcji
+  value?: string | null;         // Wartość, którą można wstrzyknąć z zewnątrz
+  onSelect: (item: DropdownItem) => void; // Funkcja obsługująca wybór
 }
 
-const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, onSelect }) => {
+const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }) => {
   const [isVisible, setIsVisible] = useState(false); // kontroluje widoczność dropdownu
   const [selectedItem, setSelectedItem] = useState<DropdownItem | null>(null); // kontroluje wybrany element
+
+  // Efekt, który synchronizuje wewnętrzny stan z wartością przekazaną z zewnątrz
+  useEffect(() => {
+    if (value) {
+      const selected = data.find(item => item.value === value);
+      setSelectedItem(selected || null);
+    }
+  }, [value, data]);
 
   const toggleDropdown = () => {
     setIsVisible(!isVisible);

@@ -1,3 +1,6 @@
+import { ExerciseForm } from "../interfaces/Exercise";
+
 export default interface CreateExerciseProps{
-    closeForm: ()=>void
+    closeForm?: ()=>void,
+    form?: ExerciseForm
 }
