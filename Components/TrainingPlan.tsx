@@ -1,4 +1,10 @@
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import { useState, useEffect } from "react";
 import Data from "./types/DataPlansArrays";
 import Exercise from "./types/Exercise";
@@ -11,8 +17,12 @@ import ImportPlanPopUp from "./ImportPlanPopUp";
 import CreatePlanConfig from "./CreatePlanConfig";
 
 const TrainingPlan: React.FC = () => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`
-  const [planConfig,setPlanConfig]= useState<{name:string,trainingDays:number,_id:string}>()
+  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+  const [planConfig, setPlanConfig] = useState<{
+    name: string;
+    trainingDays: number;
+    _id: string;
+  }>();
   const [yourPlan, setYourPlan] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [isPlanSet, setIsPlanSet] = useState<boolean>(false);
@@ -24,11 +34,11 @@ const TrainingPlan: React.FC = () => {
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
   useEffect(() => {
     setViewLoading(true);
-    getUserPlanConfig()
+    getUserPlanConfig();
     // getUserPlan();
   }, [isPlanSet]);
   // useEffect(() => {
-  //   
+  //
   //   if (isPopUpDeleteShowed) {
   //     setPopUp(
   //       <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
@@ -80,17 +90,16 @@ const TrainingPlan: React.FC = () => {
     if (response.data === "Didnt find") {
       setIsPlanSet(false);
     } else {
-      const data:Data = response.data as Data;
-      const dataKeys = Object.keys(data)
-      let isPlanEmpty = true
-      dataKeys.forEach((ele:string)=>{
-        if(data[ele].length>0){
-          isPlanEmpty=false
+      const data: Data = response.data as Data;
+      const dataKeys = Object.keys(data);
+      let isPlanEmpty = true;
+      dataKeys.forEach((ele: string) => {
+        if (data[ele].length > 0) {
+          isPlanEmpty = false;
         }
-      })
-      isPlanEmpty?deletePlan():null
-      
-      
+      });
+      isPlanEmpty ? deletePlan() : null;
+
       if (typeof data !== "string") {
         const planA =
           data.planA.length > 0
@@ -419,13 +428,15 @@ const TrainingPlan: React.FC = () => {
       })
       .catch((err) => err);
   };
-  const getUserPlanConfig = async():Promise<void>=>{
+  const getUserPlanConfig = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`).then(res=>res.json()).catch(err=>err)
-    if(Object.keys(response)[0] === 'msg')return;
-    setPlanConfig(response)
-    setViewLoading(false)
-  }
+    const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
+      .then((res) => res.json())
+      .catch((err) => err);
+    if (Object.keys(response)[0] === "msg") return;
+    setPlanConfig(response);
+    setViewLoading(false);
+  };
 
   return (
     <View className="h-[78%] relative w-full bg-[#131313]">
@@ -459,22 +470,43 @@ const TrainingPlan: React.FC = () => {
               </Text>
             </TouchableOpacity>
           </View>
-        ) : <Text></Text>}
+        ) : (
+          <Text></Text>
+        )}
         {planConfig && Object.keys(planConfig).length ? (
-          <View className="flex flex-row w-full justify-around items-center">
-            <Text
-              className="w-full text-lg text-white  font-bold "
-              style={{
-                fontFamily: "OpenSans_700Bold",
-              }}
-            >
-              Current training plan
-            </Text>
-            <TouchableOpacity onPress={() => setIsPopUpDeleteShowed(true)}>
-              <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete" />
-            </TouchableOpacity>
+          <View className="flex flex-col gap-4 items-center">
+            <View className="flex flex-row w-full justify-around items-center">
+              <Text
+                className="w-full text-lg text-white  font-bold "
+                style={{
+                  fontFamily: "OpenSans_700Bold",
+                }}
+              >
+                Current training plan: {planConfig.name}
+              </Text>
+              <TouchableOpacity onPress={() => setIsPopUpDeleteShowed(true)}>
+                <Icon
+                  style={{ color: "#de161d", fontSize: 30 }}
+                  name="delete"
+                />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <Pressable className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg">
+                <Text
+                  className="text-lg text-white"
+                  style={{
+                    fontFamily: "OpenSans_700Bold",
+                  }}
+                >
+                  Add plan day
+                </Text>
+              </Pressable>
+            </View>
           </View>
-        ) : <Text></Text>}
+        ) : (
+          <Text></Text>
+        )}
       </View>
       {popUp}
       {viewLoading ? <ViewLoading /> : <Text></Text>}
