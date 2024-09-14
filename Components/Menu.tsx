@@ -5,10 +5,12 @@ import History from "./History";
 import AddTraining from "./AddTraining";
 import Profile from "./Profile";
 import Start from "./Start";
+import Exercises from "./Exercises";
 import home from "./img/icons/home.png";
 import profile from "./img/icons/profile.png";
 import history from "./img/icons/history.png";
 import addTraining from "./img/icons/add.png";
+import exercise from "./img/icons/exercises.png"
 import plan from "./img/icons/plan.png";
 import { MarkedDates, TrainingsDates } from "./types/Training";
 import ErrorMsg from "./types/ErrorMsg";
@@ -49,25 +51,35 @@ const Menu: React.FC<MenuProps> = (props) => {
     setTrainingsDates(markedDates)
   };
   return (
-    <View className="bg-[#131313] smh:h-20 lgh:h-32 py-3  w-[99%]">
+    <View className="bg-[#131313] smh:h-24 lgh:h-36 py-3  w-[99%]">
+      <View className="flex justify-center flex-row w-full h-14">
+      <View className="flex flex-col justify-center w-[16%]">
+          <TouchableOpacity
+            onPress={() => props.viewChange(<AddTraining />)}
+            className="items-center  flex h-full justify-center flex-row w-full"
+          >
+            <Image source={addTraining} className="w-14 h-14" />
+          </TouchableOpacity>
+        </View>
+      </View>
       <View className="flex justify-between h-14 flex-row">
-        <View className="flex flex-col justify-center w-[19.9%]">
+        <View className="flex flex-col justify-center w-[16%]">
           <TouchableOpacity
             onPress={() =>
-              props.viewChange(<Start viewChange={props.viewChange} />)
+              props.viewChange(<Exercises viewChange={props.viewChange} />)
             }
             className="items-center  flex h-full justify-center flex-col w-full"
           >
-            <Image className="w-6 h-6" source={home} />
+            <Image className="w-6 h-6" source={exercise} />
             <Text
               className="text-xs  text-gray-200/80 font-light leading-4"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Start
+              Exercises
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="flex flex-col justify-center w-[19.9%]">
+        <View className="flex flex-col justify-center w-[16%]">
           <TouchableOpacity
             onPress={() => props.viewChange(<TrainingPlan />)}
             className="items-center  flex h-full justify-center flex-col w-full"
@@ -81,15 +93,8 @@ const Menu: React.FC<MenuProps> = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="flex flex-col justify-center w-[19.9%]">
-          <TouchableOpacity
-            onPress={() => props.viewChange(<AddTraining />)}
-            className="items-center  flex h-full justify-center flex-row w-full"
-          >
-            <Image source={addTraining} className="w-14 h-14" />
-          </TouchableOpacity>
-        </View>
-        <View className="flex flex-col justify-center w-[19.9%]">
+     
+        <View className="flex flex-col justify-center w-[16%]">
           <TouchableOpacity
             onPress={() => props.viewChange(<History trainingsDates={trainingsDates} />)}
             className="items-center  flex h-full justify-center flex-col w-full"
@@ -103,7 +108,21 @@ const Menu: React.FC<MenuProps> = (props) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View className="flex flex-col justify-center w-[19.9%]">
+        <View className="flex flex-col justify-center w-[16%]">
+          <TouchableOpacity
+            onPress={() => props.viewChange(<Start viewChange={props.viewChange} />)}
+            className="items-center  flex h-full justify-center flex-col w-full"
+          >
+            <Image source={home} className="w-6 h-6" />
+            <Text
+              className="leading-4 text-xs text-gray-200/80 font-light"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Home
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View className="flex flex-col justify-center w-[16%]">
           <TouchableOpacity
             onPress={() => props.viewChange(<Profile />)}
             className="items-center  flex h-full justify-center flex-col w-full"

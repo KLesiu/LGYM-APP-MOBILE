@@ -494,7 +494,7 @@ const TrainingPlan: React.FC = () => {
             <View>
               <Pressable className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg">
                 <Text
-                  className="text-lg text-white"
+                  className="text-lg text-black"
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
