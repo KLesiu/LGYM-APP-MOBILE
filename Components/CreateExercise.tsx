@@ -13,18 +13,20 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [bodyPart, setBodyPart] = useState<BodyParts>();
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>();
-  const [isAdmin,setIsAdmin] = useState<boolean>(false)
+  const [isBlocked,setIsBlocked] = useState<boolean>(false)
   const [bodyPartsToSelect, setBodyPartsToSelect] = useState<DropdownItem[]>(
     []
   );
 
   useEffect(() => {
-    console.log(props.form)
-    checkIsAdmin()
     if (props.form) {
+      
       setExerciseName(props.form.name);
       setBodyPart(props.form.bodyPart as BodyParts);
       setDescription(props.form.description);
+      if(!props.form.user){
+        checkIsBlocked()
+      }
     }
     getBodyParts();
   }, []);
@@ -33,7 +35,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     setBodyPart(item.value as BodyParts);
   };
 
-  const checkIsAdmin = async (): Promise<void> => {
+  const checkIsBlocked = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${API_URL}/api/isAdmin`,{
       method: "POST",
@@ -44,7 +46,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     })
       .then((res) => res.json())
       .catch((err) => err);
-    setIsAdmin(response)
+    setIsBlocked(!response)
   }
 
   const createExercise = async (): Promise<void> => {
@@ -127,6 +129,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             className="bg-white h-8  text-black "
             onChangeText={(text: string) => setExerciseName(text)}
             value={exerciseName}
+            readOnly={isBlocked}
          
           />
         </View>
@@ -138,11 +141,12 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             BodyPart:
           </Text>
           <View>
+            {isBlocked?<Text style={{ fontFamily: "OpenSans_400Regular" }} className="text-white text-lg">{bodyPart}</Text>:
             <CustomDropdown
             value={bodyPart}
               data={bodyPartsToSelect}
               onSelect={handleSelectBodyPart}
-            />
+            />}
           </View>
         </View>
         <View className="flex flex-col gap-2">
@@ -158,6 +162,8 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             multiline
             onChangeText={(text: string) => setDescription(text)}
             value={description}
+            readOnly={isBlocked}
+
           />
         </View>
       </View>
