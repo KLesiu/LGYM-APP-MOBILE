@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView, Pressable,FlatList } from "react-native";
 import StartProps from "./props/StartProps";
 import { useEffect, useState } from "react";
 import { ExerciseForm } from "./interfaces/Exercise";
@@ -40,7 +40,29 @@ const Exercises: React.FC<StartProps> = (props) => {
     setSelectedExercise(undefined)
     await getAllUserExercises()
   }
-
+  const renderExerciseItem = ({ item }: { item: ExerciseForm }) => (
+    <Pressable
+      onPress={() => showExerciseDetails(item)}
+      className="flex flex-col w-36 rounded-lg bg-[#4cd963b6] p-2  "
+    >
+      <Text
+        className="text-base text-white font-bold"
+        style={{
+          fontFamily: "OpenSans_700Bold",
+        }}
+      >
+        {item.name}
+      </Text>
+      <Text
+        className="text-sm text-black"
+        style={{
+          fontFamily: "OpenSans_400Regular",
+        }}
+      >
+        BodyPart: {item.bodyPart}
+      </Text>
+    </Pressable>
+  );
   const getAllUserExercises = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
@@ -68,36 +90,15 @@ const Exercises: React.FC<StartProps> = (props) => {
             Global exercises:
           </Text>
           <View className=" flex flex-col ">
-            <ScrollView className="smh:h-20 mdh:h-36">
-              <View className="flex flex-row flex-wrap gap-1">
-                {globalExercises.map((exercise, index) => {
-                  return (
-                    <Pressable
-                      key={index}
-                      onPress={()=>showExerciseDetails(exercise)}
-                      className="flex flex-col w-[48%] rounded-lg bg-[#4cd963b6] p-2  "
-                    >
-                      <Text
-                        className="text-base text-white font-bold"
-                        style={{
-                          fontFamily: "OpenSans_700Bold",
-                        }}
-                      >
-                        {exercise.name}
-                      </Text>
-                      <Text
-                        className="text-sm text-black  "
-                        style={{
-                          fontFamily: "OpenSans_400Regular",
-                        }}
-                      >
-                        BodyPart: {exercise.bodyPart}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
-            </ScrollView>
+            <FlatList
+            data={globalExercises}
+            renderItem={renderExerciseItem}
+            keyExtractor={(item) => `${item._id}`}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingVertical: 10 }}
+            ItemSeparatorComponent={() => <View style={{ width: 4 }} />} // odstępy między elementami
+          />
           </View>
         </View>
         <View className="flex flex-col gap-2">
@@ -124,37 +125,15 @@ const Exercises: React.FC<StartProps> = (props) => {
               </Text>
             </Pressable>
           </View>
+          <FlatList
+            data={userExercises}
+            renderItem={renderExerciseItem}
+            keyExtractor={(item) => `${item._id}`}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingVertical: 10 }}
+            ItemSeparatorComponent={() => <View style={{ width: 10 }} />} />
 
-          <ScrollView className="smh:h-20 mdh:h-36">
-            <View className="flex flex-row flex-wrap gap-1">
-              {userExercises.map((exercise, index) => {
-                return (
-                  <Pressable
-                   onPress={()=>showExerciseDetails(exercise)}
-                    key={index}
-                    className="flex flex-col w-[48%] rounded-lg bg-[#4cd963b6] p-2  "
-                  >
-                    <Text
-                      className="text-base text-white font-bold"
-                      style={{
-                        fontFamily: "OpenSans_700Bold",
-                      }}
-                    >
-                      {exercise.name} 
-                    </Text>
-                    <Text
-                      className="text-sm text-black  "
-                      style={{
-                        fontFamily: "OpenSans_400Regular",
-                      }}
-                    >
-                      BodyPart: {exercise.bodyPart}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </ScrollView>
         </View>
       </View>
 
