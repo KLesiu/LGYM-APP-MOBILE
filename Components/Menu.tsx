@@ -1,143 +1,95 @@
-import { View, TouchableOpacity, Image, Text } from "react-native";
-import MenuProps from "./props/MenuProps";
-import TrainingPlan from "./TrainingPlan";
-import History from "./History";
-import AddTraining from "./AddTraining";
-import Profile from "./Profile";
-import Start from "./Start";
-import Exercises from "./Exercises";
-import home from "./img/icons/home.png";
-import profile from "./img/icons/profile.png";
-import history from "./img/icons/history.png";
-import addTraining from "./img/icons/add.png";
-import exercise from "./img/icons/exercises.png"
-import plan from "./img/icons/plan.png";
-import { MarkedDates, TrainingsDates } from "./types/Training";
-import ErrorMsg from "./types/ErrorMsg";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect,useState } from "react";
+import React, { useState, useRef } from 'react';
+import { View, TouchableOpacity, Image, Text, Animated } from 'react-native';
+import MenuProps from './props/MenuProps';
+import TrainingPlan from './TrainingPlan';
+import History from './History';
+import AddTraining from './AddTraining';
+import Profile from './Profile';
+import Start from './Start';
+import Exercises from './Exercises';
+import home from './img/icons/home.png';
+import profile from './img/icons/profile.png';
+import history from './img/icons/history.png';
+import addTraining from './img/icons/add.png';
+import exercise from './img/icons/exercises.png';
+import plan from './img/icons/plan.png';
 
 const Menu: React.FC<MenuProps> = (props) => {
-  const [trainingsDates,setTrainingsDates]= useState<MarkedDates[]>([])
-  useEffect(() => {
-    dateScroll(new Date());
-  }, []);
-  // Do poprawy na backendzie!!! Narazie funkcja zwraca tablice wszystkich dat treningow uzytkownika ale docelowo ma zwracac daty z podanego przedziału!
-  const dateScroll = async (date: any) => {
-    const id = await AsyncStorage.getItem("id");
-    const response: ErrorMsg | TrainingsDates = await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/${id}/getTrainingDates`,
-      {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          date: date,
-        }),
-      }
-    )
-      .then((res) => res.json())
-      .catch((err) => err);
-    if("msg" in response) return
-    const markedDates: MarkedDates[]= response.dates.map((ele:Date)=>{
-      return{
-        date:ele,
-        dots:[
-          {color:'#4CD964'}
-        ]
-      }
-    })
-    setTrainingsDates(markedDates)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const toggleMenu = () => {
+    Animated.timing(animation, {
+      toValue: isExpanded ? 0 : 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+    setIsExpanded(!isExpanded);
   };
+
+  const animatedScale = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 1],
+  });
+
+  const animatedOpacity = animation.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 0.5, 1],
+  });
+
+  const items = [
+    { icon: addTraining, label: 'Add Training', component: <AddTraining /> },
+    { icon: exercise, label: 'Exercises', component: <Exercises viewChange={props.viewChange} /> },
+    { icon: plan, label: 'Plan', component: <TrainingPlan /> },
+    { icon: history, label: 'History', component: <History trainingsDates={[]} /> },
+    { icon: home, label: 'Home', component: <Start viewChange={props.viewChange} /> },
+    { icon: profile, label: 'Profile', component: <Profile /> },
+  ];
+
   return (
-    <View className="bg-[#131313] smh:h-24 lgh:h-36 py-3  w-[99%]">
-      <View className="flex justify-center flex-row w-full h-14">
-      <View className="flex flex-col justify-center w-[16%]">
-          <TouchableOpacity
-            onPress={() => props.viewChange(<AddTraining />)}
-            className="items-center  flex h-full justify-center flex-row w-full"
-          >
-            <Image source={addTraining} className="w-14 h-14" />
-          </TouchableOpacity>
+    <View className="flex-1 items-center justify-end bg-[#131313] relative w-full">
+      {/* Animated Menu Items */}
+      <Animated.View
+        style={[
+          {
+            transform: [{ scale: animatedScale }],
+            opacity: animatedOpacity
+          }
+        ]}
+        className="absolute items-center justify-center bottom-20 left-4"
+      >
+        <View className="relative w-52 h-24 items-center justify-center">
+          {items.map((item, index) => {
+            // Calculate angle and position for semi-circle
+            const angle = (index / (items.length - 1)) * Math.PI; // Distribute items in a semi-circle
+            const radius = 100; // Distance from the center
+            const x = -Math.sin(angle) * radius; // Adjust distance from center
+            const y = -Math.cos(angle) * radius; // Adjust distance from center
+
+            return (
+              <TouchableOpacity
+                key={index}
+                onPress={() => props.viewChange(item.component)}
+                style={{ transform: [{ translateX: x }, { translateY: y }] }}
+                className="absolute w-12 h-12 items-center justify-center"
+              >
+                <Image source={item.icon} className="w-6 h-6" />
+                <Text className="text-gray-400 text-xs font-light">{item.label}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
-      </View>
-      <View className="flex justify-between h-14 flex-row">
-        <View className="flex flex-col justify-center w-[16%]">
-          <TouchableOpacity
-            onPress={() =>
-              props.viewChange(<Exercises viewChange={props.viewChange} />)
-            }
-            className="items-center  flex h-full justify-center flex-col w-full"
-          >
-            <Image className="w-6 h-6" source={exercise} />
-            <Text
-              className="text-xs  text-gray-200/80 font-light leading-4"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Exercises
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View className="flex flex-col justify-center w-[16%]">
-          <TouchableOpacity
-            onPress={() => props.viewChange(<TrainingPlan />)}
-            className="items-center  flex h-full justify-center flex-col w-full"
-          >
-            <Image source={plan} className="w-6 h-6" />
-            <Text
-              className="text-xs text-gray-200/80 font-light leading-4"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Plan
-            </Text>
-          </TouchableOpacity>
-        </View>
-     
-        <View className="flex flex-col justify-center w-[16%]">
-          <TouchableOpacity
-            onPress={() => props.viewChange(<History trainingsDates={trainingsDates} />)}
-            className="items-center  flex h-full justify-center flex-col w-full"
-          >
-            <Image source={history} className="w-6 h-6" />
-            <Text
-              className="text-gray-200/80 text-xs font-light leading-4"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              History
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View className="flex flex-col justify-center w-[16%]">
-          <TouchableOpacity
-            onPress={() => props.viewChange(<Start viewChange={props.viewChange} />)}
-            className="items-center  flex h-full justify-center flex-col w-full"
-          >
-            <Image source={home} className="w-6 h-6" />
-            <Text
-              className="leading-4 text-xs text-gray-200/80 font-light"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Home
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View className="flex flex-col justify-center w-[16%]">
-          <TouchableOpacity
-            onPress={() => props.viewChange(<Profile />)}
-            className="items-center  flex h-full justify-center flex-col w-full"
-          >
-            <Image source={profile} className="w-6 h-6" />
-            <Text
-              className="leading-4 text-xs text-gray-200/80 font-light"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Profile
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </Animated.View>
+
+      {/* Main Menu Button */}
+      <TouchableOpacity
+        onPress={toggleMenu}
+        className="absolute bottom-5 w-15 h-15 rounded-full bg-[#4CD964] items-center justify-center z-10"
+      >
+        <Image source={addTraining} className="w-7.5 h-7.5" />
+      </TouchableOpacity>
     </View>
   );
 };
+
 export default Menu;
