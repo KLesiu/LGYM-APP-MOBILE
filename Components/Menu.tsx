@@ -13,6 +13,7 @@ import history from './img/icons/history.png';
 import addTraining from './img/icons/add.png';
 import exercise from './img/icons/exercises.png';
 import plan from './img/icons/plan.png';
+import menu from './img/icons/menu.png';
 
 const Menu: React.FC<MenuProps> = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -36,9 +37,12 @@ const Menu: React.FC<MenuProps> = (props) => {
     inputRange: [0, 0.5, 1],
     outputRange: [0, 0.5, 1],
   });
-
+  const changeView = (component:React.JSX.Element)=>{
+    toggleMenu()
+    props.viewChange(component);
+  }
   const items = [
-    { icon: addTraining, label: 'Add Training', component: <AddTraining /> },
+    { icon: addTraining, label: 'Training', component: <AddTraining /> },
     { icon: exercise, label: 'Exercises', component: <Exercises viewChange={props.viewChange} /> },
     { icon: plan, label: 'Plan', component: <TrainingPlan /> },
     { icon: history, label: 'History', component: <History trainingsDates={[]} /> },
@@ -47,7 +51,7 @@ const Menu: React.FC<MenuProps> = (props) => {
   ];
 
   return (
-    <View className="flex-1 items-center justify-end bg-[#131313] relative w-full">
+    <View className="flex items-center justify-end bg-[#131313] relative w-full">
       {/* Animated Menu Items */}
       <Animated.View
         style={[
@@ -56,25 +60,25 @@ const Menu: React.FC<MenuProps> = (props) => {
             opacity: animatedOpacity
           }
         ]}
-        className="absolute items-center justify-center bottom-20 left-4"
+        className="absolute items-center justify-center bottom-24 -right-8"
       >
-        <View className="relative w-52 h-24 items-center justify-center">
+        <View className="relative w-52 h-32 items-center justify-center">
           {items.map((item, index) => {
             // Calculate angle and position for semi-circle
             const angle = (index / (items.length - 1)) * Math.PI; // Distribute items in a semi-circle
-            const radius = 100; // Distance from the center
+            const radius = 120; // Distance from the center
             const x = -Math.sin(angle) * radius; // Adjust distance from center
             const y = -Math.cos(angle) * radius; // Adjust distance from center
 
             return (
               <TouchableOpacity
                 key={index}
-                onPress={() => props.viewChange(item.component)}
+                onPress={() => changeView(item.component)}
                 style={{ transform: [{ translateX: x }, { translateY: y }] }}
-                className="absolute w-12 h-12 items-center justify-center"
+                className="absolute w-12 h-12 items-center  justify-center"
               >
-                <Image source={item.icon} className="w-6 h-6" />
-                <Text className="text-gray-400 text-xs font-light">{item.label}</Text>
+                <Image source={item.icon} className="w-8 h-8" />
+                <Text className="text-gray-400 text-base font-light">{item.label}</Text>
               </TouchableOpacity>
             );
           })}
@@ -84,9 +88,9 @@ const Menu: React.FC<MenuProps> = (props) => {
       {/* Main Menu Button */}
       <TouchableOpacity
         onPress={toggleMenu}
-        className="absolute bottom-5 w-15 h-15 rounded-full bg-[#4CD964] items-center justify-center z-10"
+        className="absolute right-8 bottom-[132px] w-16 h-16 rounded-full bg-[#4CD964] items-center justify-center z-[9]"
       >
-        <Image source={addTraining} className="w-7.5 h-7.5" />
+        <Image source={menu}  />
       </TouchableOpacity>
     </View>
   );

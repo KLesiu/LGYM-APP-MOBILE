@@ -15,6 +15,7 @@ import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 import ImportPlanPopUp from "./ImportPlanPopUp";
 import CreatePlanConfig from "./CreatePlanConfig";
+import CreatePlanDay from "./CreatePlanDay";
 
 const TrainingPlan: React.FC = () => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
@@ -26,6 +27,7 @@ const TrainingPlan: React.FC = () => {
   const [yourPlan, setYourPlan] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [isPlanSet, setIsPlanSet] = useState<boolean>(false);
+  const [isPlanDayFormVisible, setIsPlanDayFormVisible] =useState<boolean>(false)
   const [isPopUpDeleteShowed, setIsPopUpDeleteShowed] =
     useState<boolean>(false);
   const [popUp, setPopUp] = useState<JSX.Element>();
@@ -405,6 +407,9 @@ const TrainingPlan: React.FC = () => {
   const showPlanConfigPopUp = (): void => {
     setShowPlanConfig(true);
   };
+  const showPlanDayForm = (): void => {
+    setIsPlanDayFormVisible(true)
+  }
   const showPlanSetPopUp = (): void => {
     setShowPlanConfig(false);
     getUserPlan();
@@ -439,7 +444,7 @@ const TrainingPlan: React.FC = () => {
   };
 
   return (
-    <View className="h-[78%] relative w-full bg-[#131313]">
+    <View className="flex flex-1 relative w-full bg-[#131313]">
       <View className="w-full h-[15%] px-4 flex flex-col">
         {!planConfig ? (
           <View className="flex flex-row w-full justify-around">
@@ -492,7 +497,7 @@ const TrainingPlan: React.FC = () => {
               </TouchableOpacity>
             </View>
             <View>
-              <Pressable className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg">
+              <Pressable className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg" onPress={showPlanDayForm}>
                 <Text
                   className="text-lg text-black"
                   style={{
@@ -520,6 +525,7 @@ const TrainingPlan: React.FC = () => {
       ) : (
         <Text></Text>
       )}
+      {isPlanDayFormVisible? <CreatePlanDay /> : <Text></Text>}
     </View>
   );
 };
