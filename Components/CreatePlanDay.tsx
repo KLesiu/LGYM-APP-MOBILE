@@ -1,9 +1,18 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import AutoComplete, { DropdownItem } from "./Autocomplete";
 import { ExerciseForm, ExerciseForPlanDay } from "./interfaces/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "./helpers/numberValidator";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 
 const CreatePlanDay: React.FC = () => {
   const API_URL = process.env.REACT_APP_BACKEND;
@@ -15,6 +24,7 @@ const CreatePlanDay: React.FC = () => {
   const [numberOfSeries, setNumberOfSeries] = useState<string>("");
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
+  const [clearQuery, setClearQuery] = useState<boolean>(false); // Nowy stan do czyszczenia query
 
   useEffect(() => {
     getAllExercises();
@@ -38,29 +48,48 @@ const CreatePlanDay: React.FC = () => {
     const result = isIntValidator(input);
     if (result) setNumberOfSeries(input);
   };
-
+  const removeExerciseFromList = (item: ExerciseForPlanDay) => () => {
+    const newList = exercisesList.filter(
+      (exercise: ExerciseForPlanDay) => exercise !== item
+    );
+    setExercisesList(newList);
+  }
   const addToList = (): void => {
     if (!numberOfSeries || !exerciseReps || !selectedExercise) return;
+
     const exercise: ExerciseForPlanDay = {
       series: parseInt(numberOfSeries),
       reps: exerciseReps,
       exercise: selectedExercise,
     };
+
     setExercisesList([...exercisesList, exercise]);
 
     // Resetowanie pól
     setNumberOfSeries("");
     setExerciseReps("");
     setSelectedExercise(undefined);
+
+    // Ustawiamy clearQuery, aby AutoComplete wyczyścił query
+    setClearQuery(true);
+  };
+
+  const clearAutoCompleteQuery = () => {
+    // Po wyczyszczeniu query resetujemy stan, aby zapobiec ponownemu wywołaniu
+    setClearQuery(false);
   };
 
   // Funkcja do renderowania dynamicznej listy
   const renderExerciseItem = ({ item }: { item: ExerciseForPlanDay }) => (
     <Text
       style={{ fontFamily: "OpenSans_400Regular" }}
-      className="text-white text-lg"
+      className="text-white text-lg flex justify-between"
     >
-      - {`${item.exercise.label}: ${item.series}x${item.reps}`}
+      - {`${item.exercise.label}: ${item.series}x${item.reps}`}{" "}
+      <Pressable onPress={removeExerciseFromList(item)}>
+        {" "}
+        <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete" />
+      </Pressable>
     </Text>
   );
 
@@ -73,7 +102,7 @@ const CreatePlanDay: React.FC = () => {
         New Plan Day
       </Text>
 
-      <View className="flex flex-col p-4   pl-2 pt-2 gap-2">
+      <View className="flex flex-col  justify-between p-4   pl-2 pt-2 gap-2 flex-1">
         {/* Nazwa planu */}
         <View className="flex flex-col gap-2">
           <Text
@@ -96,21 +125,21 @@ const CreatePlanDay: React.FC = () => {
           >
             Exercises List:
           </Text>
-
-          {/* Dynamicznie renderowana lista ćwiczeń */}
-          <FlatList
-            data={exercisesList}
-            renderItem={renderExerciseItem}
-            keyExtractor={(item, index) => index.toString()}
-            ListEmptyComponent={() => (
-              <Text
-                className="text-white"
-                style={{ fontFamily: "OpenSans_400Regular" }}
-              >
-                No exercises added yet.
-              </Text>
-            )}
-          />
+          <ScrollView className="h-40">
+            <FlatList
+              data={exercisesList}
+              renderItem={renderExerciseItem}
+              keyExtractor={(item, index) => index.toString()}
+              ListEmptyComponent={() => (
+                <Text
+                  className="text-white"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  No exercises added yet.
+                </Text>
+              )}
+            />
+          </ScrollView>
         </View>
 
         {/* Formularz dodawania ćwiczeń */}
@@ -126,6 +155,7 @@ const CreatePlanDay: React.FC = () => {
               data={exercisesToSelect}
               onSelect={(item) => setSelectedExercise(item)}
               value={selectedExercise?.label || ""}
+              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
             />
           </View>
 
@@ -172,6 +202,15 @@ const CreatePlanDay: React.FC = () => {
             </Text>
           </Pressable>
         </View>
+
+        <Pressable className="bg-[#4CD964] self-end w-40 h-12 flex items-center justify-center rounded-lg">
+          <Text
+            style={{ fontFamily: "OpenSans_700Bold" }}
+            className="text-white text-2xl"
+          >
+            CREATE
+          </Text>
+        </Pressable>
       </View>
     </View>
   );

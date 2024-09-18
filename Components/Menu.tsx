@@ -1,19 +1,19 @@
-import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Image, Text, Animated } from 'react-native';
-import MenuProps from './props/MenuProps';
-import TrainingPlan from './TrainingPlan';
-import History from './History';
-import AddTraining from './AddTraining';
-import Profile from './Profile';
-import Start from './Start';
-import Exercises from './Exercises';
-import home from './img/icons/home.png';
-import profile from './img/icons/profile.png';
-import history from './img/icons/history.png';
-import addTraining from './img/icons/add.png';
-import exercise from './img/icons/exercises.png';
-import plan from './img/icons/plan.png';
-import menu from './img/icons/menu.png';
+import React, { useState, useRef } from "react";
+import { View, TouchableOpacity, Image, Text, Animated } from "react-native";
+import MenuProps from "./props/MenuProps";
+import TrainingPlan from "./TrainingPlan";
+import History from "./History";
+import AddTraining from "./AddTraining";
+import Profile from "./Profile";
+import Start from "./Start";
+import Exercises from "./Exercises";
+import home from "./img/icons/home.png";
+import profile from "./img/icons/profile.png";
+import history from "./img/icons/history.png";
+import addTraining from "./img/icons/add.png";
+import exercise from "./img/icons/exercises.png";
+import plan from "./img/icons/plan.png";
+import menu from "./img/icons/menu.png";
 
 const Menu: React.FC<MenuProps> = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -37,17 +37,31 @@ const Menu: React.FC<MenuProps> = (props) => {
     inputRange: [0, 0.5, 1],
     outputRange: [0, 0.5, 1],
   });
-  const changeView = (component:React.JSX.Element)=>{
-    toggleMenu()
+
+  const changeView = (component: React.JSX.Element) => {
+    toggleMenu();
     props.viewChange(component);
-  }
+  };
+
   const items = [
-    { icon: addTraining, label: 'Training', component: <AddTraining /> },
-    { icon: exercise, label: 'Exercises', component: <Exercises viewChange={props.viewChange} /> },
-    { icon: plan, label: 'Plan', component: <TrainingPlan /> },
-    { icon: history, label: 'History', component: <History trainingsDates={[]} /> },
-    { icon: home, label: 'Home', component: <Start viewChange={props.viewChange} /> },
-    { icon: profile, label: 'Profile', component: <Profile /> },
+    { icon: addTraining, label: "Training", component: <AddTraining /> },
+    {
+      icon: exercise,
+      label: "Exercises",
+      component: <Exercises viewChange={props.viewChange} />,
+    },
+    { icon: plan, label: "Plan", component: <TrainingPlan /> },
+    {
+      icon: history,
+      label: "History",
+      component: <History trainingsDates={[]} />,
+    },
+    {
+      icon: home,
+      label: "Home",
+      component: <Start viewChange={props.viewChange} />,
+    },
+    { icon: profile, label: "Profile", component: <Profile /> },
   ];
 
   return (
@@ -57,40 +71,54 @@ const Menu: React.FC<MenuProps> = (props) => {
         style={[
           {
             transform: [{ scale: animatedScale }],
-            opacity: animatedOpacity
-          }
+            opacity: animatedOpacity,
+          },
         ]}
-        className="absolute items-center justify-center bottom-24 -right-8"
+        className="absolute items-center justify-center bottom-[-65px]"
       >
-        <View className="relative w-52 h-32 items-center justify-center">
+        <View className="relative w-52 h-52 items-center justify-center">
           {items.map((item, index) => {
-            // Calculate angle and position for semi-circle
-            const angle = (index / (items.length - 1)) * Math.PI; // Distribute items in a semi-circle
-            const radius = 120; // Distance from the center
-            const x = -Math.sin(angle) * radius; // Adjust distance from center
-            const y = -Math.cos(angle) * radius; // Adjust distance from center
+           const totalItems = items.length;
+           const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; // Rozkład od -π/2 do π/2 (od lewej do prawej)
+           const radius = 120; // Odległość od środka
+           const x = -Math.sin(angle) * radius; // Odwrócenie położenia X (od lewej do prawej)
+           const y = Math.cos(angle) * radius; // Odwrócenie położenia Y
 
             return (
               <TouchableOpacity
                 key={index}
                 onPress={() => changeView(item.component)}
                 style={{ transform: [{ translateX: x }, { translateY: y }] }}
-                className="absolute w-12 h-12 items-center  justify-center"
+                className="absolute w-12 h-12 items-center justify-center"
               >
                 <Image source={item.icon} className="w-8 h-8" />
-                <Text className="text-gray-400 text-base font-light">{item.label}</Text>
+                <Text className="text-gray-400 text-base font-light">
+                  {item.label}
+                </Text>
               </TouchableOpacity>
             );
           })}
         </View>
       </Animated.View>
 
-      {/* Main Menu Button */}
+      {/* Main Menu Button - centered at the bottom */}
       <TouchableOpacity
         onPress={toggleMenu}
-        className="absolute right-8 bottom-[132px] w-16 h-16 rounded-full bg-[#4CD964] items-center justify-center z-[9]"
+        style={{
+          position: "absolute",
+          bottom: 32,
+          left: "50%",
+          transform: [{ translateX: -32 }], // Center horizontally (half of width: 64/2)
+          width: 64,
+          height: 64,
+          borderRadius: 32,
+          backgroundColor: "#4CD964",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 9,
+        }}
       >
-        <Image source={menu}  />
+        <Image source={menu} />
       </TouchableOpacity>
     </View>
   );

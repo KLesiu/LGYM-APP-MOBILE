@@ -12,9 +12,10 @@ interface AutoCompleteProps {
   data: DropdownItem[];          // Lista dostępnych opcji
   value?: string | null;         // Wartość, którą można wstrzyknąć z zewnątrz
   onSelect: (item: DropdownItem) => void; // Funkcja obsługująca wybór
+  onClearQuery?: () => void;     // Funkcja do wyczyszczenia query
 }
 
-const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect }) => {
+const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onClearQuery }) => {
   const [query, setQuery] = useState('');            // tekst wpisany przez użytkownika
   const [filteredData, setFilteredData] = useState<DropdownItem[]>([]); // przefiltrowane dane
   const [selectedItem, setSelectedItem] = useState<DropdownItem | null>(null); // kontroluje wybrany element
@@ -40,6 +41,13 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect }) =>
       setFilteredData([]);
     }
   }, [query, data]);
+
+  useEffect(() => {
+    if (onClearQuery) {
+      setQuery('');  // Reset query
+      onClearQuery();  // Wywołanie funkcji resetującej w CreatePlanDay
+    }
+  }, [onClearQuery]);
 
   const handleSelect = (item: DropdownItem) => {
     setSelectedItem(item); // Ustaw wybrany element
