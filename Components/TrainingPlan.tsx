@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Pressable,
+  FlatList,
 } from "react-native";
 import { useState, useEffect } from "react";
 import Data from "./types/DataPlansArrays";
@@ -16,6 +17,7 @@ import ViewLoading from "./ViewLoading";
 import ImportPlanPopUp from "./ImportPlanPopUp";
 import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./CreatePlanDay";
+import { PlanDayForm, PlanDayVm } from "./interfaces/PlanDay";
 
 const TrainingPlan: React.FC = () => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
@@ -24,6 +26,7 @@ const TrainingPlan: React.FC = () => {
     trainingDays: number;
     _id: string;
   }>();
+  const [planDays, setPlanDays] = useState<PlanDayVm[]>();
   const [yourPlan, setYourPlan] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [isPlanSet, setIsPlanSet] = useState<boolean>(false);
@@ -37,8 +40,10 @@ const TrainingPlan: React.FC = () => {
   useEffect(() => {
     setViewLoading(true);
     getUserPlanConfig();
-    // getUserPlan();
   }, [isPlanSet]);
+  useEffect(() => {
+    getPlanDays()
+  }, [planConfig]);
   // useEffect(() => {
   //
   //   if (isPopUpDeleteShowed) {
@@ -81,326 +86,14 @@ const TrainingPlan: React.FC = () => {
   //     );
   //   }
   // }, [isPopUpDeleteShowed]);
-  const getUserPlan = async (): Promise<void> => {
-    const id = await AsyncStorage.getItem("id");
-    const response: { data: Data | string } = await fetch(
-      `${apiURL}api/${id}/getPlan`
-    )
-      .then((res) => res.json())
-      .catch((err) => err)
-      .then((res) => res);
-    if (response.data === "Didnt find") {
-      setIsPlanSet(false);
-    } else {
-      const data: Data = response.data as Data;
-      const dataKeys = Object.keys(data);
-      let isPlanEmpty = true;
-      dataKeys.forEach((ele: string) => {
-        if (data[ele].length > 0) {
-          isPlanEmpty = false;
-        }
-      });
-      isPlanEmpty ? deletePlan() : null;
 
-      if (typeof data !== "string") {
-        const planA =
-          data.planA.length > 0
-            ? data.planA.map((element: Exercise, index: number) => (
-                <View
-                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
-                  key={index}
-                >
-                  <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
-                    style={{
-                      fontFamily: "OpenSans_300Light",
-                      width: "60%",
-                    }}
-                  >
-                    {element.name}
-                  </Text>
-                  <Text
-                    className="text-gray-200/80 text-[11px]"
-                    style={{ fontFamily: "OpenSans_300Light" }}
-                  >
-                    {element.series} x {element.reps}
-                  </Text>
-                </View>
-              ))
-            : "";
-        const planB =
-          data.planB.length > 0
-            ? data.planB.map((element: Exercise, index: number) => (
-                <View
-                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
-                  key={index}
-                >
-                  <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
-                    style={{
-                      fontFamily: "OpenSans_300Light",
-                      width: "60%",
-                    }}
-                  >
-                    {element.name}
-                  </Text>
-                  <Text
-                    className="text-gray-200/80 text-[11px]"
-                    style={{ fontFamily: "OpenSans_300Light" }}
-                  >
-                    {element.series} x {element.reps}
-                  </Text>
-                </View>
-              ))
-            : "";
-        const planC =
-          data.planC.length > 0
-            ? data.planC.map((element: Exercise, index: number) => (
-                <View
-                  className="w-full px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
-                  key={index}
-                >
-                  <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
-                    style={{
-                      fontFamily: "OpenSans_300Light",
-                      width: "60%",
-                    }}
-                  >
-                    {element.name}
-                  </Text>
-                  <Text
-                    className="text-gray-200/80 text-[11px]"
-                    style={{ fontFamily: "OpenSans_300Light" }}
-                  >
-                    {element.series} x {element.reps}
-                  </Text>
-                </View>
-              ))
-            : "";
-        const planD =
-          data.planD.length > 0
-            ? data.planD.map((element: Exercise, index: number) => (
-                <View
-                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
-                  key={index}
-                >
-                  <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
-                    style={{
-                      fontFamily: "OpenSans_300Light",
-                      width: "60%",
-                    }}
-                  >
-                    {element.name}
-                  </Text>
-                  <Text
-                    className="text-gray-200/80 text-[11px]"
-                    style={{ fontFamily: "OpenSans_300Light" }}
-                  >
-                    {element.series} x {element.reps}
-                  </Text>
-                </View>
-              ))
-            : "";
-        const planE =
-          data.planE.length > 0
-            ? data.planE.map((element: Exercise, index: number) => (
-                <View
-                  className="w-full px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
-                  key={index}
-                >
-                  <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
-                    style={{
-                      fontFamily: "OpenSans_300Light",
-                      width: "60%",
-                    }}
-                  >
-                    {element.name}
-                  </Text>
-                  <Text
-                    className="text-gray-200/80 text-[11px]"
-                    style={{ fontFamily: "OpenSans_300Light" }}
-                  >
-                    {element.series} x {element.reps}
-                  </Text>
-                </View>
-              ))
-            : "";
-        const planF =
-          data.planF.length > 0
-            ? data.planF.map((element: Exercise, index: number) => (
-                <View
-                  className="w-full  px-2 py-2 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
-                  key={index}
-                >
-                  <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
-                    style={{
-                      fontFamily: "OpenSans_300Light",
-                      width: "60%",
-                    }}
-                  >
-                    {element.name}
-                  </Text>
-                  <Text
-                    className="text-gray-200/80 text-[11px]"
-                    style={{ fontFamily: "OpenSans_300Light" }}
-                  >
-                    {element.series} x {element.reps}
-                  </Text>
-                </View>
-              ))
-            : "";
-        const planG =
-          data.planG.length > 0
-            ? data.planG.map((element: Exercise, index: number) => (
-                <View
-                  className="w-full px-2 py-1 flex flex-row flex-wrap justify-start bg-[#1E1E1E73] "
-                  key={index}
-                >
-                  <Text
-                    className="text-[11px] text-gray-200/80 leading-4 "
-                    style={{
-                      fontFamily: "OpenSans_300Light",
-                      width: "60%",
-                    }}
-                  >
-                    {element.name}
-                  </Text>
-                  <Text
-                    className="text-gray-200/80 text-[11px]"
-                    style={{ fontFamily: "OpenSans_300Light" }}
-                  >
-                    {element.series} x {element.reps}
-                  </Text>
-                </View>
-              ))
-            : "";
-        setYourPlan(() => {
-          return (
-            <ScrollView className="flex  px-2 py-4 pb-12">
-              {planA ? (
-                <View className="rounded w-full  flex flex-column items-start">
-                  <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
-                  >
-                    Plan A
-                  </Text>
-                  {planA}
-                </View>
-              ) : (
-                ""
-              )}
-              {planB ? (
-                <View className="rounded w-full  flex flex-column items-start">
-                  <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
-                  >
-                    Plan B
-                  </Text>
-                  {planB}
-                </View>
-              ) : (
-                ""
-              )}
-              {planC ? (
-                <View className="rounded w-full  flex flex-column items-start">
-                  <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
-                  >
-                    Plan C
-                  </Text>
-                  {planC}
-                </View>
-              ) : (
-                ""
-              )}
-              {planD ? (
-                <View className="rounded w-full  flex flex-column items-start">
-                  <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
-                  >
-                    Plan D
-                  </Text>
-                  {planD}
-                </View>
-              ) : (
-                ""
-              )}
-              {planE ? (
-                <View className="rounded w-full  flex flex-column items-start">
-                  <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
-                  >
-                    Plan E
-                  </Text>
-                  {planE}
-                </View>
-              ) : (
-                ""
-              )}
-              {planF ? (
-                <View className="rounded w-full  flex flex-column items-start">
-                  <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
-                  >
-                    Plan F
-                  </Text>
-                  {planF}
-                </View>
-              ) : (
-                ""
-              )}
-              {planG ? (
-                <View className="rounded w-full  flex flex-column items-start">
-                  <Text
-                    className="text-[#4CD964] mt-2 mb-2 text-sm font-bold"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
-                  >
-                    Plan G
-                  </Text>
-                  {planG}
-                </View>
-              ) : (
-                ""
-              )}
-              <View className="h-36 w-20"></View>
-            </ScrollView>
-          );
-        });
 
-        await AsyncStorage.setItem("plan", "completed");
-        setIsPlanSet(true);
-      }
-    }
-    setViewLoading(false);
-  };
-  const deletePlan = async (): Promise<void> => {
-    const id = await AsyncStorage.getItem("id");
-    const response: ErrorMsg | SuccessMsg = await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/${id}/deletePlan`,
-      {
-        method: "DELETE",
-      }
-    )
+  const getPlanDays = async ():Promise<void> => {
+    if(!planConfig) return
+    const response = await fetch(`${apiURL}/api/planDay/${planConfig._id}/getPlanDays`)
       .then((res) => res.json())
-      .catch((err) => err)
-      .then((res) => res);
-    if (response.msg === "Deleted!") {
-      await AsyncStorage.removeItem("plan");
-      setIsPlanSet(false);
-      setPopUp(<></>);
-      setIsPopUpDeleteShowed(false);
-    }
-  };
+      .catch((err) => err);
+    setPlanDays(response)}
   const showImportPlanPopUpFn = (): void => {
     setShowImportPlanPopUp(true);
   };
@@ -415,7 +108,6 @@ const TrainingPlan: React.FC = () => {
   }
   const showPlanSetPopUp = (): void => {
     setShowPlanConfig(false);
-    getUserPlan();
   };
   const setImportPlan = async (userName: string): Promise<void> => {
     if (!userName) return;
@@ -436,6 +128,20 @@ const TrainingPlan: React.FC = () => {
       })
       .catch((err) => err);
   };
+  const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
+    return (
+        <View >
+            <Text className="text-2xl font-bold mb-3">{item.name}</Text>
+            {item.exercises.map((exercise, index) => (
+                <View key={index} className="mb-2">
+                    <Text className="text-lg">
+                        {exercise.exercise.name} - {exercise.series} x {exercise.reps} 
+                    </Text>
+                </View>
+            ))}
+        </View>
+    );
+};
   const getUserPlanConfig = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
@@ -511,6 +217,14 @@ const TrainingPlan: React.FC = () => {
                 </Text>
               </Pressable>
             </View>
+            {planDays && planDays.length ?   <FlatList
+            data={planDays} // Źródło danych
+            renderItem={renderPlanDay} // Funkcja renderująca elementy
+            keyExtractor={(item) => item._id ?? item.name} // Klucz dla każdego elementu
+            horizontal={true} // Ustawienie na poziome przewijanie
+            pagingEnabled={true} // Włączenie paginacji (swipe)
+            showsHorizontalScrollIndicator={false} // Wyłączenie paska przewijania
+        /> : <Text></Text>}
           </View>
         ) : (
           <Text></Text>
