@@ -12,9 +12,10 @@ import { ExerciseForm, ExerciseForPlanDay } from "./interfaces/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "./helpers/numberValidator";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import CreatePlanDayProps from "./props/CreatePlanDayProps";
+import { Message } from "./enums/Message";
 
-
-const CreatePlanDay: React.FC = () => {
+const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
   const [planDayName, setPlanDayName] = useState<string>("");
   const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
@@ -42,7 +43,30 @@ const CreatePlanDay: React.FC = () => {
     });
     setExercisesToSelect(helpExercisesToSelect);
   };
-
+  const createPlanDay = async () => {
+    const exercises = exercisesList.map((exercise: ExerciseForPlanDay) => {
+      return {
+        exercise: exercise.exercise.value,
+        series: exercise.series,
+        reps: exercise.reps,
+      };
+    });
+    const response = await fetch(`${API_URL}/api/planDay/${props.planId}/createPlanDay`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: planDayName,
+        exercises: exercises,
+      }),
+    })
+      .then((res) => res.json())
+      .catch((err) => err);
+    if(response.msg === Message.Created){
+      props.closeForm();
+    }
+  };
   const validator = (input: string): void => {
     if (!input) return setNumberOfSeries(input);
     const result = isIntValidator(input);
@@ -203,7 +227,7 @@ const CreatePlanDay: React.FC = () => {
           </Pressable>
         </View>
 
-        <Pressable className="bg-[#4CD964] self-end w-40 h-12 flex items-center justify-center rounded-lg">
+        <Pressable className="bg-[#4CD964] self-end w-40 h-12 flex items-center justify-center rounded-lg" onPress={createPlanDay}>
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
             className="text-white text-2xl"
@@ -217,3 +241,4 @@ const CreatePlanDay: React.FC = () => {
 };
 
 export default CreatePlanDay;
+ 

@@ -410,6 +410,9 @@ const TrainingPlan: React.FC = () => {
   const showPlanDayForm = (): void => {
     setIsPlanDayFormVisible(true)
   }
+  const hidePlanDayForm = (): void => {
+    setIsPlanDayFormVisible(false)
+  }
   const showPlanSetPopUp = (): void => {
     setShowPlanConfig(false);
     getUserPlan();
@@ -525,7 +528,7 @@ const TrainingPlan: React.FC = () => {
       ) : (
         <Text></Text>
       )}
-      {isPlanDayFormVisible? <CreatePlanDay /> : <Text></Text>}
+      {isPlanDayFormVisible && planConfig? <CreatePlanDay planId={planConfig._id} closeForm={hidePlanDayForm} /> : <Text></Text>}
     </View>
   );
 };
