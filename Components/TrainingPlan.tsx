@@ -30,7 +30,8 @@ const TrainingPlan: React.FC = () => {
   const [yourPlan, setYourPlan] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [isPlanSet, setIsPlanSet] = useState<boolean>(false);
-  const [isPlanDayFormVisible, setIsPlanDayFormVisible] =useState<boolean>(false)
+  const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
+    useState<boolean>(false);
   const [isPopUpDeleteShowed, setIsPopUpDeleteShowed] =
     useState<boolean>(false);
   const [popUp, setPopUp] = useState<JSX.Element>();
@@ -42,7 +43,7 @@ const TrainingPlan: React.FC = () => {
     getUserPlanConfig();
   }, [isPlanSet]);
   useEffect(() => {
-    getPlanDays()
+    getPlanDays();
   }, [planConfig]);
   // useEffect(() => {
   //
@@ -87,13 +88,15 @@ const TrainingPlan: React.FC = () => {
   //   }
   // }, [isPopUpDeleteShowed]);
 
-
-  const getPlanDays = async ():Promise<void> => {
-    if(!planConfig) return
-    const response = await fetch(`${apiURL}/api/planDay/${planConfig._id}/getPlanDays`)
+  const getPlanDays = async (): Promise<void> => {
+    if (!planConfig) return;
+    const response = await fetch(
+      `${apiURL}/api/planDay/${planConfig._id}/getPlanDays`
+    )
       .then((res) => res.json())
       .catch((err) => err);
-    setPlanDays(response)}
+    setPlanDays(response);
+  };
   const showImportPlanPopUpFn = (): void => {
     setShowImportPlanPopUp(true);
   };
@@ -101,11 +104,11 @@ const TrainingPlan: React.FC = () => {
     setShowPlanConfig(true);
   };
   const showPlanDayForm = (): void => {
-    setIsPlanDayFormVisible(true)
-  }
+    setIsPlanDayFormVisible(true);
+  };
   const hidePlanDayForm = (): void => {
-    setIsPlanDayFormVisible(false)
-  }
+    setIsPlanDayFormVisible(false);
+  };
   const showPlanSetPopUp = (): void => {
     setShowPlanConfig(false);
   };
@@ -130,18 +133,25 @@ const TrainingPlan: React.FC = () => {
   };
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
     return (
-        <View >
-            <Text className="text-2xl font-bold mb-3">{item.name}</Text>
-            {item.exercises.map((exercise, index) => (
-                <View key={index} className="mb-2">
-                    <Text className="text-lg">
-                        {exercise.exercise.name} - {exercise.series} x {exercise.reps} 
-                    </Text>
-                </View>
-            ))}
-        </View>
+      <View className="flex flex-col p-4 flex-1 bg-[#1E1E1E73] rounded-lg">
+        <Text
+          style={{
+            fontFamily: "OpenSans_700Bold",
+          }}
+          className="text-2xl font-bold text-[#4CD964]"
+        >
+          {item.name}
+        </Text>
+        {item.exercises.map((exercise, index) => (
+          <View key={index}>
+            <Text  style={{ fontFamily: "OpenSans_400Regular" }} className="text-lg text-white">
+              {exercise.exercise.name} - {exercise.series} x {exercise.reps}
+            </Text>
+          </View>
+        ))}
+      </View>
     );
-};
+  };
   const getUserPlanConfig = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
@@ -154,7 +164,7 @@ const TrainingPlan: React.FC = () => {
 
   return (
     <View className="flex flex-1 relative w-full bg-[#131313]">
-      <View className="w-full h-[15%] px-4 flex flex-col">
+      <View className="w-full h-full p-4 flex flex-col">
         {!planConfig ? (
           <View className="flex flex-row w-full justify-around">
             <TouchableOpacity
@@ -188,7 +198,7 @@ const TrainingPlan: React.FC = () => {
           <Text></Text>
         )}
         {planConfig && Object.keys(planConfig).length ? (
-          <View className="flex flex-col gap-4 items-center">
+          <View className="flex flex-col h-full gap-4 items-center">
             <View className="flex flex-row w-full justify-around items-center">
               <Text
                 className="w-full text-lg text-white  font-bold "
@@ -206,7 +216,10 @@ const TrainingPlan: React.FC = () => {
               </TouchableOpacity>
             </View>
             <View>
-              <Pressable className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg" onPress={showPlanDayForm}>
+              <Pressable
+                className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg"
+                onPress={showPlanDayForm}
+              >
                 <Text
                   className="text-lg text-black"
                   style={{
@@ -217,14 +230,23 @@ const TrainingPlan: React.FC = () => {
                 </Text>
               </Pressable>
             </View>
-            {planDays && planDays.length ?   <FlatList
-            data={planDays} // Źródło danych
-            renderItem={renderPlanDay} // Funkcja renderująca elementy
-            keyExtractor={(item) => item._id ?? item.name} // Klucz dla każdego elementu
-            horizontal={true} // Ustawienie na poziome przewijanie
-            pagingEnabled={true} // Włączenie paginacji (swipe)
-            showsHorizontalScrollIndicator={false} // Wyłączenie paska przewijania
-        /> : <Text></Text>}
+            {planDays && planDays.length ? (
+
+              <FlatList
+                className="flex gap-4"
+                data={planDays} // Źródło danych
+                renderItem={renderPlanDay} // Funkcja renderująca elementy
+                keyExtractor={(item) => item._id ?? item.name} // Klucz dla każdego elementu
+                horizontal={true} // Ustawienie na poziome przewijanie
+                pagingEnabled={true} // Włączenie paginacji (swipe)
+                showsHorizontalScrollIndicator={false} // Wyłączenie paska przewijania
+                ItemSeparatorComponent={() => <View className="w-8" />} 
+                
+              />
+              
+            ) : (
+              <Text></Text>
+            )}
           </View>
         ) : (
           <Text></Text>
@@ -242,7 +264,11 @@ const TrainingPlan: React.FC = () => {
       ) : (
         <Text></Text>
       )}
-      {isPlanDayFormVisible && planConfig? <CreatePlanDay planId={planConfig._id} closeForm={hidePlanDayForm} /> : <Text></Text>}
+      {isPlanDayFormVisible && planConfig ? (
+        <CreatePlanDay planId={planConfig._id} closeForm={hidePlanDayForm} />
+      ) : (
+        <Text></Text>
+      )}
     </View>
   );
 };
