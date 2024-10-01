@@ -17,6 +17,7 @@ import menu from "./img/icons/menu.png";
 
 const Menu: React.FC<MenuProps> = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true); 
   const animation = useRef(new Animated.Value(0)).current;
 
   const toggleMenu = () => {
@@ -42,6 +43,9 @@ const Menu: React.FC<MenuProps> = (props) => {
     toggleMenu();
     props.viewChange(component);
   };
+  const toggleMenuButton =()=>{
+    setIsMenuButtonVisible(!isMenuButtonVisible);
+  }
 
   const items = [
     { icon: addTraining, label: "Training", component: <AddTraining /> },
@@ -50,7 +54,7 @@ const Menu: React.FC<MenuProps> = (props) => {
       label: "Exercises",
       component: <Exercises viewChange={props.viewChange} />,
     },
-    { icon: plan, label: "Plan", component: <TrainingPlan /> },
+    { icon: plan, label: "Plan", component: <TrainingPlan hideMenuButton={toggleMenuButton} /> },
     {
       icon: history,
       label: "History",
@@ -101,7 +105,8 @@ const Menu: React.FC<MenuProps> = (props) => {
         </View>
       </Animated.View>
 
-      {/* Main Menu Button - centered at the bottom */}
+        
+      {isMenuButtonVisible ?
       <TouchableOpacity
         onPress={toggleMenu}
         style={{
@@ -119,7 +124,7 @@ const Menu: React.FC<MenuProps> = (props) => {
         }}
       >
         <Image source={menu} />
-      </TouchableOpacity>
+      </TouchableOpacity> : <></>}
     </View>
   );
 };

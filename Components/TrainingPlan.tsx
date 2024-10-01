@@ -2,24 +2,20 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ScrollView,
   Pressable,
   FlatList,
 } from "react-native";
 import { useState, useEffect } from "react";
-import Data from "./types/DataPlansArrays";
-import Exercise from "./types/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import ErrorMsg from "./types/ErrorMsg";
-import SuccessMsg from "./types/SuccessMsg";
 import ViewLoading from "./ViewLoading";
 import ImportPlanPopUp from "./ImportPlanPopUp";
 import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./CreatePlanDay";
-import { PlanDayForm, PlanDayVm } from "./interfaces/PlanDay";
+import {  PlanDayVm } from "./interfaces/PlanDay";
+import {TrainingPlanProps} from "./props/TrainingPlanProps"
 
-const TrainingPlan: React.FC = () => {
+const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [planConfig, setPlanConfig] = useState<{
     name: string;
@@ -27,14 +23,10 @@ const TrainingPlan: React.FC = () => {
     _id: string;
   }>();
   const [planDays, setPlanDays] = useState<PlanDayVm[]>();
-  const [yourPlan, setYourPlan] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [isPlanSet, setIsPlanSet] = useState<boolean>(false);
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
-  const [isPopUpDeleteShowed, setIsPopUpDeleteShowed] =
-    useState<boolean>(false);
-  const [popUp, setPopUp] = useState<JSX.Element>();
   const [showImportPlanPopUp, setShowImportPlanPopUp] =
     useState<boolean>(false);
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
@@ -45,48 +37,6 @@ const TrainingPlan: React.FC = () => {
   useEffect(() => {
     getPlanDays();
   }, [planConfig]);
-  // useEffect(() => {
-  //
-  //   if (isPopUpDeleteShowed) {
-  //     setPopUp(
-  //       <View className="absolute h-full w-full bg-[#000000f2] z-[3] flex pt-[30%] flex-column items-center">
-  //         <Text
-  //           className="text-4xl text-gray-200"
-  //           style={{
-  //             fontFamily: "OpenSans_300Light",
-  //           }}
-  //         >
-  //           Are you sure?
-  //         </Text>
-  //         <TouchableOpacity
-  //           onPress={deletePlan}
-  //           className="w-1/2 h-24 bg-green-500 rounded-xl flex flex-row justify-center items-center mt-[10%]"
-  //         >
-  //           <Text
-  //             className="text-2xl"
-  //             style={{ fontFamily: "OpenSans_700Bold" }}
-  //           >
-  //             YES
-  //           </Text>
-  //         </TouchableOpacity>
-  //         <TouchableOpacity
-  //           onPress={() => {
-  //             setPopUp(<></>);
-  //             setIsPopUpDeleteShowed(false);
-  //           }}
-  //           className="w-1/2 h-24 bg-red-500 mt-[10%] rounded-xl flex flex-row justify-center items-center"
-  //         >
-  //           <Text
-  //             className="text-2xl"
-  //             style={{ fontFamily: "OpenSans_700Bold" }}
-  //           >
-  //             NO
-  //           </Text>
-  //         </TouchableOpacity>
-  //       </View>
-  //     );
-  //   }
-  // }, [isPopUpDeleteShowed]);
 
   const getPlanDays = async (): Promise<void> => {
     if (!planConfig) return;
@@ -104,10 +54,12 @@ const TrainingPlan: React.FC = () => {
     setShowPlanConfig(true);
   };
   const showPlanDayForm = (): void => {
+    props.hideMenuButton();
     setIsPlanDayFormVisible(true);
   };
   const hidePlanDayForm = (): void => {
     setIsPlanDayFormVisible(false);
+    props.hideMenuButton();
   };
   const showPlanSetPopUp = (): void => {
     setShowPlanConfig(false);
@@ -133,7 +85,7 @@ const TrainingPlan: React.FC = () => {
   };
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
     return (
-      <View className="flex flex-col p-4 flex-1 bg-[#1E1E1E73] rounded-lg">
+      <View className="flex flex-col p-4 flex-1 bg-[#1E1E1E73] rounded-lg smh:h-56 mdh:h-96">
         <Text
           style={{
             fontFamily: "OpenSans_700Bold",
@@ -208,12 +160,6 @@ const TrainingPlan: React.FC = () => {
               >
                 Current training plan: {planConfig.name}
               </Text>
-              <TouchableOpacity onPress={() => setIsPopUpDeleteShowed(true)}>
-                <Icon
-                  style={{ color: "#de161d", fontSize: 30 }}
-                  name="delete"
-                />
-              </TouchableOpacity>
             </View>
             <View>
               <Pressable
@@ -241,7 +187,6 @@ const TrainingPlan: React.FC = () => {
                 pagingEnabled={true} // Włączenie paginacji (swipe)
                 showsHorizontalScrollIndicator={false} // Wyłączenie paska przewijania
                 ItemSeparatorComponent={() => <View className="w-8" />} 
-                
               />
               
             ) : (
@@ -252,7 +197,6 @@ const TrainingPlan: React.FC = () => {
           <Text></Text>
         )}
       </View>
-      {popUp}
       {viewLoading ? <ViewLoading /> : <Text></Text>}
       {showImportPlanPopUp ? (
         <ImportPlanPopUp setImportPlan={setImportPlan} />
