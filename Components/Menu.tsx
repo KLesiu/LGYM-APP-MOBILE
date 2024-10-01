@@ -48,7 +48,7 @@ const Menu: React.FC<MenuProps> = (props) => {
   }
 
   const items = [
-    { icon: addTraining, label: "Training", component: <AddTraining /> },
+    { icon: addTraining, label: "Training", component: <AddTraining hideMenuButton={toggleMenuButton} /> },
     {
       icon: exercise,
       label: "Exercises",

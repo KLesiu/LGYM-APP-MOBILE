@@ -84,6 +84,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
       .catch((err) => err);
   };
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
+    console.log(item)
     return (
       <View className="flex flex-col p-4 flex-1 bg-[#1E1E1E73] rounded-lg smh:h-56 mdh:h-96">
         <Text

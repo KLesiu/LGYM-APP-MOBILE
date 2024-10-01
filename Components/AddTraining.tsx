@@ -20,6 +20,8 @@ import MiniLoading from "./MiniLoading";
 import useInterval from "./helpers/hooks/useInterval";
 import UpdateRankPopUp from "./UpdateRankPopUp";
 import { LastTrainingModel } from "./types/Training";
+import TrainingPlanDay from "./TrainingPlanDay";
+import AddTrainingProps from "./props/AddTrainingProps";
 type InputAction = {
   type: "UPDATE_INPUT";
   index: number;
@@ -40,7 +42,12 @@ const inputReducer = (state: InputState, action: InputAction): InputState => {
   }
 };
 
-const AddTraining: React.FC = () => {
+const AddTraining: React.FC<AddTrainingProps> = (props) => {
+  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+  const [isTrainingPlanDayVisible, setIsTrainingPlanDayVisible] =useState(false)
+  const [dayId,setDayId] = useState<string>()
+
+
   const [plan, setPlan] = useState<string | null | undefined>("");
   const [chooseDay, setChooseDay] = useState<JSX.Element>(<View></View>);
   const [daySection, setDaySection] = useState<JSX.Element>(<View></View>);
@@ -236,17 +243,12 @@ const AddTraining: React.FC = () => {
     async (): Promise<void> => {
       setLoading(true);
       const id = await AsyncStorage.getItem("id");
-      const trainingDays: number = await fetch(
-        `https://lgym-app-api-v2.vercel.app/api/${id}/configPlan`
+      const trainingTypes = await fetch(
+        `${apiURL}/api/planDay/${id}/getPlanDaysTypes`
       )
         .then((res) => res.json())
         .catch((err) => err)
-        .then((res) => res.count);
-      const helpsArray = ["A", "B", "C", "D", "E", "F", "G"];
-      const daysArray = [];
-      for (let i = 0; i < trainingDays; i++) {
-        daysArray.push(helpsArray[i]);
-      }
+    
 
       setChooseDay(
         <View className="items-center bg-[#131313] flex flex-col justify-start gap-y-5  h-full absolute m-0 w-full top-0">
@@ -256,11 +258,11 @@ const AddTraining: React.FC = () => {
           >
             Choose training day!
           </Text>
-          {daysArray.map((ele, index: number) => (
+          {trainingTypes.map((ele:{_id:string,name:string}) => (
             <TouchableOpacity
-              onPress={() => showDaySection(ele, false)}
+              onPress={() => showDaySection(ele._id, false)}
               className="items-center border-[#868686] border-[1px] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
-              key={index}
+              key={ele._id}
             >
               <Text
               className="text-white text-3xl"
@@ -268,7 +270,7 @@ const AddTraining: React.FC = () => {
                   fontFamily: "OpenSans_700Bold",
                 }}
               >
-                {ele}
+                {ele.name}
               </Text>
             </TouchableOpacity>
           ))}
@@ -277,34 +279,47 @@ const AddTraining: React.FC = () => {
       );
       setLoading(false);
     };
+  const resetChoosePlanDay=()=>{
+    setChooseDay(<></>)
+  }
   const showDaySection = async (
     day: string,
     session: boolean
   ): Promise<void> => {
     setViewLoading(true);
-    const id = await AsyncStorage.getItem("id");
-    const planOfTheDay: Array<Exercise> | undefined = await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/${id}/getPlan`
-    )
-      .then((res) => res.json())
-      .catch((err) => err)
-      .then((res) => {
-        const data: Data = res.data;
-        if (day === "A") return data.planA;
-        else if (day === "B") return data.planB;
-        else if (day === "C") return data.planC;
-        else if (day === "D") return data.planD;
-        else if (day === "E") return data.planE;
-        else if (day === "F") return data.planF;
-        else if (day === "G") return data.planG;
-      });
-    session
-      ? setCurrentDaySectionFromSession(planOfTheDay!, day)
-      : setCurrentDaySection(planOfTheDay!, day);
-    setDayToCheck(day);
-    setChooseDay(<View></View>);
-    setPickedDay(planOfTheDay);
+
+    setIsAddTrainingActive(true)
+    setDayId(day)
     setViewLoading(false)
+    props.hideMenuButton()
+
+
+
+
+
+    // const id = await AsyncStorage.getItem("id");
+    // const planOfTheDay: Array<Exercise> | undefined = await fetch(
+    //   `https://lgym-app-api-v2.vercel.app/api/${id}/getPlan`
+    // )
+    //   .then((res) => res.json())
+    //   .catch((err) => err)
+    //   .then((res) => {
+    //     const data: Data = res.data;
+    //     if (day === "A") return data.planA;
+    //     else if (day === "B") return data.planB;
+    //     else if (day === "C") return data.planC;
+    //     else if (day === "D") return data.planD;
+    //     else if (day === "E") return data.planE;
+    //     else if (day === "F") return data.planF;
+    //     else if (day === "G") return data.planG;
+    //   });
+    // session
+    //   ? setCurrentDaySectionFromSession(planOfTheDay!, day)
+    //   : setCurrentDaySection(planOfTheDay!, day);
+    // setDayToCheck(day);
+    // setChooseDay(<View></View>);
+    // setPickedDay(planOfTheDay);
+    // setViewLoading(false)
   };
   const setCurrentDaySection = async (
     exercises: Array<Exercise>,
@@ -1107,7 +1122,7 @@ const AddTraining: React.FC = () => {
     setIsPopUpRankShowed(false)
   }
   return (
-      <View className="bg-[#131313] h-[78%] w-full z-[2]">
+      <View className="bg-[#131313] flex-1 w-full">
         {plan === "completed" && plan ? (
           <View className="relative  flex flex-col justify-center items-center h-full w-full" >
             <TouchableOpacity onPress={getInformationsAboutPlanDays}>
@@ -1195,6 +1210,7 @@ const AddTraining: React.FC = () => {
             ) : (
               <Text></Text>
             )}
+            {isAddTrainingActive && dayId ? <TrainingPlanDay hideChooseDaySection={resetChoosePlanDay} dayId={dayId} /> : <></>}
           </View>
         ) : (
           <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center p-4">
