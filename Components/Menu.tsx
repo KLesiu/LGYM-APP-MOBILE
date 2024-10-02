@@ -43,12 +43,13 @@ const Menu: React.FC<MenuProps> = (props) => {
     toggleMenu();
     props.viewChange(component);
   };
-  const toggleMenuButton =()=>{
-    setIsMenuButtonVisible(!isMenuButtonVisible);
+  const toggleMenuButton =(hide:boolean)=>{
+    if(hide)setIsMenuButtonVisible(false)
+    else setIsMenuButtonVisible(true)
   }
 
   const items = [
-    { icon: addTraining, label: "Training", component: <AddTraining hideMenuButton={toggleMenuButton} /> },
+    { icon: addTraining, label: "Training", component: <AddTraining toggleMenuButton={toggleMenuButton} /> },
     {
       icon: exercise,
       label: "Exercises",

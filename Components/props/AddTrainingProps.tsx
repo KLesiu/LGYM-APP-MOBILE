@@ -1,3 +1,3 @@
 export default interface AddTrainingProps{
-    hideMenuButton:()=>void
+    toggleMenuButton:(hide:boolean)=>void
 }

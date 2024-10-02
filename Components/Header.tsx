@@ -14,7 +14,7 @@ const Header:React.FC =()=>{
     return(
         <View className="bg-[#131313] smh:h-14 lgh:h-20 px-4 py-4 flex flex-row justify-between items-center">
             <View className="flex flex-row items-center">
-                <View className="flex items-center justify-center w-10 h-10 rounded-full bg-[#4CD964] ">
+                <View className="flex items-center justify-center w-10 h-10 rounded-full bg-[#4cd964] ">
                     <Text className="text-black text-xl font-bold" style={{fontFamily:'OpenSans_700Bold'}}>{name[0]}</Text>
                 </View>
                 <View className="flex flex-col ml-4">

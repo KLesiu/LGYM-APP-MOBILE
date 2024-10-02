@@ -54,12 +54,12 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     setShowPlanConfig(true);
   };
   const showPlanDayForm = (): void => {
-    props.hideMenuButton();
+    props.hideMenuButton(true);
     setIsPlanDayFormVisible(true);
   };
   const hidePlanDayForm = (): void => {
     setIsPlanDayFormVisible(false);
-    props.hideMenuButton();
+    props.hideMenuButton(false);
   };
   const showPlanSetPopUp = (): void => {
     setShowPlanConfig(false);

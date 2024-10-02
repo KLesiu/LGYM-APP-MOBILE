@@ -1,3 +1,3 @@
 export  interface TrainingPlanProps{
-    hideMenuButton:()=>void
+    hideMenuButton:(hide:boolean)=>void
 }
