@@ -36,7 +36,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     exercise: ExerciseForm;
   }) => {
     return (
-      <Pressable className="flex flex-col w-full  min-h-[100px] rounded-lg bg-[#282828] p-2  ">
+      <View className="flex flex-col w-full  min-h-[100px] rounded-lg bg-[#282828] p-4  ">
         <View className="flex flex-row justify-between">
           <Text
             className="text-base text-white font-bold"
@@ -52,7 +52,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           </View>
         </View>
 
-        <View style={{ gap: 8 }} className="flex flex-col">
+        <View style={{ gap: 16 }} className="flex flex-col">
           <Text
             className="text-gray-300 text-[12px] pb-1 border-b-[1px] mb-1 border-white"
             style={{ fontFamily: "OpenSans_300Light" }}
@@ -62,8 +62,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           <View style={{ gap: 8 }} className="flex flex-col">
             {Array.from({ length: item.series }).map((_, index) => (
               <View className="flex flex-col">
-                <View className="flex flex-row">
-                  <View style={{ gap: 8 }} className="flex flex-row  w-1/2">
+                <View style={{gap:16}} className="flex flex-row">
+                  <View style={{ gap: 8 }} className="flex flex-row items-center  flex-1 ">
                     <Text
                       key={index}
                       className="text-white text-sm"
@@ -71,9 +71,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                     >
                       Reps:
                     </Text>
-                    <TextInput className="text-[15px] rounded w-[45%] border-[#575757] border-[1px] text-white" />
+                    <TextInput className="text-[15px] rounded border-[#575757] w-full border-[1px] text-white h-8" />
                   </View>
-                  <View style={{ gap: 8 }} className="flex flex-row  w-1/2">
+                  <View style={{ gap: 8 }} className="flex flex-row items-center  flex-1 ">
                     <Text
                       key={index}
                       className="text-white text-sm"
@@ -81,14 +81,14 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                     >
                       Weight:
                     </Text>
-                    <TextInput className="text-[15px] rounded w-[45%] border-[#575757] border-[1px] text-white " />
+                    <TextInput className="text-[15px] rounded  border-[#575757] w-full border-[1px] text-white h-8 " />
                   </View>
                 </View>
               </View>
             ))}
           </View>
         </View>
-      </Pressable>
+      </View>
     );
   };
 
@@ -96,7 +96,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     <View className="absolute w-full h-full text-white bg-[#121212] flex flex-col">
       {planDay && Object.keys(planDay).length ? (
         <View style={{ gap: 16 }} className="flex flex-col items-center p-4">
-          <View className="flex flex-col w-full">
+          <View style={{gap:16}} className="flex flex-col w-full">
+            <View className="flex flex-row flex-1 justify-between">
             <Pressable onPress={props.hideDaySection} className="rounded-md flex flex-row justify-center items-center w-20 h-8 bg-[#3f3f3f]">
               <Text
                 className="text-center text-sm text-white"
@@ -107,6 +108,17 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 BACK
               </Text>
             </Pressable>
+            <Pressable onPress={props.hideDaySection} className="rounded-md flex flex-row justify-center items-center w-28 h-8 bg-[#3f3f3f]">
+              <Text
+                className="text-center text-sm text-white"
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+              >
+                ADD EXERCISE
+              </Text>
+            </Pressable>
+            </View>
             <Text
               className="text-4xl text-white w-full text-center  font-bold "
               style={{
@@ -118,7 +130,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           </View>
 
           <ScrollView
-            className="smh:h-56 xsmh:h-72 mdh:h-[590px] lgh:h-[620px] w-full"
+            className="smh:h-56 xsmh:h-72 mdh:h-[590px] lgh:h-[620px] w-full -mr-4 pr-4"
             contentContainerStyle={{
               display: "flex",
               alignItems: "center",
