@@ -9,18 +9,31 @@ import {
 import TrainingPlanDayProps from "./props/TrainingPlanDayProps";
 import { useEffect, useState } from "react";
 import { PlanDayVm } from "./interfaces/PlanDay";
-import { ExerciseForm } from "./interfaces/Exercise";
+import { ExerciseForm, ExerciseForPlanDay } from "./interfaces/Exercise";
 import Switch from "./img/icons/switch.png";
 import Remove from "./img/icons/remove.png";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
+import { BodyParts } from "./enums/BodyParts";
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [planDay, setPlanDay] = useState<PlanDayVm>();
+  const [isTrainingPlanDayExerciseFormShow,setIsTrainingPlanDayExerciseFormShow] = useState<boolean>(false);
+  const [bodyPart,setBodyPart] = useState<BodyParts | undefined>();
+  const [exerciseWhichBeingSwitched,setExerciseWhichBeingSwitched] = useState<string | undefined>();
 
   useEffect(() => {
-    props.hideChooseDaySection();
-    getInformationAboutPlanDay();
+    initExercisePlanDay()
   }, []);
+
+
+  const initExercisePlanDay = async () => {
+    props.hideChooseDaySection();
+    const isPlanDayFromStorage = await getPlanDayFromLocalStorage()
+    if(isPlanDayFromStorage)return;
+    getInformationAboutPlanDay();
+  }
 
   const getInformationAboutPlanDay = async () => {
     const response = await fetch(
@@ -29,7 +42,71 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       .then((res) => res.json())
       .catch((err) => err);
     setPlanDay(response);
+    await sendPlanDayToLocalStorage(response);
   };
+  const sendPlanDayToLocalStorage = async(planDay:PlanDayVm)=>{
+    await AsyncStorage.setItem('planDay',JSON.stringify(planDay));
+  }
+  const getPlanDayFromLocalStorage = async():Promise<boolean>=>{
+    const planDay = await AsyncStorage.getItem('planDay');
+    if(!planDay) return false;
+    setPlanDay(JSON.parse(planDay));
+    return true
+  }
+  const deleteExerciseFromPlanDay = async(exerciseId:string | undefined)=>{
+    if(!exerciseId) return;
+    const newPlanDayExercises = planDay?.exercises.filter(exercise=>exercise.exercise._id!==exerciseId);
+    if(!newPlanDayExercises || !newPlanDayExercises.length || !planDay) return;
+    const newPlanDay = {...planDay,exercises:newPlanDayExercises};
+    await sendPlanDayToLocalStorage(newPlanDay);
+    setPlanDay(newPlanDay);
+    return newPlanDay
+    
+  }
+  const showExerciseFormByBodyPart = (bodyPart:BodyParts,exerciseToSwitchId:string)=>{
+    if(!exerciseToSwitchId)return;
+    setExerciseWhichBeingSwitched(exerciseToSwitchId);
+    setBodyPart(bodyPart);
+    setIsTrainingPlanDayExerciseFormShow(true);
+  }
+  const showExerciseForm = ()=>{
+    setBodyPart(undefined);
+    setExerciseWhichBeingSwitched(undefined);
+    setIsTrainingPlanDayExerciseFormShow(true);
+  }
+  const hideExerciseForm = ()=>{
+    setIsTrainingPlanDayExerciseFormShow(false);
+  }
+  const getExercise = async(id:string)=>{
+    const response = await fetch(
+      `${apiURL}/api/exercise/${id}/getExercise`
+    )
+      .then((res) => res.json())
+      .catch((err) => err);
+    return response;
+  }
+  const getExerciseToAddFromForm = async(exerciseId:string,series:number,reps:string)=>{
+    if(!planDay) return;
+    const response = await getExercise(exerciseId);
+    let newPlanDay:PlanDayVm = planDay
+    if(exerciseWhichBeingSwitched){
+      const response = await deleteExerciseFromPlanDay(exerciseWhichBeingSwitched)
+      if(!response) return;
+      newPlanDay = response;
+    } 
+    const newPlanDayExercises = [...newPlanDay.exercises,{exercise:response,series:series,reps:reps}];
+    newPlanDay = {...newPlanDay,exercises:newPlanDayExercises};
+    if(!newPlanDay) return;
+    await addExerciseToPlanDay(newPlanDay);
+    setIsTrainingPlanDayExerciseFormShow(false);
+    
+  }
+  const addExerciseToPlanDay = async(newPlanDay:PlanDayVm)=>{    
+    setPlanDay(newPlanDay);
+    console.log(newPlanDay)
+    await sendPlanDayToLocalStorage(newPlanDay);
+    
+  }
   const renderExerciseItem = (item: {
     series: number;
     reps: string;
@@ -47,8 +124,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             {item.exercise.name}
           </Text>
           <View style={{ gap: 8 }} className="flex flex-row">
-            <Image className="w-6 h-6" source={Switch} />
-            <Image className="w-6 h-6" source={Remove} />
+            <Pressable onPress={()=>showExerciseFormByBodyPart(item.exercise.bodyPart,`${item.exercise._id}`)}><Image className="w-6 h-6" source={Switch} /></Pressable>
+            <Pressable onPress={()=>deleteExerciseFromPlanDay(item.exercise._id)}><Image className="w-6 h-6" source={Remove} /></Pressable> 
           </View>
         </View>
 
@@ -108,7 +185,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 BACK
               </Text>
             </Pressable>
-            <Pressable onPress={props.hideDaySection} className="rounded-md flex flex-row justify-center items-center w-28 h-8 bg-[#3f3f3f]">
+            <Pressable onPress={showExerciseForm} className="rounded-md flex flex-row justify-center items-center w-28 h-8 bg-[#3f3f3f]">
               <Text
                 className="text-center text-sm text-white"
                 style={{
@@ -165,6 +242,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       ) : (
         <></>
       )}
+      {isTrainingPlanDayExerciseFormShow ? <TrainingPlanDayExerciseForm cancel={hideExerciseForm} addExerciseToPlanDay={getExerciseToAddFromForm} bodyPart={bodyPart} /> : <></>}
     </View>
   );
 };
