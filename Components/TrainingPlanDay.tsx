@@ -103,7 +103,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   }
   const addExerciseToPlanDay = async(newPlanDay:PlanDayVm)=>{    
     setPlanDay(newPlanDay);
-    console.log(newPlanDay)
     await sendPlanDayToLocalStorage(newPlanDay);
     
   }
@@ -227,7 +226,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 ADD
               </Text>
             </Pressable>
-            <Pressable className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]">
+            <Pressable onPress={props.hideAndDeleteTrainingSession} className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]">
               <Text
                 className="text-center text-xl text-white"
                 style={{

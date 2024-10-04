@@ -2,6 +2,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,6 +18,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [isAddTrainingActive, setIsAddTrainingActive] =
     useState<boolean>(false);
+  
   const [dayId, setDayId] = useState<string>();
   const [isUserHavePlan,setIsUserHavePlan] = useState<boolean>(false); 
   const [chooseDay, setChooseDay] = useState<JSX.Element>();
@@ -24,11 +26,12 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
 
 
-  useInterval(() => {
+  useInterval(() => {setChooseDay
   }, 1000);
   useEffect(() => {
     setViewLoading(true);
     checkIsUserHavePlan()
+    checkIsUserHaveActivePlanDayTraining()
     setViewLoading(false);
   }, []);
 
@@ -37,6 +40,10 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${apiURL}/api/${id}/checkIsUserHavePlan`).then(res=>res.json()).catch(err=>err)
     setIsUserHavePlan(response)
+  }
+  const checkIsUserHaveActivePlanDayTraining = async()=>{
+    const response = await AsyncStorage.getItem('planDay');
+    if(response) setIsAddTrainingActive(true)
   }
   const getInformationsAboutPlanDays: VoidFunction = async (): Promise<void> => {
       setLoading(true);
@@ -58,7 +65,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
           </Text>
           {trainingTypes.map((ele:{_id:string,name:string}) => (
             <TouchableOpacity
-              onPress={() => showDaySection(ele._id, false)}
+              onPress={() => showDaySection(ele._id)}
               className="items-center border-[#868686] border-[1px] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
               key={ele._id}
             >
@@ -80,9 +87,16 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     const resetChoosePlanDay=()=>{
       setChooseDay(<></>)
     }
+
+  const getCurrentPlanDayTraining = async()=>{
+    const response = await AsyncStorage.getItem('planDay');
+    if(!response) return;
+    const planDay = JSON.parse(response);
+    showDaySection(planDay._id)
+  }
   const showDaySection = async (
     day: string,
-    session: boolean
+    
   ): Promise<void> => {
     setViewLoading(true);
 
@@ -92,21 +106,32 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     props.toggleMenuButton(true);
   };
   const hideDaySection = () =>{
-    setIsAddTrainingActive(false)
     setDayId('')
     props.toggleMenuButton(false)
+  }
+  const hideAndDeleteTrainingSession = async()=>{
+    await AsyncStorage.removeItem('planDay')
+    setIsAddTrainingActive(false)
+    hideDaySection()
   }
 
   return (
     <View className="bg-[#131313] flex-1 w-full">
       {isUserHavePlan ? (
         <View className="relative  flex flex-col justify-center items-center h-full w-full">
-          <TouchableOpacity onPress={getInformationsAboutPlanDays}>
+          {isAddTrainingActive ?  <Pressable onPress={getCurrentPlanDayTraining}>
+            <Icon
+              style={{ fontSize: 140, color: "#4CD964" }}
+              name="play-circle"
+            />
+          </Pressable> :   <Pressable onPress={getInformationsAboutPlanDays}>
             <Icon
               style={{ fontSize: 140, color: "#4CD964" }}
               name="plus-circle"
             />
-          </TouchableOpacity>
+          </Pressable> }
+        
+        
           {loading ? <MiniLoading /> : <Text></Text>}
           {}
           {chooseDay}
@@ -114,6 +139,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
             <TrainingPlanDay
               hideChooseDaySection={resetChoosePlanDay}
               hideDaySection={hideDaySection}
+              hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
               dayId={dayId}
             />
           ) : (
