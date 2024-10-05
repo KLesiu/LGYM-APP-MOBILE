@@ -77,7 +77,7 @@ const Exercises: React.FC<StartProps> = (props) => {
     setIsExerciseFormVisible(true);
   };
   return (
-    <View className="relative flex flex-1">
+    <View className="relative flex flex-1 bg-[#121212]">
       <View className="flex  flex-col  p-4 ">
         {isLoading ? <ViewLoading /> : <Text></Text>}
         <View className="flex flex-col gap-2">

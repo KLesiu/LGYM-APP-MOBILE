@@ -147,7 +147,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   }
 
   return (
-    <View className="bg-[#131313] flex-1 w-full">
+    <View className="bg-[#121212] flex-1 w-full">
       {isUserHavePlan ? (
         <View className="relative  flex flex-col justify-center items-center h-full w-full">
           {isAddTrainingActive ?  <Pressable onPress={getCurrentPlanDayTraining}>

@@ -45,30 +45,31 @@ const Preload: React.FC = () => {
     setIsLoading(false);
   };
   return (
-    <View className="h-full bg-black">
+    <View className="h-full bg-[#282828]">
       <ImageBackground
-        className="h-full"
+      resizeMode="cover"
+        className="h-full w-full"
         source={backgroundLGYM}
       >
         <View className="bg-[#5c5c5cb3] h-full w-full">
           <View style={{gap:16}} className="flex-1 items-center flex bg-[#111111e2] justify-center h-full">
             <Image source={logoLGYM} className="w-[70%] h-2/5" />
             <TouchableOpacity
-              className="w-96 h-20 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center"
+              className="w-96 h-20 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center"
               onPress={handleLoginPress}
             >
               <Text
-                className="text-xs w-full text-center text-white"
+                className="text-base w-full text-center text-[#131313]"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >SIGN IN
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className=" w-96 h-20 rounded-lg py-4 px-2 m-0  border-[#4CD964] border-[1px]  flex justify-center items-center"
+              className=" w-96 h-20 rounded-lg py-4 px-2 m-0  border-[#94e798] border-[1px]  flex justify-center items-center"
               onPress={handleRegisterPress}
             >
               <Text
-                className="text-xs w-full text-center text-white"
+                className="text-base w-full text-center text-white"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
                 SIGN UP

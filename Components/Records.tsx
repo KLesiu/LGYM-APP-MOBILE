@@ -96,7 +96,7 @@ const Records: React.FC = () => {
               </View>
             </View>
           </ScrollView>
-          <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
+          <View style={{gap:8}} className="flex flex-row py-2 pl-6 justify-between items-center m-0">
             <Text
               style={{ fontFamily: "OpenSans_700Bold" }}
               className="text-white font-bold text-lg"
@@ -106,7 +106,7 @@ const Records: React.FC = () => {
             <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
               <Text
                 style={{ fontFamily: "OpenSans_700Bold" }}
-                className="text-[#4CD964] font-bold text-lg"
+                className="text-[#94e798] font-bold text-lg"
               >
                 {total || 0} kg
               </Text>
@@ -114,10 +114,10 @@ const Records: React.FC = () => {
           </View>
           <TouchableOpacity
             onPress={() => setPopUp(true)}
-            className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4" 
+            className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4" 
           >
             <Text
-         className="text-xs w-full text-center text-white"
+         className="text-xl w-full text-center text-[#131313]"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Update Records

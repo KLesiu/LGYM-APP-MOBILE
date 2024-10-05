@@ -11,9 +11,11 @@ import ViewLoading from "./ViewLoading";
 import Records from "./Records";
 import MainProfileInfo from "./MainProfileInfo";
 import Measurements from "./Measurements";
+import { Message } from "./enums/Message";
 
 
 const Profile: React.FC = () => {
+  const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [yourProfile, setYourProfile] = useState<UserProfile>();
   const [profileRank, setProfileRank] = useState<string>("");
   const [memberSince, setMemberSince] = useState<string>("");
@@ -46,23 +48,23 @@ const Profile: React.FC = () => {
   const getUserEloPoints = async():Promise<void> =>{
     const id = await AsyncStorage.getItem('id')
     const response =  await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/getUserEloPoints`).then(res=>res.json()).catch(err=>err)
+      `${apiURL}/api/userInfo/${id}/getUserEloPoints`).then(res=>res.json()).catch(err=>err)
     if("elo" in response){
       setProfileElo(response.elo)
     }
     
   }
   const styleCurrentTab = (tab:JSX.Element,cssRule:string):string=>{
-    if(cssRule==='border') return currentTab.type.name===tab.type.name?'#4CD964':'#131313'
-    return currentTab.type.name===tab.type.name?'#4CD964':'#E5E7EB'
+    if(cssRule==='border') return currentTab.type.name===tab.type.name?'#94e798':'#131313'
+    return currentTab.type.name===tab.type.name?'#94e798':'#E5E7EB'
   }
   const checkMoreUserInfo = async (id: string): Promise<void> => {
-    const response: "Didnt find" | UserInfo = await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}`
+    const response: Message.DidntFind | UserInfo = await fetch(
+      `${apiURL}/api/${id}/getUserInfo`
     )
       .then((res) => res.json())
       .then((res) => res);
-    if (response !== "Didnt find")
+    if (response !== Message.DidntFind)
       if (response.profileRank && response.createdAt) {
         setProfileRank(response.profileRank);
         setMemberSince(response.createdAt.slice(0, 10));
@@ -82,7 +84,7 @@ const Profile: React.FC = () => {
               {rankComponent}
             </View>
             <View className="flex flex-col items-center  gap-1  ">
-              <Text className="text-[#4CD964] font-bold w-full text-center text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>
+              <Text className="text-[#94e798] font-bold w-full text-center text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>
                   {yourProfile?.name}
               </Text>
               <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4">

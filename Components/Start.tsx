@@ -50,7 +50,7 @@ const Start: React.FC<StartProps> = (props) => {
     props.viewChange(component);
   };
   return (
-    <View className="w-full flex flex-col flex-1 bg-[#131313] ">
+    <View className="w-full flex flex-col flex-1 bg-[#121212] ">
       <View className="flex h-full w-full gap-4 flex-col">
         <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg">
           <View>

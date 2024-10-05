@@ -20,7 +20,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
         </View>
       </View>
       <View className="flex flex-col justify-around items-center w-full">
-      {/* <Pressable className="flex justify-center items-center rounded-lg h-14 w-full py-4 px-6 bg-[#4CD964]">
+      {/* <Pressable className="flex justify-center items-center rounded-lg h-14 w-full py-4 px-6 bg-[#94e798]">
       <Text
           className="text-black text-xl"
           style={{ fontFamily: "OpenSans_700Bold" }}
@@ -29,10 +29,10 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
         </Text>
       </Pressable> */}
       <Pressable
- className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4"         onPress={props.logout}
+ className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4"         onPress={props.logout}
       >
         <Text
-         className="text-xs w-full text-center text-white"
+         className="text-xl w-full text-center text-[#131313]"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Logout
