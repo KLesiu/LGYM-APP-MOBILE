@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Pressable,
   FlatList,
+  ScrollView,
 } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -85,7 +86,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
     return (
-      <View className="flex flex-col p-4 flex-1 bg-[#1E1E1E73] rounded-lg smh:h-56 mdh:h-96">
+      <View className="flex flex-col p-4  bg-[#1E1E1E73] rounded-lg w-full">
         <Text
           style={{
             fontFamily: "OpenSans_700Bold",
@@ -150,7 +151,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
           <Text></Text>
         )}
         {planConfig && Object.keys(planConfig).length ? (
-          <View className="flex flex-col h-full gap-4 items-center">
+          <View style={{gap:16}} className="flex flex-col h-full items-center">
             <View className="flex flex-row w-full justify-around items-center">
               <Text
                 className="w-full text-lg text-white  font-bold "
@@ -177,18 +178,12 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
               </Pressable>
             </View>
             {planDays && planDays.length ? (
-
-              <FlatList
-                className="flex gap-4"
-                data={planDays} // Źródło danych
-                renderItem={renderPlanDay} // Funkcja renderująca elementy
-                keyExtractor={(item) => item._id ?? item.name} // Klucz dla każdego elementu
-                horizontal={true} // Ustawienie na poziome przewijanie
-                pagingEnabled={true} // Włączenie paginacji (swipe)
-                showsHorizontalScrollIndicator={false} // Wyłączenie paska przewijania
-                ItemSeparatorComponent={() => <View className="w-8" />} 
-              />
-              
+              <ScrollView className="w-full">
+                <View style={{gap:8}} className="flex flex-col">
+                {planDays.map((planDay) => renderPlanDay({ item: planDay }))}
+                </View>
+                
+              </ScrollView>
             ) : (
               <Text></Text>
             )}
