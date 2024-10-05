@@ -117,7 +117,7 @@ const Records: React.FC = () => {
             className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4" 
           >
             <Text
-         className="text-xl w-full text-center text-[#131313]"
+         className="text-base w-full text-center text-[#131313]"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Update Records
