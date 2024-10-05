@@ -15,6 +15,7 @@ import AddTrainingProps from "./props/AddTrainingProps";
 import { TrainingSessionScores } from "./interfaces/Training";
 import { ExerciseScoresTrainingForm } from "./interfaces/ExercisesScores";
 import { WeightUnits } from "./enums/Units";
+import { Message } from "./enums/Message";
 
 
 const AddTraining: React.FC<AddTrainingProps> = (props) => {
@@ -139,7 +140,9 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
       },
       body:JSON.stringify({type:type,createdAt:createdAt,exercises:training})
     }).then(res=>res.json()).catch(err=>err)
-    console.log(response)
+    if(response.msg === Message.Created){
+      await hideAndDeleteTrainingSession()
+    }
 
   }
 
