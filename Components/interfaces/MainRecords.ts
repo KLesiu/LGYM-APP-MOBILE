@@ -1,6 +1,9 @@
+import { WeightUnits } from "../enums/Units";
+
 export interface MainRecordsForm{
-    _id:string,
+    _id?:string,
     weight:number,
     date: Date,
-    exercise:string
+    exercise:string,
+    unit:WeightUnits
 }

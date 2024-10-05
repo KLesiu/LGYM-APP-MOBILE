@@ -12,9 +12,10 @@ import Records from "./Records";
 import MainProfileInfo from "./MainProfileInfo";
 import Measurements from "./Measurements";
 import { Message } from "./enums/Message";
+import ProfileProps from "./props/ProfileProps";
 
 
-const Profile: React.FC = () => {
+const Profile: React.FC<ProfileProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [yourProfile, setYourProfile] = useState<UserProfile>();
   const [profileRank, setProfileRank] = useState<string>("");
@@ -100,7 +101,7 @@ const Profile: React.FC = () => {
         </View>
         <View className="w-full h-12 flex flex-row m-0 justify-between pr-6 mb-8">
             <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<MainProfileInfo/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<MainProfileInfo logout={logout}/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<MainProfileInfo/>,'text')}`}}>Data</Text></Pressable>
-            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Records/>,'border')}`,borderBottomWidth:1}} onPress={()=>setCurrentTab(<Records/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Records/>,'text')}`}}>Records</Text></Pressable>
+            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Records toggleMenuButton={props.toggleMenuButton}/>,'border')}`,borderBottomWidth:1}} onPress={()=>setCurrentTab(<Records toggleMenuButton={props.toggleMenuButton}/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Records toggleMenuButton={props.toggleMenuButton}/>,'text')}`}}>Records</Text></Pressable>
             <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Measurements/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<Measurements/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm"  style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Measurements/>,'text')}`}}>Measurements</Text></Pressable>
         </View>
         <View className="w-full mt-4">

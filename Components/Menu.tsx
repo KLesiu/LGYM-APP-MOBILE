@@ -66,7 +66,7 @@ const Menu: React.FC<MenuProps> = (props) => {
       label: "Home",
       component: <Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} />,
     },
-    { icon: profile, label: "Profile", component: <Profile /> },
+    { icon: profile, label: "Profile", component: <Profile toggleMenuButton={toggleMenuButton} /> },
   ];
 
   return (

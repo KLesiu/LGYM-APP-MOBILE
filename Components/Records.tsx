@@ -9,8 +9,9 @@ import { useEffect, useState } from "react";
 import RecordsPopUp from "./RecordsPopUp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "./ViewLoading";
+import RecordsProps from "./props/RecordsProps";
 
-const Records: React.FC = () => {
+const Records: React.FC<RecordsProps> = (props) => {
   const [deadLift, setDeadLift] = useState<number>();
   const [squat, setSquat] = useState<number>();
   const [benchPress, setBenchPress] = useState<number>();
@@ -113,7 +114,11 @@ const Records: React.FC = () => {
             </View>
           </View>
           <TouchableOpacity
-            onPress={() => setPopUp(true)}
+            onPress={() => {
+              props.toggleMenuButton(true)
+              setPopUp(true)
+
+            }}
             className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4" 
           >
             <Text
