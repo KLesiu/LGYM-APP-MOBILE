@@ -53,7 +53,7 @@ const Menu: React.FC<MenuProps> = (props) => {
     {
       icon: exercise,
       label: "Exercises",
-      component: <Exercises viewChange={props.viewChange} />,
+      component: <Exercises viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} />,
     },
     { icon: plan, label: "Plan", component: <TrainingPlan hideMenuButton={toggleMenuButton} /> },
     {
@@ -64,7 +64,7 @@ const Menu: React.FC<MenuProps> = (props) => {
     {
       icon: home,
       label: "Home",
-      component: <Start viewChange={props.viewChange} />,
+      component: <Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} />,
     },
     { icon: profile, label: "Profile", component: <Profile /> },
   ];

@@ -89,7 +89,7 @@ const Start: React.FC<StartProps> = (props) => {
           </View>
 
           <Pressable
-            onPress={() => navigateTo(<AddTraining />)}
+            onPress={() => navigateTo(<AddTraining toggleMenuButton={props.toggleMenuButton} />)}
             className="h-16 w-24 bg-[#4CD964] rounded-xl flex items-center justify-center"
           >
             <Text
