@@ -12,6 +12,9 @@ import MiniLoading from "./MiniLoading";
 import useInterval from "./helpers/hooks/useInterval";
 import TrainingPlanDay from "./TrainingPlanDay";
 import AddTrainingProps from "./props/AddTrainingProps";
+import { TrainingSessionScores } from "./interfaces/Training";
+import { ExerciseScoresTrainingForm } from "./interfaces/ExercisesScores";
+import { WeightUnits } from "./enums/Units";
 
 
 const AddTraining: React.FC<AddTrainingProps> = (props) => {
@@ -111,8 +114,33 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   }
   const hideAndDeleteTrainingSession = async()=>{
     await AsyncStorage.removeItem('planDay')
+    await AsyncStorage.removeItem('trainingSessionScores')
     setIsAddTrainingActive(false)
     hideDaySection()
+  }
+  const addTraining = async(exercises:TrainingSessionScores[])=>{
+    const id = await AsyncStorage.getItem("id");
+    const type =  dayId;
+    const createdAt = new Date();
+    const training = exercises.map((ele:TrainingSessionScores)=>{
+      const exerciseScoresTrainingForm: ExerciseScoresTrainingForm = {
+        exercise: `${ele.exercise._id}`,
+        reps: ele.reps,
+        series: ele.series,
+        weight: ele.weight,
+        unit: WeightUnits.KILOGRAMS
+      }
+      return exerciseScoresTrainingForm
+    })
+    const response = await fetch(`${apiURL}/api/${id}/addTraining`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({type:type,createdAt:createdAt,exercises:training})
+    }).then(res=>res.json()).catch(err=>err)
+    console.log(response)
+
   }
 
   return (
@@ -140,6 +168,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
               hideChooseDaySection={resetChoosePlanDay}
               hideDaySection={hideDaySection}
               hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
+              addTraining={addTraining}
               dayId={dayId}
             />
           ) : (

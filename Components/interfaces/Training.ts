@@ -1,10 +1,18 @@
 import FieldScore from "./FieldScore"
 import { ExerciseScoresForm,ExerciseScoresTrainingForm } from "./ExercisesScores"
+import { ExerciseForm } from "./Exercise";
 
 interface TrainingForm{
     type:string,
     createdAt:Date,
     exercises:ExerciseScoresTrainingForm[]
+}
+
+export interface TrainingSessionScores{
+    exercise: ExerciseForm;
+    series: number;
+    reps: number;
+    weight: number;
 }
 
 export {TrainingForm}
