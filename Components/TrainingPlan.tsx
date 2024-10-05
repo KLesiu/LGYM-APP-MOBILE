@@ -86,12 +86,12 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
     return (
-      <View className="flex flex-col p-4  bg-[#1E1E1E73] rounded-lg w-full">
+      <View className="flex flex-col p-4  bg-[#282828] rounded-lg w-full">
         <Text
           style={{
             fontFamily: "OpenSans_700Bold",
           }}
-          className="text-2xl font-bold text-[#4CD964]"
+          className="text-2xl font-bold text-[#94e798]"
         >
           {item.name}
         </Text>
@@ -116,13 +116,13 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
 
   return (
-    <View className="flex flex-1 relative w-full bg-[#131313]">
+    <View className="flex flex-1 relative w-full bg-[#121212]">
       <View className="w-full h-full p-4 flex flex-col">
         {!planConfig ? (
           <View className="flex flex-row w-full justify-around">
             <TouchableOpacity
               onPress={showPlanConfigPopUp}
-              className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
+              className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
             >
               <Text
                 className="text-black text-md w-full text-center"
@@ -134,7 +134,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
+              className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
               onPress={() => showImportPlanPopUpFn()}
             >
               <Text
@@ -164,7 +164,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
             </View>
             <View>
               <Pressable
-                className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg"
+                className="w-40  h-12 flex items-center justify-center bg-[#94e798] rounded-lg"
                 onPress={showPlanDayForm}
               >
                 <Text
@@ -179,7 +179,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
             </View>
             {planDays && planDays.length ? (
               <ScrollView className="w-full">
-                <View style={{gap:8}} className="flex flex-col">
+                <View style={{gap:8}} className="flex flex-col pb-12">
                 {planDays.map((planDay) => renderPlanDay({ item: planDay }))}
                 </View>
                 

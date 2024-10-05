@@ -118,9 +118,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   );
 
   return (
-    <View className="absolute h-full w-full flex flex-col bg-black top-0 z-30 gap-0">
+    <View className="absolute h-full w-full flex flex-col bg-[#121212] top-0 z-30 gap-0">
       <Text
-        className="text-3xl text-white text-center border-b-2 border-[#4CD964] w-full p-4"
+        className="text-3xl text-white text-center border-b-2 border-[#94e798] w-full p-4"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         New Plan Day
@@ -167,11 +167,11 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         </View>
 
         {/* Formularz dodawania ćwiczeń */}
-        <View className="p-4 flex flex-col items-end bg-[#4CD964] mt-4 rounded-lg">
+        <View className="p-4 flex flex-col items-end bg-[#282828] mt-4 rounded-lg">
           <View className="flex flex-col w-full">
             <Text
               style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-black text-xl"
+              className="text-white text-xl"
             >
               Exercise:
             </Text>
@@ -186,7 +186,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           <View className="flex flex-col w-full">
             <Text
               style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-black text-xl"
+              className="text-white text-xl"
             >
               Series:
             </Text>
@@ -202,7 +202,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           <View className="flex flex-col w-full">
             <Text
               style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-black text-xl"
+              className="text-white text-xl"
             >
               Reps:
             </Text>
@@ -227,10 +227,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           </Pressable>
         </View>
 
-        <Pressable className="bg-[#4CD964] self-end w-40 h-12 flex items-center justify-center rounded-lg" onPress={createPlanDay}>
+        <Pressable className="bg-[#94e798] self-end w-40 h-12 flex items-center justify-center rounded-lg" onPress={createPlanDay}>
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-2xl"
+            className="text-[#131313] text-2xl"
           >
             CREATE
           </Text>

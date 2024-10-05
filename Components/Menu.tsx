@@ -118,7 +118,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           width: 64,
           height: 64,
           borderRadius: 32,
-          backgroundColor: "#4CD964",
+          backgroundColor: "#94e798",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 9,
