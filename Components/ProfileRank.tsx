@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 import Ranks from "./helpers/rankStore";
 
 const ProfileRank:React.FC=()=>{
+    const apiURL = `${process.env.REACT_APP_BACKEND}`;
     const [rankSrc,setSrcRank] = useState<ImageProps>()
     const getRank = async()=>{
         const id = await AsyncStorage.getItem("id");
         const response: SuccessMsg = await fetch(
-          `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/userElo`
+          `${apiURL}/api/userInfo/${id}/userElo`
         ).then((res) => res.json());
         if (response.msg === "Junior 1") setSrcRank(Ranks.Junior1);
         else if (response.msg === "Junior 2") setSrcRank(Ranks.Junior2);

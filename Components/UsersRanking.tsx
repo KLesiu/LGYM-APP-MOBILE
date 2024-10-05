@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
-import { UserRanking } from "./types/Training";
 import ViewLoading from "./ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserBaseInfo } from "./interfaces/User";
 
 const UsersRanking: React.FC = () => {
-  const [ranking, setRanking] = useState<UserRanking[]>([]);
+  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+  const [ranking, setRanking] = useState<UserBaseInfo[]>([]);
   const [username,setUsername]= useState<string>("");
   const getRanking = async () => {
     const response = await fetch(
-      "https://lgym-app-api-v2.vercel.app/api/getBestTenUsersFromElo"
+      `${apiURL}/api/getUsersRanking`
     )
       .then((res) => res.json())
       .catch((err) => err);
@@ -26,31 +27,31 @@ const UsersRanking: React.FC = () => {
   return (
     <View className="h-full w-full">
       <Text
-        className="text-[#4CD964] text-xl"
+        className="text-[#94e798] text-xl"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
        Ranking
       </Text>
       <ScrollView className="flex flex-col py-4 gap-2 smh:h-52 mdh:h-64  ">
       {ranking.length ? (
-        ranking.map((ele: UserRanking) => {
+        ranking.map((ele: UserBaseInfo,index:number) => {
             let color = "text-white"
-            if(ele.user.name === username) color="text-[#4CD964]"
+            if(ele.name === username) color="text-[#94e798]"
           return (
             
-            <View className="flex flex-row " key={ele.position}>
+            <View className="flex flex-row " key={index}>
               <Text
                 className={color + " mr-2"}
                 
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
-                {ele.position}
+                {index+1}
               </Text>
               <Text
                 className={color}
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
-                {ele.user.name} - {ele.user.elo} ELO
+                {ele.name} - {ele.elo} ELO
               </Text>
             </View>
           );

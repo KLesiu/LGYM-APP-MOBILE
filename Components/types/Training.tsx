@@ -22,11 +22,6 @@ export type MarkedDates = {
     dots: {color:string,selectedColor?:string}[]
 }
 
-export type UserRanking = {
-    // model użytkownika
-    user: any,
-    position:number
 
-}
 
 export default Training

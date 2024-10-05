@@ -8,14 +8,24 @@ interface TrainingForm{
     exercises:ExerciseScoresTrainingForm[]
 }
 
-export interface TrainingSessionScores{
+interface TrainingSessionScores{
     exercise: ExerciseForm;
     series: number;
     reps: number;
     weight: number;
 }
 
-export {TrainingForm}
+interface LastTrainingInfo{
+    _id:string,
+    type:string,
+    createdAt:Date,
+    planDay:{
+        name:string
+    }
+}
+
+
+export {TrainingForm,TrainingSessionScores,LastTrainingInfo}
 
 
 
