@@ -43,10 +43,10 @@ const Exercises: React.FC<StartProps> = (props) => {
   const renderExerciseItem = ({ item }: { item: ExerciseForm }) => (
     <Pressable
       onPress={() => showExerciseDetails(item)}
-      className="flex flex-col w-36 rounded-lg bg-[#4cd963b6] p-2  "
+      className="flex flex-col w-36 rounded-lg bg-[#94e798] p-2  "
     >
       <Text
-        className="text-base text-white font-bold"
+        className="text-base text-[#131313] font-bold"
         style={{
           fontFamily: "OpenSans_700Bold",
         }}
@@ -54,7 +54,7 @@ const Exercises: React.FC<StartProps> = (props) => {
         {item.name}
       </Text>
       <Text
-        className="text-sm text-black"
+        className="text-sm text-[#1f1f1f]"
         style={{
           fontFamily: "OpenSans_400Regular",
         }}
@@ -113,7 +113,7 @@ const Exercises: React.FC<StartProps> = (props) => {
             </Text>
             <Pressable
               onPress={openExerciseForm}
-              className="w-40  h-12 flex items-center justify-center bg-[#4CD964] rounded-lg"
+              className="w-40  h-12 flex items-center justify-center bg-[#94e798] rounded-lg"
             >
               <Text
                 className="text-base text-black  font-bold "

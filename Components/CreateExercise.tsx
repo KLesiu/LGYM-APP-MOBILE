@@ -171,7 +171,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         {props.form ? (
           <Pressable
             onPress={updateExercise}
-            className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
+            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
           >
             <Text
               className="text-xl"
@@ -183,7 +183,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         ) : (
           <Pressable
             onPress={createExercise}
-            className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"
+            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
           >
             <Text
               className="text-xl"

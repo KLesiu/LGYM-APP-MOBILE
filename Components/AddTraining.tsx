@@ -152,12 +152,12 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
         <View className="relative  flex flex-col justify-center items-center h-full w-full">
           {isAddTrainingActive ?  <Pressable onPress={getCurrentPlanDayTraining}>
             <Icon
-              style={{ fontSize: 140, color: "#4CD964" }}
+              style={{ fontSize: 140, color: "#94e798" }}
               name="play-circle"
             />
           </Pressable> :   <Pressable onPress={getInformationsAboutPlanDays}>
             <Icon
-              style={{ fontSize: 140, color: "#4CD964" }}
+              style={{ fontSize: 140, color: "#94e798" }}
               name="plus-circle"
             />
           </Pressable> }
