@@ -1,3 +1,4 @@
 export default interface RecordsPopUpProps {
-    offPopUp: ()=>void
+    offPopUp: ()=>void,
+    exerciseId:string | undefined
 }

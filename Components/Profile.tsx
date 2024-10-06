@@ -10,14 +10,16 @@ import { RootStackParamList } from "./types/RootStackParamList";
 import ViewLoading from "./ViewLoading";
 import Records from "./Records";
 import MainProfileInfo from "./MainProfileInfo";
-import Measurements from "./Measurements";
+import { Message } from "./enums/Message";
+import ProfileProps from "./props/ProfileProps";
+import Start from "./Start";
 
-
-const Profile: React.FC = () => {
+const Profile: React.FC<ProfileProps> = (props) => {
+  const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [yourProfile, setYourProfile] = useState<UserProfile>();
   const [profileRank, setProfileRank] = useState<string>("");
   const [memberSince, setMemberSince] = useState<string>("");
-  const [profileElo,setProfileElo]= useState<number>()
+  const [profileElo, setProfileElo] = useState<number>();
   const [rankComponent, setRankComponent] = useState<JSX.Element>();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -27,13 +29,15 @@ const Profile: React.FC = () => {
     keys.forEach((ele) => deleteFromStorage(ele));
     navigation.navigate("Preload");
   };
-  const [currentTab,setCurrentTab]=useState<JSX.Element>(<MainProfileInfo logout={logout}/>)
+  const [currentTab, setCurrentTab] = useState<JSX.Element>(
+    <MainProfileInfo logout={logout} />
+  );
 
   useEffect(() => {
+    props.toggleMenuButton(true);
     setViewLoading(true);
     getDataFromStorage();
-    setRankComponent(<ProfileRank />);
-    getUserEloPoints()
+    getUserEloPoints();
   }, []);
 
   const getDataFromStorage = async (): Promise<void> => {
@@ -41,31 +45,36 @@ const Profile: React.FC = () => {
     const email = await AsyncStorage.getItem("email");
     const id = await AsyncStorage.getItem("id");
     setYourProfile({ name: username!, email: email! });
-    checkMoreUserInfo(id!);
+    await checkMoreUserInfo(id!);
   };
-  const getUserEloPoints = async():Promise<void> =>{
-    const id = await AsyncStorage.getItem('id')
-    const response =  await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/getUserEloPoints`).then(res=>res.json()).catch(err=>err)
-    if("elo" in response){
-      setProfileElo(response.elo)
+  const getUserEloPoints = async (): Promise<void> => {
+    const id = await AsyncStorage.getItem("id");
+    const response = await fetch(
+      `${apiURL}/api/userInfo/${id}/getUserEloPoints`
+    )
+      .then((res) => res)
+      .catch((err) => err)
+      .then((res) => res.json());
+    if ("elo" in response) {
+      setProfileElo(response.elo);
     }
-    
-  }
-  const styleCurrentTab = (tab:JSX.Element,cssRule:string):string=>{
-    if(cssRule==='border') return currentTab.type.name===tab.type.name?'#4CD964':'#131313'
-    return currentTab.type.name===tab.type.name?'#4CD964':'#E5E7EB'
-  }
+  };
+  const styleCurrentTab = (tab: JSX.Element, cssRule: string): string => {
+    if (cssRule === "border")
+      return currentTab.type.name === tab.type.name ? "#94e798" : "#131313";
+    return currentTab.type.name === tab.type.name ? "#94e798" : "#E5E7EB";
+  };
   const checkMoreUserInfo = async (id: string): Promise<void> => {
-    const response: "Didnt find" | UserInfo = await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}`
+    const response: Message.DidntFind | UserInfo = await fetch(
+      `${apiURL}/api/${id}/getUserInfo`
     )
       .then((res) => res.json())
       .then((res) => res);
-    if (response !== "Didnt find")
+    if (response !== Message.DidntFind)
       if (response.profileRank && response.createdAt) {
         setProfileRank(response.profileRank);
         setMemberSince(response.createdAt.slice(0, 10));
+        setRankComponent(<ProfileRank rank={response.profileRank} />);
       }
     setViewLoading(false);
   };
@@ -74,41 +83,115 @@ const Profile: React.FC = () => {
     await AsyncStorage.removeItem(key);
   };
 
+  const goBack = ()=>{
+    props.toggleMenuButton(false)
+    props.viewChange(<Start viewChange={props.viewChange} toggleMenuButton={props.toggleMenuButton} />)
+
+  }
+
   return (
-      <View className=" relative w-full bg-[#131313]">
-        <View className="w-full p-4 flex flex-col">
-        <View className="flex justify-center flex-row py-3 px-6 gap-3">
-            <View className="flex  justify-center flex-col items-center flex-wrap  rounded pl-2  ">
-              {rankComponent}
-            </View>
-            <View className="flex flex-col items-center  gap-1  ">
-              <Text className="text-[#4CD964] font-bold w-full text-center text-2xl" style={{ fontFamily: "OpenSans_700Bold"}}>
-                  {yourProfile?.name}
-              </Text>
-              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4">
-                  {profileRank}
-              </Text>
-              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4">
-                  {profileElo} Elo
-              </Text>
-              <Text style={{fontFamily:"OpenSans_300Light"}} className="text-gray-200/80 font-light leading-4"> 
-                  Member since: {memberSince}
-              </Text>
-            </View>
+    <View className="relative h-full w-full flex bg-[#131313]">
+      <View className="w-full h-full p-4 flex flex-col flex-1">
+
+        <View className="flex justify-center flex-row py-3 px-6">
+          <View className="flex  justify-center flex-col items-center flex-wrap  rounded pl-2  ">
+            {rankComponent}
+          </View>
+          <View className="flex flex-col items-center  gap-1  ">
+            <Text
+              className="text-[#94e798] font-bold w-full text-center text-2xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              {yourProfile?.name}
+            </Text>
+            <Text
+              style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-gray-200/80 font-light leading-4"
+            >
+              {profileRank}
+            </Text>
+            <Text
+              style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-gray-200/80 font-light leading-4"
+            >
+              {profileElo} Elo
+            </Text>
+            <Text
+              style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-gray-200/80 font-light leading-4"
+            >
+              Member since: {memberSince}
+            </Text>
+          </View>
         </View>
-        <View className="w-full h-12 flex flex-row m-0 justify-between pr-6 mb-8">
-            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<MainProfileInfo/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<MainProfileInfo logout={logout}/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<MainProfileInfo/>,'text')}`}}>Data</Text></Pressable>
-            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Records/>,'border')}`,borderBottomWidth:1}} onPress={()=>setCurrentTab(<Records/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm" style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Records/>,'text')}`}}>Records</Text></Pressable>
-            <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Measurements/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<Measurements/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm"  style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Measurements/>,'text')}`}}>Measurements</Text></Pressable>
+        <View className="w-full flex">
+          <Pressable className="rounded-lg flex flex-row justify-center items-center w-20 h-10 bg-[#3f3f3f]" onPress={goBack}>
+            <Text
+              className="text-center text-sm text-white"
+              style={{
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+              BACK
+            </Text>
+          </Pressable>
         </View>
-        <View className="w-full mt-4">
-          {currentTab}
-          
+        <View className="w-full h-12 flex flex-row pr-6">
+          <Pressable
+            className="flex flex-row justify-center items-center flex-1"
+            style={{
+              borderBottomColor: `${styleCurrentTab(
+                <MainProfileInfo />,
+                "border"
+              )}`,
+              borderBottomWidth: 1,
+            }}
+            onPress={() => setCurrentTab(<MainProfileInfo logout={logout} />)}
+          >
+            <Text
+              className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm"
+              style={{
+                fontFamily: "OpenSans_300Light",
+                color: `${styleCurrentTab(<MainProfileInfo />, "text")}`,
+              }}
+            >
+              Data
+            </Text>
+          </Pressable>
+          <Pressable
+            className="flex flex-row justify-center items-center flex-1"
+            style={{
+              borderBottomColor: `${styleCurrentTab(
+                <Records toggleMenuButton={props.toggleMenuButton} />,
+                "border"
+              )}`,
+              borderBottomWidth: 1,
+            }}
+            onPress={() =>
+              setCurrentTab(
+                <Records toggleMenuButton={props.toggleMenuButton} />
+              )
+            }
+          >
+            <Text
+              className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm"
+              style={{
+                fontFamily: "OpenSans_300Light",
+                color: `${styleCurrentTab(
+                  <Records toggleMenuButton={props.toggleMenuButton} />,
+                  "text"
+                )}`,
+              }}
+            >
+              Records
+            </Text>
+          </Pressable>
+          {/* <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Measurements/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<Measurements/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm"  style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Measurements/>,'text')}`}}>Measurements</Text></Pressable> */}
         </View>
-        </View>
-       
-        {viewLoading ? <ViewLoading /> : <Text></Text>}
+        <View className="w-full flex-1 mt-4">{currentTab}</View>
       </View>
+      {viewLoading ? <ViewLoading /> : <Text></Text>}
+    </View>
   );
 };
 export default Profile;

@@ -14,7 +14,7 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [secureTextEntry,setSecureTextEntry]=useState<boolean>(true)
-  const apiURL = `https://lgym-app-api-v2.vercel.app/api/login`;
+  const apiURL =`${process.env.REACT_APP_BACKEND}/api/login`;
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -55,9 +55,6 @@ const Login: React.FC = () => {
             await AsyncStorage.setItem("username", res.req.name);
             await AsyncStorage.setItem("id", res.req._id);
             await AsyncStorage.setItem("email", res.req.email);
-            await AsyncStorage.setItem("bp", `${res.req.Bp}` || "0");
-            await AsyncStorage.setItem("dl", `${res.req.Dl}` || "0");
-            await AsyncStorage.setItem("sq", `${res.req.Sq}` || "0");
             return "Authorized";
           }
         });
@@ -75,13 +72,13 @@ const Login: React.FC = () => {
     return navigation.navigate("Preload")
   }
   return (
-    <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
+    <View className="flex items-center flex-col h-full justify-start bg-[#121212]">
       <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
       <Image className="w-full h-full" source={logoLGYM} />
       </Pressable>
 
       <View className="w-full flex flex-col items-center justify-start">
-      <Text className="text-[#4CD964] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
+      <Text className="text-[#94e798] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Username
       </Text>
       <TextInput
@@ -89,7 +86,7 @@ const Login: React.FC = () => {
         className="rounded-xl h-12 text-base w-80 bg-white text-black mt-1 pl-4"
         autoComplete="given-name"
       />
-      <Text className="text-[#4CD964] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
+      <Text className="text-[#94e798] text-3xl m-1" style={{ fontFamily: "OpenSans_700Bold"}}>
         Password
       </Text>
       <View className="flex w-4/5 h-12 items-center justify-center">
@@ -100,16 +97,16 @@ const Login: React.FC = () => {
       >
 
       </TextInput>
-      <Pressable className="absolute w-16 h-full text-sm flex items-center justify-center bg-[#4CD964] rounded-xl  right-0" onPress={() => setSecureTextEntry(!secureTextEntry)}>
-          <Text className="text-white text-lg ">{secureTextEntry?'SHOW':'HIDE'}</Text>
+      <Pressable className="absolute w-16 h-full text-sm flex items-center justify-center bg-[#94e798] rounded-xl  right-0" onPress={() => setSecureTextEntry(!secureTextEntry)}>
+          <Text className="text-[#121212] text-lg ">{secureTextEntry?'SHOW':'HIDE'}</Text>
         </Pressable>
       </View>
 
       </View>
       
-      <Pressable  className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4" onPress={login} >
+      <Pressable  className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4" onPress={login} >
         <Text
-         className="text-xs w-full text-center text-white"
+         className="text-base w-full text-center text-[#131313]"
           style={{ fontFamily: "OpenSans_700Bold"}}
         >LOGIN
         </Text>

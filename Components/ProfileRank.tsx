@@ -1,26 +1,21 @@
 import {Image, ImageProps} from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import SuccessMsg from "./types/SuccessMsg";
 import { useEffect, useState } from "react";
 import Ranks from "./helpers/rankStore";
+import ProfileRankProps from "./props/ProfileRankProps";
 
-const ProfileRank:React.FC=()=>{
+const ProfileRank:React.FC<ProfileRankProps>=(props)=>{
     const [rankSrc,setSrcRank] = useState<ImageProps>()
     const getRank = async()=>{
-        const id = await AsyncStorage.getItem("id");
-        const response: SuccessMsg = await fetch(
-          `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/userElo`
-        ).then((res) => res.json());
-        if (response.msg === "Junior 1") setSrcRank(Ranks.Junior1);
-        else if (response.msg === "Junior 2") setSrcRank(Ranks.Junior2);
-        else if (response.msg === "Junior 3") setSrcRank(Ranks.Junior3);
-        else if (response.msg === "Mid 1") setSrcRank(Ranks.Mid1);
-        else if (response.msg === "Mid 2") setSrcRank(Ranks.Mid2);
-        else if (response.msg === "Mid 3") setSrcRank(Ranks.Mid3);
-        else if (response.msg === "Pro 1") setSrcRank(Ranks.Pro1);
-        else if (response.msg === "Pro 2") setSrcRank(Ranks.Pro2);
-        else if (response.msg === "Pro 3") setSrcRank(Ranks.Pro3);
-        else if (response.msg === "Champ") setSrcRank(Ranks.Champ);
+        if (props.rank === "Junior 1") setSrcRank(Ranks.Junior1);
+        else if (props.rank === "Junior 2") setSrcRank(Ranks.Junior2);
+        else if (props.rank === "Junior 3") setSrcRank(Ranks.Junior3);
+        else if (props.rank === "Mid 1") setSrcRank(Ranks.Mid1);
+        else if (props.rank === "Mid 2") setSrcRank(Ranks.Mid2);
+        else if (props.rank === "Mid 3") setSrcRank(Ranks.Mid3);
+        else if (props.rank === "Pro 1") setSrcRank(Ranks.Pro1);
+        else if (props.rank === "Pro 2") setSrcRank(Ranks.Pro2);
+        else if (props.rank === "Pro 3") setSrcRank(Ranks.Pro3);
+        else if (props.rank === "Champ") setSrcRank(Ranks.Champ);
     }
     useEffect(()=>{
         getRank()

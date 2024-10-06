@@ -10,9 +10,12 @@ import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import TrainingSession from "./TrainingSession";
 import ViewLoading from "./ViewLoading";
 import HistoryProps from "./props/HistoryProps";
+import { TrainingByDate, TrainingByDateDetails } from "./interfaces/Training";
+import { Message } from "./enums/Message";
 const History: React.FC<HistoryProps> = (props) => {
+  const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const calendar = useRef(null);
-  const [session,setSession]=useState<Training>()
+  const [trainings,setTrainings]=useState<TrainingByDateDetails[]>()
   const [viewLoading,setViewLoading]=useState<boolean>(false)
   useEffect(()=>{
     setViewLoading(true)
@@ -22,11 +25,10 @@ const History: React.FC<HistoryProps> = (props) => {
 
   const getTrainingByDate = async (dateObject: any): Promise<void> => {
     const date: Date = new Date(dateObject._d);
-    setSession(undefined)
     if (!date) return;
     const id = await AsyncStorage.getItem("id");
-    const response: ErrorMsg | Training = await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/${id}/getTraining`,
+    const response: Message | TrainingByDateDetails[] = await fetch(
+      `${apiURL}/api/${id}/getTrainingByDate`,
       {
         method: "POST",
         headers: {
@@ -37,28 +39,31 @@ const History: React.FC<HistoryProps> = (props) => {
         }),
       }
     )
-      .then((res) => res.json())
+      .then((res) => res)
       .catch((err) => err)
-      .then((res) => res);
-      if('exercises' in response)setSession(response as Training)
-      else setSession(undefined)
+      .then((res) => res.json());
+      if(Array.isArray(response)){
+        setTrainings(response)
+      }else{
+        setTrainings([])
+      }
     setViewLoading(false)
     };
   return (
-    <View className="relative h-[78%]">
+    <View className="bg-[#121212] flex-1 w-full relative">
       <View className="flex flex-col h-full p-4">
       <ReactNativeCalendarStrip
         onDateSelected={getTrainingByDate}
         ref={calendar}
         selectedDate={new Date()}
         iconLeftStyle={{
-          backgroundColor: "#4CD964",
+          backgroundColor: "#94e798",
           height: 25,
           width: 25,
           borderRadius: 5,
         }}
         iconRightStyle={{
-          backgroundColor: "#4CD964",
+          backgroundColor: "#94e798",
           height: 25,
           width: 25,
           borderRadius: 5,
@@ -72,11 +77,11 @@ const History: React.FC<HistoryProps> = (props) => {
         dateNumberStyle={{ color: "#5A5A5A",fontSize:14 }}
         dateNameStyle={{ color: "#5A5A5A",fontSize:11 }}
         highlightDateContainerStyle={{
-          backgroundColor: "#4CD964",
+          backgroundColor: "#94e798",
           borderRadius: 5,
         }}
         highlightDateNumberContainerStyle={{
-          backgroundColor: "#4CD964",
+          backgroundColor: "#94e798",
           borderRadius: 5,
         }}
         highlightDateNameStyle={{
@@ -88,7 +93,7 @@ const History: React.FC<HistoryProps> = (props) => {
         }}
         iconContainer={{ flex: 0.1 }}
       />
-            {session?<TrainingSession training={session}/>:
+            {trainings && trainings.length?<TrainingSession trainings={trainings}/>:
       <View className="flex justify-center w-full h-1/2 items-center p-4">
           <Text style={{fontFamily:'OpenSans_700Bold'}} className="text-white text-xl text-center">You dont have training session this day!</Text>
         </View>}

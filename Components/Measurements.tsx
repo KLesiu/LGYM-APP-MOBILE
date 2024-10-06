@@ -68,16 +68,16 @@ const Measurements: React.FC = () => {
     );
   };
   return (
-    <View className="bg-[#131313] relative">
+    <View className="bg-[#121212] relative">
       {isFormShow && measurementsObject?<AddMeasurementsPopUp hideForm={hideForm} measurements={measurementsObject}/>:
             <View className="flex flex-col items-center px-1">
             <ScrollView className="w-full  smh:h-56 xsmh:h-72 mdh:h-80 lgh:h-96" >
               {measurements.length > 0?measurements:<Text></Text>}
               </ScrollView>
       
-            <Pressable onPress={()=>setIsFormShow(true)}  className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4">
+            <Pressable onPress={()=>setIsFormShow(true)}  className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4">
               <Text
-         className="text-xs w-full text-center text-white"
+         className="text-base w-full text-center text-[#121212]"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
                 Update Measurements

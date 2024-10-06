@@ -59,26 +59,26 @@ const Register: React.FC = () => {
 
 
   return (
-    <View className="flex items-center flex-col h-full justify-start bg-[#191919]">
+    <View className="flex items-center flex-col h-full justify-start bg-[#121212]">
       <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
       <Image  className="w-full h-full mb-[5%]" source={logoLGYM} />
       </Pressable>
 
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#94e798] text-2xl mt-1">
         Username
       </Text>
       <TextInput
         onChangeText={(text) => setUsername(text)}
         className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#94e798] text-2xl mt-1">
         Email
       </Text>
       <TextInput
         onChangeText={(text) => setEmail(text)}
         className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#94e798] text-2xl mt-1">
         Password
       </Text>
       <TextInput
@@ -86,7 +86,7 @@ const Register: React.FC = () => {
         onChangeText={(text) => setPassword(text)}
         className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
       />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#4CD964] text-2xl mt-1">
+      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#94e798] text-2xl mt-1">
         Repeat password
       </Text>
       <TextInput
@@ -96,14 +96,14 @@ const Register: React.FC = () => {
       />
       <Pressable
         onPress={register}
-        className="w-80 h-20 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4"
+        className="w-80 h-20 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4"
       >
         <Text
           style={{
             fontFamily: "OpenSans_700Bold",
             
           }}
-          className="text-xs w-full text-center text-black"
+          className="text-base w-full text-center text-black"
         >
           REGISTER
         </Text>

@@ -1,132 +1,139 @@
 import {
   Text,
   View,
-  TouchableOpacity,
   ScrollView,
   Pressable,
+  Image
 } from "react-native";
 import { useEffect, useState } from "react";
 import RecordsPopUp from "./RecordsPopUp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "./ViewLoading";
+import RecordsProps from "./props/RecordsProps";
+import { MainRecordsLast } from "./interfaces/MainRecords";
+import Remove from "./img/icons/remove.png";
+import Progress from "./img/icons/progress.png"
 
-const Records: React.FC = () => {
-  const [deadLift, setDeadLift] = useState<number>();
-  const [squat, setSquat] = useState<number>();
-  const [benchPress, setBenchPress] = useState<number>();
-  const [total, setTotal] = useState<number>();
+const Records: React.FC<RecordsProps> = (props) => {
   const [popUp, setPopUp] = useState<boolean>(false);
+  const [records, setRecords] = useState<MainRecordsLast[]>([]); // Tablica dla gridu
   const [viewLoading, setViewLoading] = useState<boolean>(true);
+  const [exercise,setExercise]= useState<string | undefined>();
+
   useEffect(() => {
-    getDataFromStorage();
-  }, [popUp]);
+    getRecords();
+  }, []);
 
   const chagePopUpValue: VoidFunction = (): void => {
     setPopUp(false);
+    getRecords()
   };
-  const getDataFromStorage = async (): Promise<void> => {
-    const dl = await AsyncStorage.getItem("dl");
-    const sq = await AsyncStorage.getItem("sq");
-    const bp = await AsyncStorage.getItem("bp");
-    setDeadLift(dl ? parseFloat(dl!) : 0);
-    setBenchPress(bp ? parseFloat(bp!) : 0);
-    setSquat(sq ? parseFloat(sq!) : 0);
-    setTotal(parseFloat(dl!) + parseFloat(sq!) + parseFloat(bp!));
+  const showPopUp = ()=>{
+    setPopUp(true);
+  }
+  const updateSettedExerciseRecord = (exerciseId:string | undefined):void=>{
+    if(!exerciseId) return;
+    setExercise(exerciseId)
+    showPopUp()
+  }
+  const getRecords = async () => {
+    const id = await AsyncStorage.getItem("id");
+    const response: MainRecordsLast[] = await fetch(
+      `${process.env.REACT_APP_BACKEND}/api/mainRecords/${id}/getLastMainRecords`
+    )
+      .then((res) => res)
+      .catch((err) => err).then((res) => res.json());
+    setRecords(response);
     setViewLoading(false);
   };
+  const deleteRecord = async(recordId:string | undefined)=>{
+    if(!recordId) return;
+      const response = await fetch(`${process.env.REACT_APP_BACKEND}/api/mainRecords/${recordId}/deleteMainRecord`)
+      .then(res=>res.json()).catch(err=>err)
+      await getRecords()
+  }
   return (
-    <View className="bg-[#131313] relative">
+    <View className="flex  flex-1 relative w-full  bg-[#121212]">
       {popUp ? (
-        <RecordsPopUp offPopUp={chagePopUpValue} />
+        <RecordsPopUp offPopUp={chagePopUpValue} exerciseId={exercise} />
       ) : (
-        <View className="flex flex-col items-center  px-1">
-          <ScrollView className="w-full smh:h-24 xsmh:h-48 mdh:h-72">
-            <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light leading-4 text-sm"
-              >
-                Dead Lift
-              </Text>
-              <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
-                <Text
-                  style={{ fontFamily: "OpenSans_400Regular" }}
-                  className="text-gray-200/80 font-base leading-4 text-md"
-                  onPress={()=>setPopUp(true)}
-                >
-                  {deadLift || 0} kg
-                </Text>
-              </View>
-            </View>
-            <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light leading-4 text-sm"
-              >
-                Squat
-              </Text>
-              <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
-                <Text
-                  style={{ fontFamily: "OpenSans_400Regular" }}
-                  className="text-gray-200/80 font-base leading-4 text-md"
-                  onPress={()=>setPopUp(true)}
-
-                >
-                  {squat || 0} kg
-                </Text>
-              </View>
-            </View>
-            <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light leading-4 text-sm"
-                
-              >
-                Bench Press
-              </Text>
-              <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
-                <Text
-                  style={{ fontFamily: "OpenSans_400Regular" }}
-                  className="text-gray-200/80 font-base leading-4 text-md"
-                  onPress={()=>setPopUp(true)}
-
-                >
-                  {benchPress || 0} kg
-                </Text>
-              </View>
-            </View>
-          </ScrollView>
-          <View className="flex flex-row py-2 pl-6 justify-between items-center m-0">
-            <Text
-              style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-white font-bold text-lg"
+        <View
+          style={{ gap: 16 }}
+          className="flex flex-col items-center w-full h-full"
+        >
+          {viewLoading ? (
+            <ViewLoading />
+          ) : (
+            <ScrollView
+              className="w-full h-full"
+              contentContainerStyle={{ padding: 10 }}
             >
-              Summary
-            </Text>
-            <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
-              <Text
-                style={{ fontFamily: "OpenSans_700Bold" }}
-                className="text-[#4CD964] font-bold text-lg"
-              >
-                {total || 0} kg
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            onPress={() => setPopUp(true)}
-            className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#4CD964] flex justify-center items-center mt-4" 
+              {records && records.length ?    <View className="flex flex-col w-full" style={{ gap: 8 }}>
+                {records.map((record) => (
+                  <View
+                    key={record._id}
+                    className="w-full bg-[#282828]  p-4 rounded-lg"
+                  >
+                    <View  className="flex flex-row justify-between">
+                      <Text
+                        style={{
+                          fontFamily: "OpenSans_700Bold",
+                        }}
+                        className="text-xl font-bold text-[#94e798]"
+                      >
+                        {record.exerciseDetails.name}
+                      </Text>
+                      <View style={{ gap: 16 }} className="flex flex-row">
+                        <Pressable
+                        onPress={()=>updateSettedExerciseRecord(record.exerciseDetails._id)}
+                         
+                        >
+                          <Image className="w-6 h-6" source={Progress} />
+                        </Pressable>
+                        <Pressable
+                         onPress={()=>deleteRecord(record._id)}
+                        >
+                          <Image className="w-6 h-6" source={Remove} />
+                        </Pressable>
+                      </View>
+                    </View>
+
+                    <Text
+                      style={{ fontFamily: "OpenSans_400Regular" }}
+                      className="text-base text-white"
+                    >
+                      Weight: {record.weight} {record.unit}
+                    </Text>
+                    <Text
+                      style={{ fontFamily: "OpenSans_400Regular" }}
+                      className="text-base text-white"
+                    >
+                      Date: {new Date(record.date).toLocaleString()}
+                    </Text>
+                  </View>
+                ))}
+              </View> : <></>}
+           
+            </ScrollView>
+          )}
+          <Pressable
+            onPress={()=>{
+              setExercise(undefined)
+              showPopUp()
+            }}
+            className="h-20 w-80 rounded-lg py-4 px-2 m-0 bg-[#94e798] flex justify-center items-center"
           >
             <Text
-         className="text-xs w-full text-center text-white"
+              className="text-base w-full text-center text-[#131313]"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
-              Update Records
+              ADD NEW RECORDS
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
       )}
-      {viewLoading ? <ViewLoading /> : <Text></Text>}
     </View>
   );
 };
+
 export default Records;
