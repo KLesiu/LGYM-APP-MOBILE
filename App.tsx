@@ -14,6 +14,8 @@ import {
 import { Caveat_400Regular } from '@expo-google-fonts/caveat';
 import * as SplashScreen from "expo-splash-screen";
 import { NativeWindStyleSheet } from "nativewind";
+import { BackHandler, Alert ,StatusBar } from 'react-native';
+
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -28,6 +30,19 @@ const App:React.FC = () => {
     OpenSans_300Light,
     Caveat_400Regular
   });
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Uwaga!", "Przycisk wstecz jest zablokowany na tym ekranie.");
+       return true;
+    };
+    StatusBar.setBackgroundColor('#121212')
+    StatusBar.setBarStyle("light-content");
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  }, []);
   useEffect(() => {
     const loadAsyncResources = async () => {
       try {

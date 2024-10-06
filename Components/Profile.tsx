@@ -10,7 +10,6 @@ import { RootStackParamList } from "./types/RootStackParamList";
 import ViewLoading from "./ViewLoading";
 import Records from "./Records";
 import MainProfileInfo from "./MainProfileInfo";
-import Measurements from "./Measurements";
 import { Message } from "./enums/Message";
 import ProfileProps from "./props/ProfileProps";
 
