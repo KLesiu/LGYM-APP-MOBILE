@@ -39,9 +39,9 @@ const History: React.FC<HistoryProps> = (props) => {
         }),
       }
     )
-      .then((res) => res.json())
+      .then((res) => res)
       .catch((err) => err)
-      .then((res) => res);
+      .then((res) => res.json());
       if(Array.isArray(response)){
         setTrainings(response)
       }else{

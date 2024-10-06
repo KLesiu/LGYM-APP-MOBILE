@@ -31,8 +31,8 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllExercises`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err).then(res=>res.json());
     const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });

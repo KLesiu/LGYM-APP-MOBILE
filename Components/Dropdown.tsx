@@ -44,16 +44,14 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
 
   return (
     <View>
-      {/* Przycisk do otwarcia dropdownu */}
       <TouchableOpacity style={styles.button} onPress={toggleDropdown}>
         <Text style={styles.buttonText}>
-          {selectedItem ? selectedItem.label : 'Choose option'} {/* Tekst przycisku */}
+          {selectedItem ? selectedItem.label : 'Choose option'}
         </Text>
       </TouchableOpacity>
 
-      {/* Dropdown jako Modal */}
       <Modal visible={isVisible} transparent animationType="fade">
-        <TouchableOpacity style={styles.overlay} onPress={toggleDropdown}> {/* Kliknięcie poza zamyka dropdown */}
+        <TouchableOpacity style={styles.overlay} onPress={toggleDropdown}> 
           <View style={styles.dropdown}>
             <FlatList
               data={data}           // Przekazane dane

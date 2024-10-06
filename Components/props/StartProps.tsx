@@ -1,4 +1,4 @@
 export default interface MenuProps{
-    viewChange:(view:any)=>void
+    viewChange:(view:JSX.Element)=>void
     toggleMenuButton:(hide:boolean)=>void
 }

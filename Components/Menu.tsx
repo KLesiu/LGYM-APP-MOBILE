@@ -66,68 +66,72 @@ const Menu: React.FC<MenuProps> = (props) => {
       label: "Home",
       component: <Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} />,
     },
-    { icon: profile, label: "Profile", component: <Profile toggleMenuButton={toggleMenuButton} /> },
+    { icon: profile, label: "Profile", component: <Profile viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
   ];
 
   return (
-    <View className="flex items-center justify-end bg-[#131313] relative w-full">
-      {/* Animated Menu Items */}
-      <Animated.View
-        style={[
-          {
-            transform: [{ scale: animatedScale }],
-            opacity: animatedOpacity,
-          },
-        ]}
-        className="absolute items-center justify-center bottom-[-65px]"
-      >
-        <View className="relative w-52 h-52 items-center justify-center">
-          {items.map((item, index) => {
-           const totalItems = items.length;
-           const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; // Rozkład od -π/2 do π/2 (od lewej do prawej)
-           const radius = 120; // Odległość od środka
-           const x = -Math.sin(angle) * radius; // Odwrócenie położenia X (od lewej do prawej)
-           const y = Math.cos(angle) * radius; // Odwrócenie położenia Y
-
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => changeView(item.component)}
-                style={{ transform: [{ translateX: x }, { translateY: y }] }}
-                className="absolute w-12 h-12 items-center justify-center"
-              >
-                <Image source={item.icon} className="w-8 h-8" />
-                <Text className="text-gray-400 text-base font-light">
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </Animated.View>
-
-        
-      {isMenuButtonVisible ?
-      <TouchableOpacity
-        onPress={toggleMenu}
-        style={{
-          position: "absolute",
-          bottom: 32,
-          left: "50%",
-          transform: [{ translateX: -32 }], // Center horizontally (half of width: 64/2)
-          width: 64,
-          height: 64,
-          borderRadius: 32,
-          backgroundColor: "#94e798",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 9,
-        }}
-      >
-        <Image source={menu} />
-      </TouchableOpacity> : <></>}
-    </View>
+    isMenuButtonVisible ? (
+      <View className="flex items-center justify-end bg-[#131313] relative w-full">
+        {/* Animated Menu Items */}
+        <Animated.View
+          style={[
+            {
+              transform: [{ scale: animatedScale }],
+              opacity: animatedOpacity,
+            },
+          ]}
+          className="absolute items-center justify-center bottom-[-65px]"
+        >
+          <View className="relative w-52 h-52 items-center justify-center">
+            {items.map((item, index) => {
+              const totalItems = items.length;
+              const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; // Rozkład od -π/2 do π/2 (od lewej do prawej)
+              const radius = 120; // Odległość od środka
+              const x = -Math.sin(angle) * radius; // Odwrócenie położenia X (od lewej do prawej)
+              const y = Math.cos(angle) * radius; // Odwrócenie położenia Y
+  
+              return (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => changeView(item.component)}
+                  style={{ transform: [{ translateX: x }, { translateY: y }] }}
+                  className="absolute w-24 h-16 items-center justify-center"
+                >
+                  <Image source={item.icon} className="w-8 h-8" />
+                  <Text className="text-gray-400 text-base font-light">
+                    {item.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </Animated.View>
+  
+        {/* Menu Button */}
+        <TouchableOpacity
+          onPress={toggleMenu}
+          style={{
+            position: "absolute",
+            bottom: 32,
+            left: "50%",
+            transform: [{ translateX: -32 }], // Center horizontally (half of width: 64/2)
+            width: 64,
+            height: 64,
+            borderRadius: 32,
+            backgroundColor: "#94e798",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9,
+          }}
+        >
+          <Image source={menu} />
+        </TouchableOpacity>
+      </View>
+    ) : (
+      <></>
+    )
   );
+  
 };
 
 export default Menu;

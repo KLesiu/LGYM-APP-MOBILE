@@ -42,12 +42,13 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
 
   const checkIsUserHavePlan = async()=>{
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/checkIsUserHavePlan`).then(res=>res.json()).catch(err=>err)
+    const response = await fetch(`${apiURL}/api/${id}/checkIsUserHavePlan`).then(res=>res).catch(err=>err).then(res=>res.json())
     setIsUserHavePlan(response)
   }
   const checkIsUserHaveActivePlanDayTraining = async()=>{
-    const response = await AsyncStorage.getItem('planDay');
-    if(response) setIsAddTrainingActive(true)
+    const response = JSON.parse(`${await AsyncStorage.getItem('planDay')}`);
+    
+    if(response && Object.keys(response).length) setIsAddTrainingActive(true)
   }
   const getInformationsAboutPlanDays: VoidFunction = async (): Promise<void> => {
       setLoading(true);
@@ -55,8 +56,8 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
       const trainingTypes = await fetch(
         `${apiURL}/api/planDay/${id}/getPlanDaysTypes`
       )
-        .then((res) => res.json())
-        .catch((err) => err)
+        .then((res) => res)
+        .catch((err) => err).then(res=>res.json());
     
 
       setChooseDay(
@@ -139,7 +140,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
         'Content-Type':'application/json'
       },
       body:JSON.stringify({type:type,createdAt:createdAt,exercises:training})
-    }).then(res=>res.json()).catch(err=>err)
+    }).then(res=>res).catch(err=>err).then(res=>res.json())
     if(response.msg === Message.Created){
       await hideAndDeleteTrainingSession()
     }
@@ -157,7 +158,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
             />
           </Pressable> :   <Pressable onPress={getInformationsAboutPlanDays}>
             <Icon
-              style={{ fontSize: 140, color: "#94e798" }}
+              style={{ fontSize: 140, color: "#94e798" }} 
               name="plus-circle"
             />
           </Pressable> }

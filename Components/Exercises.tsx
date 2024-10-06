@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable,FlatList } from "react-native";
+import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
 import StartProps from "./props/StartProps";
 import { useEffect, useState } from "react";
 import { ExerciseForm } from "./interfaces/Exercise";
@@ -12,7 +12,8 @@ const Exercises: React.FC<StartProps> = (props) => {
   const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
   const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isExerciseDetailsVisible, setIsExerciseDetailsVisible] = useState<boolean>(false)
+  const [isExerciseDetailsVisible, setIsExerciseDetailsVisible] =
+    useState<boolean>(false);
   const [isExerciseFormVisible, setIsExerciseFormVisible] =
     useState<boolean>(false);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseForm>();
@@ -27,19 +28,22 @@ const Exercises: React.FC<StartProps> = (props) => {
     const response = await fetch(
       `${API_URL}/api/exercise/getAllGlobalExercises`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err)
+      .then((res) => res.json());
     setGlobalExercises(response);
   };
-  const showExerciseDetails = (exercise:ExerciseForm): void => {
-    setSelectedExercise(exercise)
-    setIsExerciseDetailsVisible(true)
-  }
-  const closeExerciseDetails = async(): Promise<void> => {
-    setIsExerciseDetailsVisible(false)
-    setSelectedExercise(undefined)
-    await getAllUserExercises()
-  }
+  const showExerciseDetails = (exercise: ExerciseForm): void => {
+    setSelectedExercise(exercise);
+    props.toggleMenuButton(true);
+    setIsExerciseDetailsVisible(true);
+  };
+  const closeExerciseDetails = async (): Promise<void> => {
+    setIsExerciseDetailsVisible(false);
+    setSelectedExercise(undefined);
+    await getAllUserExercises();
+    props.toggleMenuButton(false);
+  };
   const renderExerciseItem = ({ item }: { item: ExerciseForm }) => (
     <Pressable
       onPress={() => showExerciseDetails(item)}
@@ -68,19 +72,26 @@ const Exercises: React.FC<StartProps> = (props) => {
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllUserExercises`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err)
+      .then((res) => res.json());
     setUserExercises(response);
     setIsLoading(false);
   };
   const openExerciseForm = (): void => {
+    props.toggleMenuButton(true)
     setIsExerciseFormVisible(true);
   };
+  const closeAddExerciseForm = async()=>{
+    await getAllUserExercises();
+    setIsExerciseFormVisible(false);
+    props.toggleMenuButton(false);
+    
+  }
   return (
     <View className="relative flex flex-1 bg-[#121212]">
       <View className="flex  flex-col  p-4 ">
-        {isLoading ? <ViewLoading /> : <Text></Text>}
-        <View className="flex flex-col gap-2">
+        <View className="flex flex-col ">
           <Text
             className="w-full text-lg text-white  font-bold "
             style={{
@@ -91,20 +102,20 @@ const Exercises: React.FC<StartProps> = (props) => {
           </Text>
           <View className=" flex flex-col ">
             <FlatList
-            data={globalExercises}
-            renderItem={renderExerciseItem}
-            keyExtractor={(item) => `${item._id}`}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingVertical: 10 }}
-            ItemSeparatorComponent={() => <View style={{ width: 4 }} />} // odstępy między elementami
-          />
+              data={globalExercises}
+              renderItem={renderExerciseItem}
+              keyExtractor={(item) => `${item._id}`}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingVertical: 10 }}
+              ItemSeparatorComponent={() => <View style={{ width: 4 }} />} // odstępy między elementami
+            />
           </View>
         </View>
-        <View className="flex flex-col gap-2">
-          <View className="flex flex-row justify-between items-center">
+        <View className="flex flex-col ">
+          <View  className="flex w-full  justify-between flex-row  items-center">
             <Text
-              className="w-full text-lg text-white  font-bold "
+              className="text-lg text-white  font-bold "
               style={{
                 fontFamily: "OpenSans_700Bold",
               }}
@@ -132,19 +143,27 @@ const Exercises: React.FC<StartProps> = (props) => {
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 10 }}
-            ItemSeparatorComponent={() => <View style={{ width: 10 }} />} />
-
+            ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+          />
         </View>
       </View>
-
+      {isLoading ? <ViewLoading /> : <Text></Text>}
       {isExerciseFormVisible ? (
-        <View className="absolute h-full w-full flex flex-col  bg-black  top-0 z-30 gap-0">
-          <CreateExercise closeForm={() => setIsExerciseFormVisible(false)} />
+        <View className="absolute h-full w-full flex flex-col  bg-black  top-0 z-30 ">
+          <CreateExercise closeForm={ closeAddExerciseForm
+          } />
         </View>
       ) : (
         <Text></Text>
       )}
-      {isExerciseDetailsVisible && selectedExercise? <ExerciseDetails hideDetails={closeExerciseDetails} exercise={selectedExercise} /> : <Text></Text>}
+      {isExerciseDetailsVisible && selectedExercise ? (
+        <ExerciseDetails
+          hideDetails={closeExerciseDetails}
+          exercise={selectedExercise}
+        />
+      ) : (
+        <Text></Text>
+      )}
     </View>
   );
 };

@@ -25,7 +25,7 @@ const Preload: React.FC = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token} `,
       },
-    }).then((res) => res.json());
+    }).then((res) => res).catch((err) => err).then((res) => res.json());
     if (!response.isValid) return;
     await AsyncStorage.setItem("username", response.user.name);
     await AsyncStorage.setItem("id", response.user._id);

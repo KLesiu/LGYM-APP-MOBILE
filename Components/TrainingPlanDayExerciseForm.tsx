@@ -37,8 +37,8 @@ const TrainingPlanDayExerciseForm: React.FC<
             })
         }
       )
-        .then((res) => res.json())
-        .catch((err) => err);
+        .then((res) => res)
+        .catch((err) => err).then(res=>res.json());
       const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
         return { label: exercise.name, value: exercise._id };
       });

@@ -12,8 +12,8 @@ const UsersRanking: React.FC = () => {
     const response = await fetch(
       `${apiURL}/api/getUsersRanking`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err).then(res=>res.json());
     setRanking(response);
     const username = await AsyncStorage.getItem("username");
     if(!username)return

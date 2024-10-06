@@ -29,8 +29,8 @@ const Start: React.FC<StartProps> = (props) => {
     const response: ErrorMsg | LastTrainingInfo = await fetch(
       `${apiURL}/api/${id}/getLastTraining`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err).then((res) => res.json());
     if ("msg" in response) return setError(response.msg);
     setLastTrainingInfo(response);
   };
@@ -51,7 +51,7 @@ const Start: React.FC<StartProps> = (props) => {
   };
   return (
     <View className="w-full flex flex-col flex-1 bg-[#121212] ">
-      <View className="flex h-full w-full gap-4 flex-col">
+      <View style={{gap:8}} className="flex h-full w-full flex-col">
         <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg">
           <View>
             <Text
@@ -140,7 +140,7 @@ const Start: React.FC<StartProps> = (props) => {
               </Text>
             </View>
           </View>
-          <ProfileRank />
+          {userInfo && userInfo.profileRank && <ProfileRank rank={userInfo.profileRank} />}
         </View>
         <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg flex-1">
           <UsersRanking />

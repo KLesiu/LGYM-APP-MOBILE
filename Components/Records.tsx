@@ -26,10 +26,9 @@ const Records: React.FC<RecordsProps> = (props) => {
 
   const chagePopUpValue: VoidFunction = (): void => {
     setPopUp(false);
-    props.toggleMenuButton(false);
+    getRecords()
   };
   const showPopUp = ()=>{
-    props.toggleMenuButton(true);
     setPopUp(true);
   }
   const updateSettedExerciseRecord = (exerciseId:string | undefined):void=>{
@@ -42,10 +41,9 @@ const Records: React.FC<RecordsProps> = (props) => {
     const response: MainRecordsLast[] = await fetch(
       `${process.env.REACT_APP_BACKEND}/api/mainRecords/${id}/getLastMainRecords`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err).then((res) => res.json());
     setRecords(response);
-    props.toggleMenuButton(false);
     setViewLoading(false);
   };
   const deleteRecord = async(recordId:string | undefined)=>{
@@ -55,7 +53,7 @@ const Records: React.FC<RecordsProps> = (props) => {
       await getRecords()
   }
   return (
-    <View className="flex flex-1 relative w-full bg-[#121212]">
+    <View className="flex  flex-1 relative w-full  bg-[#121212]">
       {popUp ? (
         <RecordsPopUp offPopUp={chagePopUpValue} exerciseId={exercise} />
       ) : (
@@ -67,7 +65,7 @@ const Records: React.FC<RecordsProps> = (props) => {
             <ViewLoading />
           ) : (
             <ScrollView
-              className="w-full smh:h-52 mdh:h-96"
+              className="w-full h-full"
               contentContainerStyle={{ padding: 10 }}
             >
               {records && records.length ?    <View className="flex flex-col w-full" style={{ gap: 8 }}>

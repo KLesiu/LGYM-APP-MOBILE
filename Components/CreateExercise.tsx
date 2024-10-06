@@ -13,19 +13,18 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [bodyPart, setBodyPart] = useState<BodyParts>();
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>();
-  const [isBlocked,setIsBlocked] = useState<boolean>(false)
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const [bodyPartsToSelect, setBodyPartsToSelect] = useState<DropdownItem[]>(
     []
   );
 
   useEffect(() => {
     if (props.form) {
-      
       setExerciseName(props.form.name);
       setBodyPart(props.form.bodyPart as BodyParts);
       setDescription(props.form.description);
-      if(!props.form.user){
-        checkIsBlocked()
+      if (!props.form.user) {
+        checkIsBlocked();
       }
     }
     getBodyParts();
@@ -37,17 +36,18 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
 
   const checkIsBlocked = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${API_URL}/api/isAdmin`,{
+    const response = await fetch(`${API_URL}/api/isAdmin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ _id: id }),
     })
-      .then((res) => res.json())
-      .catch((err) => err);
-    setIsBlocked(!response)
-  }
+      .then((res) => res)
+      .catch((err) => err)
+      .then((res) => res.json());
+    setIsBlocked(!response);
+  };
 
   const createExercise = async (): Promise<void> => {
     if (!exerciseName || !bodyPart)
@@ -67,8 +67,9 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         }),
       }
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err)
+      .then((res) => res.json());
     if (response.msg === Message.Created && props.closeForm) props.closeForm();
     else setError(response.msg);
   };
@@ -91,8 +92,9 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         }),
       }
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err)
+      .then((res) => res.json());
     if (response.msg === Message.Updated && props.closeForm) props.closeForm();
     else setError(response.msg);
   };
@@ -109,14 +111,18 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
 
   return (
     <View>
-      {!props.form? <Text
-        className="text-3xl text-white text-center border-b-2 border-[#4CD964] w-full p-4 "
-        style={{ fontFamily: "OpenSans_700Bold" }}
-      >
-        New Exercise
-      </Text>:<Text></Text>}
-     
-      <View className="flex flex-col gap-2 p-2">
+      {!props.form ? (
+        <Text
+          className="text-3xl text-white text-center border-b-2 border-[#4CD964] w-full p-4 "
+          style={{ fontFamily: "OpenSans_700Bold" }}
+        >
+          New Exercise
+        </Text>
+      ) : (
+        <Text></Text>
+      )}
+
+      <View style={{gap:8}} className="flex flex-col p-2">
         <View className="flex flex-col gap-2">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
@@ -130,7 +136,6 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             onChangeText={(text: string) => setExerciseName(text)}
             value={exerciseName}
             readOnly={isBlocked}
-         
           />
         </View>
         <View className="flex flex-col gap-2">
@@ -141,12 +146,20 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             BodyPart:
           </Text>
           <View>
-            {isBlocked?<Text style={{ fontFamily: "OpenSans_400Regular" }} className="text-white text-lg">{bodyPart}</Text>:
-            <CustomDropdown
-            value={bodyPart}
-              data={bodyPartsToSelect}
-              onSelect={handleSelectBodyPart}
-            />}
+            {isBlocked ? (
+              <Text
+                style={{ fontFamily: "OpenSans_400Regular" }}
+                className="text-white text-lg"
+              >
+                {bodyPart}
+              </Text>
+            ) : (
+              <CustomDropdown
+                value={bodyPart}
+                data={bodyPartsToSelect}
+                onSelect={handleSelectBodyPart}
+              />
+            )}
           </View>
         </View>
         <View className="flex flex-col gap-2">
@@ -163,36 +176,53 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             onChangeText={(text: string) => setDescription(text)}
             value={description}
             readOnly={isBlocked}
-
           />
         </View>
       </View>
-      <View className="flex flex-row justify-center">
-        {props.form ? (
-          <Pressable
-            onPress={updateExercise}
-            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+      <View className="flex flex-row justify-between p-2">
+        
+      {!isBlocked && (
+    <>
+      {props.form ? (
+        <Pressable
+          onPress={updateExercise}
+          className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+        >
+          <Text
+            className="text-xl"
+            style={{ fontFamily: "OpenSans_400Regular" }}
           >
-            <Text
-              className="text-xl"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              Update
-            </Text>
-          </Pressable>
-        ) : (
-          <Pressable
-            onPress={createExercise}
-            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+            Update
+          </Text>
+        </Pressable>
+      ) : (
+        <Pressable
+          onPress={createExercise}
+          className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+        >
+          <Text
+            className="text-xl"
+            style={{ fontFamily: "OpenSans_400Regular" }}
           >
-            <Text
-              className="text-xl"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              Create
-            </Text>
-          </Pressable>
-        )}
+            Create
+          </Text>
+        </Pressable>
+      )}
+    </>
+  )}
+        <Pressable
+          onPress={props.closeForm}
+          className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
+        >
+          <Text
+            className="text-center text-xl text-white"
+            style={{
+              fontFamily: "OpenSans_400Regular",
+            }}
+          >
+            CANCEL
+          </Text>
+        </Pressable>
       </View>
       {error ? (
         <Text

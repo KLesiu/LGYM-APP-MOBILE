@@ -36,8 +36,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllExercises`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err)
+      .then((res) => res.json());
     const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
@@ -51,36 +52,36 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         reps: exercise.reps,
       };
     });
-    const response = await fetch(`${API_URL}/api/planDay/${props.planId}/createPlanDay`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: planDayName,
-        exercises: exercises,
-      }),
-    })
+    const response = await fetch(
+      `${API_URL}/api/planDay/${props.planId}/createPlanDay`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: planDayName,
+          exercises: exercises,
+        }),
+      }
+    )
       .then((res) => res.json())
       .catch((err) => err);
-    if(response.msg === Message.Created){
+    if (response.msg === Message.Created) {
       props.closeForm();
     }
   };
-  const validator = (input: string): void => {
-    if (!input) return setNumberOfSeries(input);
-    const result = isIntValidator(input);
-    if (result) setNumberOfSeries(input);
-  };
+
   const removeExerciseFromList = (item: ExerciseForPlanDay) => () => {
     const newList = exercisesList.filter(
       (exercise: ExerciseForPlanDay) => exercise !== item
     );
     setExercisesList(newList);
-  }
+  };
   const addToList = (): void => {
+    if(!isIntValidator(numberOfSeries)) return;
     if (!numberOfSeries || !exerciseReps || !selectedExercise) return;
-
+    
     const exercise: ExerciseForPlanDay = {
       series: parseInt(numberOfSeries),
       reps: exerciseReps,
@@ -105,30 +106,31 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   // Funkcja do renderowania dynamicznej listy
   const renderExerciseItem = ({ item }: { item: ExerciseForPlanDay }) => (
-    <Text
-      style={{ fontFamily: "OpenSans_400Regular" }}
-      className="text-white text-lg flex justify-between"
-    >
-      - {`${item.exercise.label}: ${item.series}x${item.reps}`}{" "}
+    <View className="flex flex-row items-center justify-between">
+      <Text
+        style={{ fontFamily: "OpenSans_400Regular" }}
+        className="text-white text-lg"
+      >
+        - {`${item.exercise.label}: ${item.series}x${item.reps}`}
+      </Text>
       <Pressable onPress={removeExerciseFromList(item)}>
-        {" "}
         <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete" />
       </Pressable>
-    </Text>
+    </View>
   );
+  
 
   return (
-    <View className="absolute h-full w-full flex flex-col bg-[#121212] top-0 z-30 gap-0">
+    <View className="absolute h-full w-full flex flex-col bg-[#121212] top-0 z-30 ">
       <Text
-        className="text-3xl text-white text-center border-b-2 border-[#94e798] w-full p-4"
+        className="text-xl text-white text-center border-b-2 border-[#94e798] w-full pb-1"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         New Plan Day
       </Text>
 
-      <View className="flex flex-col  justify-between p-4   pl-2 pt-2 gap-2 flex-1">
-        {/* Nazwa planu */}
-        <View className="flex flex-col gap-2">
+      <View style={{gap:8}} className="flex flex-col    p-2 flex-1">
+        <View className="flex flex-col ">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
             className="text-white text-xl"
@@ -137,37 +139,34 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           </Text>
           <TextInput
             style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white h-8 text-black"
+            className="bg-white  text-black"
             onChangeText={(text: string) => setPlanDayName(text)}
           />
         </View>
-        <View className="flex flex-col gap-2">
+        <View className="flex flex-col h-32 ">
           {/* Lista dodanych ćwiczeń */}
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl mt-4"
+            className="text-white text-xl"
           >
             Exercises List:
           </Text>
-          <ScrollView className="h-40">
-            <FlatList
-              data={exercisesList}
-              renderItem={renderExerciseItem}
-              keyExtractor={(item, index) => index.toString()}
-              ListEmptyComponent={() => (
-                <Text
-                  className="text-white"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
-                >
-                  No exercises added yet.
-                </Text>
-              )}
-            />
+          <ScrollView className="h-full" >
+            {exercisesList.length > 0 ? (
+              exercisesList.map((item, index) => (
+                <View key={index}>{renderExerciseItem({ item })}</View>
+              ))
+            ) : (
+              <Text
+                className="text-white"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                No exercises added yet.
+              </Text>
+            )}
           </ScrollView>
         </View>
-
-        {/* Formularz dodawania ćwiczeń */}
-        <View className="p-4 flex flex-col items-end bg-[#282828] mt-4 rounded-lg">
+        <View className="p-2 flex flex-col items-end bg-[#282828] rounded-lg">
           <View className="flex flex-col w-full">
             <Text
               style={{ fontFamily: "OpenSans_700Bold" }}
@@ -191,12 +190,12 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
               Series:
             </Text>
             <TextInput
-              style={{ fontFamily: "OpenSans_400Regular" }}
-              className="bg-white h-8 p-4 text-black"
-              value={numberOfSeries}
-              keyboardType="numeric"
-              onChangeText={validator}
-            />
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="bg-white  text-black"
+            keyboardType="numeric"
+            value={numberOfSeries}
+            onChangeText={(text: string) => setNumberOfSeries(text)}
+          />
           </View>
 
           <View className="flex flex-col w-full">
@@ -207,11 +206,11 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
               Reps:
             </Text>
             <TextInput
-              style={{ fontFamily: "OpenSans_400Regular" }}
-              className="bg-white h-8 text-black p-4"
-              value={exerciseReps}
-              onChangeText={(text: string) => setExerciseReps(text)}
-            />
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="bg-white  text-black"
+            value={exerciseReps}
+            onChangeText={(text: string) => setExerciseReps(text)}
+          />
           </View>
 
           <Pressable
@@ -226,35 +225,35 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             </Text>
           </Pressable>
         </View>
-        <View className="flex flex-row justify-between">
-        <Pressable className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg" onPress={createPlanDay}>
-          <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-[#131313] text-xl"
+        <View className="flex flex-row   justify-between">
+          <Pressable
+            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+            onPress={createPlanDay}
           >
-            CREATE
-          </Text>
-        </Pressable>
-        <Pressable
-              onPress={props.closeForm
-              }
-              className="rounded-lg flex flex-row justify-center items-center w-40 h-12 bg-[#3f3f3f]"
+            <Text
+              style={{ fontFamily: "OpenSans_700Bold" }}
+              className="text-[#131313] text-xl"
             >
-              <Text
-                className="text-center text-xl text-white"
-                style={{
-                  fontFamily: "OpenSans_400Regular",
-                }}
-              >
-                CANCEL
-              </Text>
-            </Pressable>
+              CREATE
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={props.closeForm}
+            className="rounded-lg flex flex-row justify-center items-center w-40 h-12 bg-[#3f3f3f]"
+          >
+            <Text
+              className="text-center text-xl text-white"
+              style={{
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+              CANCEL
+            </Text>
+          </Pressable>
         </View>
-       
       </View>
     </View>
   );
 };
 
 export default CreatePlanDay;
- 

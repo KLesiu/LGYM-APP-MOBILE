@@ -44,8 +44,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     const response = await fetch(
       `${apiURL}/api/planDay/${planConfig._id}/getPlanDays`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err).then((res) => res.json());
     setPlanDays(response);
   };
   const showImportPlanPopUpFn = (): void => {
@@ -87,7 +87,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
     return (
-      <View className="flex flex-col p-4  bg-[#282828] rounded-lg w-full">
+      <View key={item._id} className="flex flex-col p-4  bg-[#282828] rounded-lg w-full">
         <Text
           style={{
             fontFamily: "OpenSans_700Bold",
@@ -109,8 +109,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const getUserPlanConfig = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
-      .then((res) => res.json())
-      .catch((err) => err);
+      .then((res) => res)
+      .catch((err) => err).then((res) => res.json());
     if (Object.keys(response)[0] === "msg")     setPlanConfig(undefined);
     else setPlanConfig(response);
     setViewLoading(false);

@@ -12,7 +12,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
     setEmail(email as string)
   };
   return (
-    <View className="bg-[#131313] flex flex-col smh:h-64 xsmh:h-80 mdh:h-[436px]  justify-between  items-center  w-full px-4">
+    <View className="bg-[#131313] flex flex-col flex-1 justify-between  items-center  w-full px-4">
       <View className="flex flex-col w-full">
         <Text style={{fontFamily:'OpenSans_300Light'}} className="text-gray-200/80 font-light leading-4 text-xs">Email</Text>
         <View className="bg-[#1E1E1E73] flex justify-center items-center h-14 py-4 px-6">
