@@ -62,7 +62,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     setIsPlanDayFormVisible(false);
     props.hideMenuButton(false);
   };
-  const showPlanSetPopUp = (): void => {
+  const reloadSection = (): void => {
+    setIsPlanSet(true)
     setShowPlanConfig(false);
   };
   const setImportPlan = async (userName: string): Promise<void> => {
@@ -110,8 +111,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
       .then((res) => res.json())
       .catch((err) => err);
-    if (Object.keys(response)[0] === "msg") return;
-    setPlanConfig(response);
+    if (Object.keys(response)[0] === "msg")     setPlanConfig(undefined);
+    else setPlanConfig(response);
     setViewLoading(false);
   };
 
@@ -199,7 +200,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         <Text></Text>
       )}
       {showPlanConfig ? (
-        <CreatePlanConfig showPlanSetPopUp={showPlanSetPopUp} />
+        <CreatePlanConfig reloadSection={reloadSection} />
       ) : (
         <Text></Text>
       )}

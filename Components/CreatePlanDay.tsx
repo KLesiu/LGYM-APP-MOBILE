@@ -226,15 +226,31 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             </Text>
           </Pressable>
         </View>
-
-        <Pressable className="bg-[#94e798] self-end w-40 h-12 flex items-center justify-center rounded-lg" onPress={createPlanDay}>
+        <View className="flex flex-row justify-between">
+        <Pressable className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg" onPress={createPlanDay}>
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-[#131313] text-2xl"
+            className="text-[#131313] text-xl"
           >
             CREATE
           </Text>
         </Pressable>
+        <Pressable
+              onPress={props.closeForm
+              }
+              className="rounded-lg flex flex-row justify-center items-center w-40 h-12 bg-[#3f3f3f]"
+            >
+              <Text
+                className="text-center text-xl text-white"
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+              >
+                CANCEL
+              </Text>
+            </Pressable>
+        </View>
+       
       </View>
     </View>
   );

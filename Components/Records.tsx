@@ -70,7 +70,7 @@ const Records: React.FC<RecordsProps> = (props) => {
               className="w-full smh:h-52 mdh:h-96"
               contentContainerStyle={{ padding: 10 }}
             >
-              <View className="flex flex-col w-full" style={{ gap: 8 }}>
+              {records && records.length ?    <View className="flex flex-col w-full" style={{ gap: 8 }}>
                 {records.map((record) => (
                   <View
                     key={record._id}
@@ -114,7 +114,8 @@ const Records: React.FC<RecordsProps> = (props) => {
                     </Text>
                   </View>
                 ))}
-              </View>
+              </View> : <></>}
+           
             </ScrollView>
           )}
           <Pressable

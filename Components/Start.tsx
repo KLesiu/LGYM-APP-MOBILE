@@ -60,30 +60,30 @@ const Start: React.FC<StartProps> = (props) => {
             >
               Last Training:
             </Text>
-            {error ? (
+            {!error && lastTrainingInfo && Object.keys(lastTrainingInfo).length  ?
+                          <View className="flex">
+                          <Text
+                            className="text-white"
+                            style={{ fontFamily: "OpenSans_400Regular" }}
+                          >
+                            Date:{" "}
+                            {new Date(lastTrainingInfo.createdAt!).toLocaleString()}
+                          </Text>
+                          <Text
+                            className="text-white"
+                            style={{ fontFamily: "OpenSans_400Regular" }}
+                          >
+                            Type: {lastTrainingInfo.planDay.name}
+                          </Text>
+                        </View>
+            :
               <Text
                 className="text-white"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 {error}
               </Text>
-            ) : (
-              <View className="flex">
-                <Text
-                  className="text-white"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
-                >
-                  Date:{" "}
-                  {new Date(lastTrainingInfo?.createdAt!).toLocaleString()}
-                </Text>
-                <Text
-                  className="text-white"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
-                >
-                  Type: {lastTrainingInfo?.planDay.name}
-                </Text>
-              </View>
-            )}
+             }
           </View>
 
           <Pressable

@@ -47,7 +47,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
       {/* Przycisk do otwarcia dropdownu */}
       <TouchableOpacity style={styles.button} onPress={toggleDropdown}>
         <Text style={styles.buttonText}>
-          {selectedItem ? selectedItem.label : 'Wybierz opcję'} {/* Tekst przycisku */}
+          {selectedItem ? selectedItem.label : 'Choose option'} {/* Tekst przycisku */}
         </Text>
       </TouchableOpacity>
 
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     width: 200,
-    backgroundColor: '#4CD964',
+    backgroundColor: '#94e798',
     borderRadius: 5,
     elevation: 5,
   },
