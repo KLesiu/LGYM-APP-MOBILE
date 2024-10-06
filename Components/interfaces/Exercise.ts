@@ -15,5 +15,10 @@ export interface ExerciseForPlanDay{
     exercise:DropdownItem
 }
 
+export interface ExerciseTrainingHistoryDetails{
+    _id: string;
+    name: string;
+    bodyPart: BodyParts;
+}
 
 
