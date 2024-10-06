@@ -1,20 +1,7 @@
 import { View, Text, ScrollView } from "react-native";
 import TrainingSessionProps from "./props/TrainingSessionProps";
-import { useEffect, useState } from "react";
-import ViewLoading from "./ViewLoading";
-import {
-  ExerciseTrainingScaledSession,
-  ExerciseTrainingSession,
-  ScaledExerciseTraining,
-} from "./types/Session";
-import ExerciseTraining from "./types/ExerciseTraining";
-import { TrainingByDate, TrainingByDateDetails } from "./interfaces/Training";
+import {  TrainingByDateDetails } from "./interfaces/Training";
 const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
-  const [viewLoading, setViewLoading] = useState<boolean>(false);
-  const [exercises, setExercises] = useState<ExerciseTrainingScaledSession[]>();
-  useEffect(() => {
-    console.log(props.trainings);
-  });
   return (
     <ScrollView contentContainerStyle={{gap:16}} className="w-full flex flex-col flex-1 ">
       {props.trainings.map((training: TrainingByDateDetails) => {
@@ -66,7 +53,6 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
         );
       })}
 
-      {viewLoading ? <ViewLoading /> : ""}
     </ScrollView>
   );
 };

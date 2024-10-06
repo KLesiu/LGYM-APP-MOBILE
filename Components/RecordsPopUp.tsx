@@ -1,16 +1,12 @@
 import {
   Text,
   View,
-  TouchableOpacity,
   TextInput,
   Pressable,
 } from "react-native";
 import RecordsPopUpProps from "./props/RecordsPopUpProps";
-import ErrorMsg from "./types/ErrorMsg";
 import AutoComplete, { DropdownItem } from "./Autocomplete";
-
 import { useEffect, useState } from "react";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MainRecordsForm } from "./interfaces/MainRecords";
 import { ExerciseForm } from "./interfaces/Exercise";
