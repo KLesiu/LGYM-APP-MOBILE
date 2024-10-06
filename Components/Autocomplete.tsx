@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   input: {
     padding: 16,
     backgroundColor: 'white',
-    borderRadius: 5,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: '#ddd',
     fontSize: 16,
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 5,
+    borderRadius: 8,
     marginTop: 5,
     elevation: 5,
   },

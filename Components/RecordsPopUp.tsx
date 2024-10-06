@@ -27,8 +27,6 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const [weight, setWeight] = useState<string>();
   const [clearQuery, setClearQuery] = useState<boolean>(false); // Nowy stan do czyszczenia query
 
-
-  
   useEffect(() => {
     getAllExercises();
   }, []);
@@ -42,6 +40,12 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
+    if (props.exerciseId) {
+      const exercise = helpExercisesToSelect.find(
+        (exercise: DropdownItem) => exercise.value === props.exerciseId
+      );
+      setSelectedExercise(exercise);
+    }
     setExercisesToSelect(helpExercisesToSelect);
   };
   const clearAutoCompleteQuery = () => {
@@ -54,36 +58,42 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     if (result) setWeight(input);
   };
   const createNewRecord = async () => {
-    if(!weight || !selectedExercise) return setError(Message.FieldRequired)
+    if (!weight || !selectedExercise) return setError(Message.FieldRequired);
     const form: MainRecordsForm = {
-      weight:parseFloat(weight),
+      weight: parseFloat(weight),
       exercise: selectedExercise.value,
       unit: WeightUnits.KILOGRAMS,
-      date: new Date()
-    }
+      date: new Date(),
+    };
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${API_URL}/api/mainRecords/${id}/addNewRecord`,{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    })
+    const response = await fetch(
+      `${API_URL}/api/mainRecords/${id}/addNewRecord`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      }
+    )
       .then((res) => res.json())
       .catch((err) => err);
-    if(response.msg === Message.Created){
-      props.offPopUp()
+    if (response.msg === Message.Created) {
+      props.offPopUp();
     }
-  }
+  };
   return (
-    <View style={{gap:16}} className="absolute w-full h-full flex-1 text-white bg-[#121212] flex flex-col">
+    <View
+      style={{ gap: 16 }}
+      className="absolute w-full h-full flex-1 text-white bg-[#121212] flex flex-col"
+    >
       <Text
         className="text-center text-xl text-white"
         style={{
           fontFamily: "OpenSans_400Regular",
         }}
       >
-        NEW RECORD
+        {props.exerciseId && selectedExercise ? "EDIT RECORD" : "NEW RECORD"}
       </Text>
       <View className="flex flex-col p-2" style={{ gap: 16 }}>
         <View className="flex flex-col w-full">
@@ -93,12 +103,17 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
           >
             Exercise:
           </Text>
-          <AutoComplete
-            data={exercisesToSelect}
-            onSelect={(item) => setSelectedExercise(item)}
-            value={selectedExercise?.label || ""}
-            onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
-          />
+          {props.exerciseId && selectedExercise ? (
+            <TextInput    style={{ fontFamily: "OpenSans_400Regular" }}
+            className="bg-white h-12 text-black p-4 rounded-lg" readOnly={true} value={selectedExercise.label}/>
+          ) : (
+            <AutoComplete
+              data={exercisesToSelect}
+              onSelect={(item) => setSelectedExercise(item)}
+              value={selectedExercise?.label || ""}
+              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
+            />
+          )}
         </View>
         <View className="flex flex-col w-full">
           <Text
@@ -109,7 +124,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
           </Text>
           <TextInput
             style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white h-8 text-black p-4"
+            className="bg-white h-12 text-black p-4 rounded-lg"
             onChangeText={validator}
             value={weight}
             keyboardType="numeric"
@@ -117,7 +132,11 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         </View>
       </View>
       <View className="w-full flex flex-row justify-between">
-        <Pressable onPress={createNewRecord} className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]">
+        
+        <Pressable
+          onPress={createNewRecord}
+          className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]"
+        >
           <Text
             className="text-center text-xl text-black"
             style={{
@@ -127,7 +146,10 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             ADD
           </Text>
         </Pressable>
-        <Pressable onPress={props.offPopUp} className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]">
+        <Pressable
+          onPress={props.offPopUp}
+          className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
+        >
           <Text
             className="text-center text-xl text-white"
             style={{
