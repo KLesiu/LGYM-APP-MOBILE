@@ -1,68 +1,142 @@
-import {useState } from "react";
-import { View, Text ,TextInput,  Pressable} from "react-native";
+import { useState } from "react";
+import { View, Text, TextInput, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "./helpers/numberValidator";
 import CreatePlanConfigProps from "./props/CreatePlanConfigProps";
 import ResponseMessage from "./interfaces/ResponseMessage";
 import { Message } from "./enums/Message";
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
-  const [planName,setPlanName]=useState<string>('')
-  const [numberOfDays,setNumberOfDays]=useState<string>('')
-  const [error,setError]=useState<string>()
-  
-  const sendConfig = async ():Promise<void>=>{
-    if(!planName || !numberOfDays) return setError("All fields are required")
-    const id = await  AsyncStorage.getItem("id")
-    const response: ResponseMessage = await fetch(
-        `${process.env.REACT_APP_BACKEND}/api/${id}/createPlan`
-      ,{
-        method:'POST',
-        headers: {
+  const [planName, setPlanName] = useState<string>("");
+  const [numberOfDays, setNumberOfDays] = useState<string>("");
+  const [error, setError] = useState<string>();
+
+  const sendConfig = async (): Promise<void> => {
+    if (!planName || !numberOfDays) return setError(Message.FieldRequired);
+    const id = await AsyncStorage.getItem("id");
+    try{
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND}/api/${id}/createPlan`,
+        {
+          method: "POST",
+          headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
             trainingDays: numberOfDays,
-            name:planName
+            name: planName,
           }),
-        
-      }).then(res=>res.json()).catch(err=>console.log(err))
-    if(response.msg === Message.Created
-    ){
-       return props.reloadSection()
-    }else{
-      return setError(response.msg)
+        }
+      )
+      if(!response.ok){
+        console.error("Failed to send plan config")
+        return setError(Message.TryAgain)
+      }
+      const data: ResponseMessage = await response.json()
+      if (data.msg === Message.Created) {
+        return props.reloadSection();
+      } else {
+        return setError(data.msg);
+      }
+    }catch(error){
+      setError(Message.TryAgain)
     }
-  }
-  const validator = (input:string):void=>{
-    if(!input)return setNumberOfDays(input)
-    const result = isIntValidator(input)
-    if(result) setNumberOfDays(input)
-  }
-  
+   
+  };
+  const validator = (input: string): void => {
+    if (!input) return setNumberOfDays(input);
+    const result = isIntValidator(input);
+    if (result) setNumberOfDays(input);
+  };
+
   return (
-    <View className="absolute h-full w-full flex flex-col justify-center  bg-[#121212] items-center top-0 z-30 p-4 ">
+    <View
+      style={{ gap: 16 }}
+      className="absolute h-full w-full flex flex-col  bg-[#121212] items-center top-0 z-30 p-4 "
+    >
       <Text
-        className="text-3xl text-white text-center border-b-2 border-[#94e798] p-4 w-full"
+        className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
-        PLAN CONFIG
+        Plan Config
       </Text>
-      <View className="flex h-2/3 w-4/5 items-center flex-col justify-around ">
-        <View>
-        <View className="flex justify-flex items-center w-full ">
-          <Text style={{fontFamily:'OpenSans_700Bold'}} className="text-white text-xl">Plan name:</Text>
-          <TextInput style={{fontFamily:'OpenSans_400Regular'}} className="bg-white h-8 w-72 text-[#121212] " onChangeText={(text:string)=>setPlanName(text)} value={planName}/>
+      <View
+        style={{ gap: 16 }}
+        className="flex items-center flex-col justify-around w-full "
+      >
+        <View className="flex flex-col w-full" style={{ gap: 16 }}>
+          <View style={{ gap: 8 }} className="flex flex-col w-full  ">
+            <Text
+              style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-white text-base"
+            >
+              Plan name:
+            </Text>
+            <TextInput
+              style={{
+                fontFamily: "OpenSans_400Regular",
+                backgroundColor: "rgba(30, 30, 30, 0.45)",
+              }}
+              className="w-full px-2 py-4 rounded-lg text-white "
+              onChangeText={(text: string) => setPlanName(text)}
+              value={planName}
+            />
+          </View>
+          <View style={{ gap: 8 }} className="flex flex-col w-full ">
+            <Text
+              style={{ fontFamily: "OpenSans_300Light" }}
+              className="  text-white  text-base"
+            >
+              How many days per week?
+            </Text>
+            <TextInput
+              style={{
+                fontFamily: "OpenSans_400Regular",
+                backgroundColor: "rgba(30, 30, 30, 0.45)",
+              }}
+              className=" w-full  px-2 py-4 text-white rounded-lg "
+              keyboardType="numeric"
+              onChangeText={validator}
+              value={numberOfDays}
+            />
+          </View>
         </View>
-        <View className="flex justify-flex items-center w-full ">
-          <Text  style={{fontFamily:'OpenSans_700Bold'}} className=" px-4 text-white text-center text-lg" >How many days per week do you want to train?</Text>
-          <TextInput style={{fontFamily:'OpenSans_400Regular'}} className="bg-white h-8 w-72 text-[#121212] " keyboardType = 'numeric' onChangeText={validator} value={numberOfDays}/>
+        <View className="flex flex-row justify-between w-full">
+          <Pressable
+            onPress={props.hidePlanConfig}
+            className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
+          >
+            <Text
+              className="text-center text-xl text-white"
+              style={{
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+              Cancel
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={sendConfig}
+            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+          >
+            <Text
+              className="text-xl"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              Next
+            </Text>
+          </Pressable>
         </View>
-        </View>
-        <Pressable onPress={sendConfig} className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg">
-            <Text className="text-xl" style={{fontFamily:'OpenSans_700Bold'}}>Next</Text>
-        </Pressable>
       </View>
-        {error? <Text style={{fontFamily:'OpenSans_300Light'}} className="text-red-500 text-lg">{error}</Text> : ''}
+      {error ? (
+        <Text
+          style={{ fontFamily: "OpenSans_300Light" }}
+          className="text-red-500 text-lg"
+        >
+          {error}
+        </Text>
+      ) : (
+        ""
+      )}
     </View>
   );
 };

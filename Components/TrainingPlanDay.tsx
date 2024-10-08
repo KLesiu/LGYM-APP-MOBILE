@@ -18,6 +18,8 @@ import { BodyParts } from "./enums/BodyParts";
 import { ExerciseScoresTrainingForm } from "./interfaces/ExercisesScores";
 import { TrainingSessionScores } from "./interfaces/Training";
 import useInterval from "./helpers/hooks/useInterval";
+import ViewLoading from "./ViewLoading";
+import { Message } from "./enums/Message";
 
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
@@ -34,12 +36,17 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
   >([]);
+  const [error, setError] = useState<string>("");
+
+  const [viewLoading, setViewLoading] = useState<boolean>(false);
   useInterval(() => {saveTrainingSessionScores()
   }, 1000);
   useEffect(() => {
     const init = async () => {
+      setViewLoading(true)
       await initExercisePlanDay(); 
       await loadTrainingSessionScores();
+      setViewLoading(false)
     };
     init();
   }, []);
@@ -64,6 +71,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   }, [planDay]);
  
  
+
+
+
   const loadTrainingSessionScores = async () => {
     const savedScores = await AsyncStorage.getItem("trainingSessionScores");
     if (savedScores) {
@@ -157,13 +167,46 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setPlanDay(newPlanDay);
     await sendPlanDayToLocalStorage(newPlanDay);
   };
+  const parseScoresIfValid = (scores: TrainingSessionScores[]): TrainingSessionScores[] | null => {
+    const parsedScores = scores.map((score) => {
+      // Zamiana przecinka na kropkę w `reps` i `weight`
+      const repsWithDot = score.reps.toString().replace(',', '.');
+      const weightWithDot = score.weight.toString().replace(',', '.');
+  
+      // Próba sparsowania wartości
+      const parsedReps = parseFloat(repsWithDot);
+      const parsedWeight = parseFloat(weightWithDot);
+  
+      // Sprawdzamy, czy udało się sparsować obie wartości
+      if (isNaN(parsedReps) || isNaN(parsedWeight)) {
+        return null;
+      }
+  
+      // Zwracamy nowy obiekt z sparsowanymi wartościami
+      return {
+        ...score,
+        reps: parsedReps,
+        weight: parsedWeight,
+      };
+    });
+  
+    // Sprawdzamy, czy wszystkie elementy zostały poprawnie sparsowane
+    return parsedScores.includes(null) ? null : parsedScores as TrainingSessionScores[];
+  };
+  const sendTraining = (exercises:TrainingSessionScores[])=>{
+
+    const result = parseScoresIfValid(exercises);
+    if(!result) return setError(Message.InputsMustBeNumbers)
+    props.addTraining(result)
+  }
   const updateExerciseScore = async (
     exercise: ExerciseForm,
     series: number,
-    value: number,
+    value: string,
     isWeight: boolean
   ) => {
     const updatedScores = trainingSessionScores.map((score) => {
+      setError('')
       if (score.exercise._id === exercise._id && score.series === series) {
         if (isWeight) {
           return {
@@ -178,6 +221,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       }
       return score;
     });
+    //@ts-ignore
     setTrainingSessionScores(updatedScores);
   };
   const saveTrainingSessionScores = async()=>{
@@ -192,7 +236,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       <View className="flex flex-col w-full  min-h-[100px] rounded-lg bg-[#282828] p-4  ">
         <View className="flex flex-row justify-between">
           <Text
-            className="text-base text-white font-bold"
+            className="text-lg text-white font-bold"
             style={{
               fontFamily: "OpenSans_700Bold",
             }}
@@ -225,7 +269,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           >
             Last training scores:
           </Text>
-          <View style={{ gap: 8 }} className="flex flex-col">
+          <View style={{ gap: 16 }} className="flex flex-col">
             {Array.from({ length: item.series }).map((_, index) => {
               const savedScore = trainingSessionScores.find(
                 (score) =>
@@ -234,14 +278,14 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               );
               return (
                 <View className="flex w-full flex-col" key={index}>
-                  <View style={{ gap: 16 }} className="flex w-full flex-row">
+                  <View style={{ gap: 16 }} className="flex w-full flex-row justify-between">
                     <View
                       style={{ gap: 8 }}
-                      className="flex flex-row items-center  flex-1 "
+                      className="flex flex-row  items-center"
                     >
                       <Text
-                        className="text-white text-sm"
-                        style={{ fontFamily: "OpenSans_400Regular" }}
+                        className="text-white text-base"
+                        style={{ fontFamily: "OpenSans_300Light" }}
                       >
                         Reps:
                       </Text>
@@ -250,22 +294,22 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                           updateExerciseScore(
                             item.exercise,
                             index + 1,
-                            parseInt(value) || 0,
+                           value,
                             false
                           )
                         }
-                        value={savedScore ? savedScore.reps.toString() : ''} 
+                        value={savedScore ? `${savedScore.reps}` : ''} 
                         keyboardType="numeric"
-                        className="text-[15px] rounded border-[#575757] flex-1 border-[1px] text-white h-8 p-2"
+                        className="text-[15px] rounded-lg border-[#575757] w-20  border-[1px] text-white px-2 py-4"
                       />
                     </View>
                     <View
                       style={{ gap: 8 }}
-                      className="flex flex-row items-center  flex-1 "
+                      className="flex flex-row items-center   "
                     >
                       <Text
-                        className="text-white text-sm"
-                        style={{ fontFamily: "OpenSans_400Regular" }}
+                        className="text-white text-base"
+                        style={{ fontFamily: "OpenSans_300Light" }}
                       >
                         Weight:
                       </Text>
@@ -274,13 +318,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                           updateExerciseScore(
                             item.exercise,
                             index + 1,
-                            parseInt(value) || 0,
+                            value,
                             true
                           )
                         }
-                        value={savedScore ? savedScore.weight.toString() : ''} 
+                        value={savedScore ? `${savedScore.weight}` : ''} 
                         keyboardType="numeric"
-                        className="text-[15px] rounded  border-[#575757] flex-1 border-[1px] text-white h-8 p-2 "
+                        className="text-[15px] rounded-lg  border-[#575757] w-20  border-[1px] text-white  px-2 py-4 "
                       />
                     </View>
                   </View>
@@ -309,7 +353,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                     fontFamily: "OpenSans_400Regular",
                   }}
                 >
-                  BACK
+                  Back
                 </Text>
               </Pressable>
               <Pressable
@@ -322,7 +366,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                     fontFamily: "OpenSans_400Regular",
                   }}
                 >
-                  ADD EXERCISE
+                  Add Exercise
                 </Text>
               </Pressable>
             </View>
@@ -346,16 +390,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             {planDay.exercises.map((exercise) => renderExerciseItem(exercise))}
           </ScrollView>
           <View className="w-full flex flex-row justify-between">
-            <Pressable onPress={()=>props.addTraining(trainingSessionScores)} className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]">
-              <Text
-                className="text-center text-xl text-black"
-                style={{
-                  fontFamily: "OpenSans_400Regular",
-                }}
-              >
-                ADD
-              </Text>
-            </Pressable>
+          
             <Pressable
               onPress={props.hideAndDeleteTrainingSession}
               className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
@@ -366,10 +401,28 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                   fontFamily: "OpenSans_400Regular",
                 }}
               >
-                DELETE
+                Delete
+              </Text>
+            </Pressable>
+            <Pressable onPress={()=>sendTraining(trainingSessionScores)} className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]">
+              <Text
+                className="text-center text-xl text-black"
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+              >
+                Add
               </Text>
             </Pressable>
           </View>
+          <View className="flex flex-col text-center w-full">
+            <Text
+              className="text-red-500 text-sm"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              {error}
+            </Text>
+      </View>
         </View>
       ) : (
         <></>
@@ -383,6 +436,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       ) : (
         <></>
       )}
+            {viewLoading ? <ViewLoading /> : <Text></Text>}
+
     </View>
   );
 };

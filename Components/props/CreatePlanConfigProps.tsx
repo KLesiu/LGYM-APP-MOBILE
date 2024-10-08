@@ -1,3 +1,4 @@
 export default interface CreatePlanConfigProps{
-    reloadSection:VoidFunction
+    reloadSection:VoidFunction,
+    hidePlanConfig:VoidFunction,
 }

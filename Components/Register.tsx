@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./img/logoLGYM.png";
 import ErrorMsg from "./types/ErrorMsg";
@@ -53,47 +53,87 @@ const Register: React.FC = () => {
       return navigation.navigate("Login");
     }
   };
-  const goToPreload = ()=>{
-    return navigation.navigate("Preload")
-  }
-
+  const goToPreload = () => {
+    return navigation.navigate("Preload");
+  };
 
   return (
     <View className="flex items-center flex-col h-full justify-start bg-[#121212]">
       <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
-      <Image  className="w-full h-full mb-[5%]" source={logoLGYM} />
+        <Image className="w-full h-full mb-[5%]" source={logoLGYM} />
       </Pressable>
+      <View
+        className="w-full flex flex-col items-center justify-start p-4"
+        style={{ gap: 16 }}
+      >
+        <View className="flex flex-col w-full" style={{ gap: 8 }}>
+          <Text
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
+          >
+            Username
+          </Text>
+          <TextInput
+            onChangeText={(text) => setUsername(text)}
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className="w-full px-2 py-4 rounded-lg text-white "
+          />
+        </View>
+        <View className="flex flex-col w-full" style={{ gap: 8 }}>
+          <Text
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
+          >
+            Email
+          </Text>
+          <TextInput
+            onChangeText={(text) => setEmail(text)}
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className="w-full px-2 py-4 rounded-lg text-white "
+          />
+        </View>
+        <View className="flex flex-col w-full" style={{ gap: 8 }}>
+          <Text
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
+          >
+            Password
+          </Text>
+          <TextInput
+            secureTextEntry={true}
+            onChangeText={(text) => setPassword(text)}
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className="w-full px-2 py-4 rounded-lg text-white "
+          />
+        </View>
+        <View className="flex flex-col w-full" style={{ gap: 8 }}>
+          <Text
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
+          >
+            Repeat password
+          </Text>
+          <TextInput
+            secureTextEntry={true}
+            onChangeText={(text) => setRPassword(text)}
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className="w-full px-2 py-4 rounded-lg text-white "
+          />
+        </View>
+      </View>
 
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#94e798] text-2xl mt-1">
-        Username
-      </Text>
-      <TextInput
-        onChangeText={(text) => setUsername(text)}
-        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
-      />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#94e798] text-2xl mt-1">
-        Email
-      </Text>
-      <TextInput
-        onChangeText={(text) => setEmail(text)}
-        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
-      />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#94e798] text-2xl mt-1">
-        Password
-      </Text>
-      <TextInput
-        secureTextEntry={true}
-        onChangeText={(text) => setPassword(text)}
-        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
-      />
-      <Text style={{ fontFamily: "OpenSans_700Bold" }} className="text-[#94e798] text-2xl mt-1">
-        Repeat password
-      </Text>
-      <TextInput
-        secureTextEntry={true}
-        onChangeText={(text) => setRPassword(text)}
-        className="rounded-xl h-12 text-lg w-80 text-black mt-1 pl-4 bg-white"
-      />
       <Pressable
         onPress={register}
         className="w-80 h-20 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4"
@@ -101,7 +141,6 @@ const Register: React.FC = () => {
         <Text
           style={{
             fontFamily: "OpenSans_700Bold",
-            
           }}
           className="text-base w-full text-center text-black"
         >
@@ -110,19 +149,21 @@ const Register: React.FC = () => {
       </Pressable>
       {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
-        {errors
-          ? errors.map((ele, index: number) => (
-              <Text
-                style={{
-                  fontFamily: "Caveat_400Regular"
-                }}
-                className="text-red-500 w-full text-center mt-[2%] text-2xl"
-                key={index}
-              >
-                {ele.msg}
-              </Text>
-            ))
-          : <Text></Text>}
+        {errors ? (
+          errors.map((ele, index: number) => (
+            <Text
+              style={{
+                fontFamily: "Caveat_400Regular",
+              }}
+              className="text-red-500 w-full text-center mt-[2%] text-2xl"
+              key={index}
+            >
+              {ele.msg}
+            </Text>
+          ))
+        ) : (
+          <Text></Text>
+        )}
       </View>
     </View>
   );

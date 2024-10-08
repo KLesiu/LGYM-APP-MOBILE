@@ -120,6 +120,10 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     setIsAddTrainingActive(false)
     hideDaySection()
   }
+
+
+  
+  
   const addTraining = async(exercises:TrainingSessionScores[])=>{
     const id = await AsyncStorage.getItem("id");
     const type =  dayId;

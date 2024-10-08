@@ -10,6 +10,7 @@ import ViewLoading from "./ViewLoading";
 import UsersRanking from "./UsersRanking";
 import { LastTrainingInfo } from "./interfaces/Training";
 import { UserInfo } from "./interfaces/User";
+import { Message } from "./enums/Message";
 
 const Start: React.FC<StartProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
@@ -20,31 +21,52 @@ const Start: React.FC<StartProps> = (props) => {
   const [progress, setProgress] = useState<number>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   useEffect(() => {
-    setViewLoading(true);
-    getLastTrainingInfo();
-    getRankInfo();
+    initStart();
   }, []);
+  const initStart = async()=>{
+    setViewLoading(true);
+    await getLastTrainingInfo();
+    await getRankInfo();
+    setViewLoading(false);
+  }
   const getLastTrainingInfo = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response: ErrorMsg | LastTrainingInfo = await fetch(
-      `${apiURL}/api/${id}/getLastTraining`
-    )
-      .then((res) => res)
-      .catch((err) => err).then((res) => res.json());
-    if ("msg" in response) return setError(response.msg);
-    setLastTrainingInfo(response);
+    try {
+      const id = await AsyncStorage.getItem("id");
+      const response = await fetch(`${apiURL}/api/${id}/getLastTraining`);
+  
+      if (!response.ok) {
+        // If response status is not in the 200 range
+        console.error("Failed to fetch last training info:", response.status);
+        return setError(Message.DidntFind);
+      }
+  
+      const data: ErrorMsg | LastTrainingInfo = await response.json();
+      if ("msg" in data) return setError(data.msg);
+  
+      setLastTrainingInfo(data);
+    } catch (error) {
+      console.error("Network or JSON parsing error:", error);
+      setError(Message.DidntFind);
+    }
   };
+  
   const getRankInfo = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response: UserInfo = await fetch(
-      `${apiURL}/api/${id}/getUserInfo`
-    )
-      .then((res) => res.json())
-      .catch((err) => err);
-    if (!response) return;
-   setUserInfo(response)
-   setProgress(Math.floor((response.elo / response.nextRank.needElo) * 10000) / 100);
-   setViewLoading(false);
+    try {
+      const id = await AsyncStorage.getItem("id");
+      const response = await fetch(`${apiURL}/api/${id}/getUserInfo`);
+  
+      if (!response.ok) {
+        console.error("Failed to fetch rank info:", response.status);
+        return setError("Failed to fetch rank info.");
+      }
+  
+      const data: UserInfo = await response.json();
+      setUserInfo(data);
+      setProgress(Math.floor((data.elo / data.nextRank.needElo) * 10000) / 100);
+    } catch (error) {
+      console.error("Network or JSON parsing error:", error);
+      setError("An error occurred. Please try again.");
+    }
   };
   const navigateTo = (component: JSX.Element) => {
     props.viewChange(component);

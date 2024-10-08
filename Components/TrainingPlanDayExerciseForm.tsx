@@ -20,30 +20,32 @@ const TrainingPlanDayExerciseForm: React.FC<
   const [clearQuery, setClearQuery] = useState<boolean>(false); // Nowy stan do czyszczenia query
 
   useEffect(() => {
-    if(props.bodyPart) getExercisesByBodyPart()
+    if (props.bodyPart) getExercisesByBodyPart();
     else getAllExercises();
   }, []);
 
   const getExercisesByBodyPart = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
-        `${API_URL}/api/exercise/${id}/getExerciseByBodyPart`,{
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                bodyPart:props.bodyPart
-            })
-        }
-      )
-        .then((res) => res)
-        .catch((err) => err).then(res=>res.json());
-      const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
-        return { label: exercise.name, value: exercise._id };
-      });
-      setExercisesToSelect(helpExercisesToSelect);
-  }
+      `${API_URL}/api/exercise/${id}/getExerciseByBodyPart`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          bodyPart: props.bodyPart,
+        }),
+      }
+    )
+      .then((res) => res)
+      .catch((err) => err)
+      .then((res) => res.json());
+    const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
+      return { label: exercise.name, value: exercise._id };
+    });
+    setExercisesToSelect(helpExercisesToSelect);
+  };
   const getAllExercises = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
@@ -65,31 +67,33 @@ const TrainingPlanDayExerciseForm: React.FC<
     const result = isIntValidator(input);
     if (result) setNumberOfSeries(input);
   };
-  const sendNewExercise =()=>{
-    if(!selectedExercise || !numberOfSeries || !exerciseReps) return;
-    props.addExerciseToPlanDay(selectedExercise.value,parseInt(numberOfSeries),exerciseReps);
-  }
+  const sendNewExercise = () => {
+    if (!selectedExercise || !numberOfSeries || !exerciseReps) return;
+    props.addExerciseToPlanDay(
+      selectedExercise.value,
+      parseInt(numberOfSeries),
+      exerciseReps
+    );
+  };
   return (
     <View
-      className="absolute h-full w-full flex flex-col items-center bg-[#121212]  top-0 z-30 p-4"
+      className="absolute h-full w-full flex flex-col items-center bg-[#121212] p-4  top-0 z-30 "
       style={{ gap: 16 }}
     >
       <Text
-        className="w-full text-2xl text-center text-white  font-bold "
-        style={{
-          fontFamily: "OpenSans_700Bold",
-        }}
+       className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
+       style={{ fontFamily: "OpenSans_700Bold" }}
       >
         ADD EXERCISE TO CURRENT TRAINING
       </Text>
       <View
-        className=" w-full rounded-lg bg-[#282828] p-4  flex flex-col"
-        style={{ gap: 4 }}
+       style={{ gap: 16 }}
+        className="flex items-center flex-col justify-around w-full "
       >
-        <View className="flex flex-col w-full">
+        <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
           >
             Exercise:
           </Text>
@@ -101,58 +105,71 @@ const TrainingPlanDayExerciseForm: React.FC<
           />
         </View>
 
-        <View className="flex flex-col w-full">
+        <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
           >
             Series:
           </Text>
           <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white h-8 p-4 text-black"
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className="w-full px-2 py-4 rounded-lg text-white "
             value={numberOfSeries}
             keyboardType="numeric"
             onChangeText={validator}
           />
         </View>
 
-        <View className="flex flex-col w-full">
+        <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
           >
             Reps:
           </Text>
           <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white h-8 text-black p-4"
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className="w-full px-2 py-4 rounded-lg text-white "
             value={exerciseReps}
             onChangeText={(text: string) => setExerciseReps(text)}
           />
         </View>
       </View>
       <View className="w-full flex flex-row justify-between">
-        <Pressable onPress={sendNewExercise} className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]">
-          <Text
-            className="text-center text-xl text-black"
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            ADD
-          </Text>
-        </Pressable>
-        <Pressable onPress={props.cancel} className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]">
+      <Pressable
+          onPress={props.cancel}
+          className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
+        >
           <Text
             className="text-center text-xl text-white"
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
           >
-            CANCEL
+            Cancel
           </Text>
         </Pressable>
+        <Pressable
+          onPress={sendNewExercise}
+          className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]"
+        >
+          <Text
+            className="text-center text-xl text-black"
+            style={{
+              fontFamily: "OpenSans_400Regular",
+            }}
+          >
+            Add
+          </Text>
+        </Pressable>
+
       </View>
     </View>
   );

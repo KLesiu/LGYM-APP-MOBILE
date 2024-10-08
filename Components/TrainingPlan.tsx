@@ -13,8 +13,8 @@ import ViewLoading from "./ViewLoading";
 import ImportPlanPopUp from "./ImportPlanPopUp";
 import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./CreatePlanDay";
-import {  PlanDayVm } from "./interfaces/PlanDay";
-import {TrainingPlanProps} from "./props/TrainingPlanProps"
+import { PlanDayVm } from "./interfaces/PlanDay";
+import { TrainingPlanProps } from "./props/TrainingPlanProps";
 
 const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
@@ -28,32 +28,42 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const [isPlanSet, setIsPlanSet] = useState<boolean>(false);
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
-  const [showImportPlanPopUp, setShowImportPlanPopUp] =
-    useState<boolean>(false);
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
   useEffect(() => {
-    setViewLoading(true);
-    getUserPlanConfig();
+    init()
   }, [isPlanSet]);
   useEffect(() => {
     getPlanDays();
   }, [planConfig]);
 
+
+  const init = async () => {
+    setViewLoading(true);
+    await getUserPlanConfig();
+    setViewLoading(false);
+  }
+
   const getPlanDays = async (): Promise<void> => {
     if (!planConfig) return;
-    const response = await fetch(
-      `${apiURL}/api/planDay/${planConfig._id}/getPlanDays`
-    )
-      .then((res) => res)
-      .catch((err) => err).then((res) => res.json());
-    setPlanDays(response);
-  };
-  const showImportPlanPopUpFn = (): void => {
-    setShowImportPlanPopUp(true);
+    try {
+      const response = await fetch(
+        `${apiURL}/api/planDay/${planConfig._id}/getPlanDays`
+      );
+      if (!response.ok) return console.error("Failed to fetch plan days");
+      const data = await response.json();
+      setPlanDays(data);
+    } catch (error) {
+      console.error("Failed to fetch plan days", error);
+    }
   };
   const showPlanConfigPopUp = (): void => {
+    props.hideMenuButton(true);
     setShowPlanConfig(true);
   };
+  const hidePlanConfigPopUp = (): void => {
+    props.hideMenuButton(false);
+    setShowPlanConfig(false);
+  }
   const showPlanDayForm = (): void => {
     props.hideMenuButton(true);
     setIsPlanDayFormVisible(true);
@@ -63,31 +73,16 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     props.hideMenuButton(false);
   };
   const reloadSection = (): void => {
-    setIsPlanSet(true)
+    setIsPlanSet(true);
     setShowPlanConfig(false);
-  };
-  const setImportPlan = async (userName: string): Promise<void> => {
-    if (!userName) return;
-    const id = await AsyncStorage.getItem("id");
-
-    await fetch(`https://lgym-app-api-v2.vercel.app/api/${id}/setSharedPlan`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userName: userName,
-      }),
-    })
-      .then(() => {
-        setShowImportPlanPopUp(false);
-        setIsPlanSet(true);
-      })
-      .catch((err) => err);
+    props.hideMenuButton(false);
   };
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
     return (
-      <View key={item._id} className="flex flex-col p-4  bg-[#282828] rounded-lg w-full">
+      <View
+        key={item._id}
+        className="flex flex-col p-4  bg-[#282828] rounded-lg w-full"
+      >
         <Text
           style={{
             fontFamily: "OpenSans_700Bold",
@@ -98,7 +93,10 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         </Text>
         {item.exercises.map((exercise, index) => (
           <View key={index}>
-            <Text  style={{ fontFamily: "OpenSans_400Regular" }} className="text-lg text-white">
+            <Text
+              style={{ fontFamily: "OpenSans_400Regular" }}
+              className="text-lg text-white"
+            >
               {exercise.exercise.name} - {exercise.series} x {exercise.reps}
             </Text>
           </View>
@@ -108,19 +106,22 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const getUserPlanConfig = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
-      .then((res) => res)
-      .catch((err) => err).then((res) => res.json());
-    if (Object.keys(response)[0] === "msg")     setPlanConfig(undefined);
-    else setPlanConfig(response);
-    setViewLoading(false);
+    try {
+      const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
+      if(!response.ok) return console.error("Failed to fetch plan config")
+      const result = await response.json()
+      if (Object.keys(result)[0] === "msg") setPlanConfig(undefined);
+      else setPlanConfig(result);
+    } catch (error) {
+      console.error("Failed to fetch plan config", error);
+    }
   };
 
   return (
     <View className="flex flex-1 relative w-full bg-[#121212]">
       <View className="w-full h-full p-4 flex flex-col">
         {!planConfig ? (
-          <View className="flex flex-row w-full justify-around">
+          <View className="flex flex-row w-full ">
             <TouchableOpacity
               onPress={showPlanConfigPopUp}
               className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
@@ -134,25 +135,15 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
                 Create plan
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
-              onPress={() => showImportPlanPopUpFn()}
-            >
-              <Text
-                className="text-black text-md w-full text-center"
-                style={{
-                  fontFamily: "OpenSans_700Bold",
-                }}
-              >
-                Import plan
-              </Text>
-            </TouchableOpacity>
           </View>
         ) : (
           <Text></Text>
         )}
         {planConfig && Object.keys(planConfig).length ? (
-          <View style={{gap:16}} className="flex flex-col h-full items-center">
+          <View
+            style={{ gap: 16 }}
+            className="flex flex-col h-full items-center"
+          >
             <View className="flex flex-row w-full justify-around items-center">
               <Text
                 className="w-full text-lg text-white  font-bold "
@@ -180,10 +171,9 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
             </View>
             {planDays && planDays.length ? (
               <ScrollView className="w-full">
-                <View style={{gap:8}} className="flex flex-col pb-12">
-                {planDays.map((planDay) => renderPlanDay({ item: planDay }))}
+                <View style={{ gap: 8 }} className="flex flex-col pb-12">
+                  {planDays.map((planDay) => renderPlanDay({ item: planDay }))}
                 </View>
-                
               </ScrollView>
             ) : (
               <Text></Text>
@@ -194,13 +184,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         )}
       </View>
       {viewLoading ? <ViewLoading /> : <Text></Text>}
-      {showImportPlanPopUp ? (
-        <ImportPlanPopUp setImportPlan={setImportPlan} />
-      ) : (
-        <Text></Text>
-      )}
       {showPlanConfig ? (
-        <CreatePlanConfig reloadSection={reloadSection} />
+        <CreatePlanConfig reloadSection={reloadSection} hidePlanConfig={hidePlanConfigPopUp} />
       ) : (
         <Text></Text>
       )}
