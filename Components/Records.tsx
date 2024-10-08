@@ -127,7 +127,7 @@ const Records: React.FC<RecordsProps> = (props) => {
               className="text-base w-full text-center text-[#131313]"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
-              ADD NEW RECORDS
+              Add new records
             </Text>
           </Pressable>
         </View>

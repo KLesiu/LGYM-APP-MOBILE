@@ -69,6 +69,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
         style={styles.input}
         value={query}
         onChangeText={setQuery}
+        className='text-gray-200/80 font-light leading-4'
         placeholder="Enter to search"
       />
 
@@ -92,7 +93,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(30, 30, 30, 0.45)",
     borderRadius: 8,
     borderWidth: 1,
-    color: 'white',
     borderColor: '#ddd',
     fontSize: 16,
   },

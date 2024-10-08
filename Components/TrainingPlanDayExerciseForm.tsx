@@ -92,7 +92,7 @@ const TrainingPlanDayExerciseForm: React.FC<
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base"
+            className="text-gray-200/80 font-light leading-4 text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Exercise:
@@ -107,7 +107,7 @@ const TrainingPlanDayExerciseForm: React.FC<
 
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base"
+            className="text-gray-200/80 font-light leading-4 text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Series:
@@ -126,7 +126,7 @@ const TrainingPlanDayExerciseForm: React.FC<
 
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base"
+            className="text-gray-200/80 font-light leading-4 text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Reps:

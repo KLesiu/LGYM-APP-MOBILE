@@ -47,7 +47,7 @@ const Exercises: React.FC<StartProps> = (props) => {
   const renderExerciseItem = ({ item }: { item: ExerciseForm }) => (
     <Pressable
       onPress={() => showExerciseDetails(item)}
-      className="flex flex-col w-36 rounded-lg bg-[#94e798] p-2  "
+      className="flex flex-col w-36 min-h-[150px] rounded-lg bg-[#94e798] p-2  "
     >
       <Text
         className="text-base text-[#131313] font-bold"

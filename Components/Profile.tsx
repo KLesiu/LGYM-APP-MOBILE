@@ -92,12 +92,23 @@ const Profile: React.FC<ProfileProps> = (props) => {
   return (
     <View className="relative h-full w-full flex bg-[#131313]">
       <View className="w-full h-full p-4 flex flex-col flex-1">
-
-        <View className="flex justify-center flex-row py-3 px-6">
-          <View className="flex  justify-center flex-col items-center flex-wrap  rounded pl-2  ">
+      <View className="w-full flex">
+          <Pressable className="rounded-lg flex flex-row justify-center items-center w-20 h-10 bg-[#3f3f3f]" onPress={goBack}>
+            <Text
+              className="text-center text-sm text-white"
+              style={{
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+              BACK
+            </Text>
+          </Pressable>
+        </View>
+        <View style={{gap:8}} className="flex items-center flex-col py-3 px-6">
+          <View className="flex ">
             {rankComponent}
           </View>
-          <View className="flex flex-col items-center  gap-1  ">
+          <View style={{gap:4}} className="flex flex-col items-center">
             <Text
               className="text-[#94e798] font-bold w-full text-center text-2xl"
               style={{ fontFamily: "OpenSans_700Bold" }}
@@ -124,18 +135,7 @@ const Profile: React.FC<ProfileProps> = (props) => {
             </Text>
           </View>
         </View>
-        <View className="w-full flex">
-          <Pressable className="rounded-lg flex flex-row justify-center items-center w-20 h-10 bg-[#3f3f3f]" onPress={goBack}>
-            <Text
-              className="text-center text-sm text-white"
-              style={{
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              BACK
-            </Text>
-          </Pressable>
-        </View>
+
         <View className="w-full h-12 flex flex-row pr-6">
           <Pressable
             className="flex flex-row justify-center items-center flex-1"
