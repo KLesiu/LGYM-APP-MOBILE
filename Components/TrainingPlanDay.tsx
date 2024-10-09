@@ -84,7 +84,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     props.hideChooseDaySection();
     const isPlanDayFromStorage = await getPlanDayFromLocalStorage();
     if (isPlanDayFromStorage) return;
-    getInformationAboutPlanDay();
+    await getInformationAboutPlanDay();
   };
   const getInformationAboutPlanDay = async () => {
     const response = await fetch(
@@ -233,10 +233,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     exercise: ExerciseForm;
   }) => {
     return (
-      <View className="flex flex-col w-full  min-h-[100px] rounded-lg bg-[#282828] p-4  ">
+      <View className="flex flex-col w-full  rounded-lg bg-[#282828] p-4  ">
         <View className="flex flex-row justify-between">
           <Text
-            className="text-lg text-white font-bold"
+            className="text-base text-white font-bold"
             style={{
               fontFamily: "OpenSans_700Bold",
             }}
@@ -269,7 +269,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           >
             Last training scores:
           </Text>
-          <View style={{ gap: 16 }} className="flex flex-col">
+          <View style={{ gap: 8 }} className="flex flex-col">
             {Array.from({ length: item.series }).map((_, index) => {
               const savedScore = trainingSessionScores.find(
                 (score) =>
@@ -278,13 +278,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               );
               return (
                 <View className="flex w-full flex-col" key={index}>
-                  <View style={{ gap: 16 }} className="flex w-full flex-row justify-between">
+                  <View style={{ gap: 4 }} className="flex w-full flex-row justify-between">
                     <View
                       style={{ gap: 8 }}
                       className="flex flex-row  items-center"
                     >
                       <Text
-                        className="text-white text-base"
+                        className="text-white text-sm font-light"
                         style={{ fontFamily: "OpenSans_300Light" }}
                       >
                         Reps:
@@ -300,7 +300,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                         }
                         value={savedScore ? `${savedScore.reps}` : ''} 
                         keyboardType="numeric"
-                        className="text-[15px] rounded-lg border-[#575757] w-20  border-[1px] text-white px-2 py-4"
+                        className="text-sm rounded-lg border-[#575757] w-20  border-[1px] text-white p-1"
                       />
                     </View>
                     <View
@@ -308,7 +308,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                       className="flex flex-row items-center   "
                     >
                       <Text
-                        className="text-white text-base"
+                        className="text-white text-sm font-light"
                         style={{ fontFamily: "OpenSans_300Light" }}
                       >
                         Weight:
@@ -324,7 +324,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                         }
                         value={savedScore ? `${savedScore.weight}` : ''} 
                         keyboardType="numeric"
-                        className="text-[15px] rounded-lg  border-[#575757] w-20  border-[1px] text-white  px-2 py-4 "
+                        className="text-sm rounded-lg  border-[#575757] w-20  border-[1px] text-white p-1 "
                       />
                     </View>
                   </View>
@@ -340,8 +340,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   return (
     <View className="absolute w-full h-full text-white bg-[#121212] flex flex-col">
       {planDay && Object.keys(planDay).length ? (
-        <View style={{ gap: 16 }} className="flex flex-col items-center p-4 h-full">
-          <View style={{ gap: 8 }} className="flex flex-col w-full">
+        <View style={{ gap: 8 }} className="flex flex-col items-center p-4 h-full">
+          <View style={{ gap: 4 }} className="flex flex-col w-full">
             <View className="flex flex-row  justify-between">
               <Pressable
                 onPress={props.hideDaySection}
@@ -371,7 +371,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               </Pressable>
             </View>
             <Text
-              className="text-4xl text-white w-full text-center  font-bold "
+              className="text-2xl text-white w-full text-center  font-bold "
               style={{
                 fontFamily: "OpenSans_700Bold",
               }}

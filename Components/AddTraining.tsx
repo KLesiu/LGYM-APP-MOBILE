@@ -125,6 +125,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   
   
   const addTraining = async(exercises:TrainingSessionScores[])=>{
+    setViewLoading(true);
     const id = await AsyncStorage.getItem("id");
     const type =  dayId;
     const createdAt = new Date();
@@ -148,6 +149,8 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     if(response.msg === Message.Created){
       await hideAndDeleteTrainingSession()
     }
+    setViewLoading(false);
+
 
   }
 

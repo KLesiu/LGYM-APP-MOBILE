@@ -33,13 +33,19 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     init()
   }, [isPlanSet]);
   useEffect(() => {
-    getPlanDays();
+    getPlanDaysHook()
   }, [planConfig]);
 
 
   const init = async () => {
     setViewLoading(true);
     await getUserPlanConfig();
+    setViewLoading(false);
+  }
+
+  const getPlanDaysHook = async () => {
+    setViewLoading(true);
+    await getPlanDays();
     setViewLoading(false);
   }
 
