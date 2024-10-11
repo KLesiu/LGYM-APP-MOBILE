@@ -33,17 +33,22 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   useInterval(() => {setChooseDay
   }, 1000);
   useEffect(() => {
-    setViewLoading(true);
-    checkIsUserHavePlan()
-    checkIsUserHaveActivePlanDayTraining()
-    setViewLoading(false);
+init()
   }, []);
 
+  const init = async () => {
+    setViewLoading(true);
+   await checkIsUserHavePlan()
+    await checkIsUserHaveActivePlanDayTraining()
+    setViewLoading(false)
+  }
 
   const checkIsUserHavePlan = async()=>{
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/checkIsUserHavePlan`).then(res=>res).catch(err=>err).then(res=>res.json())
-    setIsUserHavePlan(response)
+    const response = await fetch(`${apiURL}/api/${id}/checkIsUserHavePlan`)
+    if(!response.ok) return;
+    const result = await response.json();
+    setIsUserHavePlan(result)
   }
   const checkIsUserHaveActivePlanDayTraining = async()=>{
     const response = JSON.parse(`${await AsyncStorage.getItem('planDay')}`);

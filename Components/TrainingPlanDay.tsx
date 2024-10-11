@@ -5,6 +5,7 @@ import {
   Pressable,
   TextInput,
   Image,
+  Switch as SwitchComp,
 } from "react-native";
 import TrainingPlanDayProps from "./props/TrainingPlanDayProps";
 import { useEffect, useState } from "react";
@@ -21,7 +22,6 @@ import useInterval from "./helpers/hooks/useInterval";
 import ViewLoading from "./ViewLoading";
 import { Message } from "./enums/Message";
 
-
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [planDay, setPlanDay] = useState<PlanDayVm>();
@@ -36,43 +36,48 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
   >([]);
+  const [isEnabled, setIsEnabled] = useState(false);
+
   const [error, setError] = useState<string>("");
 
   const [viewLoading, setViewLoading] = useState<boolean>(false);
-  useInterval(() => {saveTrainingSessionScores()
+  useInterval(() => {
+    saveTrainingSessionScores();
   }, 1000);
   useEffect(() => {
     const init = async () => {
-      setViewLoading(true)
-      await initExercisePlanDay(); 
+      setViewLoading(true);
+      await initExercisePlanDay();
       await loadTrainingSessionScores();
-      setViewLoading(false)
+      setViewLoading(false);
     };
     init();
   }, []);
-  
+
   useEffect(() => {
     if (planDay && planDay.exercises) {
       const initialScores = planDay.exercises.flatMap((exercise) => {
         return Array.from({ length: exercise.series }).map((_, seriesIndex) => {
           const existingScore = trainingSessionScores.find(
-            (score) => score.exercise._id === exercise.exercise._id && score.series === seriesIndex + 1
+            (score) =>
+              score.exercise._id === exercise.exercise._id &&
+              score.series === seriesIndex + 1
           );
-          return existingScore || {
-            exercise: exercise.exercise,
-            series: seriesIndex + 1,
-            reps: 0,
-            weight: 0,
-          };
+          return (
+            existingScore || {
+              exercise: exercise.exercise,
+              series: seriesIndex + 1,
+              reps: 0,
+              weight: 0,
+            }
+          );
         });
       });
-      setTrainingSessionScores(initialScores); 
+      setTrainingSessionScores(initialScores);
     }
   }, [planDay]);
- 
- 
 
-
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const loadTrainingSessionScores = async () => {
     const savedScores = await AsyncStorage.getItem("trainingSessionScores");
@@ -89,19 +94,24 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const getInformationAboutPlanDay = async () => {
     const response = await fetch(
       `${apiURL}/api/planDay/${props.dayId}/getPlanDay`
-    )
-      .then((res) => res)
-      .catch((err) => err).then((res) => res.json());
-    setPlanDay(response);
-    await sendPlanDayToLocalStorage(response);
+    );
+    if (!response.ok) return;
+    const planDayInfo = await response.json();
+    setPlanDay(planDayInfo);
+    await sendPlanDayToLocalStorage(planDayInfo);
   };
   const sendPlanDayToLocalStorage = async (planDay: PlanDayVm) => {
     await AsyncStorage.setItem("planDay", JSON.stringify(planDay));
   };
   const getPlanDayFromLocalStorage = async (): Promise<boolean> => {
     const planDay = await AsyncStorage.getItem("planDay");
-    
-    if (!planDay || !JSON.parse(planDay) || !Object.keys(JSON.parse(planDay)).length) return false;
+
+    if (
+      !planDay ||
+      !JSON.parse(planDay) ||
+      !Object.keys(JSON.parse(planDay)).length
+    )
+      return false;
     setPlanDay(JSON.parse(planDay));
     return true;
   };
@@ -134,10 +144,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setIsTrainingPlanDayExerciseFormShow(false);
   };
   const getExercise = async (id: string) => {
-    const response = await fetch(`${apiURL}/api/exercise/${id}/getExercise`)
-      .then((res) => res)
-      .catch((err) => err).then((res) => res.json());
-    return response;
+    const response = await fetch(`${apiURL}/api/exercise/${id}/getExercise`);
+    if (!response.ok) return;
+    const exercise = await response.json();
+    return exercise;
   };
   const getExerciseToAddFromForm = async (
     exerciseId: string,
@@ -167,21 +177,23 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setPlanDay(newPlanDay);
     await sendPlanDayToLocalStorage(newPlanDay);
   };
-  const parseScoresIfValid = (scores: TrainingSessionScores[]): TrainingSessionScores[] | null => {
+  const parseScoresIfValid = (
+    scores: TrainingSessionScores[]
+  ): TrainingSessionScores[] | null => {
     const parsedScores = scores.map((score) => {
       // Zamiana przecinka na kropkę w `reps` i `weight`
-      const repsWithDot = score.reps.toString().replace(',', '.');
-      const weightWithDot = score.weight.toString().replace(',', '.');
-  
+      const repsWithDot = score.reps.toString().replace(",", ".");
+      const weightWithDot = score.weight.toString().replace(",", ".");
+
       // Próba sparsowania wartości
       const parsedReps = parseFloat(repsWithDot);
       const parsedWeight = parseFloat(weightWithDot);
-  
+
       // Sprawdzamy, czy udało się sparsować obie wartości
       if (isNaN(parsedReps) || isNaN(parsedWeight)) {
         return null;
       }
-  
+
       // Zwracamy nowy obiekt z sparsowanymi wartościami
       return {
         ...score,
@@ -189,16 +201,17 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         weight: parsedWeight,
       };
     });
-  
-    // Sprawdzamy, czy wszystkie elementy zostały poprawnie sparsowane
-    return parsedScores.includes(null) ? null : parsedScores as TrainingSessionScores[];
-  };
-  const sendTraining = (exercises:TrainingSessionScores[])=>{
 
+    // Sprawdzamy, czy wszystkie elementy zostały poprawnie sparsowane
+    return parsedScores.includes(null)
+      ? null
+      : (parsedScores as TrainingSessionScores[]);
+  };
+  const sendTraining = (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
-    if(!result) return setError(Message.InputsMustBeNumbers)
-    props.addTraining(result)
-  }
+    if (!result) return setError(Message.InputsMustBeNumbers);
+    props.addTraining(result);
+  };
   const updateExerciseScore = async (
     exercise: ExerciseForm,
     series: number,
@@ -206,7 +219,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     isWeight: boolean
   ) => {
     const updatedScores = trainingSessionScores.map((score) => {
-      setError('')
+      setError("");
       if (score.exercise._id === exercise._id && score.series === series) {
         if (isWeight) {
           return {
@@ -224,9 +237,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     //@ts-ignore
     setTrainingSessionScores(updatedScores);
   };
-  const saveTrainingSessionScores = async()=>{
-    await AsyncStorage.setItem("trainingSessionScores", JSON.stringify(trainingSessionScores));
-  }
+  const saveTrainingSessionScores = async () => {
+    await AsyncStorage.setItem(
+      "trainingSessionScores",
+      JSON.stringify(trainingSessionScores)
+    );
+  };
   const renderExerciseItem = (item: {
     series: number;
     reps: string;
@@ -261,7 +277,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             </Pressable>
           </View>
         </View>
-  
+
         <View style={{ gap: 16 }} className="flex w-full flex-col">
           <Text
             className="text-gray-300 text-[12px] pb-1 border-b-[1px] mb-1 border-white"
@@ -278,7 +294,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               );
               return (
                 <View className="flex w-full flex-col" key={index}>
-                  <View style={{ gap: 4 }} className="flex w-full flex-row justify-between">
+                  <View
+                    style={{ gap: 4 }}
+                    className="flex w-full flex-row justify-between"
+                  >
                     <View
                       style={{ gap: 8 }}
                       className="flex flex-row  items-center"
@@ -294,11 +313,11 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                           updateExerciseScore(
                             item.exercise,
                             index + 1,
-                           value,
+                            value,
                             false
                           )
                         }
-                        value={savedScore ? `${savedScore.reps}` : ''} 
+                        value={savedScore ? `${savedScore.reps}` : ""}
                         keyboardType="numeric"
                         className="text-sm rounded-lg border-[#575757] w-20  border-[1px] text-white p-1"
                       />
@@ -322,7 +341,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                             true
                           )
                         }
-                        value={savedScore ? `${savedScore.weight}` : ''} 
+                        value={savedScore ? `${savedScore.weight}` : ""}
                         keyboardType="numeric"
                         className="text-sm rounded-lg  border-[#575757] w-20  border-[1px] text-white p-1 "
                       />
@@ -340,7 +359,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   return (
     <View className="absolute w-full h-full text-white bg-[#121212] flex flex-col">
       {planDay && Object.keys(planDay).length ? (
-        <View style={{ gap: 8 }} className="flex flex-col items-center p-4 h-full">
+        <View
+          style={{ gap: 8 }}
+          className="flex flex-col items-center p-4 h-full"
+        >
           <View style={{ gap: 4 }} className="flex flex-col w-full">
             <View className="flex flex-row  justify-between">
               <Pressable
@@ -348,7 +370,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 className="rounded-md flex flex-row justify-center items-center w-20 h-8 bg-[#3f3f3f]"
               >
                 <Text
-                  className="text-center text-sm text-white"
+                  className="text-center text-[10px] text-white"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -361,7 +383,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 className="rounded-md flex flex-row justify-center items-center w-28 h-8 bg-[#3f3f3f]"
               >
                 <Text
-                  className="text-center text-sm text-white"
+                  className="text-center text-[10px] text-white"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -380,7 +402,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             </Text>
           </View>
           <ScrollView
-            className="w-full -mr-4 pr-4"
+            className="w-full min-h-[300px] -mr-4 pr-4"
             contentContainerStyle={{
               display: "flex",
               alignItems: "center",
@@ -390,31 +412,36 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             {planDay.exercises.map((exercise) => renderExerciseItem(exercise))}
           </ScrollView>
           <View className="w-full flex flex-row justify-between">
-          
-            <Pressable
-              onPress={props.hideAndDeleteTrainingSession}
-              className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
-            >
-              <Text
-                className="text-center text-xl text-white"
-                style={{
-                  fontFamily: "OpenSans_400Regular",
-                }}
-              >
-                Delete
-              </Text>
-            </Pressable>
-            <Pressable onPress={()=>sendTraining(trainingSessionScores)} className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]">
-              <Text
-                className="text-center text-xl text-black"
-                style={{
-                  fontFamily: "OpenSans_400Regular",
-                }}
-              >
-                Add
-              </Text>
-            </Pressable>
-          </View>
+      <Pressable
+        onPress={props.hideAndDeleteTrainingSession}
+        disabled={!isEnabled}
+        className={`rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f] ${!isEnabled ? 'opacity-50' : 'opacity-100'}`}
+      >
+        <Text
+          className="text-center text-base text-white"
+          style={{
+            fontFamily: "OpenSans_400Regular",
+          }}
+        >
+          Delete
+        </Text>
+      </Pressable>
+
+      <SwitchComp onValueChange={toggleSwitch} value={isEnabled} />
+
+      <Pressable
+        onPress={() => sendTraining(trainingSessionScores)}
+        disabled={!isEnabled}
+        className={`rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798] ${!isEnabled ? 'opacity-50' : 'opacity-100'}`}
+      >
+        <Text
+          className="text-base"
+          style={{ fontFamily: "OpenSans_400Regular" }}
+        >
+          Add
+        </Text>
+      </Pressable>
+    </View>
           <View className="flex flex-col text-center w-full">
             <Text
               className="text-red-500 text-sm"
@@ -422,7 +449,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             >
               {error}
             </Text>
-      </View>
+          </View>
         </View>
       ) : (
         <></>
@@ -436,8 +463,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       ) : (
         <></>
       )}
-            {viewLoading ? <ViewLoading /> : <Text></Text>}
-
+      {viewLoading ? <ViewLoading /> : <Text></Text>}
     </View>
   );
 };

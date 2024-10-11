@@ -70,7 +70,6 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     )
      if(!response.ok){}
      const result = await response.json()
-     console.log(result)
     if (result.msg === Message.Created) {
       props.closeForm();
     }
@@ -218,32 +217,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             </Text>
           </Pressable>
         </View>
-        <View className="flex flex-row items-end   justify-between">
-          <Pressable
-            onPress={props.closeForm}
-            className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
-          >
-            <Text
-              className="text-center text-base text-white"
-              style={{
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              CANCEL
-            </Text>
-          </Pressable>
-          <Pressable
-            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
-            onPress={createPlanDay}
-          >
-            <Text
-              className="text-base"
-              style={{ fontFamily: "OpenSans_400Regular" }}
-            >
-              CREATE
-            </Text>
-          </Pressable>
-        </View>
+
         <View className="flex flex-col h-32 ">
           {/* Lista dodanych ćwiczeń */}
           <Text
@@ -270,7 +244,32 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           
           </ScrollView>
         </View>
-
+        <View className="flex flex-row items-end   justify-between">
+          <Pressable
+            onPress={props.closeForm}
+            className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
+          >
+            <Text
+              className="text-center text-base text-white"
+              style={{
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+              Cancel
+            </Text>
+          </Pressable>
+          <Pressable
+            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+            onPress={createPlanDay}
+          >
+            <Text
+              className="text-base"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              Create
+            </Text>
+          </Pressable>
+        </View>
       
       </View>
       </View>

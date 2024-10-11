@@ -38,10 +38,9 @@ const TrainingPlanDayExerciseForm: React.FC<
         }),
       }
     )
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
+    if(!response.ok) return;
+    const result = await response.json();
+    const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
     setExercisesToSelect(helpExercisesToSelect);
@@ -51,9 +50,9 @@ const TrainingPlanDayExerciseForm: React.FC<
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllExercises`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
-    const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
+    if(!response.ok) return;
+    const result = await response.json()
+    const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
     setExercisesToSelect(helpExercisesToSelect);
