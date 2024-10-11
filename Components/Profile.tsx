@@ -52,11 +52,9 @@ const Profile: React.FC<ProfileProps> = (props) => {
     const response = await fetch(
       `${apiURL}/api/userInfo/${id}/getUserEloPoints`
     )
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
+    const result = await response.json();
     if ("elo" in response) {
-      setProfileElo(response.elo);
+      setProfileElo(result.elo);
     }
   };
   const styleCurrentTab = (tab: JSX.Element, cssRule: string): string => {

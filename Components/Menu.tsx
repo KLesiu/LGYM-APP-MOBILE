@@ -95,10 +95,10 @@ const Menu: React.FC<MenuProps> = (props) => {
                   key={index}
                   onPress={() => changeView(item.component)}
                   style={{ transform: [{ translateX: x }, { translateY: y }] }}
-                  className="absolute w-20 h-20 items-center justify-center bg-[#131313] rounded-full p-1"
+                  className="absolute w-16 h-16 items-center justify-center bg-[#131313] rounded-full p-1"
                 >
-                  <Image source={item.icon} className="w-8 h-8" />
-                  <Text className="text-gray-400 text-base font-light">
+                  <Image source={item.icon} className="w-6 h-6" />
+                  <Text className="text-gray-400 text-[10px] font-light">
                     {item.label}
                   </Text>
                 </TouchableOpacity>

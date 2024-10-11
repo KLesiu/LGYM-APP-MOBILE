@@ -77,7 +77,7 @@ const Start: React.FC<StartProps> = (props) => {
         <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg">
           <View>
             <Text
-              className="text-[#94e798] text-xl"
+              className="text-[#94e798] text-lg"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Last Training:
@@ -85,14 +85,14 @@ const Start: React.FC<StartProps> = (props) => {
             {!error && lastTrainingInfo && Object.keys(lastTrainingInfo).length  ?
                           <View className="flex">
                           <Text
-                            className="text-white"
+                            className="text-white text-sm"
                             style={{ fontFamily: "OpenSans_400Regular" }}
                           >
                             Date:{" "}
                             {new Date(lastTrainingInfo.createdAt!).toLocaleString()}
                           </Text>
                           <Text
-                            className="text-white"
+                            className="text-white text-sm"
                             style={{ fontFamily: "OpenSans_400Regular" }}
                           >
                             Type: {lastTrainingInfo.planDay.name}
@@ -100,7 +100,7 @@ const Start: React.FC<StartProps> = (props) => {
                         </View>
             :
               <Text
-                className="text-white"
+                className="text-white text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 {error}
@@ -113,17 +113,17 @@ const Start: React.FC<StartProps> = (props) => {
             className="h-16 w-24 bg-[#94e798] rounded-xl flex items-center justify-center"
           >
             <Text
-              className="text-[#131313] text-lg text-center"
+              className="text-[#131313] text-base text-center"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              ADD NEW
+              New
             </Text>
           </Pressable>
         </View>
         <View className="flex w-full flex-row justify-between bg-[#1E1E1E73] items-center p-4 rounded-lg">
           <View>
             <Text
-              className="text-[#94e798] text-xl"
+              className="text-[#94e798] text-lg"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Progress
@@ -155,7 +155,7 @@ const Start: React.FC<StartProps> = (props) => {
                 <Text></Text>
               )}
               <Text
-                className="text-white"
+                className="text-white text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 Completed: {progress ? progress : <Text></Text>}%

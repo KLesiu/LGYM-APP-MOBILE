@@ -28,7 +28,6 @@ const Login: React.FC = () => {
         setErrors([{ msg: "All fields are required!" }]);
         return;
       }
-    
       try {
         const response = await fetch(apiURL, {
           method: "POST",

@@ -27,7 +27,7 @@ const UsersRanking: React.FC = () => {
   return (
     <View className="h-full w-full">
       <Text
-        className="text-[#94e798] text-xl"
+        className="text-[#94e798] text-lg"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
        Ranking
@@ -41,14 +41,15 @@ const UsersRanking: React.FC = () => {
             
             <View className="flex flex-row " key={index}>
               <Text
-                className={color + " mr-2"}
+                className={color + " mr-2 text-sm"}
                 
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 {index+1}
               </Text>
               <Text
-                className={color}
+              
+                className={color + " text-sm"}
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 {ele.name} - {ele.elo} ELO

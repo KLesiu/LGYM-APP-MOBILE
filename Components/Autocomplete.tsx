@@ -66,11 +66,13 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
     <View>
       {/* Pole tekstowe dla AutoComplete */}
       <TextInput
-        style={styles.input}
+        style={{
+          fontFamily: "OpenSans_400Regular",
+          backgroundColor: "rgba(30, 30, 30, 0.45)",
+        }}
+        className=" w-full  px-2 py-4 text-white rounded-lg "
         value={query}
         onChangeText={setQuery}
-        className='text-gray-200/80 font-light leading-4'
-        placeholder="Enter to search"
       />
 
       {/* Dropdown pod polem tekstowym */}
@@ -88,14 +90,6 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
 };
 
 const styles = StyleSheet.create({
-  input: {
-    padding: 16,
-    backgroundColor: "rgba(30, 30, 30, 0.45)",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    fontSize: 16,
-  },
   dropdown: {
     maxHeight: 150, // Ogranicz wysokość listy, jeśli jest wiele opcji
     backgroundColor: 'white',

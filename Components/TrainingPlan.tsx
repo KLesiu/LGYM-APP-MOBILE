@@ -31,10 +31,10 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
   useEffect(() => {
     init()
-  }, [isPlanSet]);
+  }, []);
   useEffect(() => {
     getPlanDaysHook()
-  }, [planConfig]);
+  }, []);
 
 
   const init = async () => {
@@ -74,15 +74,25 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     props.hideMenuButton(true);
     setIsPlanDayFormVisible(true);
   };
-  const hidePlanDayForm = (): void => {
+  const hidePlanDayForm = async(): Promise<void> => {
+    setViewLoading(true);
     setIsPlanDayFormVisible(false);
+    await getPlanDaysHook()
     props.hideMenuButton(false);
+    setViewLoading(false);
   };
   const reloadSection = (): void => {
     setIsPlanSet(true);
     setShowPlanConfig(false);
     props.hideMenuButton(false);
   };
+
+  const render = ({ item }: { item: PlanDayVm }) => {
+    setViewLoading(true)
+    const planDay = renderPlanDay({ item });
+    setViewLoading(false)
+    return planDay
+  }
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
     return (
       <View
@@ -112,7 +122,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const getUserPlanConfig = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
-    try {
+      try {
       const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
       if(!response.ok) return console.error("Failed to fetch plan config")
       const result = await response.json()
@@ -178,7 +188,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
             {planDays && planDays.length ? (
               <ScrollView className="w-full">
                 <View style={{ gap: 8 }} className="flex flex-col pb-12">
-                  {planDays.map((planDay) => renderPlanDay({ item: planDay }))}
+                  {planDays.map((planDay) => render({ item: planDay }))}
                 </View>
               </ScrollView>
             ) : (

@@ -5,15 +5,23 @@ import { isIntValidator } from "./helpers/numberValidator";
 import CreatePlanConfigProps from "./props/CreatePlanConfigProps";
 import ResponseMessage from "./interfaces/ResponseMessage";
 import { Message } from "./enums/Message";
+import ViewLoading from "./ViewLoading";
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   const [planName, setPlanName] = useState<string>("");
   const [numberOfDays, setNumberOfDays] = useState<string>("");
   const [error, setError] = useState<string>();
+  const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   const sendConfig = async (): Promise<void> => {
     if (!planName || !numberOfDays) return setError(Message.FieldRequired);
+    setViewLoading(true);
+    await submitPlanConfig();
+    setViewLoading(false);
+  };
+
+  const submitPlanConfig = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
-    try{
+    try {
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND}/api/${id}/createPlan`,
         {
@@ -26,22 +34,22 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             name: planName,
           }),
         }
-      )
-      if(!response.ok){
-        console.error("Failed to send plan config")
-        return setError(Message.TryAgain)
+      );
+      if (!response.ok) {
+        console.error("Failed to send plan config");
+        return setError(Message.TryAgain);
       }
-      const data: ResponseMessage = await response.json()
+      const data: ResponseMessage = await response.json();
       if (data.msg === Message.Created) {
         return props.reloadSection();
       } else {
         return setError(data.msg);
       }
-    }catch(error){
-      setError(Message.TryAgain)
+    } catch (error) {
+      setError(Message.TryAgain);
     }
-   
   };
+
   const validator = (input: string): void => {
     if (!input) return setNumberOfDays(input);
     const result = isIntValidator(input);
@@ -106,7 +114,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
           >
             <Text
-              className="text-center text-xl text-white"
+              className="text-center text-base text-white"
               style={{
                 fontFamily: "OpenSans_400Regular",
               }}
@@ -119,8 +127,8 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
           >
             <Text
-              className="text-xl"
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              className="text-base"
+              style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Next
             </Text>
@@ -137,6 +145,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
       ) : (
         ""
       )}
+      {viewLoading ? <ViewLoading /> : <Text></Text>}
     </View>
   );
 };

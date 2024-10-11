@@ -14,6 +14,7 @@ import { isIntValidator } from "./helpers/numberValidator";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CreatePlanDayProps from "./props/CreatePlanDayProps";
 import { Message } from "./enums/Message";
+import ViewLoading from "./ViewLoading";
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
@@ -26,6 +27,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [clearQuery, setClearQuery] = useState<boolean>(false); // Nowy stan do czyszczenia query
+  const [viewLoading,setViewLoading] = useState<boolean>(false)
 
   useEffect(() => {
     getAllExercises();
@@ -45,6 +47,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setExercisesToSelect(helpExercisesToSelect);
   };
   const createPlanDay = async () => {
+    setViewLoading(true)
     const exercises = exercisesList.map((exercise: ExerciseForPlanDay) => {
       return {
         exercise: exercise.exercise.value,
@@ -65,11 +68,13 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         }),
       }
     )
-      .then((res) => res.json())
-      .catch((err) => err);
-    if (response.msg === Message.Created) {
+     if(!response.ok){}
+     const result = await response.json()
+     console.log(result)
+    if (result.msg === Message.Created) {
       props.closeForm();
     }
+    setViewLoading(false)
   };
 
   const removeExerciseFromList = (item: ExerciseForPlanDay) => () => {
@@ -79,9 +84,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setExercisesList(newList);
   };
   const addToList = (): void => {
-    if(!isIntValidator(numberOfSeries)) return;
+    if (!isIntValidator(numberOfSeries)) return;
     if (!numberOfSeries || !exerciseReps || !selectedExercise) return;
-    
+
     const exercise: ExerciseForPlanDay = {
       series: parseInt(numberOfSeries),
       reps: exerciseReps,
@@ -108,69 +113,50 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const renderExerciseItem = ({ item }: { item: ExerciseForPlanDay }) => (
     <View className="flex flex-row items-center justify-between">
       <Text
-        style={{ fontFamily: "OpenSans_400Regular" }}
-        className="text-white text-lg"
+        style={{ fontFamily: "OpenSans_300Light" }}
+        className="text-white text-sm"
       >
         - {`${item.exercise.label}: ${item.series}x${item.reps}`}
       </Text>
       <Pressable onPress={removeExerciseFromList(item)}>
-        <Icon style={{ color: "#de161d", fontSize: 30 }} name="delete" />
+        <Icon style={{ color: "#de161d", fontSize: 20 }} name="delete" />
       </Pressable>
     </View>
   );
-  
 
   return (
-    <View className="absolute h-full w-full flex flex-col bg-[#121212] top-0 z-30 ">
+    <View className="absolute h-full w-full top-0   z-30 ">
+      <View className="flex flex-col bg-[#121212] h-full w-full p-4 relative">
+
       <Text
-        className="text-xl text-white text-center border-b-2 border-[#94e798] w-full pb-1"
+        className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         New Plan Day
       </Text>
 
-      <View style={{gap:8}} className="flex flex-col    p-2 flex-1">
-        <View className="flex flex-col ">
+      <View style={{ gap: 16 }} className="flex flex-col flex-1">
+        <View style={{gap:8}} className="flex flex-col ">
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+           style={{ fontFamily: "OpenSans_300Light" }}
+              className="  text-white  text-base"
           >
             Name:
           </Text>
           <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white  text-black"
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className=" w-full  px-2 py-4 text-white rounded-lg "
             onChangeText={(text: string) => setPlanDayName(text)}
           />
         </View>
-        <View className="flex flex-col h-32 ">
-          {/* Lista dodanych ćwiczeń */}
-          <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
-          >
-            Exercises List:
-          </Text>
-          <ScrollView className="h-full" >
-            {exercisesList.length > 0 ? (
-              exercisesList.map((item, index) => (
-                <View key={index}>{renderExerciseItem({ item })}</View>
-              ))
-            ) : (
-              <Text
-                className="text-white"
-                style={{ fontFamily: "OpenSans_400Regular" }}
-              >
-                No exercises added yet.
-              </Text>
-            )}
-          </ScrollView>
-        </View>
-        <View className="p-2 flex flex-col items-end bg-[#282828] rounded-lg">
+        <View className="flex flex-col items-end ">
           <View className="flex flex-col w-full">
             <Text
-              style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-white text-xl"
+             style={{ fontFamily: "OpenSans_300Light" }}
+              className="  text-white  text-base"
             >
               Exercise:
             </Text>
@@ -182,35 +168,42 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             />
           </View>
 
-          <View className="flex flex-col w-full">
+          <View style={{gap:8}} className="flex flex-col w-full">
             <Text
-              style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-white text-xl"
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="  text-white  text-base"
+              
             >
               Series:
             </Text>
             <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white  text-black"
+             style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className=" w-full  px-2 py-4 text-white rounded-lg "
             keyboardType="numeric"
-            value={numberOfSeries}
-            onChangeText={(text: string) => setNumberOfSeries(text)}
-          />
+              value={numberOfSeries}
+              onChangeText={(text: string) => setNumberOfSeries(text)}
+            />
           </View>
 
-          <View className="flex flex-col w-full">
+          <View style={{gap:8}} className="flex flex-col w-full">
             <Text
-              style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-white text-xl"
+              style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-white text-base"
             >
               Reps:
             </Text>
             <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white  text-black"
-            value={exerciseReps}
-            onChangeText={(text: string) => setExerciseReps(text)}
-          />
+              style={{
+                fontFamily: "OpenSans_400Regular",
+                backgroundColor: "rgba(30, 30, 30, 0.45)",
+              }}
+              className=" w-full  px-2 py-4 text-white rounded-lg "
+              value={exerciseReps}
+              onChangeText={(text: string) => setExerciseReps(text)}
+            />
           </View>
 
           <Pressable
@@ -218,31 +211,20 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             onPress={addToList}
           >
             <Text
-              className="text-xl"
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              className="text-base"
+              style={{ fontFamily: "OpenSans_400Regular" }}
             >
               ADD TO LIST
             </Text>
           </Pressable>
         </View>
-        <View className="flex flex-row   justify-between">
-          <Pressable
-            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
-            onPress={createPlanDay}
-          >
-            <Text
-              style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-[#131313] text-xl"
-            >
-              CREATE
-            </Text>
-          </Pressable>
+        <View className="flex flex-row items-end   justify-between">
           <Pressable
             onPress={props.closeForm}
-            className="rounded-lg flex flex-row justify-center items-center w-40 h-12 bg-[#3f3f3f]"
+            className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
           >
             <Text
-              className="text-center text-xl text-white"
+              className="text-center text-base text-white"
               style={{
                 fontFamily: "OpenSans_400Regular",
               }}
@@ -250,8 +232,51 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
               CANCEL
             </Text>
           </Pressable>
+          <Pressable
+            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+            onPress={createPlanDay}
+          >
+            <Text
+              className="text-base"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              CREATE
+            </Text>
+          </Pressable>
         </View>
+        <View className="flex flex-col h-32 ">
+          {/* Lista dodanych ćwiczeń */}
+          <Text
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="text-white text-base"
+          >
+            Exercises List:
+          </Text>
+          <ScrollView className="h-full">
+            <View className="flex flex-col " style={{gap:16}}>
+            {exercisesList.length > 0 ? (
+              exercisesList.map((item, index) => (
+                <View key={index}>{renderExerciseItem({ item })}</View>
+              ))
+            ) : (
+              <Text
+                className="text-white"
+                style={{ fontFamily: "OpenSans_300Light" }}
+              >
+                No exercises added yet.
+              </Text>
+            )}
+            </View>
+          
+          </ScrollView>
+        </View>
+
+      
       </View>
+      </View>
+      {viewLoading ? <ViewLoading /> : <Text></Text>}
+
+
     </View>
   );
 };
