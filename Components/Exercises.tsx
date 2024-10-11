@@ -28,10 +28,10 @@ const Exercises: React.FC<StartProps> = (props) => {
     const response = await fetch(
       `${API_URL}/api/exercise/getAllGlobalExercises`
     )
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    setGlobalExercises(response);
+    if(response.ok){
+      const result = await response.json()
+      setGlobalExercises(result);
+    }
   };
   const showExerciseDetails = (exercise: ExerciseForm): void => {
     setSelectedExercise(exercise);
@@ -72,10 +72,10 @@ const Exercises: React.FC<StartProps> = (props) => {
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllUserExercises`
     )
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    setUserExercises(response);
+    if(response.ok){
+      const result = await response.json()
+      setUserExercises(result);
+    }
     setIsLoading(false);
   };
   const openExerciseForm = (): void => {

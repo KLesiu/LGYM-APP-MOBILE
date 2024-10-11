@@ -10,7 +10,7 @@ import {
 import TrainingPlanDayProps from "./props/TrainingPlanDayProps";
 import { useEffect, useState } from "react";
 import { PlanDayVm } from "./interfaces/PlanDay";
-import { ExerciseForm, ExerciseForPlanDay } from "./interfaces/Exercise";
+import { ExerciseForm, ExerciseForPlanDay, LastExerciseScores } from "./interfaces/Exercise";
 import Switch from "./img/icons/switch.png";
 import Remove from "./img/icons/remove.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,6 +36,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
   >([]);
+  const [lastExerciseScores,setLastExerciseScores] = useState<LastExerciseScores[]>()
   const [isEnabled, setIsEnabled] = useState(false);
 
   const [error, setError] = useState<string>("");
@@ -45,15 +46,16 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     saveTrainingSessionScores();
   }, 1000);
   useEffect(() => {
-    const init = async () => {
-      setViewLoading(true);
-      await initExercisePlanDay();
-      await loadTrainingSessionScores();
-      setViewLoading(false);
-    };
+
     init();
   }, []);
 
+  const init = async () => {
+    setViewLoading(true);
+    await initExercisePlanDay();
+    await loadTrainingSessionScores();
+    setViewLoading(false);
+  };
   useEffect(() => {
     if (planDay && planDay.exercises) {
       const initialScores = planDay.exercises.flatMap((exercise) => {
@@ -91,6 +93,21 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     if (isPlanDayFromStorage) return;
     await getInformationAboutPlanDay();
   };
+  const getLastExerciseScores = async (plan:PlanDayVm):Promise<LastExerciseScores[] | void>=>{
+    const id = await AsyncStorage.getItem("id");
+    const response = await fetch(`${apiURL}/api/exercise/${id}/getLastExerciseScores`,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(plan)
+    })
+    if(!response.ok) return;
+    const result = await response.json();
+    setLastExerciseScores(result)
+    return result;
+  }
+
   const getInformationAboutPlanDay = async () => {
     const response = await fetch(
       `${apiURL}/api/planDay/${props.dayId}/getPlanDay`
@@ -98,6 +115,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     if (!response.ok) return;
     const planDayInfo = await response.json();
     setPlanDay(planDayInfo);
+    await getLastExerciseScores(planDayInfo);
     await sendPlanDayToLocalStorage(planDayInfo);
   };
   const sendPlanDayToLocalStorage = async (planDay: PlanDayVm) => {
@@ -248,6 +266,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     reps: string;
     exercise: ExerciseForm;
   }) => {
+  const findLastScores = lastExerciseScores?.find((score)=>score.exerciseId === item.exercise._id)
+  const stringScores = findLastScores?.seriesScores.map((score)=>`${score.score?.reps}x${score.score?.weight}`)
     return (
       <View className="flex flex-col w-full  rounded-lg bg-[#282828] p-4  ">
         <View className="flex flex-row justify-between">
@@ -280,10 +300,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
         <View style={{ gap: 16 }} className="flex w-full flex-col">
           <Text
-            className="text-gray-300 text-[12px] pb-1 border-b-[1px] mb-1 border-white"
+            className="text-gray-300 text-[10px] pb-1 border-b-[1px] mb-1 border-white"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
-            Last training scores:
+            Last scores: {stringScores?.join(', ')} (kg)
           </Text>
           <View style={{ gap: 8 }} className="flex flex-col">
             {Array.from({ length: item.series }).map((_, index) => {

@@ -21,4 +21,21 @@ export interface ExerciseTrainingHistoryDetails{
     bodyPart: BodyParts;
 }
 
+export interface LastExerciseScores{
+    exerciseId:string,
+    name:string,
+    seriesScores:SeriesScore[] 
+ }
+ 
+ export interface SeriesScore{
+    series:number,
+    score:{
+     createdAt:Date,
+     reps:number,
+     weight:number,
+     unit:string,
+     _id:string
+    } | null
+ }
+
 
