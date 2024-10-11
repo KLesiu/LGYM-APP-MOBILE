@@ -125,7 +125,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   return (
     <View className="absolute h-full w-full top-0   z-30 ">
-      <View className="flex flex-col bg-[#121212] h-full w-full p-4 relative">
+      <View style={{gap:16}} className="flex flex-col bg-[#121212] h-full w-full p-4 relative">
 
       <Text
         className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
@@ -134,8 +134,8 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         New Plan Day
       </Text>
 
-      <View style={{ gap: 16 }} className="flex flex-col flex-1">
-        <View style={{gap:8}} className="flex flex-col ">
+      <View style={{ gap: 8 }} className="flex flex-col flex-1">
+        <View style={{gap:4}} className="flex flex-col ">
           <Text
            style={{ fontFamily: "OpenSans_300Light" }}
               className="  text-white  text-base"
@@ -166,8 +166,8 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
               onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
             />
           </View>
-
-          <View style={{gap:8}} className="flex flex-col w-full">
+          <View className="flex flex-row" style={{gap:16}}>
+          <View style={{gap:8}} className="flex flex-col flex-1">
             <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
                 className="  text-white  text-base"
@@ -187,7 +187,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             />
           </View>
 
-          <View style={{gap:8}} className="flex flex-col w-full">
+          <View style={{gap:8}} className="flex flex-col flex-1">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
               className="text-white text-base"
@@ -205,6 +205,8 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             />
           </View>
 
+          </View>
+      
           <Pressable
             className="bg-white w-40 h-12 flex items-center justify-center rounded-lg mt-2"
             onPress={addToList}

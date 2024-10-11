@@ -131,6 +131,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     )
       return false;
     setPlanDay(JSON.parse(planDay));
+    await getLastExerciseScores(JSON.parse(planDay))
     return true;
   };
   const deleteExerciseFromPlanDay = async (exerciseId: string | undefined) => {
@@ -189,6 +190,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
     if (!newPlanDay) return;
     await addExerciseToPlanDay(newPlanDay);
+    await getLastExerciseScores(newPlanDay)
     setIsTrainingPlanDayExerciseFormShow(false);
   };
   const addExerciseToPlanDay = async (newPlanDay: PlanDayVm) => {
@@ -267,8 +269,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     exercise: ExerciseForm;
   }) => {
   const findLastScores = lastExerciseScores?.find((score)=>score.exerciseId === item.exercise._id)
-  const stringScores = findLastScores?.seriesScores.map((score)=>`${score.score?.reps}x${score.score?.weight}`)
-    return (
+  const stringScores = findLastScores?.seriesScores.map((score) => 
+    `${score.score?.reps ?? 0}x${score.score?.weight ?? 0}`
+  );
+      return (
       <View className="flex flex-col w-full  rounded-lg bg-[#282828] p-4  ">
         <View className="flex flex-row justify-between">
           <Text

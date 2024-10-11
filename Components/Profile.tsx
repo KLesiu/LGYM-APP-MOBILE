@@ -53,9 +53,7 @@ const Profile: React.FC<ProfileProps> = (props) => {
       `${apiURL}/api/userInfo/${id}/getUserEloPoints`
     )
     const result = await response.json();
-    if ("elo" in response) {
-      setProfileElo(result.elo);
-    }
+    setProfileElo(result.elo);
   };
   const styleCurrentTab = (tab: JSX.Element, cssRule: string): string => {
     if (cssRule === "border")

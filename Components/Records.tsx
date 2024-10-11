@@ -38,12 +38,13 @@ const Records: React.FC<RecordsProps> = (props) => {
   }
   const getRecords = async () => {
     const id = await AsyncStorage.getItem("id");
-    const response: MainRecordsLast[] = await fetch(
+    const response= await fetch(
       `${process.env.REACT_APP_BACKEND}/api/mainRecords/${id}/getLastMainRecords`
     )
-      .then((res) => res)
-      .catch((err) => err).then((res) => res.json());
-    setRecords(response);
+    if(response.ok){
+      const result = await response.json();
+      setRecords(result);
+    }
     setViewLoading(false);
   };
   const deleteRecord = async(recordId:string | undefined)=>{
