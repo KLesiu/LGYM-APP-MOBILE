@@ -46,16 +46,15 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     saveTrainingSessionScores();
   }, 1000);
   useEffect(() => {
-
+    const init = async () => {
+      setViewLoading(true);
+      await initExercisePlanDay();
+      await loadTrainingSessionScores();
+    setViewLoading(false);
+  
+  }
     init();
   }, []);
-
-  const init = async () => {
-    setViewLoading(true);
-    await initExercisePlanDay();
-    await loadTrainingSessionScores();
-    setViewLoading(false);
-  };
   useEffect(() => {
     if (planDay && planDay.exercises) {
       const initialScores = planDay.exercises.flatMap((exercise) => {
@@ -79,17 +78,23 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     }
   }, [planDay]);
 
+
+
+
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const loadTrainingSessionScores = async () => {
     const savedScores = await AsyncStorage.getItem("trainingSessionScores");
-    if (savedScores) {
-      setTrainingSessionScores(JSON.parse(savedScores));
+    const parsedScores = savedScores ? JSON.parse(savedScores) : [];
+    
+    if (parsedScores && parsedScores.length) {
+      setTrainingSessionScores(parsedScores);
     }
   };
   const initExercisePlanDay = async () => {
     props.hideChooseDaySection();
     const isPlanDayFromStorage = await getPlanDayFromLocalStorage();
+
     if (isPlanDayFromStorage) return;
     await getInformationAboutPlanDay();
   };
@@ -123,7 +128,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
   const getPlanDayFromLocalStorage = async (): Promise<boolean> => {
     const planDay = await AsyncStorage.getItem("planDay");
-
     if (
       !planDay ||
       !JSON.parse(planDay) ||
@@ -254,6 +258,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       }
       return score;
     });
+
     //@ts-ignore
     setTrainingSessionScores(updatedScores);
   };
@@ -273,7 +278,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     `${score.score?.reps ?? 0}x${score.score?.weight ?? 0}`
   );
       return (
-      <View className="flex flex-col w-full  rounded-lg bg-[#282828] p-4  ">
+      <View key={item.exercise._id} className="flex flex-col w-full  rounded-lg bg-[#282828] p-4  ">
         <View className="flex flex-row justify-between">
           <Text
             className="text-base text-white font-bold"
