@@ -42,7 +42,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const [error, setError] = useState<string>("");
 
   const [viewLoading, setViewLoading] = useState<boolean>(false);
+
+  const [startInterval, setStartInterval] = useState<boolean>(false);
   useInterval(() => {
+    if(!startInterval)return;
     saveTrainingSessionScores();
   }, 1000);
   useEffect(() => {
@@ -51,6 +54,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       await initExercisePlanDay();
       await loadTrainingSessionScores();
     setViewLoading(false);
+    setStartInterval(true);
   
   }
     init();
