@@ -3,7 +3,7 @@ import {
   View,
   TouchableOpacity,
   Pressable,
-  FlatList,
+  Image,
   ScrollView,
 } from "react-native";
 import { useState, useEffect } from "react";
@@ -15,6 +15,8 @@ import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./CreatePlanDay";
 import { PlanDayVm } from "./interfaces/PlanDay";
 import { TrainingPlanProps } from "./props/TrainingPlanProps";
+import Remove from "./img/icons/remove.png";
+import { Message } from "./enums/Message";
 
 const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
@@ -29,37 +31,44 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     useState<boolean>(false);
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
   useEffect(() => {
-    init()
+    init();
   }, []);
-
-
 
   const init = async () => {
     setViewLoading(true);
     const result = await getUserPlanConfig();
-    if(result) await getPlanDays(result);
+    if (result) await getPlanDays(result);
     setViewLoading(false);
+  };
 
-  }
-
- 
-
-  const getPlanDays = async (planConfig:{
+  const getPlanDays = async (planConfig: {
     name: string;
     trainingDays: number;
     _id: string;
   }): Promise<void> => {
-      try {
+    try {
       const response = await fetch(
         `${apiURL}/api/planDay/${planConfig._id}/getPlanDays`
       );
-      if (!response.ok) return console.error("Failed to fetch plan days");
+      if (!response.ok){
+          setPlanDays([])
+          return
+      }
       const data = await response.json();
       setPlanDays(data);
     } catch (error) {
       console.error("Failed to fetch plan days", error);
     }
   };
+  const deletePlanDay = async (planDayId: string): Promise<void> => {
+    const response = await fetch(`${apiURL}/api/planDay/${planDayId}/deletePlanDay`)
+    if(!response.ok)return console.error("Failed to delete plan day")
+    const data = await response.json()
+    if(data.msg === Message.Deleted){
+      init()
+    }
+
+  }
   const showPlanConfigPopUp = (): void => {
     props.hideMenuButton(true);
     setShowPlanConfig(true);
@@ -67,20 +76,22 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const hidePlanConfigPopUp = (): void => {
     props.hideMenuButton(false);
     setShowPlanConfig(false);
-  }
+  };
   const showPlanDayForm = (): void => {
     props.hideMenuButton(true);
     setIsPlanDayFormVisible(true);
   };
-  const hidePlanDayForm = async(): Promise<void> => {
+  const hidePlanDayForm = async (): Promise<void> => {
     setViewLoading(true);
     setIsPlanDayFormVisible(false);
     props.hideMenuButton(false);
     setViewLoading(false);
+    init()
   };
   const reloadSection = (): void => {
     setShowPlanConfig(false);
     props.hideMenuButton(false);
+    init();
   };
 
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
@@ -89,14 +100,22 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         key={item._id}
         className="flex flex-col p-4  bg-[#282828] rounded-lg w-full"
       >
-        <Text
-          style={{
-            fontFamily: "OpenSans_700Bold",
-          }}
-          className="text-2xl font-bold text-[#94e798]"
-        >
-          {item.name}
-        </Text>
+        <View className="flex flex-row justify-between w-full">
+          <Text
+            style={{
+              fontFamily: "OpenSans_700Bold",
+            }}
+            className="text-2xl font-bold text-[#94e798]"
+          >
+            {item.name}
+          </Text>
+          <View>
+            <Pressable onPress={()=>deletePlanDay(item._id)}>
+              <Image className="w-6 h-6" source={Remove} />
+            </Pressable>
+          </View>
+        </View>
+
         {item.exercises.map((exercise, index) => (
           <View key={index}>
             <Text
@@ -112,14 +131,14 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const getUserPlanConfig = async () => {
     const id = await AsyncStorage.getItem("id");
-      try {
-      const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`)
-      if(!response.ok) return console.error("Failed to fetch plan config")
-      const result = await response.json()
+    try {
+      const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`);
+      if (!response.ok) return console.error("Failed to fetch plan config");
+      const result = await response.json();
       if (Object.keys(result)[0] === "msg") setPlanConfig(undefined);
       else {
         setPlanConfig(result);
-        return result
+        return result;
       }
     } catch (error) {
       console.error("Failed to fetch plan config", error);
@@ -194,7 +213,10 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
       </View>
       {viewLoading ? <ViewLoading /> : <Text></Text>}
       {showPlanConfig ? (
-        <CreatePlanConfig reloadSection={reloadSection} hidePlanConfig={hidePlanConfigPopUp} />
+        <CreatePlanConfig
+          reloadSection={reloadSection}
+          hidePlanConfig={hidePlanConfigPopUp}
+        />
       ) : (
         <Text></Text>
       )}

@@ -17,7 +17,7 @@ import { Message } from "./enums/Message";
 import ViewLoading from "./ViewLoading";
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
-  const API_URL = process.env.REACT_APP_BACKEND;
+  const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [planDayName, setPlanDayName] = useState<string>("");
   const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
@@ -36,7 +36,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const getAllExercises = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
-      `${API_URL}/api/exercise/${id}/getAllExercises`
+      `${apiURL}/api/exercise/${id}/getAllExercises`
     )
       .then((res) => res)
       .catch((err) => err)
@@ -56,7 +56,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       };
     });
     const response = await fetch(
-      `${API_URL}/api/planDay/${props.planId}/createPlanDay`,
+      `${apiURL}/api/planDay/${props.planId}/createPlanDay`,
       {
         method: "POST",
         headers: {
