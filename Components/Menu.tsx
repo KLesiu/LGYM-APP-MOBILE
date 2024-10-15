@@ -71,7 +71,7 @@ const Menu: React.FC<MenuProps> = (props) => {
 
   return (
     isMenuButtonVisible ? (
-      <View className="flex items-center justify-end bg-[#131313] relative w-full">
+      <View className="flex items-center justify-end bg-[#131313] relative w-full ">
         {/* Animated Menu Items */}
         <Animated.View
           style={[
@@ -82,7 +82,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           ]}
           className="absolute items-center justify-center bottom-[-65px]"
         >
-          <View className="relative w-52 h-52 items-center justify-center">
+          <View className="relative w-[420px] h-[380px] items-center justify-center bg-[#282424db] -mb-[82px] rounded-[100%]">
             {items.map((item, index) => {
               const totalItems = items.length;
               const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; // Rozkład od -π/2 do π/2 (od lewej do prawej)
