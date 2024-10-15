@@ -3,7 +3,7 @@ import TrainingSessionProps from "./props/TrainingSessionProps";
 import {  TrainingByDateDetails } from "./interfaces/Training";
 const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
   return (
-    <ScrollView contentContainerStyle={{gap:16}} className="w-full flex flex-col flex-1 ">
+    <ScrollView contentContainerStyle={{gap:16}} className="w-full flex flex-col flex-1 pt-2">
       {props.trainings.map((training: TrainingByDateDetails) => {
         return (
           <View style={{gap:8}} className="flex flex-col ">

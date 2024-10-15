@@ -59,7 +59,7 @@ const Menu: React.FC<MenuProps> = (props) => {
     {
       icon: history,
       label: "History",
-      component: <History trainingsDates={[]} />,
+      component: <History />,
     },
     {
       icon: home,
@@ -86,7 +86,7 @@ const Menu: React.FC<MenuProps> = (props) => {
             {items.map((item, index) => {
               const totalItems = items.length;
               const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; // Rozkład od -π/2 do π/2 (od lewej do prawej)
-              const radius = 120; // Odległość od środka
+              const radius = 150; // Odległość od środka
               const x = -Math.sin(angle) * radius; // Odwrócenie położenia X (od lewej do prawej)
               const y = Math.cos(angle) * radius; // Odwrócenie położenia Y
   
@@ -95,10 +95,10 @@ const Menu: React.FC<MenuProps> = (props) => {
                   key={index}
                   onPress={() => changeView(item.component)}
                   style={{ transform: [{ translateX: x }, { translateY: y }] }}
-                  className="absolute w-16 h-16 items-center justify-center bg-[#131313] rounded-full p-1"
+                  className="absolute w-20 h-20 items-center justify-center bg-[#131313] rounded-full p-1"
                 >
-                  <Image source={item.icon} className="w-6 h-6" />
-                  <Text className="text-gray-400 text-[10px] font-light">
+                  <Image source={item.icon} className="w-8 h-8" />
+                  <Text className="text-gray-400 text-sm font-light">
                     {item.label}
                   </Text>
                 </TouchableOpacity>

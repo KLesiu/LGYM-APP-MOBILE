@@ -149,7 +149,7 @@ const Exercises: React.FC<StartProps> = (props) => {
       </View>
       {isLoading ? <ViewLoading /> : <Text></Text>}
       {isExerciseFormVisible ? (
-        <View className="absolute h-full w-full flex flex-col  bg-black  top-0 z-30 ">
+        <View className="absolute h-full w-full flex flex-col  bg-[#121212]  top-0 z-30 ">
           <CreateExercise closeForm={ closeAddExerciseForm
           } />
         </View>

@@ -110,46 +110,49 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   };
 
   return (
-    <View>
+    <View className="flex flex-col w-full h-full p-4" style={{gap:16}}>
       {!props.form ? (
         <Text
-          className="text-3xl text-white text-center border-b-2 border-[#4CD964] w-full p-4 "
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
+        className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
+        style={{ fontFamily: "OpenSans_700Bold" }}
+      >
           New Exercise
         </Text>
       ) : (
         <Text></Text>
       )}
 
-      <View style={{gap:8}} className="flex flex-col p-2">
-        <View className="flex flex-col gap-2">
+      <View style={{gap:16}} className="flex flex-col w-full">
+        <View style={{ gap: 8 }} className="flex flex-col w-full  ">
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-white text-base"
           >
             Name:
           </Text>
           <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white h-8  text-black "
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className="w-full px-2 py-4 rounded-lg text-white "
             onChangeText={(text: string) => setExerciseName(text)}
             value={exerciseName}
             readOnly={isBlocked}
           />
         </View>
-        <View className="flex flex-col gap-2">
+        <View  style={{ gap: 8 }} className="flex flex-col w-full  ">
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-white text-base"
           >
             BodyPart:
           </Text>
           <View>
             {isBlocked ? (
               <Text
-                style={{ fontFamily: "OpenSans_400Regular" }}
-                className="text-white text-lg"
+                style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-white text-base"
               >
                 {bodyPart}
               </Text>
@@ -162,16 +165,19 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             )}
           </View>
         </View>
-        <View className="flex flex-col gap-2">
+        <View  style={{ gap: 8 }} className="flex flex-col w-full  ">
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+             style={{ fontFamily: "OpenSans_300Light" }}
+              className="text-white text-base"
           >
             Description:
           </Text>
           <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white h-40  text-black "
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+            }}
+            className="w-full px-2 py-4 rounded-lg text-white "
             multiline
             onChangeText={(text: string) => setDescription(text)}
             value={description}
@@ -179,9 +185,23 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           />
         </View>
       </View>
-      <View className="flex flex-row justify-between p-2">
+      <View className="flex flex-row justify-between ">
         
-      {!isBlocked && (
+
+        <Pressable
+          onPress={props.closeForm}
+         className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
+        >
+          <Text
+           className="text-center text-base text-white"
+           style={{
+             fontFamily: "OpenSans_400Regular",
+           }}
+          >
+            Cancel
+          </Text>
+        </Pressable>
+        {!isBlocked && (
     <>
       {props.form ? (
         <Pressable
@@ -198,11 +218,11 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       ) : (
         <Pressable
           onPress={createExercise}
-          className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+           className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
         >
           <Text
-            className="text-xl"
-            style={{ fontFamily: "OpenSans_400Regular" }}
+             className="text-base"
+             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             Create
           </Text>
@@ -210,19 +230,6 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       )}
     </>
   )}
-        <Pressable
-          onPress={props.closeForm}
-          className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
-        >
-          <Text
-            className="text-center text-xl text-white"
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            CANCEL
-          </Text>
-        </Pressable>
       </View>
       {error ? (
         <Text
