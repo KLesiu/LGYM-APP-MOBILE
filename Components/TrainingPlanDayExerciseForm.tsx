@@ -115,8 +115,9 @@ const TrainingPlanDayExerciseForm: React.FC<
             style={{
               fontFamily: "OpenSans_400Regular",
               backgroundColor: "rgba(30, 30, 30, 0.45)",
+              borderRadius:8
             }}
-            className="w-full px-2 py-4 rounded-lg text-white "
+            className="w-full px-2 py-4  text-white "
             value={numberOfSeries}
             keyboardType="numeric"
             onChangeText={validator}
@@ -134,8 +135,10 @@ const TrainingPlanDayExerciseForm: React.FC<
             style={{
               fontFamily: "OpenSans_400Regular",
               backgroundColor: "rgba(30, 30, 30, 0.45)",
+              borderRadius:8
+
             }}
-            className="w-full px-2 py-4 rounded-lg text-white "
+            className="w-full px-2 py-4  text-white "
             value={exerciseReps}
             onChangeText={(text: string) => setExerciseReps(text)}
           />
@@ -144,7 +147,8 @@ const TrainingPlanDayExerciseForm: React.FC<
       <View className="w-full flex flex-row justify-between">
       <Pressable
           onPress={props.cancel}
-          className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
+          style={{borderRadius:8}}
+          className=" flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
         >
           <Text
             className="text-center text-xl text-white"
@@ -157,7 +161,8 @@ const TrainingPlanDayExerciseForm: React.FC<
         </Pressable>
         <Pressable
           onPress={sendNewExercise}
-          className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]"
+          style={{borderRadius:8}}
+          className=" flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]"
         >
           <Text
             className="text-center text-xl text-black"

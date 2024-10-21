@@ -134,8 +134,9 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             style={{
               fontFamily: "OpenSans_400Regular",
               backgroundColor: "rgba(30, 30, 30, 0.45)",
+              borderRadius:8
             }}
-            className="w-full px-2 py-4 rounded-lg text-white "
+            className="w-full px-2 py-4  text-white "
             onChangeText={(text: string) => setExerciseName(text)}
             value={exerciseName}
             readOnly={isBlocked}
@@ -175,9 +176,10 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <TextInput
             style={{
               fontFamily: "OpenSans_400Regular",
+              borderRadius:8,
               backgroundColor: "rgba(30, 30, 30, 0.45)",
             }}
-            className="w-full px-2 py-4 rounded-lg text-white "
+            className="w-full px-2 py-4  text-white "
             multiline
             onChangeText={(text: string) => setDescription(text)}
             value={description}
@@ -189,8 +191,9 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         
 
         <Pressable
+        style={{borderRadius:8}}
           onPress={props.closeForm}
-         className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
+         className=" flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
         >
           <Text
            className="text-center text-base text-white"
@@ -206,7 +209,8 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       {props.form ? (
         <Pressable
           onPress={updateExercise}
-          className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+          style={{borderRadius:8}}
+          className="bg-[#94e798] w-40 h-12 flex items-center justify-center "
         >
           <Text
             className="text-xl"
@@ -218,7 +222,8 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       ) : (
         <Pressable
           onPress={createExercise}
-           className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+          style={{borderRadius:8}}
+           className="bg-[#94e798] w-40 h-12 flex items-center justify-center"
         >
           <Text
              className="text-base"

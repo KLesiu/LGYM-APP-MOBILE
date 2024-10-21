@@ -79,7 +79,7 @@ const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
     const generateDaysSections = (numberOfDays:number)=>{
         const helpSections:JSX.Element[]=[]
         for(let i=0;i<numberOfDays;i++){
-            helpSections.push(<Pressable className="h-20 w-[45%] flex justify-center items-center m-2 rounded-lg border-2 border-[#4CD964]" onPress={()=>configCurrentyDay(trainingDays[i])}>
+            helpSections.push(<Pressable style={{ borderRadius:8}} className="h-20 w-[45%] flex justify-center items-center m-2  border-2 border-[#4CD964]" onPress={()=>configCurrentyDay(trainingDays[i])}>
                 <Text className="text-white text-xl text-center">{trainingDays[i]}</Text>
             </Pressable>)
 
@@ -96,7 +96,7 @@ const CreatePlanBody:React.FC<CreatePlanBodyProps> = (props)=>{
             <View className="w-full p-4 h-80 flex flex-row flex-wrap justify-around">
             {days?generateDaysSections(days):''}
             </View>
-            <Pressable disabled={completedDays.count !== days} onPress={setPlan} className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"><Text style={{fontFamily:'OpenSans_400Regular'}} className="text-white text-2xl">DONE</Text></Pressable>
+            <Pressable disabled={completedDays.count !== days} style={{borderRadius:8}} onPress={setPlan} className="bg-[#4CD964] w-40 h-12 flex items-center justify-center "><Text style={{fontFamily:'OpenSans_400Regular'}} className="text-white text-2xl">DONE</Text></Pressable>
             <Text className="text-sm text-gray-300">Choose for which day you want to set exercises!</Text>
             <Text className="text-sm text-white">Completed sections: {completedDays.completed.map(ele=><Text>{ele}, </Text>)}</Text>
             <Text className="text-sm text-white">Completed: {completedDays.count}/{days}</Text>

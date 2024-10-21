@@ -27,7 +27,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [clearQuery, setClearQuery] = useState<boolean>(false); // Nowy stan do czyszczenia query
-  const [viewLoading,setViewLoading] = useState<boolean>(false)
+  const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   useEffect(() => {
     getAllExercises();
@@ -35,9 +35,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   const getAllExercises = async () => {
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${apiURL}/api/exercise/${id}/getAllExercises`
-    )
+    const response = await fetch(`${apiURL}/api/exercise/${id}/getAllExercises`)
       .then((res) => res)
       .catch((err) => err)
       .then((res) => res.json());
@@ -47,7 +45,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setExercisesToSelect(helpExercisesToSelect);
   };
   const createPlanDay = async () => {
-    setViewLoading(true)
+    setViewLoading(true);
     const exercises = exercisesList.map((exercise: ExerciseForPlanDay) => {
       return {
         exercise: exercise.exercise.value,
@@ -67,13 +65,14 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           exercises: exercises,
         }),
       }
-    )
-     if(!response.ok){}
-     const result = await response.json()
+    );
+    if (!response.ok) {
+    }
+    const result = await response.json();
     if (result.msg === Message.Created) {
       props.closeForm();
     }
-    setViewLoading(false)
+    setViewLoading(false);
   };
 
   const removeExerciseFromList = (item: ExerciseForPlanDay) => () => {
@@ -125,159 +124,161 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   return (
     <View className="absolute h-full w-full top-0   z-30 ">
-      <View style={{gap:16}} className="flex flex-col bg-[#121212] h-full w-full p-4 relative">
-
-      <Text
-        className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
-        style={{ fontFamily: "OpenSans_700Bold" }}
+      <View
+        style={{ gap: 16 }}
+        className="flex flex-col bg-[#121212] h-full w-full p-4 relative"
       >
-        New Plan Day
-      </Text>
+        <Text
+          className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
+          style={{ fontFamily: "OpenSans_700Bold" }}
+        >
+          New Plan Day
+        </Text>
 
-      <View style={{ gap: 8 }} className="flex flex-col flex-1">
-        <View style={{gap:4}} className="flex flex-col ">
-          <Text
-           style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  text-base"
-          >
-            Name:
-          </Text>
-          <TextInput
-            style={{
-              fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgba(30, 30, 30, 0.45)",
-            }}
-            className=" w-full  px-2 py-4 text-white rounded-lg "
-            onChangeText={(text: string) => setPlanDayName(text)}
-          />
-        </View>
-        <View className="flex flex-col items-end ">
-          <View className="flex flex-col w-full">
-            <Text
-             style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  text-base"
-            >
-              Exercise:
-            </Text>
-            <AutoComplete
-              data={exercisesToSelect}
-              onSelect={(item) => setSelectedExercise(item)}
-              value={selectedExercise?.label || ""}
-              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
-            />
-          </View>
-          <View className="flex flex-row" style={{gap:16}}>
-          <View style={{gap:8}} className="flex flex-col flex-1">
-            <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="  text-white  text-base"
-              
-            >
-              Series:
-            </Text>
-            <TextInput
-             style={{
-              fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgba(30, 30, 30, 0.45)",
-            }}
-            className=" w-full  px-2 py-4 text-white rounded-lg "
-            keyboardType="numeric"
-              value={numberOfSeries}
-              onChangeText={(text: string) => setNumberOfSeries(text)}
-            />
-          </View>
-
-          <View style={{gap:8}} className="flex flex-col flex-1">
+        <View style={{ gap: 8 }} className="flex flex-col flex-1">
+          <View style={{ gap: 4 }} className="flex flex-col ">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
+              className="  text-white  text-base"
             >
-              Reps:
+              Name:
             </Text>
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
                 backgroundColor: "rgba(30, 30, 30, 0.45)",
+                borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white rounded-lg "
-              value={exerciseReps}
-              onChangeText={(text: string) => setExerciseReps(text)}
+              className=" w-full  px-2 py-4 text-white  "
+              onChangeText={(text: string) => setPlanDayName(text)}
             />
           </View>
-
-          </View>
-      
-          <Pressable
-            className="bg-white w-40 h-12 flex items-center justify-center rounded-lg mt-2"
-            onPress={addToList}
-          >
-            <Text
-              className="text-base"
-              style={{ fontFamily: "OpenSans_400Regular" }}
-            >
-              ADD TO LIST
-            </Text>
-          </Pressable>
-        </View>
-
-        <View className="flex flex-col h-32 ">
-          {/* Lista dodanych ćwiczeń */}
-          <Text
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="text-white text-base"
-          >
-            Exercises List:
-          </Text>
-          <ScrollView className="h-full">
-            <View className="flex flex-col " style={{gap:16}}>
-            {exercisesList.length > 0 ? (
-              exercisesList.map((item, index) => (
-                <View key={index}>{renderExerciseItem({ item })}</View>
-              ))
-            ) : (
+          <View className="flex flex-col items-end ">
+            <View className="flex flex-col w-full">
               <Text
-                className="text-white"
                 style={{ fontFamily: "OpenSans_300Light" }}
+                className="  text-white  text-base"
               >
-                No exercises added yet.
+                Exercise:
               </Text>
-            )}
+              <AutoComplete
+                data={exercisesToSelect}
+                onSelect={(item) => setSelectedExercise(item)}
+                value={selectedExercise?.label || ""}
+                onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
+              />
             </View>
-          
-          </ScrollView>
-        </View>
-        <View className="flex flex-row items-end   justify-between">
-          <Pressable
-            onPress={props.closeForm}
-            className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
-          >
-            <Text
-              className="text-center text-base text-white"
-              style={{
-                fontFamily: "OpenSans_400Regular",
-              }}
+            <View className="flex flex-row" style={{ gap: 16 }}>
+              <View style={{ gap: 8 }} className="flex flex-col flex-1">
+                <Text
+                  style={{ fontFamily: "OpenSans_300Light" }}
+                  className="  text-white  text-base"
+                >
+                  Series:
+                </Text>
+                <TextInput
+                  style={{
+                    fontFamily: "OpenSans_400Regular",
+                    backgroundColor: "rgba(30, 30, 30, 0.45)",
+                    borderRadius: 8,
+                  }}
+                  className=" w-full  px-2 py-4 text-white  "
+                  keyboardType="numeric"
+                  value={numberOfSeries}
+                  onChangeText={(text: string) => setNumberOfSeries(text)}
+                />
+              </View>
+
+              <View style={{ gap: 8 }} className="flex flex-col flex-1">
+                <Text
+                  style={{ fontFamily: "OpenSans_300Light" }}
+                  className="text-white text-base"
+                >
+                  Reps:
+                </Text>
+                <TextInput
+                  style={{
+                    fontFamily: "OpenSans_400Regular",
+                    backgroundColor: "rgba(30, 30, 30, 0.45)",
+                    borderRadius: 8,
+                  }}
+                  className=" w-full  px-2 py-4 text-white  "
+                  value={exerciseReps}
+                  onChangeText={(text: string) => setExerciseReps(text)}
+                />
+              </View>
+            </View>
+
+            <Pressable
+              style={{ borderRadius: 8 }}
+              className="bg-white w-40 h-12 flex items-center justify-center  mt-2"
+              onPress={addToList}
             >
-              Cancel
-            </Text>
-          </Pressable>
-          <Pressable
-            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
-            onPress={createPlanDay}
-          >
+              <Text
+                className="text-base"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                ADD TO LIST
+              </Text>
+            </Pressable>
+          </View>
+
+          <View className="flex flex-col h-32 ">
+            {/* Lista dodanych ćwiczeń */}
             <Text
-              className="text-base"
               style={{ fontFamily: "OpenSans_400Regular" }}
+              className="text-white text-base"
             >
-              Create
+              Exercises List:
             </Text>
-          </Pressable>
+            <ScrollView className="h-full">
+              <View className="flex flex-col " style={{ gap: 16 }}>
+                {exercisesList.length > 0 ? (
+                  exercisesList.map((item, index) => (
+                    <View key={index}>{renderExerciseItem({ item })}</View>
+                  ))
+                ) : (
+                  <Text
+                    className="text-white"
+                    style={{ fontFamily: "OpenSans_300Light" }}
+                  >
+                    No exercises added yet.
+                  </Text>
+                )}
+              </View>
+            </ScrollView>
+          </View>
+          <View className="flex flex-row items-end   justify-between">
+            <Pressable
+              style={{ borderRadius: 8 }}
+              onPress={props.closeForm}
+              className=" flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
+            >
+              <Text
+                className="text-center text-base text-white"
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+              >
+                Cancel
+              </Text>
+            </Pressable>
+            <Pressable
+              style={{ borderRadius: 8 }}
+              className="bg-[#94e798] w-40 h-12 flex items-center justify-center "
+              onPress={createPlanDay}
+            >
+              <Text
+                className="text-base"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                Create
+              </Text>
+            </Pressable>
+          </View>
         </View>
-      
-      </View>
       </View>
       {viewLoading ? <ViewLoading /> : <Text></Text>}
-
-
     </View>
   );
 };

@@ -1,9 +1,4 @@
-import {
-  Text,
-  View,
-  TextInput,
-  Pressable,
-} from "react-native";
+import { Text, View, TextInput, Pressable } from "react-native";
 import RecordsPopUpProps from "./props/RecordsPopUpProps";
 import AutoComplete, { DropdownItem } from "./Autocomplete";
 import { useEffect, useState } from "react";
@@ -32,7 +27,8 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       `${API_URL}/api/exercise/${id}/getAllExercises`
     )
       .then((res) => res)
-      .catch((err) => err).then(res=>res.json());
+      .catch((err) => err)
+      .then((res) => res.json());
     const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
@@ -100,8 +96,12 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             Exercise:
           </Text>
           {props.exerciseId && selectedExercise ? (
-            <TextInput    style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white h-12 text-black p-4 rounded-lg" readOnly={true} value={selectedExercise.label}/>
+            <TextInput
+              style={{ fontFamily: "OpenSans_400Regular", borderRadius: 8 }}
+              className="bg-white h-12 text-black p-4 "
+              readOnly={true}
+              value={selectedExercise.label}
+            />
           ) : (
             <AutoComplete
               data={exercisesToSelect}
@@ -119,8 +119,8 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             Weight:
           </Text>
           <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="bg-white h-12 text-black p-4 rounded-lg"
+            style={{ fontFamily: "OpenSans_400Regular", borderRadius: 8 }}
+            className="bg-white h-12 text-black p-4 "
             onChangeText={validator}
             value={weight}
             keyboardType="numeric"
@@ -128,10 +128,10 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         </View>
       </View>
       <View className="w-full flex flex-row justify-between">
-        
         <Pressable
           onPress={createNewRecord}
-          className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]"
+          style={{ borderRadius: 8 }}
+          className=" flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]"
         >
           <Text
             className="text-center text-xl text-black"
@@ -139,12 +139,13 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               fontFamily: "OpenSans_400Regular",
             }}
           >
-            ADD
+            Add
           </Text>
         </Pressable>
         <Pressable
           onPress={props.offPopUp}
-          className="rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
+          style={{ borderRadius: 8 }}
+          className=" flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
         >
           <Text
             className="text-center text-xl text-white"
@@ -152,7 +153,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               fontFamily: "OpenSans_400Regular",
             }}
           >
-            CANCEL
+            Cancel
           </Text>
         </Pressable>
       </View>

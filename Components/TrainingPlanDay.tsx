@@ -282,7 +282,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     `${score.score?.reps ?? 0}x${score.score?.weight ?? 0}`
   );
       return (
-      <View key={item.exercise._id} className="flex flex-col w-full  rounded-lg bg-[#282828] p-4  ">
+      <View         style={{borderRadius:8}}
+      key={item.exercise._id} className="flex flex-col w-full   bg-[#282828] p-4  ">
         <View className="flex flex-row justify-between">
           <Text
             className="text-base text-white font-bold"
@@ -352,7 +353,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                         }
                         value={savedScore ? `${savedScore.reps}` : ""}
                         keyboardType="numeric"
-                        className="text-sm rounded-lg border-[#575757] w-20  border-[1px] text-white p-1"
+                        style={{borderRadius:8}}
+
+                        className="text-sm  border-[#575757] w-20  border-[1px] text-white p-1"
                       />
                     </View>
                     <View
@@ -374,9 +377,11 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                             true
                           )
                         }
+                        style={{borderRadius:8}}
+
                         value={savedScore ? `${savedScore.weight}` : ""}
                         keyboardType="numeric"
-                        className="text-sm rounded-lg  border-[#575757] w-20  border-[1px] text-white p-1 "
+                        className="text-sm   border-[#575757] w-20  border-[1px] text-white p-1 "
                       />
                     </View>
                   </View>
@@ -400,7 +405,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             <View className="flex flex-row  justify-between">
               <Pressable
                 onPress={props.hideDaySection}
-                className="rounded-md flex flex-row justify-center items-center w-20 h-8 bg-[#3f3f3f]"
+                style={{borderRadius:6}}
+                className="flex flex-row justify-center items-center w-20 h-8 bg-[#3f3f3f]"
               >
                 <Text
                   className="text-center text-[10px] text-white"
@@ -413,7 +419,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               </Pressable>
               <Pressable
                 onPress={showExerciseForm}
-                className="rounded-md flex flex-row justify-center items-center w-28 h-8 bg-[#3f3f3f]"
+                style={{borderRadius:6}}
+
+                className=" flex flex-row justify-center items-center w-28 h-8 bg-[#3f3f3f]"
               >
                 <Text
                   className="text-center text-[10px] text-white"
@@ -448,7 +456,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       <Pressable
         onPress={props.hideAndDeleteTrainingSession}
         disabled={!isEnabled}
-        className={`rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f] ${!isEnabled ? 'opacity-50' : 'opacity-100'}`}
+        style={{borderRadius:8}}
+
+        className={`flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f] ${!isEnabled ? 'opacity-50' : 'opacity-100'}`}
       >
         <Text
           className="text-center text-base text-white"
@@ -465,7 +475,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       <Pressable
         onPress={() => sendTraining(trainingSessionScores)}
         disabled={!isEnabled}
-        className={`rounded-lg flex flex-row justify-center items-center w-28 h-14 bg-[#94e798] ${!isEnabled ? 'opacity-50' : 'opacity-100'}`}
+        style={{borderRadius:8}}
+
+        className={` flex flex-row justify-center items-center w-28 h-14 bg-[#94e798] ${!isEnabled ? 'opacity-50' : 'opacity-100'}`}
       >
         <Text
           className="text-base"

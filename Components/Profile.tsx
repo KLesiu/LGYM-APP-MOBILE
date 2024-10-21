@@ -51,7 +51,7 @@ const Profile: React.FC<ProfileProps> = (props) => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
       `${apiURL}/api/userInfo/${id}/getUserEloPoints`
-    )
+    );
     const result = await response.json();
     setProfileElo(result.elo);
   };
@@ -79,17 +79,25 @@ const Profile: React.FC<ProfileProps> = (props) => {
     await AsyncStorage.removeItem(key);
   };
 
-  const goBack = ()=>{
-    props.toggleMenuButton(false)
-    props.viewChange(<Start viewChange={props.viewChange} toggleMenuButton={props.toggleMenuButton} />)
-
-  }
+  const goBack = () => {
+    props.toggleMenuButton(false);
+    props.viewChange(
+      <Start
+        viewChange={props.viewChange}
+        toggleMenuButton={props.toggleMenuButton}
+      />
+    );
+  };
 
   return (
     <View className="relative h-full w-full flex bg-[#131313]">
       <View className="w-full h-full p-4 flex flex-col flex-1">
-      <View className="w-full flex">
-          <Pressable className="rounded-lg flex flex-row justify-center items-center w-20 h-10 bg-[#3f3f3f]" onPress={goBack}>
+        <View className="w-full flex">
+          <Pressable
+            style={{ borderRadius: 8 }}
+            className=" flex flex-row justify-center items-center w-20 h-10 bg-[#3f3f3f]"
+            onPress={goBack}
+          >
             <Text
               className="text-center text-sm text-white"
               style={{
@@ -100,11 +108,12 @@ const Profile: React.FC<ProfileProps> = (props) => {
             </Text>
           </Pressable>
         </View>
-        <View style={{gap:8}} className="flex items-center flex-col py-3 px-6">
-          <View className="flex ">
-            {rankComponent}
-          </View>
-          <View style={{gap:4}} className="flex flex-col items-center">
+        <View
+          style={{ gap: 8 }}
+          className="flex items-center flex-col py-3 px-6"
+        >
+          <View className="flex ">{rankComponent}</View>
+          <View style={{ gap: 4 }} className="flex flex-col items-center">
             <Text
               className="text-[#94e798] font-bold w-full text-center text-2xl"
               style={{ fontFamily: "OpenSans_700Bold" }}

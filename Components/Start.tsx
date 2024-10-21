@@ -74,7 +74,7 @@ const Start: React.FC<StartProps> = (props) => {
   return (
     <View className="w-full flex flex-col flex-1 bg-[#121212] ">
       <View style={{gap:8}} className="flex h-full w-full flex-col">
-        <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg">
+        <View style={{borderRadius:8}} className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 ">
           <View>
             <Text
               className="text-[#94e798] text-lg"
@@ -110,7 +110,8 @@ const Start: React.FC<StartProps> = (props) => {
 
           <Pressable
             onPress={() => navigateTo(<AddTraining toggleMenuButton={props.toggleMenuButton} />)}
-            className="h-16 w-24 bg-[#94e798] rounded-xl flex items-center justify-center"
+            style={{borderRadius:12}}
+            className="h-16 w-24 bg-[#94e798]  flex items-center justify-center"
           >
             <Text
               className="text-[#131313] text-base text-center"
@@ -120,7 +121,7 @@ const Start: React.FC<StartProps> = (props) => {
             </Text>
           </Pressable>
         </View>
-        <View className="flex w-full flex-row justify-between bg-[#1E1E1E73] items-center p-4 rounded-lg">
+        <View style={{borderRadius:8}} className="flex w-full flex-row justify-between bg-[#1E1E1E73] items-center p-4">
           <View>
             <Text
               className="text-[#94e798] text-lg"
@@ -164,7 +165,7 @@ const Start: React.FC<StartProps> = (props) => {
           </View>
           {userInfo && userInfo.profileRank && <ProfileRank rank={userInfo.profileRank} />}
         </View>
-        <View className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 rounded-lg flex-1">
+        <View style={{borderRadius:12}} className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4  flex-1">
           <UsersRanking />
         </View>
       </View>

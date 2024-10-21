@@ -16,7 +16,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
             <ScrollView  contentContainerStyle={{gap:8}}>
               {training.exercises.map((exercise) => {
                 return (
-                  <View style={{gap:8}} className="w-full flex flex-col p-4  bg-[#282828] rounded-lg border-b-[1px] border-b-white">
+                  <View style={{gap:8,borderRadius:8}} className="w-full flex flex-col p-4  bg-[#282828]  border-b-[1px] border-b-white">
                     <Text
                       style={{
                         fontFamily: "OpenSans_700Bold",

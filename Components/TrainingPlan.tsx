@@ -50,9 +50,9 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
       const response = await fetch(
         `${apiURL}/api/planDay/${planConfig._id}/getPlanDays`
       );
-      if (!response.ok){
-          setPlanDays([])
-          return
+      if (!response.ok) {
+        setPlanDays([]);
+        return;
       }
       const data = await response.json();
       setPlanDays(data);
@@ -61,14 +61,15 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     }
   };
   const deletePlanDay = async (planDayId: string): Promise<void> => {
-    const response = await fetch(`${apiURL}/api/planDay/${planDayId}/deletePlanDay`)
-    if(!response.ok)return console.error("Failed to delete plan day")
-    const data = await response.json()
-    if(data.msg === Message.Deleted){
-      init()
+    const response = await fetch(
+      `${apiURL}/api/planDay/${planDayId}/deletePlanDay`
+    );
+    if (!response.ok) return console.error("Failed to delete plan day");
+    const data = await response.json();
+    if (data.msg === Message.Deleted) {
+      init();
     }
-
-  }
+  };
   const showPlanConfigPopUp = (): void => {
     props.hideMenuButton(true);
     setShowPlanConfig(true);
@@ -86,7 +87,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     setIsPlanDayFormVisible(false);
     props.hideMenuButton(false);
     setViewLoading(false);
-    init()
+    init();
   };
   const reloadSection = (): void => {
     setShowPlanConfig(false);
@@ -98,7 +99,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     return (
       <View
         key={item._id}
-        className="flex flex-col p-4  bg-[#282828] rounded-lg w-full"
+        style={{ borderRadius: 8 }}
+        className="flex flex-col p-4  bg-[#282828]  w-full"
       >
         <View className="flex flex-row justify-between w-full">
           <Text
@@ -110,7 +112,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
             {item.name}
           </Text>
           <View>
-            <Pressable onPress={()=>deletePlanDay(item._id)}>
+            <Pressable onPress={() => deletePlanDay(item._id)}>
               <Image className="w-6 h-6" source={Remove} />
             </Pressable>
           </View>
@@ -152,7 +154,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
           <View className="flex flex-row w-full ">
             <TouchableOpacity
               onPress={showPlanConfigPopUp}
-              className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+              style={{ borderRadius: 8 }}
+              className="bg-[#94e798] w-40 h-12 flex items-center justify-center"
             >
               <Text
                 className="text-black text-md w-full text-center"
@@ -184,7 +187,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
             </View>
             <View>
               <Pressable
-                className="w-40  h-12 flex items-center justify-center bg-[#94e798] rounded-lg"
+                style={{ borderRadius: 8 }}
+                className="w-40  h-12 flex items-center justify-center bg-[#94e798] "
                 onPress={showPlanDayForm}
               >
                 <Text

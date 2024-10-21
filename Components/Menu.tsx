@@ -82,7 +82,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           ]}
           className="absolute items-center justify-center bottom-[-65px]"
         >
-          <View className="relative w-[420px] h-[380px] items-center justify-center bg-[#282424db] -mb-[82px] rounded-[100%]">
+          <View style={{borderRadius:10000}} className="relative w-[420px] h-[380px] items-center justify-center bg-[#282424db] -mb-[82px] ">
             {items.map((item, index) => {
               const totalItems = items.length;
               const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; // Rozkład od -π/2 do π/2 (od lewej do prawej)
@@ -94,8 +94,8 @@ const Menu: React.FC<MenuProps> = (props) => {
                 <TouchableOpacity
                   key={index}
                   onPress={() => changeView(item.component)}
-                  style={{ transform: [{ translateX: x }, { translateY: y }] }}
-                  className="absolute w-20 h-20 items-center justify-center bg-[#131313] rounded-full p-1"
+                  style={{ transform: [{ translateX: x }, { translateY: y }] ,borderRadius:10000}}
+                  className="absolute w-20 h-20 items-center justify-center bg-[#131313]  p-1"
                 >
                   <Image source={item.icon} className="w-8 h-8" />
                   <Text className="text-gray-400 text-sm font-light">

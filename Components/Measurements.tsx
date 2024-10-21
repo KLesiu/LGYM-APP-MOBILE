@@ -52,7 +52,7 @@ const Measurements: React.FC = () => {
             >
               {ele}
             </Text>
-            <View className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 rounded-lg flex justify-center items-center m-0">
+            <View style={{borderRadius:8}} className="bg-[#1E1E1E73] w-36 h-16 py-4 px-6 flex justify-center items-center m-0">
               <Text
                 style={{ fontFamily: "OpenSans_400Regular" }}
                 className="text-gray-200/80 font-base leading-4 text-md"
@@ -75,7 +75,7 @@ const Measurements: React.FC = () => {
               {measurements.length > 0?measurements:<Text></Text>}
               </ScrollView>
       
-            <Pressable onPress={()=>setIsFormShow(true)}  className="h-20 w-80 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4">
+            <Pressable style={{borderRadius:8}} onPress={()=>setIsFormShow(true)}  className="h-20 w-80  py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4">
               <Text
          className="text-base w-full text-center text-[#121212]"
                 style={{ fontFamily: "OpenSans_700Bold" }}

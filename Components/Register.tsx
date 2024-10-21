@@ -77,9 +77,10 @@ const Register: React.FC = () => {
             onChangeText={(text) => setUsername(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
+              borderRadius: 8,
               backgroundColor: "rgba(30, 30, 30, 0.45)",
             }}
-            className="w-full px-2 py-4 rounded-lg text-white "
+            className="w-full px-2 py-4  text-white "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
@@ -94,8 +95,10 @@ const Register: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
               backgroundColor: "rgba(30, 30, 30, 0.45)",
+              borderRadius: 8,
+
             }}
-            className="w-full px-2 py-4 rounded-lg text-white "
+            className="w-full px-2 py-4  text-white "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
@@ -111,8 +114,10 @@ const Register: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
               backgroundColor: "rgba(30, 30, 30, 0.45)",
+              borderRadius: 8,
+
             }}
-            className="w-full px-2 py-4 rounded-lg text-white "
+            className="w-full px-2 py-4 text-white "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
@@ -128,15 +133,18 @@ const Register: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
               backgroundColor: "rgba(30, 30, 30, 0.45)",
+              borderRadius: 8,
+
             }}
-            className="w-full px-2 py-4 rounded-lg text-white "
+            className="w-full px-2 py-4  text-white "
           />
         </View>
       </View>
 
       <Pressable
         onPress={register}
-        className="w-80 h-20 rounded-lg py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4"
+        style={{borderRadius:8}}
+        className="w-80 h-20  py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4"
       >
         <Text
           style={{

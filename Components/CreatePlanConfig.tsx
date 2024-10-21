@@ -83,8 +83,9 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
               style={{
                 fontFamily: "OpenSans_400Regular",
                 backgroundColor: "rgba(30, 30, 30, 0.45)",
+                borderRadius: 8,
               }}
-              className="w-full px-2 py-4 rounded-lg text-white "
+              className="w-full px-2 py-4  text-white "
               onChangeText={(text: string) => setPlanName(text)}
               value={planName}
             />
@@ -100,8 +101,9 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
               style={{
                 fontFamily: "OpenSans_400Regular",
                 backgroundColor: "rgba(30, 30, 30, 0.45)",
+                borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white rounded-lg "
+              className=" w-full  px-2 py-4 text-white  "
               keyboardType="numeric"
               onChangeText={validator}
               value={numberOfDays}
@@ -111,7 +113,8 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
         <View className="flex flex-row justify-between w-full">
           <Pressable
             onPress={props.hidePlanConfig}
-            className="rounded-lg flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
+            style={{ borderRadius: 8 }}
+            className=" flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
           >
             <Text
               className="text-center text-base text-white"
@@ -124,7 +127,8 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           </Pressable>
           <Pressable
             onPress={sendConfig}
-            className="bg-[#94e798] w-40 h-12 flex items-center justify-center rounded-lg"
+            style={{ borderRadius: 8 }}
+            className="bg-[#94e798] w-40 h-12 flex items-center justify-center "
           >
             <Text
               className="text-base"

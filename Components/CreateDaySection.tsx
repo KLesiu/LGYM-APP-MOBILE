@@ -39,7 +39,7 @@ const CreateDaySection:React.FC<CreateDaySectionProps> =(props)=>{
         value={text}
         onChangeText={(text:string)=>setText(text)}
       />
-      <Pressable onPress={()=>parseTextArea(text)} className="bg-[#4CD964] w-40 h-12 flex items-center justify-center rounded-lg"><Text style={{fontFamily:'OpenSans_400Regular'}} className="text-white text-2xl">DONE</Text></Pressable>
+      <Pressable onPress={()=>parseTextArea(text)} style={{borderRadius:8}} className="bg-[#4CD964] w-40 h-12 flex items-center justify-center "><Text style={{fontFamily:'OpenSans_400Regular'}} className="text-white text-2xl">DONE</Text></Pressable>
       {error?<Text style={{fontFamily:'OpenSans_300Light'}} className="text-red-500 text-lg">{error}</Text>:''}
         </View>
     )

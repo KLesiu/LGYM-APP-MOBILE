@@ -18,12 +18,13 @@ const Loading: React.FC<LoadingProps> = (props) => {
     <View className="bg-[#121212] h-full w-full absolute flex flex-col items-center z-[6]" >
       <Image source={logoLGYM} className="w-[70%] h-[40%]" />
       <View className="flex flex-col mx-[5%] mt-[40%] w-[90%]">
-        <View className="border-[2px] border-gray-500 w-full rounded-xl h-1/5">
+        <View style={{borderRadius:12}} className="border-[2px] border-gray-500 w-full  h-1/5">
           <View
             style={{
               width: `${width}%`,
+              borderRadius:12
             }}
-            className="bg-gray-500 rounded-xl h-full z-[7]"
+            className="bg-gray-500  h-full z-[7]"
           ></View>
         </View>
         <Text

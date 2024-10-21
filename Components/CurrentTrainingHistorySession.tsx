@@ -25,7 +25,8 @@ const CurrentTrainingHistorySession: React.FC<
       setExercises(response.exercises);
       setInfoAboutSession(() => (
         <View
-        className="bg-[#e6e6e627] rounded-md mb-[2%] mt-[1%] h-[10%]  flex flex-wrap flex-row justify-center w-full"
+        style={{ borderRadius:6}}
+        className="bg-[#e6e6e627] mb-[2%] mt-[1%] h-[10%]  flex flex-wrap flex-row justify-center w-full"
         >
           <Text
           className="m-1 w-full text-[25px] text-center text-white"
@@ -67,9 +68,10 @@ const CurrentTrainingHistorySession: React.FC<
                 ) : (
                   <Text
                     style={{
-                      fontFamily: "Teko_400Regular"
+                      fontFamily: "Teko_400Regular",
+                      borderRadius:8
                     }}
-                    className="text-center w-[75%] text-[18px] h-full pl-[5%] pr-[5%] border-r-white border-r-[1px] bg-[#9696961a] rounded-lg text-white"
+                    className="text-center w-[75%] text-[18px] h-full pl-[5%] pr-[5%] border-r-white border-r-[1px] bg-[#9696961a] text-white"
                   >
                     {ele.field.slice(0, ele.field.length - 3)}
                   </Text>

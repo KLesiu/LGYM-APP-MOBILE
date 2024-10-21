@@ -76,7 +76,8 @@ init()
           {trainingTypes.map((ele:{_id:string,name:string}) => (
             <TouchableOpacity
               onPress={() => showDaySection(ele._id)}
-              className="items-center border-[#868686] border-[1px] rounded-xl flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
+              style={{borderRadius:12}}
+              className="items-center border-[#868686] border-[1px]  flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
               key={ele._id}
             >
               <Text

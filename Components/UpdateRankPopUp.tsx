@@ -43,7 +43,8 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
       className="h-full w-full absolute top-0 bg-[#000000f4]	flex flex-col	items-center justify-center"
     >
       <TouchableOpacity
-        className="w-[100px] h-[50px] p-[5px] absolute top-0 right-0 mr-[10px] border-white border-[1px] border-solid rounded-[10px]"
+      style={{borderRadius:8}}
+        className="w-[100px] h-[50px] p-[5px] absolute top-0 right-0 mr-[10px] border-white border-[1px] border-solid "
         onPress={() => props.closePopUp()}
       >
         <Text
