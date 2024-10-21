@@ -16,6 +16,8 @@ import { TrainingSessionScores } from "./interfaces/Training";
 import { ExerciseScoresTrainingForm } from "./interfaces/ExercisesScores";
 import { WeightUnits } from "./enums/Units";
 import { Message } from "./enums/Message";
+import UpdateRankPopUp from "./UpdateRankPopUp";
+
 
 
 const AddTraining: React.FC<AddTrainingProps> = (props) => {
@@ -28,6 +30,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const [chooseDay, setChooseDay] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [showUpdateRankPopUp,setShowUpdateRankPopUp] = useState<boolean>(false);  
 
 
   useInterval(() => {setChooseDay
@@ -126,6 +129,14 @@ init()
     setIsAddTrainingActive(false)
     hideDaySection()
   }
+  const showUpdateRankPop = ():void=>{
+    props.toggleMenuButton(true);
+    setShowUpdateRankPopUp(true);
+  }
+  const hideUpdateRankPopUp = ():void=>{ 
+    props.toggleMenuButton(false);
+    setShowUpdateRankPopUp(false);
+  }
 
 
   
@@ -161,51 +172,53 @@ init()
   }
 
   return (
-    <View className="bg-[#121212] flex-1 w-full">
-      {isUserHavePlan ? (
-        <View className="relative  flex flex-col justify-center items-center h-full w-full">
-          {isAddTrainingActive ?  <Pressable onPress={getCurrentPlanDayTraining}>
-            <Icon
-              style={{ fontSize: 140, color: "#94e798" }}
-              name="play-circle"
-            />
-          </Pressable> :   <Pressable onPress={getInformationsAboutPlanDays}>
-            <Icon
-              style={{ fontSize: 140, color: "#94e798" }} 
-              name="plus-circle"
-            />
-          </Pressable> }
+    // <View className="bg-[#121212] flex-1 w-full">
+    //   {isUserHavePlan ? (
+    //     <View className="relative  flex flex-col justify-center items-center h-full w-full">
+    //       {isAddTrainingActive ?  <Pressable onPress={getCurrentPlanDayTraining}>
+    //         <Icon
+    //           style={{ fontSize: 140, color: "#94e798" }}
+    //           name="play-circle"
+    //         />
+    //       </Pressable> :   <Pressable onPress={getInformationsAboutPlanDays}>
+    //         <Icon
+    //           style={{ fontSize: 140, color: "#94e798" }} 
+    //           name="plus-circle"
+    //         />
+    //       </Pressable> }
         
         
-          {loading ? <MiniLoading /> : <Text></Text>}
-          {}
-          {chooseDay}
-          {isAddTrainingActive && dayId ? (
-            <TrainingPlanDay
-              hideChooseDaySection={resetChoosePlanDay}
-              hideDaySection={hideDaySection}
-              hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
-              addTraining={addTraining}
-              dayId={dayId}
-            />
-          ) : (
-            <></>
-          )}
-        </View>
-      ) : (
-        <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center p-4">
-          <Text
-            className="text-white text-xl text-center"
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            You cant add training, because you dont have plan!
-          </Text>
-        </View>
-      )}
-      {viewLoading ? <ViewLoading /> : <Text></Text>}
-    </View>
+    //       {loading ? <MiniLoading /> : <Text></Text>}
+    //       {}
+    //       {chooseDay}
+    //       {isAddTrainingActive && dayId ? (
+    //         <TrainingPlanDay
+    //           hideChooseDaySection={resetChoosePlanDay}
+    //           hideDaySection={hideDaySection}
+    //           hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
+    //           addTraining={addTraining}
+    //           dayId={dayId}
+    //         />
+    //       ) : (
+    //         <></>
+    //       )}
+    //     </View>
+    //   ) : (
+    //     <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center p-4">
+    //       <Text
+    //         className="text-white text-xl text-center"
+    //         style={{
+    //           fontFamily: "OpenSans_400Regular",
+    //         }}
+    //       >
+    //         You cant add training, because you dont have plan!
+    //       </Text>
+    //     </View>
+    //   )}
+    //   {viewLoading ? <ViewLoading /> : <Text></Text>}
+    // </View>
+        <UpdateRankPopUp  closePopUp={hideUpdateRankPopUp}/>
+
   );
 };
 export default AddTraining;

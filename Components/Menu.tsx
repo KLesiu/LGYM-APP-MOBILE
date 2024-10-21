@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View, TouchableOpacity, Image, Text, Animated } from "react-native";
 import MenuProps from "./props/MenuProps";
 import TrainingPlan from "./TrainingPlan";
@@ -19,6 +19,11 @@ const Menu: React.FC<MenuProps> = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true); 
   const animation = useRef(new Animated.Value(0)).current;
+
+  useEffect(()=>
+    props.viewChange(<Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} />)
+
+    ,[])
 
   const toggleMenu = () => {
     Animated.timing(animation, {

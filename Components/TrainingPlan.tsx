@@ -82,6 +82,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     props.hideMenuButton(true);
     setIsPlanDayFormVisible(true);
   };
+
   const hidePlanDayForm = async (): Promise<void> => {
     setViewLoading(true);
     setIsPlanDayFormVisible(false);
