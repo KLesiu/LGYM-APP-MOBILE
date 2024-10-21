@@ -4,14 +4,15 @@ import {
   Image,
   ImageProps,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SuccessMsg from "./types/SuccessMsg";
 import Ranks from "./helpers/rankStore";
-import UpdateRankPopUpProps from "./props/UpdateRankPopUpProps";
+import TrainingSummaryProps from "./props/TrainingSummaryProps";
 
-const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
+const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
   const [rank, setRank] = useState<string>("");
   const [srcRank, setSrcRank] = useState<ImageProps>();
   const [rankMessage, setRankMessage] = useState<string>(
@@ -19,10 +20,14 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
   );
   const getRank = async () => {
     const id = await AsyncStorage.getItem("id");
-    const response: SuccessMsg = await fetch(
-      `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/userElo`
-    ).then((res) => res.json());
-    setRank(response.msg);
+    // const response: SuccessMsg = await fetch(
+    //   `https://lgym-app-api-v2.vercel.app/api/userInfo/${id}/userElo`
+    // ).then((res) => res.json());
+    // setRank(response.msg);
+    const response = {
+      msg: "Junior 1",
+      isNew: true,
+    }
     if (response.msg === "Junior 1") setSrcRank(Ranks.Junior1);
     else if (response.msg === "Junior 2") setSrcRank(Ranks.Junior2);
     else if (response.msg === "Junior 3") setSrcRank(Ranks.Junior3);
@@ -40,9 +45,16 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
   }, []);
   return (
     <View
-      className="h-full w-full absolute top-0 bg-[#000000f4]	flex flex-col	items-center justify-center"
+    style={{ gap: 16 }}
+    className="absolute h-full w-full flex flex-col  bg-[#121212] items-center top-0 z-30 p-4 "
+  >
+    <Text
+      className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
+      style={{ fontFamily: "OpenSans_700Bold" }}
     >
-      <TouchableOpacity
+      Training Summary
+    </Text>
+      {/* <Pressable
       style={{borderRadius:8}}
         className="w-[100px] h-[50px] p-[5px] absolute top-0 right-0 mr-[10px] border-white border-[1px] border-solid "
         onPress={() => props.closePopUp()}
@@ -55,8 +67,8 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
         >
           Close
         </Text>
-      </TouchableOpacity>
-      <Text
+      </Pressable> */}
+      {/* <Text
         className="text-white text-[30px] text-center"
         style={{
           fontFamily: "Teko_700Bold",
@@ -64,8 +76,8 @@ const UpdateRankPopUp: React.FC<UpdateRankPopUpProps> = (props) => {
       >
         {rankMessage} :{rank}
       </Text>
-      <Image className="w-[250px] h-[250px]" source={srcRank as ImageProps} />
+      <Image className="w-[250px] h-[250px]" source={srcRank as ImageProps} /> */}
     </View>
   );
 };
-export default UpdateRankPopUp;
+export default TrainingSummary;

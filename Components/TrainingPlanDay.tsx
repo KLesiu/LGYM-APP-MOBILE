@@ -10,7 +10,11 @@ import {
 import TrainingPlanDayProps from "./props/TrainingPlanDayProps";
 import { useEffect, useState } from "react";
 import { PlanDayVm } from "./interfaces/PlanDay";
-import { ExerciseForm, ExerciseForPlanDay, LastExerciseScores } from "./interfaces/Exercise";
+import {
+  ExerciseForm,
+  ExerciseForPlanDay,
+  LastExerciseScores,
+} from "./interfaces/Exercise";
 import Switch from "./img/icons/switch.png";
 import Remove from "./img/icons/remove.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,7 +40,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
   >([]);
-  const [lastExerciseScores,setLastExerciseScores] = useState<LastExerciseScores[]>()
+  const [lastExerciseScores, setLastExerciseScores] =
+    useState<LastExerciseScores[]>();
   const [isEnabled, setIsEnabled] = useState(false);
 
   const [error, setError] = useState<string>("");
@@ -45,7 +50,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   const [startInterval, setStartInterval] = useState<boolean>(false);
   useInterval(() => {
-    if(!startInterval)return;
+    if (!startInterval) return;
     saveTrainingSessionScores();
   }, 1000);
   useEffect(() => {
@@ -53,10 +58,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       setViewLoading(true);
       await initExercisePlanDay();
       await loadTrainingSessionScores();
-    setViewLoading(false);
-    setStartInterval(true);
-  
-  }
+      setViewLoading(false);
+      setStartInterval(true);
+    };
     init();
   }, []);
   useEffect(() => {
@@ -82,15 +86,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     }
   }, [planDay]);
 
-
-
-
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const loadTrainingSessionScores = async () => {
     const savedScores = await AsyncStorage.getItem("trainingSessionScores");
     const parsedScores = savedScores ? JSON.parse(savedScores) : [];
-    
+
     if (parsedScores && parsedScores.length) {
       setTrainingSessionScores(parsedScores);
     }
@@ -102,20 +103,25 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     if (isPlanDayFromStorage) return;
     await getInformationAboutPlanDay();
   };
-  const getLastExerciseScores = async (plan:PlanDayVm):Promise<LastExerciseScores[] | void>=>{
+  const getLastExerciseScores = async (
+    plan: PlanDayVm
+  ): Promise<LastExerciseScores[] | void> => {
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/exercise/${id}/getLastExerciseScores`,{
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(plan)
-    })
-    if(!response.ok) return;
+    const response = await fetch(
+      `${apiURL}/api/exercise/${id}/getLastExerciseScores`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(plan),
+      }
+    );
+    if (!response.ok) return;
     const result = await response.json();
-    setLastExerciseScores(result)
+    setLastExerciseScores(result);
     return result;
-  }
+  };
 
   const getInformationAboutPlanDay = async () => {
     const response = await fetch(
@@ -139,7 +145,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     )
       return false;
     setPlanDay(JSON.parse(planDay));
-    await getLastExerciseScores(JSON.parse(planDay))
+    await getLastExerciseScores(JSON.parse(planDay));
     return true;
   };
   const deleteExerciseFromPlanDay = async (exerciseId: string | undefined) => {
@@ -198,7 +204,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
     if (!newPlanDay) return;
     await addExerciseToPlanDay(newPlanDay);
-    await getLastExerciseScores(newPlanDay)
+    await getLastExerciseScores(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
   };
   const addExerciseToPlanDay = async (newPlanDay: PlanDayVm) => {
@@ -238,7 +244,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const sendTraining = (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
     if (!result) return setError(Message.InputsMustBeNumbers);
-    props.addTraining(result);
+    props.addTraining(result,lastExerciseScores);
   };
   const updateExerciseScore = async (
     exercise: ExerciseForm,
@@ -277,13 +283,18 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     reps: string;
     exercise: ExerciseForm;
   }) => {
-  const findLastScores = lastExerciseScores?.find((score)=>score.exerciseId === item.exercise._id)
-  const stringScores = findLastScores?.seriesScores.map((score) => 
-    `${score.score?.reps ?? 0}x${score.score?.weight ?? 0}`
-  );
-      return (
-      <View         style={{borderRadius:8}}
-      key={item.exercise._id} className="flex flex-col w-full   bg-[#282828] p-4  ">
+    const findLastScores = lastExerciseScores?.find(
+      (score) => score.exerciseId === item.exercise._id
+    );
+    const stringScores = findLastScores?.seriesScores.map(
+      (score) => `${score.score?.reps ?? 0}x${score.score?.weight ?? 0}`
+    );
+    return (
+      <View
+        style={{ borderRadius: 8 }}
+        key={item.exercise._id}
+        className="flex flex-col w-full   bg-[#282828] p-4  "
+      >
         <View className="flex flex-row justify-between">
           <Text
             className="text-base text-white font-bold"
@@ -317,7 +328,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             className="text-gray-300 text-[10px] pb-1 border-b-[1px] mb-1 border-white"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
-            Last scores: {stringScores?.join(', ')} (kg)
+            Last scores: {stringScores?.join(", ")} (kg)
           </Text>
           <View style={{ gap: 8 }} className="flex flex-col">
             {Array.from({ length: item.series }).map((_, index) => {
@@ -353,8 +364,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                         }
                         value={savedScore ? `${savedScore.reps}` : ""}
                         keyboardType="numeric"
-                        style={{borderRadius:8}}
-
+                        style={{ borderRadius: 8 }}
                         className="text-sm  border-[#575757] w-20  border-[1px] text-white p-1"
                       />
                     </View>
@@ -377,8 +387,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                             true
                           )
                         }
-                        style={{borderRadius:8}}
-
+                        style={{ borderRadius: 8 }}
                         value={savedScore ? `${savedScore.weight}` : ""}
                         keyboardType="numeric"
                         className="text-sm   border-[#575757] w-20  border-[1px] text-white p-1 "
@@ -405,7 +414,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             <View className="flex flex-row  justify-between">
               <Pressable
                 onPress={props.hideDaySection}
-                style={{borderRadius:6}}
+                style={{ borderRadius: 6 }}
                 className="flex flex-row justify-center items-center w-20 h-8 bg-[#3f3f3f]"
               >
                 <Text
@@ -419,8 +428,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               </Pressable>
               <Pressable
                 onPress={showExerciseForm}
-                style={{borderRadius:6}}
-
+                style={{ borderRadius: 6 }}
                 className=" flex flex-row justify-center items-center w-28 h-8 bg-[#3f3f3f]"
               >
                 <Text
@@ -453,40 +461,42 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             {planDay.exercises.map((exercise) => renderExerciseItem(exercise))}
           </ScrollView>
           <View className="w-full flex flex-row justify-between">
-      <Pressable
-        onPress={props.hideAndDeleteTrainingSession}
-        disabled={!isEnabled}
-        style={{borderRadius:8}}
+            <Pressable
+              onPress={props.hideAndDeleteTrainingSession}
+              disabled={!isEnabled}
+              style={{ borderRadius: 8 }}
+              className={`flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f] ${
+                !isEnabled ? "opacity-50" : "opacity-100"
+              }`}
+            >
+              <Text
+                className="text-center text-base text-white"
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+              >
+                Delete
+              </Text>
+            </Pressable>
 
-        className={`flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f] ${!isEnabled ? 'opacity-50' : 'opacity-100'}`}
-      >
-        <Text
-          className="text-center text-base text-white"
-          style={{
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
-          Delete
-        </Text>
-      </Pressable>
+            <SwitchComp onValueChange={toggleSwitch} value={isEnabled} />
 
-      <SwitchComp onValueChange={toggleSwitch} value={isEnabled} />
-
-      <Pressable
-        onPress={() => sendTraining(trainingSessionScores)}
-        disabled={!isEnabled}
-        style={{borderRadius:8}}
-
-        className={` flex flex-row justify-center items-center w-28 h-14 bg-[#94e798] ${!isEnabled ? 'opacity-50' : 'opacity-100'}`}
-      >
-        <Text
-          className="text-base"
-          style={{ fontFamily: "OpenSans_400Regular" }}
-        >
-          Add
-        </Text>
-      </Pressable>
-    </View>
+            <Pressable
+              onPress={() => sendTraining(trainingSessionScores)}
+              disabled={!isEnabled}
+              style={{ borderRadius: 8 }}
+              className={` flex flex-row justify-center items-center w-28 h-14 bg-[#94e798] ${
+                !isEnabled ? "opacity-50" : "opacity-100"
+              }`}
+            >
+              <Text
+                className="text-base"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                Add
+              </Text>
+            </Pressable>
+          </View>
           <View className="flex flex-col text-center w-full">
             <Text
               className="text-red-500 text-sm"

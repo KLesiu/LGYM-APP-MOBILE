@@ -15,7 +15,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
   };
 
   return (
-    <View className="bg-[#121212] h-[1000px] pt-10 w-full absolute flex flex-col items-center z-[6]" >
+    <View className="bg-[#121212] h-full  w-full absolute flex flex-col items-center z-[6]" >
       <Image source={logoLGYM} className="w-[70%] h-[40%]" />
       <View className="flex flex-col mx-[5%] mt-[40%] w-[90%]">
         <View style={{borderRadius:12}} className="border-[2px] border-gray-500 w-full  h-1/5">
