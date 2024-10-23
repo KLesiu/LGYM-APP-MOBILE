@@ -1,3 +1,6 @@
+import { TrainingSummary } from "../interfaces/Training";
+
 export default interface TrainingSummaryProps{
-    closePopUp:()=>void
+    closePopUp:()=>void,
+    trainingSummary: TrainingSummary
 }

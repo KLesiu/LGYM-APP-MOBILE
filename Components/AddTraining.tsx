@@ -7,7 +7,7 @@ import MiniLoading from "./MiniLoading";
 import useInterval from "./helpers/hooks/useInterval";
 import TrainingPlanDay from "./TrainingPlanDay";
 import AddTrainingProps from "./props/AddTrainingProps";
-import { TrainingSessionScores } from "./interfaces/Training";
+import { TrainingSessionScores, TrainingSummary as TrainingSummaryInterface } from "./interfaces/Training";
 import { ExerciseScoresTrainingForm } from "./interfaces/ExercisesScores";
 import { WeightUnits } from "./enums/Units";
 import { Message } from "./enums/Message";
@@ -24,6 +24,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const [chooseDay, setChooseDay] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [trainingSummary,setTrainingSummary]= useState<TrainingSummaryInterface>();
   const [showUpdateRankPopUp, setShowUpdateRankPopUp] =
     useState<boolean>(false);
 
@@ -145,7 +146,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
       };
       return exerciseScoresTrainingForm;
     });
-    const response = await fetch(`${apiURL}/api/${id}/addTraining`, {
+    const response:TrainingSummaryInterface = await fetch(`${apiURL}/api/${id}/addTraining`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -162,6 +163,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
       .then((res) => res.json());
     if (response.msg === Message.Created) {
       await hideAndDeleteTrainingSession();
+      setTrainingSummary(response)
     }
     showUpdateRankPop();
     setViewLoading(false);
@@ -201,8 +203,8 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
           ) : (
             <></>
           )}
-          {showUpdateRankPopUp ? (
-            <TrainingSummary closePopUp={hideUpdateRankPopUp} />
+          {showUpdateRankPopUp && trainingSummary ? (
+            <TrainingSummary trainingSummary={trainingSummary} closePopUp={hideUpdateRankPopUp} />
           ) : (
             <></>
           )}

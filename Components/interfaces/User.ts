@@ -36,7 +36,7 @@ export interface RequestUser{
 }
 export interface Rank{
     name:string,
-    maxElo:number
+    needElo:number
 }
 export interface UserElo{
     elo: number
