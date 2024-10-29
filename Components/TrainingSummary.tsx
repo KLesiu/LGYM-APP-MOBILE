@@ -8,9 +8,6 @@ import {
   ScrollView,
 } from "react-native";
 import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import SuccessMsg from "./types/SuccessMsg";
-import Ranks from "./helpers/rankStore";
 import TrainingSummaryProps from "./props/TrainingSummaryProps";
 import ProfileRank from "./ProfileRank";
 import ProgressBar from "./ProgressBar";
