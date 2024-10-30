@@ -1,15 +1,14 @@
 import { Text, View } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ErrorMsg from "./types/ErrorMsg";
-import Training, { MarkedDates, TrainingsDates } from "./types/Training";
+import  { MarkedDates } from "./types/Training";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import TrainingSession from "./TrainingSession";
 import ViewLoading from "./ViewLoading";
 import HistoryProps from "./props/HistoryProps";
-import { TrainingByDate, TrainingByDateDetails } from "./interfaces/Training";
+import {  TrainingByDateDetails } from "./interfaces/Training";
 import { Message } from "./enums/Message";
-const History: React.FC<HistoryProps> = (props) => {
+const History: React.FC<HistoryProps> = () => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const calendar = useRef(null);
   const [trainings, setTrainings] = useState<TrainingByDateDetails[]>();
@@ -33,7 +32,7 @@ const init = async()=>{
     const date: Date = new Date(dateObject._d);
     if (!date) return;
     const id = await AsyncStorage.getItem("id");
-    const response: Message | TrainingByDateDetails[] = await fetch(
+    const response = await fetch(
       `${apiURL}/api/${id}/getTrainingByDate`,
       {
         method: "POST",
@@ -45,11 +44,9 @@ const init = async()=>{
         }),
       }
     )
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    if (Array.isArray(response)) {
-      setTrainings(response);
+    const result: Message | TrainingByDateDetails[]= await response.json()
+    if (Array.isArray(result)) {
+      setTrainings(result);
     } else {
       setTrainings([]);
     }
@@ -57,7 +54,7 @@ const init = async()=>{
   const getTrainingDates = async():Promise<void>=>{
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${apiURL}/api/${id}/getTrainingDates`)
-    if(!response.ok)return;
+    if(!response.ok)return;  
     const data:Date[] = await response.json();
     const markedDates:MarkedDates[] = data.map((date:Date)=>({
       date:date,
@@ -82,7 +79,8 @@ const init = async()=>{
           }}
           markedDates={trainingDates}
           scrollable
-          style={{width:'100%'}}
+          style={{width:'100%',height:150}}
+          calendarColor={"#131313"}
           dayContainerStyle={{backgroundColor:'rgb(40, 40, 40)',borderRadius:8,padding:4 }}
           calendarHeaderStyle={{ color: "white", fontSize: 22,paddingBottom:16 }}
           dateNumberStyle={{ color: "#5A5A5A", fontSize: 16 }}
@@ -108,7 +106,7 @@ const init = async()=>{
           numDaysInWeek={5}
         />
         {trainings && trainings.length ? (
-          <TrainingSession trainings={trainings} />
+          <TrainingSession  trainings={trainings} />
         ) : (
           <View className="flex justify-center w-full h-1/2 items-center p-4">
             <Text

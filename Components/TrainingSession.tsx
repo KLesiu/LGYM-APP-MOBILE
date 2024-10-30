@@ -4,9 +4,9 @@ import {  TrainingByDateDetails } from "./interfaces/Training";
 const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
   return (
     <ScrollView contentContainerStyle={{gap:16}} className="w-full flex flex-col flex-1 pt-2">
-      {props.trainings.map((training: TrainingByDateDetails) => {
+      {props.trainings.map((training: TrainingByDateDetails,index:number) => {
         return (
-          <View style={{gap:8}} className="flex flex-col ">
+          <View style={{gap:8}} key={index} className="flex flex-col ">
             <Text
               style={{ fontFamily: "OpenSans_700Bold" }}
               className="text-lg text-[#94e798]"
