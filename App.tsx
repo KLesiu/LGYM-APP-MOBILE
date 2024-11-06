@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Preload from "./Components/Preload";
-import Login from "./Components/Login";
+import Preload from "./Components/views/preload/Preload";
+import Login from "./views/login/Login";
 import Register from "./Components/Register";
 import Home from "./Components/Home";
 import {
