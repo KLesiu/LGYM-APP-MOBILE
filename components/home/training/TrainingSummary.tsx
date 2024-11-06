@@ -7,11 +7,11 @@ import {
 import { useEffect, useState } from "react";
 import ProfileRank from "../../elements/ProfileRank";
 import ProgressBar from "../../elements/ProgressBar";
-import { TrainingSummary } from "../../../interfaces/Training";
+import { TrainingSummary as TrainingSummaryInterface } from "../../../interfaces/Training";
 
 interface TrainingSummaryProps{
   closePopUp:()=>void,
-  trainingSummary: TrainingSummary
+  trainingSummary: TrainingSummaryInterface
 }
 
 const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {

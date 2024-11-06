@@ -6,13 +6,13 @@ import AddTraining from "../home/training/AddTraining";
 import Profile from "../home/profile/Profile";
 import Start from "../home/start/Start";
 import Exercises from "../home/exercises/Exercises";
-import home from "./img/icons/home.png";
-import profile from "./img/icons/profile.png";
-import history from "./img/icons/history.png";
-import addTraining from "./img/icons/add.png";
-import exercise from "./img/icons/exercises.png";
-import plan from "./img/icons/plan.png";
-import menu from "./img/icons/menu.png";
+import home from "./../../img/icons/home.png";
+import profile from "./../../img/icons/profile.png";
+import history from "./../../img/icons/history.png";
+import addTraining from "./../../img/icons/add.png";
+import exercise from "./../../img/icons/exercises.png";
+import plan from "./../../img/icons/plan.png";
+import menu from "./../../img/icons/menu.png";
 
 interface MenuProps{
   viewChange:(view:any)=>void

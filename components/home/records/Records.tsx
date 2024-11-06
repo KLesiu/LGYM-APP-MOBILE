@@ -4,8 +4,8 @@ import RecordsPopUp from "./RecordsPopUp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "../../elements/ViewLoading";
 import { MainRecordsLast } from "../../../interfaces/MainRecords";
-import Remove from "./img/icons/remove.png";
-import Progress from "./img/icons/progress.png";
+import RemoveIcon from "./../../../img/icons/remove.png";
+import ProgressIcon from "./../../../img/icons/progress.png";
 
 interface RecordsProps{
   toggleMenuButton:(hide:boolean)=>void
@@ -94,10 +94,10 @@ const Records: React.FC<RecordsProps> = (props) => {
                               )
                             }
                           >
-                            <Image className="w-6 h-6" source={Progress} />
+                            <Image className="w-6 h-6" source={ProgressIcon} />
                           </Pressable>
                           <Pressable onPress={() => deleteRecord(record._id)}>
-                            <Image className="w-6 h-6" source={Remove} />
+                            <Image className="w-6 h-6" source={RemoveIcon} />
                           </Pressable>
                         </View>
                       </View>

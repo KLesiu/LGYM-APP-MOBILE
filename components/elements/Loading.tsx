@@ -1,4 +1,4 @@
-import logoLGYM from "./img/logoLGYM.png";
+import logoLGYM from "./../../img/logoLGYM.png";
 import { Text, Image, View } from "react-native";
 import { useState, useEffect } from "react";
 interface LoadingProps{

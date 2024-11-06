@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
-import logoLGYM from "./img/logoLGYM.png";
+import logoLGYM from "./../../img/logoLGYM.png";
 import ErrorMsg from "../../types/ErrorMsg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/RootStackParamList";
 import MiniLoading from "../elements/MiniLoading";
-import Show from "./img/icons/show.png"
-import Hide from "./img/icons/hide.png"
+import ShowIcon from "./../../img/icons/show.png"
+import HideIcon from "./../../img/icons/hide.png"
 
 const Login: React.FC = () => {
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -125,7 +125,7 @@ const Login: React.FC = () => {
             className="absolute top-[39%] h-[50px]   text-sm flex items-center justify-center   right-2"
             onPress={() => setSecureTextEntry(!secureTextEntry)}
           >
-            {secureTextEntry ? <Image source={Show}/> : <Image source={Hide}/>}
+            {secureTextEntry ? <Image source={ShowIcon}/> : <Image source={HideIcon}/>}
   
           </Pressable>
         </View>

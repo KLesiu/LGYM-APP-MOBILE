@@ -12,7 +12,7 @@ import ViewLoading from "../../elements/ViewLoading";
 import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./CreatePlanDay";
 import { PlanDayVm } from "../../../interfaces/PlanDay";
-import Remove from "./img/icons/remove.png";
+import RemoveIcon from "./../../../img/icons/remove.png";
 import { Message } from "../../../enums/Message";
 
 interface TrainingPlanProps{
@@ -92,7 +92,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     init();
   };
   const reloadSection = (): void => {
-    setShowPlanConfig(false);
+    setShowPlanConfig(false);``
     props.hideMenuButton(false);
     init();
   };
@@ -115,7 +115,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
           </Text>
           <View>
             <Pressable onPress={() => deletePlanDay(item._id)}>
-              <Image className="w-6 h-6" source={Remove} />
+              <Image className="w-6 h-6" source={RemoveIcon} />
             </Pressable>
           </View>
         </View>

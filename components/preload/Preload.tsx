@@ -5,8 +5,8 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import logoLGYM from "./img/logoLGYM.png";
-import backgroundLGYM from "./img/backgroundLGYMApp500.png";
+import logoLGYM from "./../../img/logoLGYM.png"
+import backgroundLGYM from "./../../img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../types/RootStackParamList";

@@ -2,7 +2,7 @@ import FieldScore from "./FieldScore"
 import { ExerciseScoresForm,ExerciseScoresTrainingForm } from "./ExercisesScores"
 import { ExerciseForm } from "./Exercise";
 import { ExerciseTrainingHistoryDetails } from "./Exercise";
-import { Message } from "../../enums/Message";
+import { Message } from "../enums/Message";
 import { Rank } from "./User";
 interface TrainingForm{
     type:string,

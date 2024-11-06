@@ -14,8 +14,8 @@ import {
   ExerciseForPlanDay,
   LastExerciseScores,
 } from "./../../../interfaces/Exercise";
-import Switch from "./img/icons/switch.png";
-import Remove from "./img/icons/remove.png";
+import SwitchIcon from "./../../../img/icons/switch.png";
+import RemoveIcon from "./../../../img/icons/remove.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../enums/BodyParts";
@@ -319,12 +319,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 )
               }
             >
-              <Image className="w-6 h-6" source={Switch} />
+              <Image className="w-6 h-6" source={SwitchIcon} />
             </Pressable>
             <Pressable
               onPress={() => deleteExerciseFromPlanDay(item.exercise._id)}
             >
-              <Image className="w-6 h-6" source={Remove} />
+              <Image className="w-6 h-6" source={RemoveIcon} />
             </Pressable>
           </View>
         </View>

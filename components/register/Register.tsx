@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
-import logoLGYM from "./img/logoLGYM.png";
+import logoLGYM from "./../../img/logoLGYM.png";
 import ErrorMsg from "../../types/ErrorMsg";
 import ErrorRegister from "../../types/ErrorRegister";
 import SuccessMsg from "../../types/SuccessMsg";

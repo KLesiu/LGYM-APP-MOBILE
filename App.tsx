@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Preload from "./Components/views/preload/Preload";
-import Login from "./views/login/Login";
-import Register from "./Components/Register";
-import Home from "./Components/Home";
+import Preload from "./components/preload/Preload";
+import Login from "./components/login/Login";
+import Home from "./components/home/Home";
+import Register from "./components/register/Register";
 import {
   OpenSans_400Regular,
   OpenSans_700Bold,
