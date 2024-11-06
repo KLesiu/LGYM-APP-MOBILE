@@ -9,6 +9,7 @@ import { RootStackParamList } from "../../types/RootStackParamList";
 import MiniLoading from "../elements/MiniLoading";
 import ShowIcon from "./../../img/icons/show.png"
 import HideIcon from "./../../img/icons/hide.png"
+import Button, { ButtonStyle } from "../elements/Button";
 
 const Login: React.FC = () => {
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -130,19 +131,7 @@ const Login: React.FC = () => {
           </Pressable>
         </View>
       </View>
-
-      <Pressable
-      style={{borderRadius:8}}
-        className="h-20 w-80  py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4"
-        onPress={login}
-      >
-        <Text
-          className="text-base w-full text-center text-[#131313]"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          LOGIN
-        </Text>
-      </Pressable>
+      <Button height="h-20" width="w-80"  onPress={login} buttonStyleType={ButtonStyle.success} text="Login"/>
       {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
         {errors ? (
