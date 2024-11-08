@@ -13,6 +13,7 @@ import { isIntValidator } from "../../../helpers/numberValidator";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Message } from "../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 
 interface CreatePlanDayProps{
   planId: string,
@@ -111,7 +112,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   };
 
   // Funkcja do renderowania dynamicznej listy
-  const renderExerciseItem = ({ item }: { item: ExerciseForPlanDay }) => (
+  const renderExerciseItem = ({ item }: { item: ExerciseForPlanDay }) => {
+    const IconElement: JSX.Element =  <Icon style={{ color: "#de161d", fontSize: 20 }} name="delete" />
+    return(
     <View className="flex flex-row items-center justify-between">
       <Text
         style={{ fontFamily: "OpenSans_300Light" }}
@@ -119,12 +122,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       >
         - {`${item.exercise.label}: ${item.series}x${item.reps}`}
       </Text>
-      <Pressable onPress={removeExerciseFromList(item)}>
-        <Icon style={{ color: "#de161d", fontSize: 20 }} name="delete" />
-      </Pressable>
+      <CustomButton  onPress={removeExerciseFromList(item)}  customSlots={[IconElement]}/>
     </View>
   );
-
+}
   return (
     <View className="absolute h-full w-full top-0   z-30 ">
       <View
@@ -168,7 +169,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
                 data={exercisesToSelect}
                 onSelect={(item) => setSelectedExercise(item)}
                 value={selectedExercise?.label || ""}
-                onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
+                onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
               />
             </View>
             <View className="flex flex-row" style={{ gap: 16 }}>
@@ -211,19 +212,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
                 />
               </View>
             </View>
-
-            <Pressable
-              style={{ borderRadius: 8 }}
-              className="bg-white w-40 h-12 flex items-center justify-center  mt-2"
-              onPress={addToList}
-            >
-              <Text
-                className="text-base"
-                style={{ fontFamily: "OpenSans_400Regular" }}
-              >
-                ADD TO LIST
-              </Text>
-            </Pressable>
+            <CustomButton  text="Add to list"  onPress={addToList} buttonStyleType={ButtonStyle.default}/>
           </View>
 
           <View className="flex flex-col h-32 ">
@@ -251,33 +240,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
               </View>
             </ScrollView>
           </View>
-          <View className="flex flex-row items-end   justify-between">
-            <Pressable
-              style={{ borderRadius: 8 }}
-              onPress={props.closeForm}
-              className=" flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
-            >
-              <Text
-                className="text-center text-base text-white"
-                style={{
-                  fontFamily: "OpenSans_400Regular",
-                }}
-              >
-                Cancel
-              </Text>
-            </Pressable>
-            <Pressable
-              style={{ borderRadius: 8 }}
-              className="bg-[#94e798] w-40 h-12 flex items-center justify-center "
-              onPress={createPlanDay}
-            >
-              <Text
-                className="text-base"
-                style={{ fontFamily: "OpenSans_400Regular" }}
-              >
-                Create
-              </Text>
-            </Pressable>
+          <View className="flex flex-row items-end   justify-between" style={{gap:16}}>
+            <CustomButton width="flex-1"  text="Cancel" onPress={props.closeForm} buttonStyleType={ButtonStyle.cancel} />
+            <CustomButton width="flex-1" text="Create" onPress={createPlanDay} buttonStyleType={ButtonStyle.success} />
           </View>
         </View>
       </View>

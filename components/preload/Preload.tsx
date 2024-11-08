@@ -13,6 +13,7 @@ import { RootStackParamList } from "../../types/RootStackParamList";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Loading from "../elements/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomButton, { ButtonSize, ButtonStyle } from "./../elements/CustomButton"
 
 const Preload: React.FC = () => {
   const navigation =
@@ -63,33 +64,11 @@ const Preload: React.FC = () => {
         <View className="bg-[#5c5c5cb3] h-full w-full">
           <View
             style={{ gap: 16 }}
-            className="flex-1 items-center flex bg-[#111111e2] justify-center h-full"
+            className="flex-1 items-center flex bg-[#111111e2] justify-center h-full p-4"
           >
             <Image source={logoLGYM} className="w-[70%] h-2/5" />
-            <TouchableOpacity
-              style={{ borderRadius: 8 }}
-              className="w-96 h-20  py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center"
-              onPress={handleLoginPress}
-            >
-              <Text
-                className="text-base w-full text-center text-[#131313]"
-                style={{ fontFamily: "OpenSans_700Bold" }}
-              >
-                SIGN IN
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ borderRadius: 8 }}
-              className=" w-96 h-20  py-4 px-2 m-0  border-[#94e798] border-[1px]  flex justify-center items-center"
-              onPress={handleRegisterPress}
-            >
-              <Text
-                className="text-base w-full text-center text-white"
-                style={{ fontFamily: "OpenSans_700Bold" }}
-              >
-                SIGN UP
-              </Text>
-            </TouchableOpacity>
+            <CustomButton  text="SIGN IN" onPress={handleLoginPress} buttonStyleSize={ButtonSize.xl} buttonStyleType={ButtonStyle.success} width="w-full" />
+            <CustomButton  text='SIGN UP' onPress={handleRegisterPress} buttonStyleType={ButtonStyle.outline} width="w-full" buttonStyleSize={ButtonSize.xl}/>
           </View>
         </View>
       </ImageBackground>

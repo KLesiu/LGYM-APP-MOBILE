@@ -151,7 +151,7 @@ const Profile: React.FC<ProfileProps> = (props) => {
             className="flex flex-row justify-center items-center flex-1"
             style={{
               borderBottomColor: `${styleCurrentTab(
-                <MainProfileInfo />,
+                <MainProfileInfo logout={logout} />,
                 "border"
               )}`,
               borderBottomWidth: 1,
@@ -162,7 +162,7 @@ const Profile: React.FC<ProfileProps> = (props) => {
               className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm"
               style={{
                 fontFamily: "OpenSans_300Light",
-                color: `${styleCurrentTab(<MainProfileInfo />, "text")}`,
+                color: `${styleCurrentTab(<MainProfileInfo logout={logout} />, "text")}`,
               }}
             >
               Data

@@ -5,6 +5,8 @@ import ViewLoading from "../../elements/ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateExercise from "./CreateExercise";
 import ExerciseDetails from "./ExerciseDetails";
+import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
+import { FontWeights } from "../../../enums/FontsProperties";
 
 interface StartProps{
   viewChange:(view:JSX.Element)=>void
@@ -48,30 +50,29 @@ const Exercises: React.FC<StartProps> = (props) => {
     await getAllUserExercises();
     props.toggleMenuButton(false);
   };
-  const renderExerciseItem = ({ item }: { item: ExerciseForm }) => (
-    <Pressable
-      onPress={() => showExerciseDetails(item)}
-      style={{borderRadius:8}}
-      className="flex flex-col w-36 min-h-[150px] bg-[#94e798] p-2  "
+  const renderExerciseItem = ({ item }: { item: ExerciseForm }) =>{
+    const customElements:JSX.Element[]=[
+      <Text
+      className="text-base text-[#131313] font-bold"
+      style={{
+        fontFamily: "OpenSans_700Bold",
+      }}
     >
+      {item.name}
+    </Text>,
       <Text
-        className="text-base text-[#131313] font-bold"
-        style={{
-          fontFamily: "OpenSans_700Bold",
-        }}
-      >
-        {item.name}
-      </Text>
-      <Text
-        className="text-sm text-[#1f1f1f]"
-        style={{
-          fontFamily: "OpenSans_400Regular",
-        }}
-      >
-        BodyPart: {item.bodyPart}
-      </Text>
-    </Pressable>
-  );
+      className="text-sm text-[#1f1f1f]"
+      style={{
+        fontFamily: "OpenSans_400Regular",
+      }}
+    >
+      BodyPart: {item.bodyPart}
+    </Text>
+    ]
+    return (
+      <CustomButton  customSlots={customElements} onPress={()=>showExerciseDetails(item)} buttonStyleType={ButtonStyle.success} buttonStyleSize={ButtonSize.xxl} />
+    )
+  } 
   const getAllUserExercises = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
@@ -113,7 +114,7 @@ const Exercises: React.FC<StartProps> = (props) => {
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ paddingVertical: 10 }}
-              ItemSeparatorComponent={() => <View style={{ width: 4 }} />} // odstępy między elementami
+              ItemSeparatorComponent={() => <View style={{ width: 8 }} />} 
             />
           </View>
         </View>
@@ -127,20 +128,7 @@ const Exercises: React.FC<StartProps> = (props) => {
             >
               User exercises:
             </Text>
-            <Pressable
-              onPress={openExerciseForm}
-              style={{borderRadius:8}}
-              className="w-40  h-12 flex items-center justify-center bg-[#94e798] "
-            >
-              <Text
-                className="text-base text-black  font-bold "
-                style={{
-                  fontFamily: "OpenSans_700Bold",
-                }}
-              >
-                Add new exercise
-              </Text>
-            </Pressable>
+            <CustomButton  onPress={openExerciseForm} textWeight={FontWeights.bold} buttonStyleType={ButtonStyle.success} text="Add new exercise" />
           </View>
           <FlatList
             data={userExercises}

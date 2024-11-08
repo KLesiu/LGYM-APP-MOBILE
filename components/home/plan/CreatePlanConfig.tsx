@@ -5,6 +5,7 @@ import { isIntValidator } from "../../../helpers/numberValidator";
 import ResponseMessage from "../../../interfaces/ResponseMessage";
 import { Message } from "../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 
 interface CreatePlanConfigProps{
   reloadSection:VoidFunction,
@@ -116,32 +117,8 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           </View>
         </View>
         <View className="flex flex-row justify-between w-full">
-          <Pressable
-            onPress={props.hidePlanConfig}
-            style={{ borderRadius: 8 }}
-            className=" flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
-          >
-            <Text
-              className="text-center text-base text-white"
-              style={{
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              Cancel
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={sendConfig}
-            style={{ borderRadius: 8 }}
-            className="bg-[#94e798] w-40 h-12 flex items-center justify-center "
-          >
-            <Text
-              className="text-base"
-              style={{ fontFamily: "OpenSans_400Regular" }}
-            >
-              Next
-            </Text>
-          </Pressable>
+          <CustomButton  text="Cancel" onPress={props.hidePlanConfig} buttonStyleType={ButtonStyle.cancel}/>
+          <CustomButton  text="Next" onPress={sendConfig} buttonStyleType={ButtonStyle.success}/>
         </View>
       </View>
       {error ? (

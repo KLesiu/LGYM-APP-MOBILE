@@ -12,6 +12,7 @@ import { WeightUnits } from "../../../enums/Units";
 import { Message } from "../../../enums/Message";
 import TrainingSummary from "./TrainingSummary";
 import { LastExerciseScores } from "../../../interfaces/Exercise";
+import CustomButton from "../../elements/CustomButton";
 
 interface AddTrainingProps{
   toggleMenuButton:(hide:boolean)=>void
@@ -177,12 +178,10 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
       {isUserHavePlan ? (
         <View className="relative  flex flex-col justify-center items-center h-full w-full">
           {isAddTrainingActive ? (
-            <Pressable onPress={getCurrentPlanDayTraining}>
-              <Icon
-                style={{ fontSize: 140, color: "#94e798" }}
-                name="play-circle"
-              />
-            </Pressable>
+            <CustomButton  onPress={getCurrentPlanDayTraining} customSlots={[  <Icon
+              style={{ fontSize: 140, color: "#94e798" }}
+              name="play-circle"
+            />]}/>
           ) : (
             <Pressable onPress={getInformationsAboutPlanDays}>
               <Icon

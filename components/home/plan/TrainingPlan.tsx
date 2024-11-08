@@ -14,6 +14,8 @@ import CreatePlanDay from "./CreatePlanDay";
 import { PlanDayVm } from "../../../interfaces/PlanDay";
 import RemoveIcon from "./../../../img/icons/remove.png";
 import { Message } from "../../../enums/Message";
+import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
+import { FontWeights } from "../../../enums/FontsProperties";
 
 interface TrainingPlanProps{
   hideMenuButton:(hide:boolean)=>void
@@ -98,6 +100,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
 
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
+    const imageSlot: JSX.Element[] = [<Image className="w-6 h-6" source={RemoveIcon} />]
     return (
       <View
         key={item._id}
@@ -113,11 +116,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
           >
             {item.name}
           </Text>
-          <View>
-            <Pressable onPress={() => deletePlanDay(item._id)}>
-              <Image className="w-6 h-6" source={RemoveIcon} />
-            </Pressable>
-          </View>
+            <CustomButton buttonStyleSize={ButtonSize.small}  onPress={()=>deletePlanDay(item._id)} customSlots={imageSlot}/>
         </View>
 
         {item.exercises.map((exercise, index) => (
@@ -153,21 +152,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     <View className="flex flex-1 relative w-full bg-[#121212]">
       <View className="w-full h-full p-4 flex flex-col">
         {!planConfig ? (
-          <View className="flex flex-row w-full ">
-            <TouchableOpacity
-              onPress={showPlanConfigPopUp}
-              style={{ borderRadius: 8 }}
-              className="bg-[#94e798] w-40 h-12 flex items-center justify-center"
-            >
-              <Text
-                className="text-black text-md w-full text-center"
-                style={{
-                  fontFamily: "OpenSans_700Bold",
-                }}
-              >
-                Create plan
-              </Text>
-            </TouchableOpacity>
+          <View className="flex flex-row w-full">
+            <CustomButton  onPress={showPlanConfigPopUp} text="Create plan" textWeight={FontWeights.bold} buttonStyleType={ButtonStyle.success}/>
           </View>
         ) : (
           <Text></Text>
@@ -187,22 +173,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
                 Current training plan: {planConfig.name}
               </Text>
             </View>
-            <View>
-              <Pressable
-                style={{ borderRadius: 8 }}
-                className="w-40  h-12 flex items-center justify-center bg-[#94e798] "
-                onPress={showPlanDayForm}
-              >
-                <Text
-                  className="text-lg text-black"
-                  style={{
-                    fontFamily: "OpenSans_700Bold",
-                  }}
-                >
-                  Add plan day
-                </Text>
-              </Pressable>
-            </View>
+              <CustomButton  text="Add plan day" onPress={showPlanDayForm} buttonStyleType={ButtonStyle.success} textWeight={FontWeights.bold}/>
             {planDays && planDays.length ? (
               <ScrollView className="w-full">
                 <View style={{ gap: 8 }} className="flex flex-col pb-12">

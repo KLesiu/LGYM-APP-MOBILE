@@ -2,9 +2,10 @@ import { Pressable, View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import UserProfile from "../../../types/UserProfile";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 
 interface MainProfileInfoProps{
-  logout?:VoidFunction,
+  logout:VoidFunction,
   userInfo?:UserProfile}
 
 const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
@@ -46,18 +47,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
           Change password
         </Text>
       </Pressable> */}
-        <Pressable
-          style={{ borderRadius: 8 }}
-          className="h-20 w-80  py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4"
-          onPress={props.logout}
-        >
-          <Text
-            className="text-base w-full text-center text-[#131313]"
-            style={{ fontFamily: "OpenSans_700Bold" }}
-          >
-            Logout
-          </Text>
-        </Pressable>
+      <CustomButton width="w-full"  text="Logout" onPress={props.logout} buttonStyleType={ButtonStyle.success}/>
       </View>
     </View>
   );

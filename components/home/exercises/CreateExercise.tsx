@@ -6,9 +6,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ResponseMessage from "../../../interfaces/ResponseMessage";
 import CustomDropdown, {DropdownItem} from "../../elements/Dropdown";
 import { ExerciseForm } from "../../../interfaces/Exercise";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 
 interface CreateExerciseProps{
-    closeForm?: ()=>void,
+    closeForm: ()=>void,
     form?: ExerciseForm
 }
 
@@ -192,51 +193,15 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           />
         </View>
       </View>
-      <View className="flex flex-row justify-between ">
+      <View className="flex flex-row justify-between " style={{gap:8}}>
         
-
-        <Pressable
-        style={{borderRadius:8}}
-          onPress={props.closeForm}
-         className=" flex flex-row justify-center items-center  w-40 h-12 bg-[#3f3f3f]"
-        >
-          <Text
-           className="text-center text-base text-white"
-           style={{
-             fontFamily: "OpenSans_400Regular",
-           }}
-          >
-            Cancel
-          </Text>
-        </Pressable>
+        <CustomButton  onPress={props.closeForm} text="Cancel" buttonStyleType={ButtonStyle.cancel} width="flex-1"/>
         {!isBlocked && (
     <>
       {props.form ? (
-        <Pressable
-          onPress={updateExercise}
-          style={{borderRadius:8}}
-          className="bg-[#94e798] w-40 h-12 flex items-center justify-center "
-        >
-          <Text
-            className="text-xl"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            Update
-          </Text>
-        </Pressable>
+        <CustomButton  onPress={updateExercise} text="Update" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl" />
       ) : (
-        <Pressable
-          onPress={createExercise}
-          style={{borderRadius:8}}
-           className="bg-[#94e798] w-40 h-12 flex items-center justify-center"
-        >
-          <Text
-             className="text-base"
-             style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            Create
-          </Text>
-        </Pressable>
+        <CustomButton  onPress={createExercise} text="Create" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl"/>
       )}
     </>
   )}

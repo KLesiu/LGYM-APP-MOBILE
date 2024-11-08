@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../types/RootStackParamList";
 import MiniLoading from "../elements/MiniLoading";
+import CustomButton, { ButtonSize, ButtonStyle } from "../elements/CustomButton";
 
 const Register: React.FC = () => {
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -58,13 +59,13 @@ const Register: React.FC = () => {
   };
 
   return (
-    <View className="flex items-center flex-col h-full justify-start bg-[#121212]">
+    <View style={{gap:16}} className="flex items-center flex-col h-full justify-start bg-[#121212] p-4">
       <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
         <Image className="w-full h-full mb-[5%]" source={logoLGYM} />
       </Pressable>
       <View
-        className="w-full flex flex-col items-center justify-start p-4"
-        style={{ gap: 16 }}
+        className="w-full flex flex-col items-center justify-start "
+        style={{ gap: 8 }}
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
@@ -140,21 +141,7 @@ const Register: React.FC = () => {
           />
         </View>
       </View>
-
-      <Pressable
-        onPress={register}
-        style={{borderRadius:8}}
-        className="w-80 h-20  py-4  px-2 m-0  bg-[#94e798] flex justify-center items-center mt-4"
-      >
-        <Text
-          style={{
-            fontFamily: "OpenSans_700Bold",
-          }}
-          className="text-base w-full text-center text-black"
-        >
-          REGISTER
-        </Text>
-      </Pressable>
+      <CustomButton  text="REGISTER" onPress={register} width="w-full" buttonStyleType={ButtonStyle.success} buttonStyleSize={ButtonSize.xl} />
       {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
         {errors ? (

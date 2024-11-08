@@ -9,7 +9,7 @@ import { RootStackParamList } from "../../types/RootStackParamList";
 import MiniLoading from "../elements/MiniLoading";
 import ShowIcon from "./../../img/icons/show.png"
 import HideIcon from "./../../img/icons/hide.png"
-import Button, { ButtonStyle } from "../elements/Button";
+import CustomButton, { ButtonSize, ButtonStyle } from "../elements/CustomButton";
 
 const Login: React.FC = () => {
   const [errors, setErrors] = useState<ErrorMsg[]>([]);
@@ -77,14 +77,14 @@ const Login: React.FC = () => {
     return navigation.navigate("Preload");
   };
   return (
-    <View className="flex items-center flex-col h-full justify-start bg-[#121212]">
+    <View style={{gap:16}} className="flex items-center flex-col h-full justify-start bg-[#121212]  p-4">
       <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
         <Image className="w-full h-full" source={logoLGYM} />
       </Pressable>
 
       <View
-        className="w-full flex flex-col items-center justify-start p-4"
-        style={{ gap: 16 }}
+        className="w-full flex flex-col items-center justify-start"
+        style={{ gap: 8 }}
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
@@ -131,7 +131,7 @@ const Login: React.FC = () => {
           </Pressable>
         </View>
       </View>
-      <Button height="h-20" width="w-80"  onPress={login} buttonStyleType={ButtonStyle.success} text="Login"/>
+      <CustomButton  width="w-full"  onPress={login} buttonStyleType={ButtonStyle.success} text="Login" buttonStyleSize={ButtonSize.xl}/>
       {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
         {errors ? (

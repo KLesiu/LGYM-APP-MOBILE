@@ -15,7 +15,7 @@ import plan from "./../../img/icons/plan.png";
 import menu from "./../../img/icons/menu.png";
 
 interface MenuProps{
-  viewChange:(view:any)=>void
+  viewChange:(view:JSX.Element)=>void
 }
 
 const Menu: React.FC<MenuProps> = (props) => {

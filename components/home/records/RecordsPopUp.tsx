@@ -7,6 +7,7 @@ import { ExerciseForm } from "../../../interfaces/Exercise";
 import { isIntValidator } from "../../../helpers/numberValidator";
 import { Message } from "../../../enums/Message";
 import { WeightUnits } from "../../../enums/Units";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 interface RecordsPopUpProps {
   offPopUp: ()=>void,
   exerciseId:string | undefined
@@ -43,10 +44,8 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     }
     setExercisesToSelect(helpExercisesToSelect);
   };
-  const clearAutoCompleteQuery = () => {
-    // Po wyczyszczeniu query resetujemy stan, aby zapobiec ponownemu wywołaniu
-    setClearQuery(false);
-  };
+  const clearAutoCompleteQuery = () => setClearQuery(false);
+  
   const validator = (input: string): void => {
     if (!input) return setWeight(input);
     const result = isIntValidator(input);
@@ -110,7 +109,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               data={exercisesToSelect}
               onSelect={(item) => setSelectedExercise(item)}
               value={selectedExercise?.label || ""}
-              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
+              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
             />
           )}
         </View>
@@ -130,35 +129,9 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
           />
         </View>
       </View>
-      <View className="w-full flex flex-row justify-between">
-        <Pressable
-          onPress={createNewRecord}
-          style={{ borderRadius: 8 }}
-          className=" flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]"
-        >
-          <Text
-            className="text-center text-xl text-black"
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            Add
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={props.offPopUp}
-          style={{ borderRadius: 8 }}
-          className=" flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
-        >
-          <Text
-            className="text-center text-xl text-white"
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            Cancel
-          </Text>
-        </Pressable>
+      <View className="w-full flex flex-row justify-between" style={{gap:16}}>
+        <CustomButton  text="Cancel" onPress={props.offPopUp} buttonStyleType={ButtonStyle.cancel} width="flex-1"/>
+        <CustomButton  text="Add" onPress={createNewRecord} buttonStyleType={ButtonStyle.success} width="flex-1"/>
       </View>
     </View>
   );

@@ -6,14 +6,15 @@ import ViewLoading from "../../elements/ViewLoading";
 import { MainRecordsLast } from "../../../interfaces/MainRecords";
 import RemoveIcon from "./../../../img/icons/remove.png";
 import ProgressIcon from "./../../../img/icons/progress.png";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 
 interface RecordsProps{
   toggleMenuButton:(hide:boolean)=>void
 }
 
-const Records: React.FC<RecordsProps> = (props) => {
+const Records: React.FC<RecordsProps> = () => {
   const [popUp, setPopUp] = useState<boolean>(false);
-  const [records, setRecords] = useState<MainRecordsLast[]>([]); // Tablica dla gridu
+  const [records, setRecords] = useState<MainRecordsLast[]>([]); 
   const [viewLoading, setViewLoading] = useState<boolean>(true);
   const [exercise, setExercise] = useState<string | undefined>();
 
@@ -87,18 +88,13 @@ const Records: React.FC<RecordsProps> = (props) => {
                           {record.exerciseDetails.name}
                         </Text>
                         <View style={{ gap: 16 }} className="flex flex-row">
-                          <Pressable
-                            onPress={() =>
+                          <CustomButton  onPress={() =>
                               updateSettedExerciseRecord(
                                 record.exerciseDetails._id
                               )
-                            }
-                          >
-                            <Image className="w-6 h-6" source={ProgressIcon} />
-                          </Pressable>
-                          <Pressable onPress={() => deleteRecord(record._id)}>
-                            <Image className="w-6 h-6" source={RemoveIcon} />
-                          </Pressable>
+                            } customSlots={[  <Image className="w-6 h-6" source={ProgressIcon} />]}/>
+                          <CustomButton onPress={() => deleteRecord(record._id)} customSlots={[ <Image className="w-6 h-6" source={RemoveIcon} />]} />
+                          
                         </View>
                       </View>
 
@@ -122,21 +118,10 @@ const Records: React.FC<RecordsProps> = (props) => {
               )}
             </ScrollView>
           )}
-          <Pressable
-            onPress={() => {
+          <CustomButton  text="Add new records"  onPress={() => {
               setExercise(undefined);
               showPopUp();
-            }}
-            style={{ borderRadius: 8 }}
-            className="h-20 w-80  py-4 px-2 m-0 bg-[#94e798] flex justify-center items-center"
-          >
-            <Text
-              className="text-base w-full text-center text-[#131313]"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              Add new records
-            </Text>
-          </Pressable>
+            }} width="w-full" buttonStyleType={ButtonStyle.success}/>
         </View>
       )}
     </View>

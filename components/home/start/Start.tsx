@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import ErrorMsg from "../../../types/ErrorMsg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddTraining from "../training/AddTraining";
@@ -10,6 +10,7 @@ import UsersRanking from "./UsersRanking";
 import { LastTrainingInfo } from "../../../interfaces/Training";
 import { UserInfo } from "../../../interfaces/User";
 import { Message } from "../../../enums/Message";
+import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
 
 interface StartProps{
   viewChange:(view:JSX.Element)=>void
@@ -36,19 +37,13 @@ const Start: React.FC<StartProps> = (props) => {
     try {
       const id = await AsyncStorage.getItem("id");
       const response = await fetch(`${apiURL}/api/${id}/getLastTraining`);
-
       if (!response.ok) {
-        // If response status is not in the 200 range
-        console.error("Failed to fetch last training info:", response.status);
         return setError(Message.DidntFind);
       }
-
       const data: ErrorMsg | LastTrainingInfo = await response.json();
       if ("msg" in data) return setError(data.msg);
-
       setLastTrainingInfo(data);
     } catch (error) {
-      console.error("Network or JSON parsing error:", error);
       setError(Message.DidntFind);
     }
   };
@@ -114,23 +109,10 @@ const Start: React.FC<StartProps> = (props) => {
               </Text>
             )}
           </View>
-
-          <Pressable
-            onPress={() =>
+          <CustomButton buttonStyleSize={ButtonSize.xl}  onPress={() =>
               navigateTo(
                 <AddTraining toggleMenuButton={props.toggleMenuButton} />
-              )
-            }
-            style={{ borderRadius: 12 }}
-            className="h-16 w-24 bg-[#94e798]  flex items-center justify-center"
-          >
-            <Text
-              className="text-[#131313] text-base text-center"
-              style={{ fontFamily: "OpenSans_400Regular" }}
-            >
-              New
-            </Text>
-          </Pressable>
+              )} buttonStyleType={ButtonStyle.success} text="New"/>
         </View>
         <View
           style={{ borderRadius: 8 }}
