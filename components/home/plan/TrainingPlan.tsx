@@ -1,8 +1,6 @@
 import {
   Text,
   View,
-  TouchableOpacity,
-  Pressable,
   Image,
   ScrollView,
 } from "react-native";
@@ -16,7 +14,7 @@ import RemoveIcon from "./../../../img/icons/remove.png";
 import { Message } from "../../../enums/Message";
 import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
 import { FontWeights } from "../../../enums/FontsProperties";
-
+import EditIcon from "./../../../img/icons/edit.png"
 interface TrainingPlanProps{
   hideMenuButton:(hide:boolean)=>void
 }
@@ -33,6 +31,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
+  const [planDayId, setPlanDayId] = useState<string>("");
+
   useEffect(() => {
     init();
   }, []);
@@ -98,9 +98,18 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     props.hideMenuButton(false);
     init();
   };
+  const editPlanDay = (planDayId: string): void => {
+    setPlanDayId(planDayId)
+    showPlanDayForm()
+  }
+  const addNewPlanDay = ()=>{
+    setPlanDayId("")
+    showPlanDayForm()
+  }
 
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
-    const imageSlot: JSX.Element[] = [<Image className="w-6 h-6" source={RemoveIcon} />]
+    const removeSlot: JSX.Element[] = [<Image className="w-6 h-6" source={RemoveIcon} />]
+    const editSlot:JSX.Element[]= [<Image className="w-6 h-6" source={EditIcon} />]
     return (
       <View
         key={item._id}
@@ -116,7 +125,11 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
           >
             {item.name}
           </Text>
-            <CustomButton buttonStyleSize={ButtonSize.small}  onPress={()=>deletePlanDay(item._id)} customSlots={imageSlot}/>
+          <View className="flex flex-row" style={{gap:8}}>
+          <CustomButton  buttonStyleSize={ButtonSize.small} onPress={()=>editPlanDay(item._id)} customSlots={editSlot} />
+          <CustomButton buttonStyleSize={ButtonSize.small}  onPress={()=>deletePlanDay(item._id)} customSlots={removeSlot}/>
+          </View>
+            
         </View>
 
         {item.exercises.map((exercise, index) => (
@@ -173,7 +186,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
                 Current training plan: {planConfig.name}
               </Text>
             </View>
-              <CustomButton  text="Add plan day" onPress={showPlanDayForm} buttonStyleType={ButtonStyle.success} textWeight={FontWeights.bold}/>
+              <CustomButton  text="Add plan day" onPress={addNewPlanDay} buttonStyleType={ButtonStyle.success} textWeight={FontWeights.bold}/>
             {planDays && planDays.length ? (
               <ScrollView className="w-full">
                 <View style={{ gap: 8 }} className="flex flex-col pb-12">
@@ -198,7 +211,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         <Text></Text>
       )}
       {isPlanDayFormVisible && planConfig ? (
-        <CreatePlanDay planId={planConfig._id} closeForm={hidePlanDayForm} />
+        <CreatePlanDay planId={planConfig._id} closeForm={hidePlanDayForm} planDayId={planDayId} />
       ) : (
         <Text></Text>
       )}

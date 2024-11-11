@@ -16,6 +16,7 @@ import CreateExercise from "../exercises/CreateExercise";
 interface CreatePlanDayProps {
   planId: string;
   closeForm: () => void;
+  planDayId?: string;
 }
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
@@ -36,8 +37,13 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    getAllExercises();
+    init();
   }, []);
+
+  const init = async () => {
+    await getAllExercises();
+    if (props.planDayId) await getPlanDay();
+  };
 
   const getAllExercises = async () => {
     const id = await AsyncStorage.getItem("id");
@@ -50,8 +56,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     });
     setExercisesToSelect(helpExercisesToSelect);
   };
-  const createPlanDay = async () => {
-    setViewLoading(true);
+  const mapExercisesListToSend = () => {
     const exercises = exercisesList.map((exercise: ExerciseForPlanDay) => {
       return {
         exercise: exercise.exercise.value,
@@ -59,6 +64,11 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         reps: exercise.reps,
       };
     });
+    return exercises;
+  };
+  const createPlanDay = async () => {
+    setViewLoading(true);
+    const exercises = mapExercisesListToSend();
     const response = await fetch(
       `${apiURL}/api/planDay/${props.planId}/createPlanDay`,
       {
@@ -72,15 +82,32 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         }),
       }
     );
-    if (!response.ok) {
-    }
     const result = await response.json();
-    if (result.msg === Message.Created) {
-      props.closeForm();
-    }
+    if (result.msg === Message.Created)props.closeForm();
+    
     setViewLoading(false);
   };
-
+  const editPlanDay = async () => {
+    setViewLoading(true);
+    const exercises = mapExercisesListToSend()
+    const response = await fetch(
+      `${apiURL}/api/planDay/updatePlanDay`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          _id: props.planDayId,
+          name: planDayName,
+          exercises: exercises,
+        }),
+      }
+    );
+    const result = await response.json();
+    if(result.msg === Message.Updated) props.closeForm()
+    setViewLoading(false);
+  };
   const removeExerciseFromList = (item: ExerciseForPlanDay) => () => {
     const newList = exercisesList.filter(
       (exercise: ExerciseForPlanDay) => exercise !== item
@@ -112,7 +139,6 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     // Po wyczyszczeniu query resetujemy stan, aby zapobiec ponownemu wywołaniu
     setClearQuery(false);
   };
-
   // Funkcja do renderowania dynamicznej listy
   const renderExerciseItem = ({ item }: { item: ExerciseForPlanDay }) => {
     const IconElement: JSX.Element = (
@@ -132,6 +158,30 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         />
       </View>
     );
+  };
+  const getPlanDay = async () => {
+    const response = await fetch(
+      `${apiURL}/api/planDay/${props.planDayId}/getPlanDay`
+    );
+    const result = await response.json();
+    const currentExercisesList = result.exercises.map(
+      (exerciseInPlanDay: {
+        series: number;
+        reps: string;
+        exercise: ExerciseForm;
+      }) => {
+        return {
+          series: exerciseInPlanDay.series,
+          reps: exerciseInPlanDay.reps,
+          exercise: {
+            label: exerciseInPlanDay.exercise.name,
+            value: exerciseInPlanDay.exercise._id,
+          },
+        };
+      }
+    );
+    setPlanDayName(result.name);
+    setExercisesList(currentExercisesList);
   };
   const toggleExerciseForm = async () => {
     setIsTrainingPlanDayExerciseFormShow(!isTrainingPlanDayExerciseFormShow);
@@ -167,6 +217,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
               }}
               className=" w-full  px-2 py-4 text-white  "
               onChangeText={(text: string) => setPlanDayName(text)}
+              value={planDayName}
             />
           </View>
           <View className="flex flex-col items-end " style={{ gap: 8 }}>
@@ -247,7 +298,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
               Exercises List:
             </Text>
             <ScrollView className="h-full">
-              <View className="flex flex-col " style={{ gap: 16 }}>
+              <View className="flex flex-col " style={{ gap: 8 }}>
                 {exercisesList.length > 0 ? (
                   exercisesList.map((item, index) => (
                     <View key={index}>{renderExerciseItem({ item })}</View>
@@ -273,12 +324,21 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
               onPress={props.closeForm}
               buttonStyleType={ButtonStyle.cancel}
             />
-            <CustomButton
-              width="flex-1"
-              text="Create"
-              onPress={createPlanDay}
-              buttonStyleType={ButtonStyle.success}
-            />
+            {props.planDayId ? (
+              <CustomButton
+                width="flex-1"
+                text="Edit"
+                onPress={editPlanDay}
+                buttonStyleType={ButtonStyle.success}
+              />
+            ) : (
+              <CustomButton
+                width="flex-1"
+                text="Create"
+                onPress={createPlanDay}
+                buttonStyleType={ButtonStyle.success}
+              />
+            )}
           </View>
         </View>
       </View>

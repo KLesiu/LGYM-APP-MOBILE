@@ -1,5 +1,6 @@
-import { DropdownItem } from "../../views/elements/Autocomplete"
-import { BodyParts } from "../../enums/BodyParts"
+
+import { BodyParts } from "../enums/BodyParts"
+import { DropdownItem } from "../components/elements/Autocomplete"
 export interface ExerciseForm{
     _id?:string,
     name:string,
