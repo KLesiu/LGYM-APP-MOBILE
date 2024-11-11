@@ -121,10 +121,10 @@ const Exercises: React.FC<StartProps> = (props) => {
         <View className="flex flex-col ">
           <View className="flex w-full  justify-between flex-row  items-center">
             <Text
-              className="w-full text-lg text-white  font-bold "
-              style={{
-                fontFamily: "OpenSans_700Bold",
-              }}
+             className="text-lg text-white  font-bold "
+             style={{
+               fontFamily: "OpenSans_700Bold",
+             }}
             >
               Global exercises:
             </Text>
