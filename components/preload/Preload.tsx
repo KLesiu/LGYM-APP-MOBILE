@@ -40,9 +40,6 @@ const Preload: React.FC = () => {
     await AsyncStorage.setItem("username", response.user.name);
     await AsyncStorage.setItem("id", response.user._id);
     await AsyncStorage.setItem("email", response.user.email);
-    await AsyncStorage.setItem("bp", `${response.user.Bp}` || "0");
-    await AsyncStorage.setItem("dl", `${response.user.Dl}` || "0");
-    await AsyncStorage.setItem("sq", `${response.user.Sq}` || "0");
     navigation.navigate("Home");
   };
   const handleLoginPress: VoidFunction = (): void => {

@@ -10,7 +10,10 @@ import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 
 interface CreateExerciseProps{
     closeForm: ()=>void,
-    form?: ExerciseForm
+    form?: ExerciseForm,
+    isGlobal?: boolean,
+    isAdmin?: boolean
+
 }
 
 const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
@@ -30,7 +33,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       setBodyPart(props.form.bodyPart as BodyParts);
       setDescription(props.form.description);
       if (!props.form.user) {
-        checkIsBlocked();
+        setIsBlocked(!props.isAdmin);
       }
     }
     getBodyParts();
@@ -38,28 +41,17 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
 
   const handleSelectBodyPart = (item: { label: string; value: string }) => {
     setBodyPart(item.value as BodyParts);
-  };
+  }
 
-  const checkIsBlocked = async (): Promise<void> => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${API_URL}/api/isAdmin`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ _id: id }),
-    })
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    setIsBlocked(!response);
-  };
+  const create = async () => {
+    if (props.isGlobal) await createGlobalExercise();
+     else await createExercise();
+}
 
   const createExercise = async (): Promise<void> => {
-    if (!exerciseName || !bodyPart)
-      return setError("Name and body part are required!");
+    if(!validateForm()) return;
     const id = await AsyncStorage.getItem("id");
-    const response: ResponseMessage = await fetch(
+    const response = await fetch(
       `${API_URL}/api/exercise/${id}/addUserExercise`,
       {
         method: "POST",
@@ -73,13 +65,39 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         }),
       }
     )
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    if (response.msg === Message.Created && props.closeForm) props.closeForm();
-    else setError(response.msg);
+    const result = await response.json();
+    if (result.msg === Message.Created && props.closeForm) props.closeForm();
+    else setError(result.msg);
   };
 
+  const createGlobalExercise = async (): Promise<void> => {
+    if(!validateForm()) return;
+    const response = await fetch(
+      `${API_URL}/api/exercise/addExercise`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: exerciseName,
+          bodyPart: bodyPart,
+          description: description,
+        }),
+      }
+    )
+    const result = await response.json();
+    if (result.msg === Message.Created && props.closeForm) props.closeForm();
+    else setError(result.msg);
+  }
+
+  const validateForm = (): boolean => {
+    if (!exerciseName || !bodyPart) {
+      setError(Message.FieldRequired);
+      return false;
+    }
+    return true;
+  }
   const updateExercise = async (): Promise<void> => {
     if (!exerciseName || !bodyPart)
       return setError("Name and body part are required!");
@@ -116,7 +134,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   };
 
   return (
-    <View className="absolute  flex flex-col w-full h-full p-4 bg-[#121212]" style={{gap:16}}>
+    <View className="absolute top-0 left-0  flex flex-col w-full h-full p-4 bg-[#121212]" style={{gap:16}}>
       {!props.form ? (
         <Text
         className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
@@ -201,7 +219,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       {props.form ? (
         <CustomButton  onPress={updateExercise} text="Update" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl" />
       ) : (
-        <CustomButton  onPress={createExercise} text="Create" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl"/>
+        <CustomButton  onPress={create} text="Create" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl"/>
       )}
     </>
   )}

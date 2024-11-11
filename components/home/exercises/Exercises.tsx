@@ -5,12 +5,15 @@ import ViewLoading from "../../elements/ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateExercise from "./CreateExercise";
 import ExerciseDetails from "./ExerciseDetails";
-import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../elements/CustomButton";
 import { FontWeights } from "../../../enums/FontsProperties";
 
-interface StartProps{
-  viewChange:(view:JSX.Element)=>void
-  toggleMenuButton:(hide:boolean)=>void
+interface StartProps {
+  viewChange: (view: JSX.Element) => void;
+  toggleMenuButton: (hide: boolean) => void;
 }
 
 const Exercises: React.FC<StartProps> = (props) => {
@@ -23,19 +26,22 @@ const Exercises: React.FC<StartProps> = (props) => {
   const [isExerciseFormVisible, setIsExerciseFormVisible] =
     useState<boolean>(false);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseForm>();
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isGlobal, setIsGlobal] = useState<boolean>(false);
 
   useEffect(() => {
     setIsLoading(true);
     getAllGlobalExercises();
     getAllUserExercises();
+    checkIsAdmin();
   }, []);
 
   const getAllGlobalExercises = async () => {
     const response = await fetch(
       `${API_URL}/api/exercise/getAllGlobalExercises`
-    )
-    if(response.ok){
-      const result = await response.json()
+    );
+    if (response.ok) {
+      const result = await response.json();
       setGlobalExercises(result);
     }
   };
@@ -50,62 +56,90 @@ const Exercises: React.FC<StartProps> = (props) => {
     await getAllUserExercises();
     props.toggleMenuButton(false);
   };
-  const renderExerciseItem = ({ item }: { item: ExerciseForm }) =>{
-    const customElements:JSX.Element[]=[
+  const renderExerciseItem = ({ item }: { item: ExerciseForm }) => {
+    const customElements: JSX.Element[] = [
       <Text
-      className="text-base text-[#131313] font-bold"
-      style={{
-        fontFamily: "OpenSans_700Bold",
-      }}
-    >
-      {item.name}
-    </Text>,
+        className="text-base text-[#131313] font-bold"
+        style={{
+          fontFamily: "OpenSans_700Bold",
+        }}
+      >
+        {item.name}
+      </Text>,
       <Text
-      className="text-sm text-[#1f1f1f]"
-      style={{
-        fontFamily: "OpenSans_400Regular",
-      }}
-    >
-      BodyPart: {item.bodyPart}
-    </Text>
-    ]
+        className="text-sm text-[#1f1f1f]"
+        style={{
+          fontFamily: "OpenSans_400Regular",
+        }}
+      >
+        BodyPart: {item.bodyPart}
+      </Text>,
+    ];
     return (
-      <CustomButton  customSlots={customElements} onPress={()=>showExerciseDetails(item)} buttonStyleType={ButtonStyle.success} buttonStyleSize={ButtonSize.xxl} />
-    )
-  } 
+      <CustomButton
+        customSlots={customElements}
+        onPress={() => showExerciseDetails(item)}
+        buttonStyleType={ButtonStyle.success}
+        buttonStyleSize={ButtonSize.xxl}
+      />
+    );
+  };
   const getAllUserExercises = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllUserExercises`
-    )
-    if(response.ok){
-      const result = await response.json()
+    );
+    if (response.ok) {
+      const result = await response.json();
       setUserExercises(result);
     }
     setIsLoading(false);
   };
+  const openGlobalExerciseForm = (): void => {
+    setIsGlobal(true);
+    openExerciseForm()
+  }
   const openExerciseForm = (): void => {
-    props.toggleMenuButton(true)
+    props.toggleMenuButton(true);
     setIsExerciseFormVisible(true);
   };
-  const closeAddExerciseForm = async()=>{
+  const closeAddExerciseForm = async () => {
     await getAllUserExercises();
+    await getAllGlobalExercises()
     setIsExerciseFormVisible(false);
     props.toggleMenuButton(false);
-    
-  }
+  };
+  const checkIsAdmin = async () => {
+    const id = await AsyncStorage.getItem("id");
+    const response = await fetch(`${API_URL}/api/${id}/isAdmin`);
+    const result = await response.json();
+    setIsAdmin(result);
+  };
   return (
     <View className="relative flex flex-1 bg-[#121212]">
       <View className="flex  flex-col  p-4 ">
         <View className="flex flex-col ">
-          <Text
-            className="w-full text-lg text-white  font-bold "
-            style={{
-              fontFamily: "OpenSans_700Bold",
-            }}
-          >
-            Global exercises:
-          </Text>
+          <View className="flex w-full  justify-between flex-row  items-center">
+            <Text
+              className="w-full text-lg text-white  font-bold "
+              style={{
+                fontFamily: "OpenSans_700Bold",
+              }}
+            >
+              Global exercises:
+            </Text>
+            {isAdmin ? (
+              <CustomButton
+                onPress={openGlobalExerciseForm}
+                textWeight={FontWeights.bold}
+                buttonStyleType={ButtonStyle.success}
+                text="Add new exercise"
+              />
+            ) : (
+              <></>
+            )}
+          </View>
+
           <View className=" flex flex-col ">
             <FlatList
               data={globalExercises}
@@ -114,12 +148,12 @@ const Exercises: React.FC<StartProps> = (props) => {
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ paddingVertical: 10 }}
-              ItemSeparatorComponent={() => <View style={{ width: 8 }} />} 
+              ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
             />
           </View>
         </View>
         <View className="flex flex-col ">
-          <View  className="flex w-full  justify-between flex-row  items-center">
+          <View className="flex w-full  justify-between flex-row  items-center">
             <Text
               className="text-lg text-white  font-bold "
               style={{
@@ -128,7 +162,12 @@ const Exercises: React.FC<StartProps> = (props) => {
             >
               User exercises:
             </Text>
-            <CustomButton  onPress={openExerciseForm} textWeight={FontWeights.bold} buttonStyleType={ButtonStyle.success} text="Add new exercise" />
+            <CustomButton
+              onPress={openExerciseForm}
+              textWeight={FontWeights.bold}
+              buttonStyleType={ButtonStyle.success}
+              text="Add new exercise"
+            />
           </View>
           <FlatList
             data={userExercises}
@@ -144,8 +183,7 @@ const Exercises: React.FC<StartProps> = (props) => {
       {isLoading ? <ViewLoading /> : <Text></Text>}
       {isExerciseFormVisible ? (
         <View className="absolute h-full w-full flex flex-col  bg-[#121212]  top-0 z-30 ">
-          <CreateExercise closeForm={ closeAddExerciseForm
-          } />
+          <CreateExercise closeForm={closeAddExerciseForm} isAdmin={isAdmin} isGlobal={isGlobal} />
         </View>
       ) : (
         <Text></Text>
