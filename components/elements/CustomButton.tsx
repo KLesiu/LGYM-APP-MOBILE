@@ -8,6 +8,7 @@ export enum ButtonStyle {
     default = "bg-white"
 }
 export enum ButtonSize{
+  none= "p-0",
   small ="py-2 px-1",
   regular = 'py-4 px-2',
   xl = 'py-6 px-4',

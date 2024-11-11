@@ -6,15 +6,18 @@ import ViewLoading from "../../elements/ViewLoading";
 import { MainRecordsLast } from "../../../interfaces/MainRecords";
 import RemoveIcon from "./../../../img/icons/remove.png";
 import ProgressIcon from "./../../../img/icons/progress.png";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../elements/CustomButton";
 
-interface RecordsProps{
-  toggleMenuButton:(hide:boolean)=>void
+interface RecordsProps {
+  toggleMenuButton: (hide: boolean) => void;
 }
 
 const Records: React.FC<RecordsProps> = () => {
   const [popUp, setPopUp] = useState<boolean>(false);
-  const [records, setRecords] = useState<MainRecordsLast[]>([]); 
+  const [records, setRecords] = useState<MainRecordsLast[]>([]);
   const [viewLoading, setViewLoading] = useState<boolean>(true);
   const [exercise, setExercise] = useState<string | undefined>();
 
@@ -88,13 +91,27 @@ const Records: React.FC<RecordsProps> = () => {
                           {record.exerciseDetails.name}
                         </Text>
                         <View style={{ gap: 16 }} className="flex flex-row">
-                          <CustomButton  onPress={() =>
+                          <CustomButton
+                            buttonStyleSize={ButtonSize.none}
+                            onPress={() =>
                               updateSettedExerciseRecord(
                                 record.exerciseDetails._id
                               )
-                            } customSlots={[  <Image className="w-6 h-6" source={ProgressIcon} />]}/>
-                          <CustomButton onPress={() => deleteRecord(record._id)} customSlots={[ <Image className="w-6 h-6" source={RemoveIcon} />]} />
-                          
+                            }
+                            customSlots={[
+                              <Image
+                                className="w-6 h-6"
+                                source={ProgressIcon}
+                              />,
+                            ]}
+                          />
+                          <CustomButton
+                            buttonStyleSize={ButtonSize.none}
+                            onPress={() => deleteRecord(record._id)}
+                            customSlots={[
+                              <Image className="w-6 h-6" source={RemoveIcon} />,
+                            ]}
+                          />
                         </View>
                       </View>
 
@@ -118,10 +135,15 @@ const Records: React.FC<RecordsProps> = () => {
               )}
             </ScrollView>
           )}
-          <CustomButton  text="Add new records"  onPress={() => {
+          <CustomButton
+            text="Add new records"
+            onPress={() => {
               setExercise(undefined);
               showPopUp();
-            }} width="w-full" buttonStyleType={ButtonStyle.success}/>
+            }}
+            width="w-full"
+            buttonStyleType={ButtonStyle.success}
+          />
         </View>
       )}
     </View>
