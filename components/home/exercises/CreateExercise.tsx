@@ -116,7 +116,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   };
 
   return (
-    <View className="flex flex-col w-full h-full p-4" style={{gap:16}}>
+    <View className="absolute  flex flex-col w-full h-full p-4 bg-[#121212]" style={{gap:16}}>
       {!props.form ? (
         <Text
         className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"

@@ -1,24 +1,21 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import AutoComplete, { DropdownItem } from "./../../elements/Autocomplete";
-import { ExerciseForm, ExerciseForPlanDay } from "./../../../interfaces/Exercise";
+import {
+  ExerciseForm,
+  ExerciseForPlanDay,
+} from "./../../../interfaces/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "../../../helpers/numberValidator";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Message } from "../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import TrainingPlanDayExerciseForm from "../training/TrainingPlanDayExerciseForm";
+import CreateExercise from "../exercises/CreateExercise";
 
-interface CreatePlanDayProps{
-  planId: string,
-  closeForm: ()=>void,
+interface CreatePlanDayProps {
+  planId: string;
+  closeForm: () => void;
 }
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
@@ -28,7 +25,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
   );
-  const [isTrainingPlanDayExerciseFormShow, setIsTrainingPlanDayExerciseFormShow] = useState<boolean>(false);
+  const [
+    isTrainingPlanDayExerciseFormShow,
+    setIsTrainingPlanDayExerciseFormShow,
+  ] = useState<boolean>(false);
   const [numberOfSeries, setNumberOfSeries] = useState<string>("");
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
@@ -113,39 +113,31 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setClearQuery(false);
   };
 
-  const addNewExerciseToPlanDay = async (
-    exerciseId: string,
-    series: number,
-    reps: string
-  ) =>  {
-    const exercise = exercisesToSelect.find((item:DropdownItem)=>item.value === exerciseId)
-    if(!exercise) return;
-    setExerciseReps(reps);
-    setNumberOfSeries(series.toString());
-    setSelectedExercise(exercise);
-    setIsTrainingPlanDayExerciseFormShow(false);
-    addToList()
-
-  }
-
   // Funkcja do renderowania dynamicznej listy
   const renderExerciseItem = ({ item }: { item: ExerciseForPlanDay }) => {
-    const IconElement: JSX.Element =  <Icon style={{ color: "#de161d", fontSize: 20 }} name="delete" />
-    return(
-    <View className="flex flex-row items-center justify-between">
-      <Text
-        style={{ fontFamily: "OpenSans_300Light" }}
-        className="text-white text-sm"
-      >
-        - {`${item.exercise.label}: ${item.series}x${item.reps}`}
-      </Text>
-      <CustomButton  onPress={removeExerciseFromList(item)}  customSlots={[IconElement]}/>
-    </View>
-  );
-}
-const hideExerciseForm = () => {
-  setIsTrainingPlanDayExerciseFormShow(false);
-};
+    const IconElement: JSX.Element = (
+      <Icon style={{ color: "#de161d", fontSize: 20 }} name="delete" />
+    );
+    return (
+      <View className="flex flex-row items-center justify-between">
+        <Text
+          style={{ fontFamily: "OpenSans_300Light" }}
+          className="text-white text-sm"
+        >
+          - {`${item.exercise.label}: ${item.series}x${item.reps}`}
+        </Text>
+        <CustomButton
+          onPress={removeExerciseFromList(item)}
+          customSlots={[IconElement]}
+        />
+      </View>
+    );
+  };
+  const toggleExerciseForm = async () => {
+    setIsTrainingPlanDayExerciseFormShow(!isTrainingPlanDayExerciseFormShow);
+    await getAllExercises();
+  };
+
   return (
     <View className="absolute h-full w-full top-0   z-30 ">
       <View
@@ -177,7 +169,7 @@ const hideExerciseForm = () => {
               onChangeText={(text: string) => setPlanDayName(text)}
             />
           </View>
-          <View className="flex flex-col items-end ">
+          <View className="flex flex-col items-end " style={{ gap: 8 }}>
             <View className="flex flex-col w-full">
               <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
@@ -232,7 +224,18 @@ const hideExerciseForm = () => {
                 />
               </View>
             </View>
-            <CustomButton  text="Add to list"  onPress={addToList} buttonStyleType={ButtonStyle.default}/>
+            <View className="flex justify-between flex-row w-full">
+              <CustomButton
+                text="New exercise"
+                onPress={toggleExerciseForm}
+                buttonStyleType={ButtonStyle.outline}
+              />
+              <CustomButton
+                text="Add to list"
+                onPress={addToList}
+                buttonStyleType={ButtonStyle.default}
+              />
+            </View>
           </View>
 
           <View className="flex flex-col h-32 ">
@@ -260,17 +263,27 @@ const hideExerciseForm = () => {
               </View>
             </ScrollView>
           </View>
-          <View className="flex flex-row items-end   justify-between" style={{gap:16}}>
-            <CustomButton width="flex-1"  text="Cancel" onPress={props.closeForm} buttonStyleType={ButtonStyle.cancel} />
-            <CustomButton width="flex-1" text="Create" onPress={createPlanDay} buttonStyleType={ButtonStyle.success} />
+          <View
+            className="flex flex-row items-end   justify-between"
+            style={{ gap: 16 }}
+          >
+            <CustomButton
+              width="flex-1"
+              text="Cancel"
+              onPress={props.closeForm}
+              buttonStyleType={ButtonStyle.cancel}
+            />
+            <CustomButton
+              width="flex-1"
+              text="Create"
+              onPress={createPlanDay}
+              buttonStyleType={ButtonStyle.success}
+            />
           </View>
         </View>
       </View>
       {isTrainingPlanDayExerciseFormShow ? (
-        <TrainingPlanDayExerciseForm
-          cancel={hideExerciseForm}
-          addExerciseToPlanDay={addNewExerciseToPlanDay}
-        />
+        <CreateExercise closeForm={toggleExerciseForm} />
       ) : (
         <></>
       )}
