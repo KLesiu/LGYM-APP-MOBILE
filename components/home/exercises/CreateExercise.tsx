@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
+import { View, Text, TextInput } from "react-native";
 import { BodyParts } from "../../../enums/BodyParts";
 import { Message } from "../../../enums/Message";
 import AsyncStorage from "@react-native-async-storage/async-storage";

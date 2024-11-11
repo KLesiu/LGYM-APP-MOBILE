@@ -5,12 +5,13 @@ import { isIntValidator } from "../../../helpers/numberValidator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "../../../interfaces/Exercise";
 import { BodyParts } from "../../../enums/BodyParts";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
   addExerciseToPlanDay: (exerciseId:string,series:number,reps:string) => Promise<void>;
-  bodyPart: BodyParts | undefined;
+  bodyPart?: BodyParts ;
 }
 
 const TrainingPlanDayExerciseForm: React.FC<
@@ -64,6 +65,7 @@ const TrainingPlanDayExerciseForm: React.FC<
     });
     setExercisesToSelect(helpExercisesToSelect);
   };
+  
   const clearAutoCompleteQuery = () => {
     // Po wyczyszczeniu query resetujemy stan, aby zapobiec ponownemu wywołaniu
     setClearQuery(false);
@@ -81,6 +83,7 @@ const TrainingPlanDayExerciseForm: React.FC<
       exerciseReps
     );
   };
+  
   return (
     <View
       className="absolute h-full w-full flex flex-col items-center bg-[#121212] p-4  top-0 z-30 "
@@ -151,36 +154,9 @@ const TrainingPlanDayExerciseForm: React.FC<
           />
         </View>
       </View>
-      <View className="w-full flex flex-row justify-between">
-      <Pressable
-          onPress={props.cancel}
-          style={{borderRadius:8}}
-          className=" flex flex-row justify-center items-center w-28 h-14 bg-[#3f3f3f]"
-        >
-          <Text
-            className="text-center text-xl text-white"
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            Cancel
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={sendNewExercise}
-          style={{borderRadius:8}}
-          className=" flex flex-row justify-center items-center w-28 h-14 bg-[#94e798]"
-        >
-          <Text
-            className="text-center text-xl text-black"
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            Add
-          </Text>
-        </Pressable>
-
+      <View className="w-full flex flex-row justify-between" style={{gap:16}}>
+      <CustomButton width="flex-1" onPress={props.cancel} buttonStyleType={ButtonStyle.cancel} text="Cancel" />
+      <CustomButton width="flex-1"  onPress={sendNewExercise} buttonStyleType={ButtonStyle.success} text="Add"/>
       </View>
     </View>
   );

@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Message } from "../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
+import TrainingPlanDayExerciseForm from "../training/TrainingPlanDayExerciseForm";
 
 interface CreatePlanDayProps{
   planId: string,
@@ -27,6 +28,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
   );
+  const [isTrainingPlanDayExerciseFormShow, setIsTrainingPlanDayExerciseFormShow] = useState<boolean>(false);
   const [numberOfSeries, setNumberOfSeries] = useState<string>("");
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
@@ -111,6 +113,21 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setClearQuery(false);
   };
 
+  const addNewExerciseToPlanDay = async (
+    exerciseId: string,
+    series: number,
+    reps: string
+  ) =>  {
+    const exercise = exercisesToSelect.find((item:DropdownItem)=>item.value === exerciseId)
+    if(!exercise) return;
+    setExerciseReps(reps);
+    setNumberOfSeries(series.toString());
+    setSelectedExercise(exercise);
+    setIsTrainingPlanDayExerciseFormShow(false);
+    addToList()
+
+  }
+
   // Funkcja do renderowania dynamicznej listy
   const renderExerciseItem = ({ item }: { item: ExerciseForPlanDay }) => {
     const IconElement: JSX.Element =  <Icon style={{ color: "#de161d", fontSize: 20 }} name="delete" />
@@ -126,6 +143,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     </View>
   );
 }
+const hideExerciseForm = () => {
+  setIsTrainingPlanDayExerciseFormShow(false);
+};
   return (
     <View className="absolute h-full w-full top-0   z-30 ">
       <View
@@ -246,6 +266,14 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           </View>
         </View>
       </View>
+      {isTrainingPlanDayExerciseFormShow ? (
+        <TrainingPlanDayExerciseForm
+          cancel={hideExerciseForm}
+          addExerciseToPlanDay={addNewExerciseToPlanDay}
+        />
+      ) : (
+        <></>
+      )}
       {viewLoading ? <ViewLoading /> : <Text></Text>}
     </View>
   );
