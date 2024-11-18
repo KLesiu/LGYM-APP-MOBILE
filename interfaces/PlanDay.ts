@@ -1,5 +1,5 @@
 import { ExerciseForm } from "./Exercise";
-export interface PlanDayForm {
+interface PlanDayForm {
   _id?: string;
   name: string;
   exercises: {
@@ -9,7 +9,7 @@ export interface PlanDayForm {
   }[];
 }
 
-export interface PlanDayVm {
+interface PlanDayVm {
   _id: string;
   name: string;
   exercises: {
@@ -18,3 +18,13 @@ export interface PlanDayVm {
     exercise: ExerciseForm;
   }[];
 }
+
+interface PlanDayExercise{
+  series: number;
+  reps: string;
+  exercise:string;
+  _id:string;
+}
+
+
+export {PlanDayExercise, PlanDayForm, PlanDayVm};

@@ -1,6 +1,6 @@
 import { Text, View, TextInput, Pressable } from "react-native";
 import { MainRecordsForm } from "../../../interfaces/MainRecords";
-import AutoComplete, { DropdownItem } from "./../../elements/Autocomplete";
+import AutoComplete from "./../../elements/Autocomplete";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "../../../interfaces/Exercise";
@@ -8,6 +8,8 @@ import { isIntValidator } from "../../../helpers/numberValidator";
 import { Message } from "../../../enums/Message";
 import { WeightUnits } from "../../../enums/Units";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
+import { DropdownItem } from "../../../interfaces/Dropdown";
+
 interface RecordsPopUpProps {
   offPopUp: ()=>void,
   exerciseId:string | undefined

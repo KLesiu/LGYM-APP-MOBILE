@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
-
-// Typy dla elementów w dropdownie
-export interface DropdownItem {
-  label: string;
-  value: string;
-}
+import { DropdownItem } from '../../interfaces/Dropdown';
 
 // Typy dla propsów komponentu CustomDropdown
 interface CustomDropdownProps {

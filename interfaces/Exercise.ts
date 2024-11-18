@@ -1,7 +1,7 @@
-
 import { BodyParts } from "../enums/BodyParts"
-import { DropdownItem } from "../components/elements/Autocomplete"
-export interface ExerciseForm{
+import { DropdownItem } from "./Dropdown";
+
+interface ExerciseForm{
     _id?:string,
     name:string,
     user?:string,
@@ -10,33 +10,34 @@ export interface ExerciseForm{
     image:string
 }
 
-export interface ExerciseForPlanDay{
+interface ExerciseForPlanDay{
     series:number,
     reps:string,
     exercise:DropdownItem
 }
 
-export interface ExerciseTrainingHistoryDetails{
+interface ExerciseTrainingHistoryDetails{
     _id: string;
     name: string;
     bodyPart: BodyParts;
 }
 
-export interface LastExerciseScores{
-    exerciseId:string,
-    name:string,
-    seriesScores:SeriesScore[] 
- }
- 
- export interface SeriesScore{
-    series:number,
-    score:{
-     createdAt:Date,
-     reps:number,
-     weight:number,
-     unit:string,
-     _id:string
-    } | null
- }
+interface LastExerciseScores{
+   exerciseId:string,
+   name:string,
+   seriesScores:SeriesScore[] 
+}
 
+ interface SeriesScore{
+   series:number,
+   score:{
+    createdAt:Date,
+    reps:number,
+    weight:number,
+    unit:string,
+    _id:string
+   } | null
+}
+
+export {ExerciseForm,ExerciseTrainingHistoryDetails,ExerciseForPlanDay,LastExerciseScores,SeriesScore}
 

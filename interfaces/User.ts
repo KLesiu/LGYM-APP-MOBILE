@@ -1,4 +1,3 @@
-
 interface UserBaseInfo{
     _id:string,
     name:string,
@@ -11,17 +10,13 @@ interface UserBaseInfo{
     plan:string
 }
 interface UserInfo extends UserBaseInfo{
-
     nextRank:{
         name:string,
         needElo:number
     },
-
 }
 
 export {UserInfo,UserBaseInfo}
-
-
 
 
 
@@ -47,4 +42,3 @@ export interface UserLoginInfo{
     email:string,
     avatar:string
 }
-

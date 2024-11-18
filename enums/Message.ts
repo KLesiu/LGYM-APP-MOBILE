@@ -9,5 +9,6 @@ export enum Message{
     InvalidToken = 'Invalid JWT Token',
     ExpiredToken = 'Token expired',
     InputsMustBeNumbers = 'Inputs must be numbers',
+
     
 }

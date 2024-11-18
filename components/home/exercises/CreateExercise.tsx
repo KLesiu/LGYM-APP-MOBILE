@@ -4,10 +4,10 @@ import { BodyParts } from "../../../enums/BodyParts";
 import { Message } from "../../../enums/Message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ResponseMessage from "../../../interfaces/ResponseMessage";
-import CustomDropdown, {DropdownItem} from "../../elements/Dropdown";
+import CustomDropdown from "../../elements/Dropdown";
 import { ExerciseForm } from "../../../interfaces/Exercise";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-
+import { DropdownItem } from "../../../interfaces/Dropdown";
 interface CreateExerciseProps{
     closeForm: ()=>void,
     form?: ExerciseForm,

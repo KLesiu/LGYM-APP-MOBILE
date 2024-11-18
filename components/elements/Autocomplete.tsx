@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { DropdownItem } from '../../interfaces/Dropdown';
 
-// Typy dla elementów w autocomplete
-export interface DropdownItem {
-  label: string;
-  value: string;
-}
 
 // Typy dla propsów komponentu AutoComplete
 interface AutoCompleteProps {

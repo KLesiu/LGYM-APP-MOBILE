@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, TextInput, ScrollView } from "react-native";
-import AutoComplete, { DropdownItem } from "./../../elements/Autocomplete";
+import AutoComplete from "./../../elements/Autocomplete";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -12,6 +12,8 @@ import { Message } from "../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import CreateExercise from "../exercises/CreateExercise";
+import { DropdownItem } from "../../../interfaces/Dropdown";
+
 
 interface CreatePlanDayProps {
   planId: string;
