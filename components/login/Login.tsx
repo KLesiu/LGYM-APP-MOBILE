@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./../../img/logoLGYM.png";
-import ErrorMsg from "../../types/ErrorMsg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../types/RootStackParamList";
+import { RootStackParamList } from "../../interfaces/Navigation";
 import MiniLoading from "../elements/MiniLoading";
 import ShowIcon from "./../../img/icons/show.png"
 import HideIcon from "./../../img/icons/hide.png"
 import CustomButton, { ButtonSize, ButtonStyle } from "../elements/CustomButton";
+import ResponseMessage from "../../interfaces/ResponseMessage";
 
 const Login: React.FC = () => {
-  const [errors, setErrors] = useState<ErrorMsg[]>([]);
+  const [errors, setErrors] = useState<ResponseMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();

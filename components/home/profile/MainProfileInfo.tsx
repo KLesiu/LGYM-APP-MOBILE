@@ -1,12 +1,13 @@
-import { Pressable, View, Text } from "react-native";
+import {  View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import UserProfile from "../../../types/UserProfile";
+import { UserProfileInfo } from "../../../interfaces/User";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 
-interface MainProfileInfoProps{
-  logout:VoidFunction,
-  userInfo?:UserProfile}
+interface MainProfileInfoProps {
+  logout: VoidFunction;
+  userInfo?: UserProfileInfo;
+}
 
 const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
   const [email, setEmail] = useState<string>();
@@ -47,7 +48,12 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
           Change password
         </Text>
       </Pressable> */}
-      <CustomButton width="w-full"  text="Logout" onPress={props.logout} buttonStyleType={ButtonStyle.success}/>
+        <CustomButton
+          width="w-full"
+          text="Logout"
+          onPress={props.logout}
+          buttonStyleType={ButtonStyle.success}
+        />
       </View>
     </View>
   );

@@ -9,7 +9,7 @@ import logoLGYM from "./../../img/logoLGYM.png"
 import backgroundLGYM from "./../../img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../../types/RootStackParamList";
+import { RootStackParamList } from "../../interfaces/Navigation";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Loading from "../elements/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";

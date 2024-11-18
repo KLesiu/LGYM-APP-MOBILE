@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
-import ErrorMsg from "../../../types/ErrorMsg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddTraining from "../training/AddTraining";
 import ProfileRank from "../../elements/ProfileRank";
@@ -10,11 +9,15 @@ import UsersRanking from "./UsersRanking";
 import { LastTrainingInfo } from "../../../interfaces/Training";
 import { UserInfo } from "../../../interfaces/User";
 import { Message } from "../../../enums/Message";
-import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../elements/CustomButton";
+import ResponseMessage from "../../../interfaces/ResponseMessage";
 
-interface StartProps{
-  viewChange:(view:JSX.Element)=>void
-  toggleMenuButton:(hide:boolean)=>void
+interface StartProps {
+  viewChange: (view: JSX.Element) => void;
+  toggleMenuButton: (hide: boolean) => void;
 }
 
 const Start: React.FC<StartProps> = (props) => {
@@ -40,7 +43,7 @@ const Start: React.FC<StartProps> = (props) => {
       if (!response.ok) {
         return setError(Message.DidntFind);
       }
-      const data: ErrorMsg | LastTrainingInfo = await response.json();
+      const data: ResponseMessage | LastTrainingInfo = await response.json();
       if ("msg" in data) return setError(data.msg);
       setLastTrainingInfo(data);
     } catch (error) {
@@ -109,10 +112,16 @@ const Start: React.FC<StartProps> = (props) => {
               </Text>
             )}
           </View>
-          <CustomButton buttonStyleSize={ButtonSize.xl}  onPress={() =>
+          <CustomButton
+            buttonStyleSize={ButtonSize.xl}
+            onPress={() =>
               navigateTo(
                 <AddTraining toggleMenuButton={props.toggleMenuButton} />
-              )} buttonStyleType={ButtonStyle.success} text="New"/>
+              )
+            }
+            buttonStyleType={ButtonStyle.success}
+            text="New"
+          />
         </View>
         <View
           style={{ borderRadius: 8 }}

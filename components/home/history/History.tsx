@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MarkedDates } from "../../../types/Training";
+import { MarkedDates } from "../../../interfaces/Training";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import TrainingSession from "./TrainingSession";
 import ViewLoading from "../../elements/ViewLoading";

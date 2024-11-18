@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./../../img/logoLGYM.png";
-import ErrorMsg from "../../types/ErrorMsg";
 import ErrorRegister from "../../types/ErrorRegister";
-import SuccessMsg from "../../types/SuccessMsg";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../types/RootStackParamList";
+import { RootStackParamList } from "../../interfaces/Navigation";
 import MiniLoading from "../elements/MiniLoading";
 import CustomButton, { ButtonSize, ButtonStyle } from "../elements/CustomButton";
+import ResponseMessage from "../../interfaces/ResponseMessage";
 
 const Register: React.FC = () => {
-  const [errors, setErrors] = useState<ErrorMsg[]>([]);
+  const [errors, setErrors] = useState<ResponseMessage[]>([]);
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [rpassword, setRPassword] = useState<string>();
@@ -26,7 +25,7 @@ const Register: React.FC = () => {
     if (!username || !email || !password || !rpassword)
       return setErrors([{ msg: "All fields are required" }]);
     setLoading(true);
-    const response: ErrorRegister | SuccessMsg = await fetch(apiURL, {
+    const response: ErrorRegister | ResponseMessage = await fetch(apiURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

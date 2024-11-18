@@ -1,13 +1,13 @@
 import { Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
-import UserProfile from "../../../types/UserProfile";
+import { UserProfileInfo } from "../../../interfaces/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import UserInfo from "../../../types/UserInfo";
+import { UserInfo } from "../../../interfaces/User";
 import ProfileRank from "../../elements/ProfileRank";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import ViewLoading from "../../elements/ViewLoading";
-import { RootStackParamList } from "../../../types/RootStackParamList";
+import { RootStackParamList } from "../../../interfaces/Navigation";
 import Records from "../records/Records";
 import MainProfileInfo from "./MainProfileInfo";
 import { Message } from "../../../enums/Message";
@@ -21,7 +21,7 @@ interface ProfileProps{
 
 const Profile: React.FC<ProfileProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
-  const [yourProfile, setYourProfile] = useState<UserProfile>();
+  const [yourProfile, setYourProfile] = useState<UserProfileInfo>();
   const [profileRank, setProfileRank] = useState<string>("");
   const [memberSince, setMemberSince] = useState<string>("");
   const [profileElo, setProfileElo] = useState<number>();
@@ -74,7 +74,7 @@ const Profile: React.FC<ProfileProps> = (props) => {
     if (response !== Message.DidntFind)
       if (response.profileRank && response.createdAt) {
         setProfileRank(response.profileRank);
-        setMemberSince(response.createdAt.slice(0, 10));
+        setMemberSince(`${response.createdAt}`.slice(0, 10));
         setRankComponent(<ProfileRank rank={response.profileRank} />);
       }
     setViewLoading(false);
