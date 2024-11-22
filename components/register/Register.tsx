@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./../../img/logoLGYM.png";
-import ErrorRegister from "../../types/ErrorRegister";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../interfaces/Navigation";
 import MiniLoading from "../elements/MiniLoading";
 import CustomButton, { ButtonSize, ButtonStyle } from "../elements/CustomButton";
 import ResponseMessage from "../../interfaces/ResponseMessage";
+import { Message } from "../../enums/Message";
 
 const Register: React.FC = () => {
   const [errors, setErrors] = useState<ResponseMessage[]>([]);
@@ -18,14 +18,10 @@ const Register: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const apiURL = `https://lgym-app-api-v2.vercel.app/api/register`;
+  const apiURL = `${process.env.REACT_APP_BACKEND}/api/register`;
   const register = async (): Promise<void> => {
-    if (password !== rpassword)
-      return setErrors([{ msg: "Both passwords need to be same" }]);
-    if (!username || !email || !password || !rpassword)
-      return setErrors([{ msg: "All fields are required" }]);
     setLoading(true);
-    const response: ErrorRegister | ResponseMessage = await fetch(apiURL, {
+    const response = await fetch(apiURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -37,21 +33,12 @@ const Register: React.FC = () => {
         email: email,
       }),
     })
-      .then((res) => res.json())
-      .catch((err) => err)
-      .then((res) => {
-        if (res.msg === `User created successfully!`) {
-          setErrors([]);
-          return res.msg;
-        } else return res;
-      });
-    if (typeof response === "object" && "errors" in response) {
-      setLoading(false);
-      return setErrors(response.errors);
-    } else {
-      setLoading(false);
+    const result:  ResponseMessage = await response.json();
+    setLoading(false)
+    if(result.msg === Message.Created){
       return navigation.navigate("Login");
     }
+    setErrors([result])
   };
   const goToPreload = () => {
     return navigation.navigate("Preload");
@@ -140,7 +127,7 @@ const Register: React.FC = () => {
           />
         </View>
       </View>
-      <CustomButton  text="REGISTER" onPress={register} width="w-full" buttonStyleType={ButtonStyle.success} buttonStyleSize={ButtonSize.xl} />
+      <CustomButton  text="Register" onPress={register} width="w-full" buttonStyleType={ButtonStyle.success} buttonStyleSize={ButtonSize.xl} />
       {loading ? <MiniLoading /> : <Text></Text>}
       <View className="flex flex-col text-center w-[90%]">
         {errors ? (

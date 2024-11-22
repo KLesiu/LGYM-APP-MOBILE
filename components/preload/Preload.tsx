@@ -33,13 +33,11 @@ const Preload: React.FC = () => {
         Authorization: `Bearer ${token} `,
       },
     })
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    if (!response.isValid) return;
-    await AsyncStorage.setItem("username", response.user.name);
-    await AsyncStorage.setItem("id", response.user._id);
-    await AsyncStorage.setItem("email", response.user.email);
+    const result = await response.json()
+    if (!result.isValid) return;
+    await AsyncStorage.setItem("username", result.user.name);
+    await AsyncStorage.setItem("id", result.user._id);
+    await AsyncStorage.setItem("email", result.user.email);
     navigation.navigate("Home");
   };
   const handleLoginPress: VoidFunction = (): void => {

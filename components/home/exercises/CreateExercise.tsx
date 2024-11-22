@@ -101,7 +101,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const updateExercise = async (): Promise<void> => {
     if (!exerciseName || !bodyPart)
       return setError("Name and body part are required!");
-    const response: ResponseMessage = await fetch(
+    const response = await fetch(
       `${API_URL}/api/exercise/updateExercise`,
       {
         method: "POST",
@@ -116,11 +116,9 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         }),
       }
     )
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    if (response.msg === Message.Updated && props.closeForm) props.closeForm();
-    else setError(response.msg);
+    const result:ResponseMessage = await response.json();
+    if (result.msg === Message.Updated && props.closeForm) props.closeForm();
+    else setError(result.msg);
   };
 
   const getBodyParts = () => {

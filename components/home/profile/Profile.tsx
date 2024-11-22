@@ -39,11 +39,16 @@ const Profile: React.FC<ProfileProps> = (props) => {
   );
 
   useEffect(() => {
-    props.toggleMenuButton(true);
-    setViewLoading(true);
-    getDataFromStorage();
-    getUserEloPoints();
+    init()
   }, []);
+
+  const init = async (): Promise<void> => {
+    setViewLoading(true);
+    props.toggleMenuButton(true)
+    await getDataFromStorage();
+    await getUserEloPoints();
+    setViewLoading(false);
+  }
 
   const getDataFromStorage = async (): Promise<void> => {
     const username = await AsyncStorage.getItem("username");
@@ -66,16 +71,15 @@ const Profile: React.FC<ProfileProps> = (props) => {
     return currentTab.type.name === tab.type.name ? "#94e798" : "#E5E7EB";
   };
   const checkMoreUserInfo = async (id: string): Promise<void> => {
-    const response: Message.DidntFind | UserInfo = await fetch(
+    const response = await fetch(
       `${apiURL}/api/${id}/getUserInfo`
     )
-      .then((res) => res.json())
-      .then((res) => res);
-    if (response !== Message.DidntFind)
-      if (response.profileRank && response.createdAt) {
-        setProfileRank(response.profileRank);
-        setMemberSince(`${response.createdAt}`.slice(0, 10));
-        setRankComponent(<ProfileRank rank={response.profileRank} />);
+    const result: Message.DidntFind | UserInfo = await response.json();
+    if (result !== Message.DidntFind)
+      if (result.profileRank && result.createdAt) {
+        setProfileRank(result.profileRank);
+        setMemberSince(`${result.createdAt}`.slice(0, 10));
+        setRankComponent(<ProfileRank rank={result.profileRank} />);
       }
     setViewLoading(false);
   };

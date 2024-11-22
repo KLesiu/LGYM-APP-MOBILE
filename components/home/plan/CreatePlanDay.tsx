@@ -50,10 +50,8 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const getAllExercises = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${apiURL}/api/exercise/${id}/getAllExercises`)
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
+    const result = await response.json()
+    const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
     setExercisesToSelect(helpExercisesToSelect);

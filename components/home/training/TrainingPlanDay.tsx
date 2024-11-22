@@ -123,7 +123,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         body: JSON.stringify(plan),
       }
     );
-    if (!response.ok) return;
     const result = await response.json();
     setLastExerciseScores(result);
     return result;

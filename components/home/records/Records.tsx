@@ -42,10 +42,8 @@ const Records: React.FC<RecordsProps> = () => {
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND}/api/mainRecords/${id}/getLastMainRecords`
     );
-    if (response.ok) {
-      const result = await response.json();
-      setRecords(result);
-    }
+    const result = await response.json();
+    setRecords(result);
     setViewLoading(false);
   };
   const deleteRecord = async (recordId: string | undefined) => {
@@ -53,8 +51,7 @@ const Records: React.FC<RecordsProps> = () => {
     const response = await fetch(
       `${process.env.REACT_APP_BACKEND}/api/mainRecords/${recordId}/deleteMainRecord`
     )
-      .then((res) => res.json())
-      .catch((err) => err);
+    await response.json();
     await getRecords();
   };
   return (

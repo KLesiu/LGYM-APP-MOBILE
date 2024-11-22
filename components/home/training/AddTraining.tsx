@@ -61,13 +61,10 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     async (): Promise<void> => {
       setLoading(true);
       const id = await AsyncStorage.getItem("id");
-      const trainingTypes = await fetch(
+      const response = await fetch(
         `${apiURL}/api/planDay/${id}/getPlanDaysTypes`
       )
-        .then((res) => res)
-        .catch((err) => err)
-        .then((res) => res.json());
-
+      const trainingTypes = await response.json()
       setChooseDay(
         <View className="items-center bg-[#131313] flex flex-col justify-start gap-y-5  h-full absolute m-0 w-full top-0">
           <Text
@@ -150,7 +147,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
       };
       return exerciseScoresTrainingForm;
     });
-    const response:TrainingSummaryInterface = await fetch(`${apiURL}/api/${id}/addTraining`, {
+    const response = await fetch(`${apiURL}/api/${id}/addTraining`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -162,12 +159,10 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
         lastExercisesScores: lastExercisesScores
       }),
     })
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    if (response.msg === Message.Created) {
+    const result:TrainingSummaryInterface = await response.json();
+    if (result.msg === Message.Created) {
       await hideAndDeleteTrainingSession();
-      setTrainingSummary(response)
+      setTrainingSummary(result)
     }
     showUpdateRankPop();
     setViewLoading(false);

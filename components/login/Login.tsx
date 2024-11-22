@@ -23,7 +23,6 @@ const Login: React.FC = () => {
 
     const login = async (): Promise<string | void> => {
       setLoading(true);
-    
       if (!username || !password) {
         setLoading(false);
         setErrors([{ msg: "All fields are required!" }]);

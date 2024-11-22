@@ -32,10 +32,8 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllExercises`
     )
-      .then((res) => res)
-      .catch((err) => err)
-      .then((res) => res.json());
-    const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
+    const result = await response.json();
+    const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
     if (props.exerciseId) {
@@ -72,9 +70,8 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         body: JSON.stringify(form),
       }
     )
-      .then((res) => res.json())
-      .catch((err) => err);
-    if (response.msg === Message.Created) {
+    const result = await response.json()
+    if (result.msg === Message.Created) {
       props.offPopUp();
     }
   };

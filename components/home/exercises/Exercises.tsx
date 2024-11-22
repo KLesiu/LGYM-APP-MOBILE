@@ -30,11 +30,16 @@ const Exercises: React.FC<StartProps> = (props) => {
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsLoading(true);
-    getAllGlobalExercises();
-    getAllUserExercises();
-    checkIsAdmin();
+    init()
   }, []);
+
+  const init = async () => {
+    setIsLoading(true);
+    await getAllGlobalExercises();
+    await getAllUserExercises();
+    await checkIsAdmin();
+    setIsLoading(false);
+  }
 
   const getAllGlobalExercises = async () => {
     const response = await fetch(

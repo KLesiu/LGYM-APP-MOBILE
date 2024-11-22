@@ -52,22 +52,11 @@ const Start: React.FC<StartProps> = (props) => {
   };
 
   const getRankInfo = async () => {
-    try {
       const id = await AsyncStorage.getItem("id");
       const response = await fetch(`${apiURL}/api/${id}/getUserInfo`);
-
-      if (!response.ok) {
-        console.error("Failed to fetch rank info:", response.status);
-        return setError("Failed to fetch rank info.");
-      }
-
       const data: UserInfo = await response.json();
       setUserInfo(data);
       setProgress(Math.floor((data.elo / data.nextRank.needElo) * 10000) / 100);
-    } catch (error) {
-      console.error("Network or JSON parsing error:", error);
-      setError("An error occurred. Please try again.");
-    }
   };
   const navigateTo = (component: JSX.Element) => {
     props.viewChange(component);

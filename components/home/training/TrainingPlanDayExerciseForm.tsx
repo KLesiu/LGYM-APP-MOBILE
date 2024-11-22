@@ -47,7 +47,6 @@ const TrainingPlanDayExerciseForm: React.FC<
         }),
       }
     )
-    if(!response.ok) return;
     const result = await response.json();
     const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
