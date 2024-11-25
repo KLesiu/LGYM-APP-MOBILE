@@ -11,12 +11,12 @@ import CustomButton, {
 } from "../../elements/CustomButton";
 import { FontWeights } from "../../../enums/FontsProperties";
 
-interface StartProps {
+interface ExercisesProps {
   viewChange: (view: JSX.Element) => void;
   toggleMenuButton: (hide: boolean) => void;
 }
 
-const Exercises: React.FC<StartProps> = (props) => {
+const Exercises: React.FC<ExercisesProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
   const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
   const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);

@@ -1,0 +1,72 @@
+import { useState } from "react";
+import { View, Text, TextInput } from "react-native";
+import { GymForm as GymFormVm } from "../../../interfaces/Gym";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
+
+interface GymFormProps {
+  closeForm: () => void;
+  gym?: GymFormVm;
+}
+
+const GymForm: React.FC<GymFormProps> = (props) => {
+  const API_URL = process.env.REACT_APP_BACKEND;
+  const [gymName, setGymName] = useState<string>("");
+  const [error, setError] = useState<string>();
+
+  const updateGym = async () => {}
+  const createGym = async () => {}
+
+  return (
+    <View
+      className="absolute top-0 left-0  flex flex-col w-full h-full p-4 bg-[#121212]"
+      style={{ gap: 16 }}
+    >
+      {!props.gym ? (
+        <Text
+          className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
+          style={{ fontFamily: "OpenSans_700Bold" }}
+        >
+          New gym
+        </Text>
+      ) : (
+        <Text
+          className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
+          style={{ fontFamily: "OpenSans_700Bold" }}
+        >
+          Edit gym
+        </Text>
+      )}
+      <View style={{ gap: 16 }} className="flex flex-col w-full">
+        <View style={{ gap: 8 }} className="flex flex-col w-full  ">
+          <Text
+            style={{ fontFamily: "OpenSans_300Light" }}
+            className="text-white text-base"
+          >
+            Name:
+          </Text>
+          <TextInput
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgba(30, 30, 30, 0.45)",
+              borderRadius: 8,
+            }}
+            className="w-full px-2 py-4  text-white "
+            onChangeText={(text: string) => setGymName(text)}
+            value={gymName}
+          />
+        </View>
+      </View>
+      <View className="flex flex-row justify-between " style={{gap:8}}>
+        
+        <CustomButton  onPress={props.closeForm} text="Cancel" buttonStyleType={ButtonStyle.cancel} width="flex-1"/>
+        {props.gym ? (
+        <CustomButton  onPress={updateGym} text="Update" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl" />
+      ) : (
+        <CustomButton  onPress={createGym} text="Create" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl"/>
+      )}
+      </View>
+    </View>
+  );
+};
+
+export default GymForm

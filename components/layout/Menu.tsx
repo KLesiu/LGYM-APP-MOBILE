@@ -6,12 +6,14 @@ import AddTraining from "../home/training/AddTraining";
 import Profile from "../home/profile/Profile";
 import Start from "../home/start/Start";
 import Exercises from "../home/exercises/Exercises";
+import Gym from "../home/gym/Gym";
 import home from "./../../img/icons/home.png";
 import profile from "./../../img/icons/profile.png";
 import history from "./../../img/icons/history.png";
 import addTraining from "./../../img/icons/add.png";
 import exercise from "./../../img/icons/exercises.png";
 import plan from "./../../img/icons/plan.png";
+import gym from "./../../img/icons/gym.png"
 import menu from "./../../img/icons/menu.png";
 
 interface MenuProps{
@@ -52,8 +54,10 @@ const Menu: React.FC<MenuProps> = (props) => {
     props.viewChange(component);
   };
   const toggleMenuButton =(hide:boolean)=>{
+    toggleMenu()
     if(hide)setIsMenuButtonVisible(false)
     else setIsMenuButtonVisible(true)
+
   }
 
   const items = [
@@ -63,6 +67,7 @@ const Menu: React.FC<MenuProps> = (props) => {
       label: "Exercises",
       component: <Exercises viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} />,
     },
+    {icon:gym,label:"Gym",component:<Gym  viewChange={props.viewChange} toggleMenuButton={toggleMenuButton}/>},
     { icon: plan, label: "Plan", component: <TrainingPlan hideMenuButton={toggleMenuButton} /> },
     {
       icon: history,
@@ -90,11 +95,11 @@ const Menu: React.FC<MenuProps> = (props) => {
           ]}
           className="absolute items-center justify-center bottom-[-65px]"
         >
-          <View style={{borderRadius:10000}} className="relative w-[420px] h-[380px] items-center justify-center bg-[#282424db] -mb-[82px] ">
+          <View style={{borderRadius:10000}} className="relative w-[450px] h-[420px] items-center justify-center bg-[#282424db] -mb-[82px] ">
             {items.map((item, index) => {
               const totalItems = items.length;
               const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; // Rozkład od -π/2 do π/2 (od lewej do prawej)
-              const radius = 150; // Odległość od środka
+              const radius = 160; // Odległość od środka
               const x = -Math.sin(angle) * radius; // Odwrócenie położenia X (od lewej do prawej)
               const y = Math.cos(angle) * radius; // Odwrócenie położenia Y
   

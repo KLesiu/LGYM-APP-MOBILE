@@ -20,7 +20,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
   const [exerciseName, setExerciseName] = useState<string>("");
   const [bodyPart, setBodyPart] = useState<BodyParts>();
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string | undefined>("");
   const [error, setError] = useState<string>();
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const [bodyPartsToSelect, setBodyPartsToSelect] = useState<DropdownItem[]>(

@@ -3,10 +3,12 @@ import { ExerciseForm, LastExerciseScores } from "./Exercise";
 import { ExerciseTrainingHistoryDetails } from "./Exercise";
 import { Message } from "../enums/Message";
 import { Rank } from "./User";
-interface TrainingForm{
+interface TrainingBase{
     type:string,
     createdAt:Date,
     exercises:ExerciseScoresTrainingForm[],
+}
+interface TrainingForm extends TrainingBase{
     lastExercisesScores:LastExerciseScores[]
 }
 
@@ -30,16 +32,12 @@ interface TrainingByDate extends LastTrainingInfo{
 }
 
 interface TrainingByDateDetails extends LastTrainingInfo{
-    exercises:{
-        exerciseScoreId:string,
-        scoresDetails:ExerciseScoresTrainingForm[]
-        exerciseDetails:ExerciseTrainingHistoryDetails
-    }[]
+    exercises: EnrichedExercise[]
    
 }
 interface EnrichedExercise {
     exerciseScoreId: string;
-    scoreDetails: ExerciseScoresTrainingForm;
+    scoresDetails: ExerciseScoresTrainingForm[];
     exerciseDetails: ExerciseTrainingHistoryDetails;
 }
 interface TrainingHistoryQuery{
@@ -74,4 +72,4 @@ interface MarkedDates  {
     date:Date | string
     dots: {color:string,selectedColor?:string}[]
 }
-export {TrainingForm,LastTrainingInfo,TrainingHistoryQuery,TrainingByDate,TrainingByDateDetails,TrainingSessionScores,EnrichedExercise,TrainingSummary,MarkedDates}
+export {TrainingForm,LastTrainingInfo,TrainingHistoryQuery,TrainingByDate,TrainingByDateDetails,TrainingSessionScores,EnrichedExercise,TrainingSummary,MarkedDates,TrainingBase}

@@ -138,7 +138,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
               style={{ fontFamily: "OpenSans_400Regular" }}
               className="text-lg text-white"
             >
-              {exercise.exercise.name} - {exercise.series} x {exercise.reps}
+              {exercise.exercise ? exercise.exercise.name : ''} - {exercise.series} x {exercise.reps}
             </Text>
           </View>
         ))}
@@ -147,18 +147,14 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const getUserPlanConfig = async () => {
     const id = await AsyncStorage.getItem("id");
-    try {
+   
       const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`);
-      if (!response.ok) return console.error("Failed to fetch plan config");
       const result = await response.json();
       if (Object.keys(result)[0] === "msg") setPlanConfig(undefined);
       else {
         setPlanConfig(result);
         return result;
       }
-    } catch (error) {
-      console.error("Failed to fetch plan config", error);
-    }
   };
 
   return (

@@ -18,9 +18,9 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
               Training {training.planDay.name}
             </Text>
             <ScrollView  contentContainerStyle={{gap:8}}>
-              {training.exercises.map((exercise) => {
+              {training.exercises.map((exercise,key) => {
                 return (
-                  <View style={{gap:8,borderRadius:8}} className="w-full flex flex-col p-4  bg-[#282828]  border-b-[1px] border-b-white">
+                  <View style={{gap:8,borderRadius:8}} key={`exercise_${key}`} className="w-full flex flex-col p-4  bg-[#282828]  border-b-[1px] border-b-white">
                     <Text
                       style={{
                         fontFamily: "OpenSans_700Bold",

@@ -14,7 +14,6 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import ResponseMessage from "../../../interfaces/ResponseMessage";
-import * as Location from 'expo-location';
 
 interface StartProps {
   viewChange: (view: JSX.Element) => void;
@@ -35,7 +34,6 @@ const Start: React.FC<StartProps> = (props) => {
     setViewLoading(true);
     await getLastTrainingInfo();
     await getRankInfo();
-    await getCurrentLocation();
     setViewLoading(false);
   };
   const getLastTrainingInfo = async () => {
@@ -60,18 +58,6 @@ const Start: React.FC<StartProps> = (props) => {
       setUserInfo(data);
       setProgress(Math.floor((data.elo / data.nextRank.needElo) * 10000) / 100);
   };
-
-  const getCurrentLocation = async()=>{
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.log(status)
-      return;
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    const result = await Location.reverseGeocodeAsync({longitude: location.coords.longitude, latitude: location.coords.latitude});
-    console.log(result);
-  }
 
   const navigateTo = (component: JSX.Element) => {
     props.viewChange(component);
