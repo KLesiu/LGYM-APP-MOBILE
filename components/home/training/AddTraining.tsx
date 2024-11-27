@@ -13,6 +13,7 @@ import { Message } from "../../../enums/Message";
 import TrainingSummary from "./TrainingSummary";
 import { LastExerciseScores } from "../../../interfaces/Exercise";
 import CustomButton from "../../elements/CustomButton";
+import TrainingGymChoose from "./TrainingGymChoose";
 
 interface AddTrainingProps{
   toggleMenuButton:(hide:boolean)=>void
@@ -22,6 +23,8 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [isAddTrainingActive, setIsAddTrainingActive] =
     useState<boolean>(false);
+  const [isGymChoiceActive, setIsGymChoiceActive] = useState<boolean>(false);
+  const [gymId, setGymId] = useState<string>();
 
   const [dayId, setDayId] = useState<string>();
   const [isUserHavePlan, setIsUserHavePlan] = useState<boolean>(false);
@@ -57,6 +60,20 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
 
     if (response && Object.keys(response).length) setIsAddTrainingActive(true);
   };
+
+  const getInformationAboutGyms =  () => {
+    setViewLoading(true);
+    setIsGymChoiceActive(true);
+    setViewLoading(false);
+  }
+  const setGym = async (gymId: string) => {
+    setGymId(gymId);
+    setIsGymChoiceActive(false);
+    setViewLoading(true);
+    getInformationsAboutPlanDays();
+    setViewLoading(false);
+  }
+
   const getInformationsAboutPlanDays: VoidFunction =
     async (): Promise<void> => {
       setLoading(true);
@@ -110,6 +127,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
 
     setIsAddTrainingActive(true);
     setDayId(day);
+    if(gymId)await AsyncStorage.setItem("gymId", gymId);
     setViewLoading(false);
     props.toggleMenuButton(true);
   };
@@ -120,6 +138,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const hideAndDeleteTrainingSession = async () => {
     await AsyncStorage.removeItem("planDay");
     await AsyncStorage.removeItem("trainingSessionScores");
+    await AsyncStorage.removeItem("gymId")
     setIsAddTrainingActive(false);
     hideDaySection();
   };
@@ -178,7 +197,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
               name="play-circle"
             />]}/>
           ) : (
-            <Pressable onPress={getInformationsAboutPlanDays}>
+            <Pressable onPress={getInformationAboutGyms}>
               <Icon
                 style={{ fontSize: 140, color: "#94e798" }}
                 name="plus-circle"
@@ -187,8 +206,9 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
           )}
 
           {loading ? <MiniLoading /> : <Text></Text>}
-          {}
+          {isGymChoiceActive ? <TrainingGymChoose setGym={setGym} /> : <></>}
           {chooseDay}
+
           {isAddTrainingActive && dayId ? (
             <TrainingPlanDay
               hideChooseDaySection={resetChoosePlanDay}

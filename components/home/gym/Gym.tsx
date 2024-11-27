@@ -102,6 +102,7 @@ const Gym: React.FC<GymProps> = (props) => {
                 gym={gym}
                 editGym={editGym}
                 deleteGym={deleteGym}
+                isEditable={true}
               />
             ))}
           </View>

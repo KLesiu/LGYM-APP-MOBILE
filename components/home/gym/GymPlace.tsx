@@ -6,8 +6,9 @@ import RemoveIcon from "./../../../img/icons/remove.png";
 
 interface GymPlaceProps {
   gym: GymForm;
-  editGym: (id: string ) => void;
-  deleteGym: (id: string ) => void;
+  isEditable: boolean;
+  editGym?: (id: string ) => void;
+  deleteGym?: (id: string ) => void;
 }
 
 const GymPlace: React.FC<GymPlaceProps> = (props) => {
@@ -23,18 +24,19 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
         >
           {props.gym.name}
         </Text>
+        {props.isEditable ?
         <View style={{ gap: 8 }} className="flex flex-row">
           <CustomButton
             buttonStyleSize={ButtonSize.small}
-            onPress={() => props.editGym(`${props.gym._id}`)}
+            onPress={() => props.editGym ? props.editGym(`${props.gym._id}`) : null}
             customSlots={[<Image className="w-6 h-6" source={EditIcon} />]}
           />
           <CustomButton
             buttonStyleSize={ButtonSize.small}
-            onPress={() => props.deleteGym(`${props.gym._id}`)}
+            onPress={() => props.deleteGym ? props.deleteGym(`${props.gym._id}`) : null}
             customSlots={[<Image className="w-6 h-6" source={RemoveIcon} />]}
           />
-        </View>
+        </View>: <></>}
       </View>
       <View className="flex flex-col">
         {/* <Text
