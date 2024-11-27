@@ -6,8 +6,8 @@ import RemoveIcon from "./../../../img/icons/remove.png";
 
 interface GymPlaceProps {
   gym: GymForm;
-  editGym: (id: string | undefined) => void;
-  deleteGym: (id: string | undefined) => void;
+  editGym: (id: string ) => void;
+  deleteGym: (id: string ) => void;
 }
 
 const GymPlace: React.FC<GymPlaceProps> = (props) => {
@@ -26,23 +26,23 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
         <View style={{ gap: 8 }} className="flex flex-row">
           <CustomButton
             buttonStyleSize={ButtonSize.small}
-            onPress={() => props.editGym(props.gym._id)}
+            onPress={() => props.editGym(`${props.gym._id}`)}
             customSlots={[<Image className="w-6 h-6" source={EditIcon} />]}
           />
           <CustomButton
             buttonStyleSize={ButtonSize.small}
-            onPress={() => props.deleteGym(props.gym._id)}
+            onPress={() => props.deleteGym(`${props.gym._id}`)}
             customSlots={[<Image className="w-6 h-6" source={RemoveIcon} />]}
           />
         </View>
       </View>
       <View className="flex flex-col">
-        <Text
+        {/* <Text
           style={{ fontFamily: "OpenSans_400Regular" }}
           className="text-lg text-white"
         >
           Address:
-        </Text>
+        </Text> */}
         <Text
           style={{ fontFamily: "OpenSans_400Regular" }}
           className="text-lg text-white"

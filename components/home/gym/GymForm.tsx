@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { GymForm as GymFormVm } from "../../../interfaces/Gym";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Message } from "../../../enums/Message";
 
 interface GymFormProps {
   closeForm: () => void;
@@ -13,8 +15,34 @@ const GymForm: React.FC<GymFormProps> = (props) => {
   const [gymName, setGymName] = useState<string>("");
   const [error, setError] = useState<string>();
 
-  const updateGym = async () => {}
-  const createGym = async () => {}
+  useEffect(() => {
+    if (props.gym) setGymName(props.gym.name);
+  },[])
+
+  const updateGym = async () => {
+    const response = await fetch(`${API_URL}/api/gym/editGym`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: gymName, _id: props.gym?._id }),
+    });
+    const result = await response.json();
+    if(result.msg === Message.Updated) props.closeForm();
+  }
+  const createGym = async () => {
+    const id = await AsyncStorage.getItem("id");
+    const response = await fetch(`${API_URL}/api/gym/${id}/addGym`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: gymName }),
+    });
+    const result = await response.json();
+    if(result.msg === Message.Created) props.closeForm();
+    
+  }
 
   return (
     <View

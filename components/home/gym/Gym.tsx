@@ -6,6 +6,7 @@ import { GymForm } from "../../../interfaces/Gym";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GymFormComponent from "./GymForm";
+import { Message } from "../../../enums/Message";
 interface GymProps {
   viewChange: (view: JSX.Element) => void;
   toggleMenuButton: (hide: boolean) => void;
@@ -15,6 +16,7 @@ const Gym: React.FC<GymProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
 
   const [gyms, setGyms] = useState<GymForm[]>([]);
+  const [currentChosenGym, setCurrentChosenGym] = useState<GymForm>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -32,6 +34,17 @@ const Gym: React.FC<GymProps> = (props) => {
     setGyms(result);
   };
 
+  const getGym = async(id:string):Promise<GymForm>=>{
+    const response = await fetch(`${API_URL}/api/gym/${id}/getGym`);
+    const result = await response.json();
+    return result;
+  }
+
+
+  const addNewGym = ()=>{
+    setCurrentChosenGym(undefined);
+    openForm();``
+  }
   const openForm = () => {
     props.toggleMenuButton(true);
     setIsGymFormVisible(true);
@@ -42,6 +55,22 @@ const Gym: React.FC<GymProps> = (props) => {
     setIsGymFormVisible(false);
     props.toggleMenuButton(false);
   };
+
+
+
+  const editGym = async (id: string) => {
+    const gym = await getGym(id);
+    setCurrentChosenGym(gym);
+    openForm();
+  }
+
+  const deleteGym = async (id: string) => {
+    const response = await fetch(`${API_URL}/api/gym/${id}/deleteGym`, {
+      method: "DELETE",
+    });
+    const result = await response.json();
+    if(result.msg === Message.Deleted) await getGyms();
+  }
 
   return (
     <View className="relative flex flex-1 bg-[#121212]">
@@ -58,7 +87,7 @@ const Gym: React.FC<GymProps> = (props) => {
             </Text>
 
             <CustomButton
-              onPress={openForm}
+              onPress={addNewGym}
               textWeight={FontWeights.bold}
               buttonStyleType={ButtonStyle.success}
               text="Add gym"
@@ -71,8 +100,8 @@ const Gym: React.FC<GymProps> = (props) => {
               <GymPlace
                 key={index}
                 gym={gym}
-                editGym={() => {}}
-                deleteGym={() => {}}
+                editGym={editGym}
+                deleteGym={deleteGym}
               />
             ))}
           </View>
@@ -80,7 +109,7 @@ const Gym: React.FC<GymProps> = (props) => {
       </View>
       {isGymFormVisible ? (
         <View className="absolute h-full w-full flex flex-col  bg-[#121212]  top-0 z-30 ">
-          <GymFormComponent closeForm={closeForm} />
+          <GymFormComponent closeForm={closeForm} gym={currentChosenGym} />
         </View>
       ) : (
         <></>
