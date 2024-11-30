@@ -7,11 +7,10 @@ import {
   Image,
   Switch as SwitchComp,
 } from "react-native";
-import { PlanDayVm } from "../../../interfaces/PlanDay";
+import { LastScoresPlanDayVm, PlanDayVm } from "../../../interfaces/PlanDay";
 import { useEffect, useState } from "react";
 import {
   ExerciseForm,
-  ExerciseForPlanDay,
   LastExerciseScores,
 } from "./../../../interfaces/Exercise";
 import SwitchIcon from "./../../../img/icons/switch.png";
@@ -23,18 +22,24 @@ import { TrainingSessionScores } from "../../../interfaces/Training";
 import useInterval from "../../../helpers/hooks/useInterval";
 import ViewLoading from "../../elements/ViewLoading";
 import { Message } from "../../../enums/Message";
+import gym from "./../../../img/icons/gym.png";
+import { GymForm } from "../../../interfaces/Gym";
 
-interface TrainingPlanDayProps{
-  hideChooseDaySection:()=>void,
-  hideDaySection:()=>void,
-  hideAndDeleteTrainingSession:()=>void,
-  addTraining:(exercises: TrainingSessionScores[],lastExercisesScores:LastExerciseScores[] | undefined)=>Promise<void>,
-  dayId:string
+interface TrainingPlanDayProps {
+  hideChooseDaySection: () => void;
+  hideDaySection: () => void;
+  hideAndDeleteTrainingSession: () => void;
+  addTraining: (
+    exercises: TrainingSessionScores[],
+    lastExercisesScores: LastExerciseScores[] | undefined
+  ) => Promise<void>;
+  dayId: string;
+  gym: GymForm | undefined;
 }
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
-  const [planDay, setPlanDay] = useState<PlanDayVm>();
+  const [planDay, setPlanDay] = useState<LastScoresPlanDayVm>();
   const [
     isTrainingPlanDayExerciseFormShow,
     setIsTrainingPlanDayExerciseFormShow,
@@ -110,7 +115,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     await getInformationAboutPlanDay();
   };
   const getLastExerciseScores = async (
-    plan: PlanDayVm
+    plan: LastScoresPlanDayVm
   ): Promise<LastExerciseScores[] | void> => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
@@ -132,13 +137,17 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const response = await fetch(
       `${apiURL}/api/planDay/${props.dayId}/getPlanDay`
     );
-    if (!response.ok) return;
-    const planDayInfo = await response.json();
+    const result = await response.json();
+    const planDayInfo:LastScoresPlanDayVm = {
+      ...result,
+      gym: props.gym?.name,
+    }
+  
     setPlanDay(planDayInfo);
     await getLastExerciseScores(planDayInfo);
     await sendPlanDayToLocalStorage(planDayInfo);
   };
-  const sendPlanDayToLocalStorage = async (planDay: PlanDayVm) => {
+  const sendPlanDayToLocalStorage = async (planDay: LastScoresPlanDayVm) => {
     await AsyncStorage.setItem("planDay", JSON.stringify(planDay));
   };
   const getPlanDayFromLocalStorage = async (): Promise<boolean> => {
@@ -149,8 +158,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       !Object.keys(JSON.parse(planDay)).length
     )
       return false;
-    setPlanDay(JSON.parse(planDay));
-    await getLastExerciseScores(JSON.parse(planDay));
+    const result = JSON.parse(planDay);
+    const planDayInfo = {
+      ...result,
+      gym: props.gym,
+    }
+    setPlanDay(planDayInfo);
+    await getLastExerciseScores(planDayInfo);
     return true;
   };
   const deleteExerciseFromPlanDay = async (exerciseId: string | undefined) => {
@@ -183,7 +197,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
   const getExercise = async (id: string) => {
     const response = await fetch(`${apiURL}/api/exercise/${id}/getExercise`);
-    if (!response.ok) return;
     const exercise = await response.json();
     return exercise;
   };
@@ -194,7 +207,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   ) => {
     if (!planDay) return;
     const response = await getExercise(exerciseId);
-    let newPlanDay: PlanDayVm = planDay;
+    let newPlanDay: LastScoresPlanDayVm = planDay;
     if (exerciseWhichBeingSwitched) {
       const response = await deleteExerciseFromPlanDay(
         exerciseWhichBeingSwitched
@@ -212,7 +225,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     await getLastExerciseScores(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
   };
-  const addExerciseToPlanDay = async (newPlanDay: PlanDayVm) => {
+  const addExerciseToPlanDay = async (newPlanDay: LastScoresPlanDayVm) => {
     setPlanDay(newPlanDay);
     await sendPlanDayToLocalStorage(newPlanDay);
   };
@@ -249,7 +262,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const sendTraining = (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
     if (!result) return setError(Message.InputsMustBeNumbers);
-    props.addTraining(result,lastExerciseScores);
+    props.addTraining(result, lastExerciseScores);
   };
   const updateExerciseScore = async (
     exercise: ExerciseForm,
@@ -415,15 +428,36 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           style={{ gap: 8 }}
           className="flex flex-col items-center p-4 h-full"
         >
-          <View style={{ gap: 4 }} className="flex flex-col w-full">
-            <View className="flex flex-row  justify-between">
+          <View style={{ gap: 8 }} className="flex flex-row w-full justify-between">
+            <View className="flex flex-col items-center flex-1 ">
+              <Text
+                className="text-2xl text-white block  font-bold "
+                style={{
+                  fontFamily: "OpenSans_700Bold",
+                }}
+              >
+                {planDay.name}
+              </Text>
+              <View className="flex flex-row items-center">
+                <Image source={gym} className="w-8 h-8" />
+                <Text
+                  className="text-sm text-white"
+                  style={{
+                    fontFamily: "OpenSans_400Regular",
+                  }}
+                >
+                  {props.gym?.name}
+                </Text>
+              </View>
+            </View>
+            <View className="flex flex-row items-center" style={{gap:8}}>
               <Pressable
                 onPress={props.hideDaySection}
                 style={{ borderRadius: 6 }}
-                className="flex flex-row justify-center items-center w-20 h-8 bg-[#3f3f3f]"
+                className="flex flex-row justify-center items-center w-20 h-16 bg-[#3f3f3f]"
               >
                 <Text
-                  className="text-center text-[10px] text-white"
+                  className="text-center text-[12px] text-white"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -434,10 +468,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               <Pressable
                 onPress={showExerciseForm}
                 style={{ borderRadius: 6 }}
-                className=" flex flex-row justify-center items-center w-28 h-8 bg-[#3f3f3f]"
+                className=" flex flex-row justify-center items-center w-28 h-16 bg-[#3f3f3f]"
               >
                 <Text
-                  className="text-center text-[10px] text-white"
+                  className="text-center text-[12px] text-white"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -446,14 +480,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 </Text>
               </Pressable>
             </View>
-            <Text
-              className="text-2xl text-white w-full text-center  font-bold "
-              style={{
-                fontFamily: "OpenSans_700Bold",
-              }}
-            >
-              {planDay.name}
-            </Text>
           </View>
           <ScrollView
             className="w-full min-h-[300px] -mr-4 pr-4"

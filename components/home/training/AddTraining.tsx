@@ -14,6 +14,7 @@ import TrainingSummary from "./TrainingSummary";
 import { LastExerciseScores } from "../../../interfaces/Exercise";
 import CustomButton from "../../elements/CustomButton";
 import TrainingGymChoose from "./TrainingGymChoose";
+import { GymForm } from "../../../interfaces/Gym";
 
 interface AddTrainingProps{
   toggleMenuButton:(hide:boolean)=>void
@@ -24,7 +25,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const [isAddTrainingActive, setIsAddTrainingActive] =
     useState<boolean>(false);
   const [isGymChoiceActive, setIsGymChoiceActive] = useState<boolean>(false);
-  const [gymId, setGymId] = useState<string>();
+  const [gym, setGym] = useState<GymForm>();
 
   const [dayId, setDayId] = useState<string>();
   const [isUserHavePlan, setIsUserHavePlan] = useState<boolean>(false);
@@ -66,8 +67,8 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     setIsGymChoiceActive(true);
     setViewLoading(false);
   }
-  const setGym = async (gymId: string) => {
-    setGymId(gymId);
+  const changeGym = async (gym: GymForm) => {
+    setGym(gym);
     setIsGymChoiceActive(false);
     setViewLoading(true);
     getInformationsAboutPlanDays();
@@ -119,15 +120,15 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const getCurrentPlanDayTraining = async () => {
     const response = await AsyncStorage.getItem("planDay");
     if (!response) return;
-    const planDay = JSON.parse(response);
-    showDaySection(planDay._id);
+    const result = JSON.parse(response);
+    setGym(result.gym);
+    showDaySection(result._id);
   };
   const showDaySection = async (day: string): Promise<void> => {
     setViewLoading(true);
 
     setIsAddTrainingActive(true);
     setDayId(day);
-    if(gymId)await AsyncStorage.setItem("gymId", gymId);
     setViewLoading(false);
     props.toggleMenuButton(true);
   };
@@ -138,7 +139,6 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const hideAndDeleteTrainingSession = async () => {
     await AsyncStorage.removeItem("planDay");
     await AsyncStorage.removeItem("trainingSessionScores");
-    await AsyncStorage.removeItem("gymId")
     setIsAddTrainingActive(false);
     hideDaySection();
   };
@@ -206,7 +206,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
           )}
 
           {loading ? <MiniLoading /> : <Text></Text>}
-          {isGymChoiceActive ? <TrainingGymChoose setGym={setGym} /> : <></>}
+          {isGymChoiceActive ? <TrainingGymChoose setGym={changeGym} /> : <></>}
           {chooseDay}
 
           {isAddTrainingActive && dayId ? (
@@ -216,6 +216,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
               hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
               addTraining={addTraining}
               dayId={dayId}
+              gym={gym}
             />
           ) : (
             <></>

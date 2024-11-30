@@ -6,7 +6,7 @@ import { ScrollView } from "react-native";
 import GymPlace from "../gym/GymPlace";
 
 interface TrainingGymChooseProps {
-    setGym: (gymId:string) => void;
+    setGym: (gym:GymForm) => void;
 }
 
 const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
@@ -38,7 +38,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
       <ScrollView className="w-full">
         <View style={{ gap: 8 }} className="flex flex-col pb-12">
           {gyms.map((gym, index) => (
-            <Pressable onPress={()=>props.setGym(`${gym._id}`)}>
+            <Pressable onPress={()=>props.setGym(gym)}>
               <GymPlace key={index} gym={gym} isEditable={false} />
             </Pressable>
           ))}
