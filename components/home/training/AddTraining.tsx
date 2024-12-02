@@ -175,7 +175,8 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
         type: type,
         createdAt: createdAt,
         exercises: training,
-        lastExercisesScores: lastExercisesScores
+        lastExercisesScores: lastExercisesScores,
+        gym:gym?._id
       }),
     })
     const result:TrainingSummaryInterface = await response.json();

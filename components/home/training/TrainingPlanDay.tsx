@@ -80,7 +80,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         return Array.from({ length: exercise.series }).map((_, seriesIndex) => {
           const existingScore = trainingSessionScores.find(
             (score) =>
-              score.exercise._id === exercise.exercise._id &&
+              score.exercise._id === exercise.exercise?._id &&
               score.series === seriesIndex + 1
           );
           return (
@@ -138,11 +138,11 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       `${apiURL}/api/planDay/${props.dayId}/getPlanDay`
     );
     const result = await response.json();
-    const planDayInfo:LastScoresPlanDayVm = {
+    const planDayInfo: LastScoresPlanDayVm = {
       ...result,
-      gym: props.gym?.name,
-    }
-  
+      gym: props.gym,
+    };
+
     setPlanDay(planDayInfo);
     await getLastExerciseScores(planDayInfo);
     await sendPlanDayToLocalStorage(planDayInfo);
@@ -162,7 +162,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const planDayInfo = {
       ...result,
       gym: props.gym,
-    }
+    };
     setPlanDay(planDayInfo);
     await getLastExerciseScores(planDayInfo);
     return true;
@@ -314,14 +314,25 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         className="flex flex-col w-full   bg-[#282828] p-4  "
       >
         <View className="flex flex-row justify-between">
-          <Text
-            className="text-base text-white font-bold"
-            style={{
-              fontFamily: "OpenSans_700Bold",
-            }}
-          >
-            {item.exercise.name}
-          </Text>
+          <View className="flex flex-row" style={{ gap: 8 }}>
+            <Text
+              className="text-base text-white font-bold max-w-[150px]"
+              style={{
+                fontFamily: "OpenSans_700Bold",
+              }}
+            >
+              {item.exercise.name}
+            </Text>
+            <Text
+              className="text-base text-white font-bold max-w-[150px]"
+              style={{
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+             {item.series}x{item.reps}
+            </Text>
+          </View>
+
           <View style={{ gap: 8 }} className="flex flex-row">
             <Pressable
               onPress={() =>
@@ -428,7 +439,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           style={{ gap: 8 }}
           className="flex flex-col items-center p-4 h-full"
         >
-          <View style={{ gap: 8 }} className="flex flex-row w-full justify-between">
+          <View
+            style={{ gap: 8 }}
+            className="flex flex-row w-full justify-between"
+          >
             <View className="flex flex-col items-center flex-1 ">
               <Text
                 className="text-2xl text-white block  font-bold "
@@ -450,7 +464,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 </Text>
               </View>
             </View>
-            <View className="flex flex-row items-center" style={{gap:8}}>
+            <View className="flex flex-row items-center" style={{ gap: 8 }}>
               <Pressable
                 onPress={props.hideDaySection}
                 style={{ borderRadius: 6 }}
