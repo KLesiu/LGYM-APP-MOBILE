@@ -1,6 +1,6 @@
 {
   "name": "lgym-app-mobile",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "npx expo start",
