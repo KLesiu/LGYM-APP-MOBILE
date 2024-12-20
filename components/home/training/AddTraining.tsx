@@ -15,6 +15,7 @@ import { LastExerciseScores } from "../../../interfaces/Exercise";
 import CustomButton from "../../elements/CustomButton";
 import TrainingGymChoose from "./TrainingGymChoose";
 import { GymForm } from "../../../interfaces/Gym";
+import React from "react";
 
 interface AddTrainingProps{
   toggleMenuButton:(hide:boolean)=>void
@@ -65,6 +66,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const getInformationAboutGyms =  () => {
     setViewLoading(true);
     setIsGymChoiceActive(true);
+    props.toggleMenuButton(true);
     setViewLoading(false);
   }
   const changeGym = async (gym: GymForm) => {
