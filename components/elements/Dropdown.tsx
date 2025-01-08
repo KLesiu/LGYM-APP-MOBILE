@@ -2,18 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
 import { DropdownItem } from '../../interfaces/Dropdown';
 
-// Typy dla propsów komponentu CustomDropdown
 interface CustomDropdownProps {
-  data: DropdownItem[];          // Lista dostępnych opcji
-  value?: string | null;         // Wartość, którą można wstrzyknąć z zewnątrz
-  onSelect: (item: DropdownItem) => void; // Funkcja obsługująca wybór
+  data: DropdownItem[];    
+  value?: string | null;   
+  onSelect: (item: DropdownItem) => void; 
 }
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }) => {
-  const [isVisible, setIsVisible] = useState(false); // kontroluje widoczność dropdownu
-  const [selectedItem, setSelectedItem] = useState<DropdownItem | null>(null); // kontroluje wybrany element
+  const [isVisible, setIsVisible] = useState(false); 
+  const [selectedItem, setSelectedItem] = useState<DropdownItem | null>(null); 
 
-  // Efekt, który synchronizuje wewnętrzny stan z wartością przekazaną z zewnątrz
   useEffect(() => {
     if (value) {
       const selected = data.find(item => item.value === value);
@@ -26,9 +24,9 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
   };
 
   const handleSelect = (item: DropdownItem) => {
-    setSelectedItem(item); // Ustaw wybrany element
-    onSelect(item);        // Wywołaj funkcję przekazaną z zewnątrz
-    setIsVisible(false);   // Zamknij dropdown po wyborze
+    setSelectedItem(item);
+    onSelect(item);    
+    setIsVisible(false);  
   };
 
   const renderItem = ({ item }: { item: DropdownItem }) => (
@@ -49,9 +47,9 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
         <TouchableOpacity style={styles.overlay} onPress={toggleDropdown}> 
           <View style={styles.dropdown}>
             <FlatList
-              data={data}           // Przekazane dane
-              renderItem={renderItem} // Funkcja renderująca opcję
-              keyExtractor={(item) => item.value.toString()} // Klucz do listy
+              data={data}          
+              renderItem={renderItem} 
+              keyExtractor={(item) => item.value.toString()}
             />
           </View>
         </TouchableOpacity>

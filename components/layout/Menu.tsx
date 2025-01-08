@@ -85,7 +85,6 @@ const Menu: React.FC<MenuProps> = (props) => {
   return (
     isMenuButtonVisible ? (
       <View className="flex items-center justify-end bg-[#131313] relative w-full ">
-        {/* Animated Menu Items */}
         <Animated.View
           style={[
             {
@@ -98,10 +97,10 @@ const Menu: React.FC<MenuProps> = (props) => {
           <View style={{borderRadius:10000}} className="relative w-[450px] h-[420px] items-center justify-center bg-[#282424db] -mb-[82px] ">
             {items.map((item, index) => {
               const totalItems = items.length;
-              const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; // Rozkład od -π/2 do π/2 (od lewej do prawej)
-              const radius = 160; // Odległość od środka
-              const x = -Math.sin(angle) * radius; // Odwrócenie położenia X (od lewej do prawej)
-              const y = Math.cos(angle) * radius; // Odwrócenie położenia Y
+              const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2; 
+              const radius = 160; 
+              const x = -Math.sin(angle) * radius; 
+              const y = Math.cos(angle) * radius; 
   
               return (
                 <TouchableOpacity
@@ -120,14 +119,13 @@ const Menu: React.FC<MenuProps> = (props) => {
           </View>
         </Animated.View>
   
-        {/* Menu Button */}
         <TouchableOpacity
           onPress={toggleMenu}
           style={{
             position: "absolute",
             bottom: 32,
             left: "50%",
-            transform: [{ translateX: -32 }], // Center horizontally (half of width: 64/2)
+            transform: [{ translateX: -32 }], 
             width: 64,
             height: 64,
             borderRadius: 32,

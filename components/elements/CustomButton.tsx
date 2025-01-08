@@ -1,5 +1,6 @@
 import { Pressable, Text } from "react-native";
 import { FontWeights } from "../../enums/FontsProperties";
+import React from "react";
 
 export enum ButtonStyle {
     success = "bg-[#94e798]",
@@ -14,8 +15,6 @@ export enum ButtonSize{
   xl = 'py-6 px-4',
   xxl = 'py-8 px-6'
 }
-
-
 interface ButtonProps {
   onPress: () => void;
   text?: string;
@@ -26,7 +25,6 @@ interface ButtonProps {
   customSlots?: JSX.Element[];
   width?:string,
 }
-
 
 const CustomButton: React.FC<ButtonProps> = (props) => {
   const textColorClass = ():string=>{

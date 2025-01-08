@@ -2,21 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { DropdownItem } from '../../interfaces/Dropdown';
 
-
-// Typy dla propsów komponentu AutoComplete
 interface AutoCompleteProps {
-  data: DropdownItem[];          // Lista dostępnych opcji
-  value?: string | null;         // Wartość, którą można wstrzyknąć z zewnątrz
-  onSelect: (item: DropdownItem) => void; // Funkcja obsługująca wybór
-  onClearQuery?: () => void;     // Funkcja do wyczyszczenia query
+  data: DropdownItem[];          
+  value?: string | null;       
+  onSelect: (item: DropdownItem) => void; 
+  onClearQuery?: () => void;   
 }
 
 const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onClearQuery }) => {
-  const [query, setQuery] = useState('');            // tekst wpisany przez użytkownika
-  const [filteredData, setFilteredData] = useState<DropdownItem[]>([]); // przefiltrowane dane
-  const [selectedItem, setSelectedItem] = useState<DropdownItem | null>(null); // kontroluje wybrany element
+  const [query, setQuery] = useState('');  
+  const [filteredData, setFilteredData] = useState<DropdownItem[]>([]); 
+  const [selectedItem, setSelectedItem] = useState<DropdownItem | null>(null); 
 
-  // Efekt, który synchronizuje wewnętrzny stan z wartością przekazaną z zewnątrz
   useEffect(() => {
     if (value) {
       const selected = data.find(item => item.value === value);
@@ -24,7 +21,6 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
     }
   }, [value, data]);
 
-  // Efekt do filtrowania danych na podstawie wpisywanego tekstu
   useEffect(() => {
     if (query.length > 0) {
       const filtered = data.filter(item =>
@@ -40,16 +36,16 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
 
   useEffect(() => {
     if (onClearQuery) {
-      setQuery('');  // Reset query
-      onClearQuery();  // Wywołanie funkcji resetującej w CreatePlanDay
+      setQuery('');  
+      onClearQuery();  
     }
   }, [onClearQuery]);
 
   const handleSelect = (item: DropdownItem) => {
-    setSelectedItem(item); // Ustaw wybrany element
-    setQuery(item.label);  // Ustaw wybrany tekst w polu tekstowym
-    onSelect(item);        // Wywołaj funkcję przekazaną z zewnątrz
-    setFilteredData([]);   // Zamknij listę po wyborze
+    setSelectedItem(item); 
+    setQuery(item.label);  
+    onSelect(item);      
+    setFilteredData([]);   
   };
 
   const renderItem = ({ item }: { item: DropdownItem }) => (
@@ -60,7 +56,6 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
 
   return (
     <View>
-      {/* Pole tekstowe dla AutoComplete */}
       <TextInput
         style={{
           fontFamily: "OpenSans_400Regular",
@@ -73,13 +68,12 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
         onChangeText={setQuery}
       />
 
-      {/* Dropdown pod polem tekstowym */}
       {filteredData.length > 0 && (
         <View style={styles.dropdown}>
           <FlatList
-            data={filteredData}    // Przefiltrowane dane
-            renderItem={renderItem} // Funkcja renderująca opcję
-            keyExtractor={(item) => item.value.toString()} // Klucz do listy
+            data={filteredData}    
+            renderItem={renderItem} 
+            keyExtractor={(item) => item.value.toString()} 
           />
         </View>
       )}
@@ -89,7 +83,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
 
 const styles = StyleSheet.create({
   dropdown: {
-    maxHeight: 150, // Ogranicz wysokość listy, jeśli jest wiele opcji
+    maxHeight: 150,
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#ddd',

@@ -10,22 +10,24 @@ import ShowIcon from "./../../img/icons/show.png"
 import HideIcon from "./../../img/icons/hide.png"
 import CustomButton, { ButtonSize, ButtonStyle } from "../elements/CustomButton";
 import ResponseMessage from "../../interfaces/ResponseMessage";
+import { Message } from "../../enums/Message";
 
 const Login: React.FC = () => {
+  const apiURL = `${process.env.REACT_APP_BACKEND}/api/login`;
+
+
   const [errors, setErrors] = useState<ResponseMessage[]>([]);
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
-  const apiURL = `${process.env.REACT_APP_BACKEND}/api/login`;
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-    const login = async (): Promise<string | void> => {
+    const login = async (): Promise<void> => {
       setLoading(true);
       if (!username || !password) {
         setLoading(false);
-        setErrors([{ msg: "All fields are required!" }]);
+        setErrors([{ msg: Message.FieldRequired }]);
         return;
       }
       try {
@@ -48,9 +50,9 @@ const Login: React.FC = () => {
               { msg: "Maybe you typed the wrong password! Please check it." },
             ]);
           } else {
-            setErrors([{ msg: "An error occurred. Please try again." }]);
+            setErrors([{ msg: Message.TryAgain }]);
           }
-          return "Unauthorized";
+          return;
         }
     
         const data = await response.json();
@@ -62,9 +64,7 @@ const Login: React.FC = () => {
     
         setErrors([]);
         setLoading(false);
-        navigation.navigate("Home");
-        return "Authorized";
-        
+        navigation.navigate("Home");        
       } catch (error) {
         setLoading(false);
         console.error("Network error or unexpected issue:", error);
