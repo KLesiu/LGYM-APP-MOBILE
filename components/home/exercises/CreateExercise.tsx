@@ -8,6 +8,7 @@ import CustomDropdown from "../../elements/Dropdown";
 import { ExerciseForm } from "../../../interfaces/Exercise";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "../../../interfaces/Dropdown";
+import React from "react";
 interface CreateExerciseProps{
     closeForm: ()=>void,
     form?: ExerciseForm,

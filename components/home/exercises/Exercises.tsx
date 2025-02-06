@@ -4,12 +4,12 @@ import { ExerciseForm } from "../../../interfaces/Exercise";
 import ViewLoading from "../../elements/ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateExercise from "./CreateExercise";
-import ExerciseDetails from "./ExerciseDetails";
 import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "../../elements/CustomButton";
 import { FontWeights } from "../../../enums/FontsProperties";
+import React from "react";
 
 interface ExercisesProps {
   viewChange: (view: JSX.Element) => void;
@@ -194,10 +194,7 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
         <Text></Text>
       )}
       {isExerciseDetailsVisible && selectedExercise ? (
-        <ExerciseDetails
-          hideDetails={closeExerciseDetails}
-          exercise={selectedExercise}
-        />
+        <CreateExercise closeForm={closeExerciseDetails} form={selectedExercise} isAdmin={isAdmin}/>
       ) : (
         <Text></Text>
       )}

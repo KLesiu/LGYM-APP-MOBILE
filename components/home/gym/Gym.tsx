@@ -2,11 +2,12 @@ import { View, Text, ScrollView } from "react-native";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { FontWeights } from "../../../enums/FontsProperties";
 import GymPlace from "./GymPlace";
-import { GymForm } from "../../../interfaces/Gym";
+import { GymChoiceInfo } from "../../../interfaces/Gym";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GymFormComponent from "./GymForm";
 import { Message } from "../../../enums/Message";
+import React from "react";
 interface GymProps {
   viewChange: (view: JSX.Element) => void;
   toggleMenuButton: (hide: boolean) => void;
@@ -15,8 +16,8 @@ interface GymProps {
 const Gym: React.FC<GymProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
 
-  const [gyms, setGyms] = useState<GymForm[]>([]);
-  const [currentChosenGym, setCurrentChosenGym] = useState<GymForm>();
+  const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
+  const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
 
   useEffect(() => {
@@ -33,12 +34,6 @@ const Gym: React.FC<GymProps> = (props) => {
     const result = await response.json();
     setGyms(result);
   };
-
-  const getGym = async(id:string):Promise<GymForm>=>{
-    const response = await fetch(`${API_URL}/api/gym/${id}/getGym`);
-    const result = await response.json();
-    return result;
-  }
 
 
   const addNewGym = ()=>{
@@ -59,8 +54,8 @@ const Gym: React.FC<GymProps> = (props) => {
 
 
   const editGym = async (id: string) => {
-    const gym = await getGym(id);
-    setCurrentChosenGym(gym);
+    const currentGym = gyms.find((gym)=>gym._id === id);
+    setCurrentChosenGym(currentGym);
     openForm();
   }
 
