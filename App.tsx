@@ -29,11 +29,15 @@ const App: React.FC = () => {
     OpenSans_300Light,
     Caveat_400Regular,
   });
+
+  const stackScreens = [
+    { name: "Preload", component: Preload },
+    { name: "Login", component: Login },
+    { name: "Register", component: Register},
+    { name: "Home", component: Home },
+  ]
+
   useEffect(() => {
-    const backAction = () => {
-      Alert.alert("Attention!", "The back button is blocked on this screen.");
-      return true;
-    };
     StatusBar.setBackgroundColor("#121212");
     StatusBar.setBarStyle("light-content");
     const backHandler = BackHandler.addEventListener(
@@ -42,42 +46,29 @@ const App: React.FC = () => {
     );
     return () => backHandler.remove();
   }, []);
-  useEffect(() => {
-    const loadAsyncResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fontsLoaded;
-        SplashScreen.hideAsync();
-      } catch (error) {
-        console.error("Błąd ładowania zasobów:", error);
-      }
-    };
 
+  useEffect(() => {
     loadAsyncResources();
   }, [fontsLoaded]);
+
+  const loadAsyncResources = async () => {
+    try {
+      await SplashScreen.preventAutoHideAsync();
+      fontsLoaded;
+      await SplashScreen.hideAsync();
+    } catch (error) {
+      console.error("Błąd ładowania zasobów:", error);
+    }
+  };
+  const backAction = () => {
+    Alert.alert("Attention!", "The back button is blocked on this screen.");
+    return true;
+  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Preload">
-        <Stack.Screen
-          name="Preload"
-          component={Preload}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
+        {stackScreens.map((screen) => <Stack.Screen key={screen.name} name={screen.name} component={screen.component} options={{ headerShown: false }} />)}
       </Stack.Navigator>
     </NavigationContainer>
   );

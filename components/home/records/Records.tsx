@@ -10,6 +10,7 @@ import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "../../elements/CustomButton";
+import React from "react";
 
 interface RecordsProps {
   toggleMenuButton: (hide: boolean) => void;

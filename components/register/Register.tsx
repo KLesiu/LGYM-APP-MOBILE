@@ -16,9 +16,10 @@ const Register: React.FC = () => {
   const [rpassword, setRPassword] = useState<string>();
   const [email, setEmail] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const apiURL = `${process.env.REACT_APP_BACKEND}/api/register`;
+
   const register = async (): Promise<void> => {
     setLoading(true);
     const response = await fetch(apiURL, {

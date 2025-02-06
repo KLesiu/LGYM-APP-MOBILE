@@ -1,17 +1,21 @@
 import { View, Text, Image } from "react-native";
-import { GymForm } from "../../../interfaces/Gym";
+import { GymChoiceInfo, GymForm } from "../../../interfaces/Gym";
 import CustomButton, { ButtonSize } from "../../elements/CustomButton";
 import EditIcon from "./../../../img/icons/edit.png";
 import RemoveIcon from "./../../../img/icons/remove.png";
+import React from "react";
 
 interface GymPlaceProps {
-  gym: GymForm;
+  gym: GymChoiceInfo;
   isEditable: boolean;
   editGym?: (id: string ) => void;
   deleteGym?: (id: string ) => void;
 }
 
 const GymPlace: React.FC<GymPlaceProps> = (props) => {
+  const {lastTrainingInfo} = props.gym;
+  const trainingDate = lastTrainingInfo && lastTrainingInfo.createdAt ?  new Date(props.gym.lastTrainingInfo.createdAt).toLocaleDateString() : '';
+  const trainingName = lastTrainingInfo && lastTrainingInfo.type && lastTrainingInfo.type.name ? lastTrainingInfo.type.name : '';
   return (
     <View
       style={{ borderRadius: 8 }}
@@ -39,17 +43,11 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
         </View>: <></>}
       </View>
       <View className="flex flex-col">
-        {/* <Text
-          style={{ fontFamily: "OpenSans_400Regular" }}
-          className="text-lg text-white"
-        >
-          Address:
-        </Text> */}
         <Text
           style={{ fontFamily: "OpenSans_400Regular" }}
           className="text-lg text-white"
         >
-          Last training:
+          Last training: {`${trainingDate} ${trainingName}`}
         </Text>
       </View>
     </View>

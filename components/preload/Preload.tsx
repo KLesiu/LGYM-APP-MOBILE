@@ -3,7 +3,6 @@ import {
   Image,
   View,
   ImageBackground,
-  TouchableOpacity,
 } from "react-native";
 import logoLGYM from "./../../img/logoLGYM.png"
 import backgroundLGYM from "./../../img/backgroundLGYMApp500.png";
@@ -16,14 +15,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomButton, { ButtonSize, ButtonStyle } from "./../elements/CustomButton"
 
 const Preload: React.FC = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  
+  const apiURL = `${process.env.REACT_APP_BACKEND}/api/checkToken`;
+
   useEffect(() => {
     checkUserSession();
   }, []);
+
   const checkUserSession = async (): Promise<void> => {
-    const apiURL = `${process.env.REACT_APP_BACKEND}/api/checkToken`;
     const token = await AsyncStorage.getItem("token");
     if (!token) return;
     const response = await fetch(apiURL, {

@@ -30,46 +30,39 @@ const Login: React.FC = () => {
         setErrors([{ msg: Message.FieldRequired }]);
         return;
       }
-      try {
-        const response = await fetch(apiURL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: username,
-            password: password,
-          }),
-        });
-    
-        if (!response.ok) {
-          setLoading(false);
-          if (response.status === 401) {
-            setErrors([
-              { msg: "We haven't heard about you yet! Please register." },
-              { msg: "Maybe you typed the wrong password! Please check it." },
-            ]);
-          } else {
-            setErrors([{ msg: Message.TryAgain }]);
-          }
-          return;
+      const response = await fetch(apiURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: username,
+          password: password,
+        }),
+      });
+      if (!response.ok) {
+        setLoading(false);
+        if (response.status === 401) {
+          setErrors([
+            { msg: "We haven't heard about you yet! Please register." },
+            { msg: "Maybe you typed the wrong password! Please check it." },
+          ]);
+        } else {
+          setErrors([{ msg: Message.TryAgain }]);
         }
-    
-        const data = await response.json();
-    
-        await AsyncStorage.setItem("token", data.token);
-        await AsyncStorage.setItem("username", data.req.name);
-        await AsyncStorage.setItem("id", data.req._id);
-        await AsyncStorage.setItem("email", data.req.email);
-    
-        setErrors([]);
-        setLoading(false);
-        navigation.navigate("Home");        
-      } catch (error) {
-        setLoading(false);
-        console.error("Network error or unexpected issue:", error);
-        setErrors([{ msg: "An error occurred. Please try again." }]);
+        return;
       }
+  
+      const data = await response.json();
+  
+      await AsyncStorage.setItem("token", data.token);
+      await AsyncStorage.setItem("username", data.req.name);
+      await AsyncStorage.setItem("id", data.req._id);
+      await AsyncStorage.setItem("email", data.req.email);
+  
+      setErrors([]);
+      setLoading(false);
+      navigation.navigate("Home");   
     };
     
   const goToPreload = () => {

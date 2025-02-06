@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, Pressable } from "react-native";
-import { GymForm } from "../../../interfaces/Gym";
+import { GymChoiceInfo, GymForm } from "../../../interfaces/Gym";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native";
 import GymPlace from "../gym/GymPlace";
@@ -11,7 +11,7 @@ interface TrainingGymChooseProps {
 
 const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
-  const [gyms, setGyms] = useState<GymForm[]>([]);
+  const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   useEffect(() => {
     init();
   }, []);
@@ -23,7 +23,8 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
   const getGyms = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${API_URL}/api/gym/${id}/getGyms`);
-    const result = await response.json();
+    const result = await response.json() as GymChoiceInfo[];
+    
     setGyms(result);
   };
 
