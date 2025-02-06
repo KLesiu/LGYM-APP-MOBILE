@@ -24,6 +24,8 @@ import ViewLoading from "../../elements/ViewLoading";
 import { Message } from "../../../enums/Message";
 import gym from "./../../../img/icons/gym.png";
 import { GymForm } from "../../../interfaces/Gym";
+import React from "react";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 interface TrainingPlanDayProps {
   hideChooseDaySection: () => void;
@@ -195,6 +197,14 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const hideExerciseForm = () => {
     setIsTrainingPlanDayExerciseFormShow(false);
   };
+
+  const incrementSeriesNumber = async(exercise:string,series:number,reps:string) => {
+    await getExerciseToAddFromForm(exercise,series+1,reps,true)
+  }
+  const decrementSeriesNumber = async(exercise:string,series:number,reps:string) => {
+    await getExerciseToAddFromForm(exercise,series-1,reps,true)
+  }
+
   const getExercise = async (id: string) => {
     const response = await fetch(`${apiURL}/api/exercise/${id}/getExercise`);
     const exercise = await response.json();
@@ -203,28 +213,45 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const getExerciseToAddFromForm = async (
     exerciseId: string,
     series: number,
-    reps: string
+    reps: string,
+    isIncrementDecrement?: boolean
   ) => {
     if (!planDay) return;
+    
     const response = await getExercise(exerciseId);
     let newPlanDay: LastScoresPlanDayVm = planDay;
-    if (exerciseWhichBeingSwitched) {
-      const response = await deleteExerciseFromPlanDay(
-        exerciseWhichBeingSwitched
-      );
+    let exerciseIndex = -1;
+  
+    if (exerciseWhichBeingSwitched || isIncrementDecrement) {
+      const idExercise = isIncrementDecrement ? exerciseId : exerciseWhichBeingSwitched;
+  
+      exerciseIndex = newPlanDay.exercises.findIndex(e => e.exercise._id=== idExercise);
+  
+      const response = await deleteExerciseFromPlanDay(idExercise);
       if (!response) return;
+  
       newPlanDay = response;
     }
-    const newPlanDayExercises = [
-      ...newPlanDay.exercises,
-      { exercise: response, series: series, reps: reps },
-    ];
+  
+    let newPlanDayExercises = [...newPlanDay.exercises];
+  
+    const newExercise = { exercise: response, series, reps };
+  
+    if (exerciseIndex !== -1) {
+      newPlanDayExercises.splice(exerciseIndex, 0, newExercise);
+    } else {
+      newPlanDayExercises.push(newExercise);
+    }
+  
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
+  
     if (!newPlanDay) return;
+  
     await addExerciseToPlanDay(newPlanDay);
     await getLastExerciseScores(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
   };
+  
   const addExerciseToPlanDay = async (newPlanDay: LastScoresPlanDayVm) => {
     setPlanDay(newPlanDay);
     await sendPlanDayToLocalStorage(newPlanDay);
@@ -329,11 +356,16 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 fontFamily: "OpenSans_400Regular",
               }}
             >
-             {item.series}x{item.reps}
+              {item.series}x{item.reps}
             </Text>
           </View>
-
-          <View style={{ gap: 8 }} className="flex flex-row">
+          <View style={{ gap: 16 }} className="flex flex-row">
+            <Pressable onPress={()=>incrementSeriesNumber(`${item.exercise._id}`,item.series,item.reps)}>
+              <Icon name="plus" size={20} color="#94e798" />
+            </Pressable>
+            <Pressable onPress={()=>decrementSeriesNumber(`${item.exercise._id}`,item.series,item.reps)}>
+              <Icon name="minus" size={20} color="#94e798" />
+            </Pressable>
             <Pressable
               onPress={() =>
                 showExerciseFormByBodyPart(
