@@ -1,9 +1,4 @@
-import {
-  Text,
-  View,
-  Image,
-  ScrollView,
-} from "react-native";
+import { Text, View, Image, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "../../elements/ViewLoading";
@@ -12,12 +7,16 @@ import CreatePlanDay from "./CreatePlanDay";
 import { PlanDayVm } from "../../../interfaces/PlanDay";
 import RemoveIcon from "./../../../img/icons/remove.png";
 import { Message } from "../../../enums/Message";
-import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../elements/CustomButton";
 import { FontWeights } from "../../../enums/FontsProperties";
-import EditIcon from "./../../../img/icons/edit.png"
+import EditIcon from "./../../../img/icons/edit.png";
 import ConfirmDialog from "../../elements/ConfirmDialog";
-interface TrainingPlanProps{
-  hideMenuButton:(hide:boolean)=>void
+import BackgroundMainSection from "../../elements/BackgroundMainSection";
+interface TrainingPlanProps {
+  hideMenuButton: (hide: boolean) => void;
 }
 
 const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
@@ -33,7 +32,10 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     useState<boolean>(false);
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
   const [currentPlanDay, setCurrentPlanDay] = useState<PlanDayVm>();
-  const [isDeletePlanDayConfirmationDialogVisible,setIsDeletePlanDayConfirmationDialogVisible] = useState<boolean>(false);
+  const [
+    isDeletePlanDayConfirmationDialogVisible,
+    setIsDeletePlanDayConfirmationDialogVisible,
+  ] = useState<boolean>(false);
 
   useEffect(() => {
     init();
@@ -66,7 +68,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     }
   };
   const deletePlanDay = async (): Promise<void> => {
-    if(!currentPlanDay) return; 
+    if (!currentPlanDay) return;
     const response = await fetch(
       `${apiURL}/api/planDay/${currentPlanDay._id}/deletePlanDay`
     );
@@ -98,22 +100,27 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     init();
   };
   const reloadSection = (): void => {
-    setShowPlanConfig(false);``
+    setShowPlanConfig(false);
+    ``;
     props.hideMenuButton(false);
     init();
   };
   const editPlanDay = (planDay: PlanDayVm): void => {
-    setCurrentPlanDay(planDay)
-    showPlanDayForm()
-  }
-  const addNewPlanDay = ()=>{
-    setCurrentPlanDay(undefined)
-    showPlanDayForm()
-  }
+    setCurrentPlanDay(planDay);
+    showPlanDayForm();
+  };
+  const addNewPlanDay = () => {
+    setCurrentPlanDay(undefined);
+    showPlanDayForm();
+  };
 
   const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
-    const removeSlot: JSX.Element[] = [<Image className="w-6 h-6" source={RemoveIcon} />]
-    const editSlot:JSX.Element[]= [<Image className="w-6 h-6" source={EditIcon} />]
+    const removeSlot: JSX.Element[] = [
+      <Image className="w-6 h-6" source={RemoveIcon} />,
+    ];
+    const editSlot: JSX.Element[] = [
+      <Image className="w-6 h-6" source={EditIcon} />,
+    ];
     return (
       <View
         key={item._id}
@@ -129,11 +136,18 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
           >
             {item.name}
           </Text>
-          <View className="flex flex-row" style={{gap:8}}>
-          <CustomButton  buttonStyleSize={ButtonSize.small} onPress={()=>editPlanDay(item)} customSlots={editSlot} />
-          <CustomButton buttonStyleSize={ButtonSize.small}  onPress={()=>deletePlanDayVisible(true,item)} customSlots={removeSlot}/>
+          <View className="flex flex-row" style={{ gap: 8 }}>
+            <CustomButton
+              buttonStyleSize={ButtonSize.small}
+              onPress={() => editPlanDay(item)}
+              customSlots={editSlot}
+            />
+            <CustomButton
+              buttonStyleSize={ButtonSize.small}
+              onPress={() => deletePlanDayVisible(true, item)}
+              customSlots={removeSlot}
+            />
           </View>
-            
         </View>
 
         {item.exercises.map((exercise, index) => (
@@ -142,7 +156,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
               style={{ fontFamily: "OpenSans_400Regular" }}
               className="text-lg text-white"
             >
-              {exercise.exercise ? exercise.exercise.name : ''} - {exercise.series} x {exercise.reps}
+              {exercise.exercise ? exercise.exercise.name : ""} -{" "}
+              {exercise.series} x {exercise.reps}
             </Text>
           </View>
         ))}
@@ -151,28 +166,33 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const getUserPlanConfig = async () => {
     const id = await AsyncStorage.getItem("id");
-   
-      const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`);
-      const result = await response.json();
-      if (Object.keys(result)[0] === "msg") setPlanConfig(undefined);
-      else {
-        setPlanConfig(result);
-        return result;
-      }
+
+    const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`);
+    const result = await response.json();
+    if (Object.keys(result)[0] === "msg") setPlanConfig(undefined);
+    else {
+      setPlanConfig(result);
+      return result;
+    }
   };
 
-  const deletePlanDayVisible = (visible:boolean,planDay?:PlanDayVm)=>{
-    if(visible) setCurrentPlanDay(planDay);
+  const deletePlanDayVisible = (visible: boolean, planDay?: PlanDayVm) => {
+    if (visible) setCurrentPlanDay(planDay);
     else setCurrentPlanDay(undefined);
     setIsDeletePlanDayConfirmationDialogVisible(visible);
-  }
+  };
 
   return (
-    <View className="flex flex-1 relative w-full bg-[#121212]">
+    <BackgroundMainSection>
       <View className="w-full h-full p-4 flex flex-col">
         {!planConfig ? (
           <View className="flex flex-row w-full">
-            <CustomButton  onPress={showPlanConfigPopUp} text="Create plan" textWeight={FontWeights.bold} buttonStyleType={ButtonStyle.success}/>
+            <CustomButton
+              onPress={showPlanConfigPopUp}
+              text="Create plan"
+              textWeight={FontWeights.bold}
+              buttonStyleType={ButtonStyle.success}
+            />
           </View>
         ) : (
           <Text></Text>
@@ -192,7 +212,12 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
                 Current training plan: {planConfig.name}
               </Text>
             </View>
-              <CustomButton  text="Add plan day" onPress={addNewPlanDay} buttonStyleType={ButtonStyle.success} textWeight={FontWeights.bold}/>
+            <CustomButton
+              text="Add plan day"
+              onPress={addNewPlanDay}
+              buttonStyleType={ButtonStyle.success}
+              textWeight={FontWeights.bold}
+            />
             {planDays && planDays.length ? (
               <ScrollView className="w-full">
                 <View style={{ gap: 8 }} className="flex flex-col pb-12">
@@ -217,12 +242,22 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         <Text></Text>
       )}
       {isPlanDayFormVisible && planConfig ? (
-        <CreatePlanDay planId={planConfig._id} closeForm={hidePlanDayForm} planDayId={currentPlanDay ? currentPlanDay._id : ''} />
+        <CreatePlanDay
+          planId={planConfig._id}
+          closeForm={hidePlanDayForm}
+          planDayId={currentPlanDay ? currentPlanDay._id : ""}
+        />
       ) : (
         <Text></Text>
       )}
-       <ConfirmDialog visible={isDeletePlanDayConfirmationDialogVisible} title={`Delete: ${currentPlanDay ? currentPlanDay.name : ''}`} message={`Are you sure you want to delete?`} onConfirm={deletePlanDay} onCancel={()=>deletePlanDayVisible(false)} />
-    </View>
+      <ConfirmDialog
+        visible={isDeletePlanDayConfirmationDialogVisible}
+        title={`Delete: ${currentPlanDay ? currentPlanDay.name : ""}`}
+        message={`Are you sure you want to delete?`}
+        onConfirm={deletePlanDay}
+        onCancel={() => deletePlanDayVisible(false)}
+      />
+    </BackgroundMainSection>
   );
 };
 export default TrainingPlan;

@@ -12,11 +12,16 @@ import Records from "../records/Records";
 import MainProfileInfo from "./MainProfileInfo";
 import { Message } from "../../../enums/Message";
 import Start from "../start/Start";
+import BackgroundMainSection from "../../elements/BackgroundMainSection";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../elements/CustomButton";
+import TabView from "../../elements/TabView";
 
-
-interface ProfileProps{
-  toggleMenuButton:(hide:boolean)=>void
-  viewChange:(view:JSX.Element)=>void
+interface ProfileProps {
+  toggleMenuButton: (hide: boolean) => void;
+  viewChange: (view: JSX.Element) => void;
 }
 
 const Profile: React.FC<ProfileProps> = (props) => {
@@ -39,16 +44,16 @@ const Profile: React.FC<ProfileProps> = (props) => {
   );
 
   useEffect(() => {
-    init()
+    init();
   }, []);
 
   const init = async (): Promise<void> => {
     setViewLoading(true);
-    props.toggleMenuButton(true)
+    props.toggleMenuButton(true);
     await getDataFromStorage();
     await getUserEloPoints();
     setViewLoading(false);
-  }
+  };
 
   const getDataFromStorage = async (): Promise<void> => {
     const username = await AsyncStorage.getItem("username");
@@ -65,15 +70,9 @@ const Profile: React.FC<ProfileProps> = (props) => {
     const result = await response.json();
     setProfileElo(result.elo);
   };
-  const styleCurrentTab = (tab: JSX.Element, cssRule: string): string => {
-    if (cssRule === "border")
-      return currentTab.type.name === tab.type.name ? "#94e798" : "#131313";
-    return currentTab.type.name === tab.type.name ? "#94e798" : "#E5E7EB";
-  };
+
   const checkMoreUserInfo = async (id: string): Promise<void> => {
-    const response = await fetch(
-      `${apiURL}/api/${id}/getUserInfo`
-    )
+    const response = await fetch(`${apiURL}/api/${id}/getUserInfo`);
     const result: Message.DidntFind | UserInfo = await response.json();
     if (result !== Message.DidntFind)
       if (result.profileRank && result.createdAt) {
@@ -98,24 +97,20 @@ const Profile: React.FC<ProfileProps> = (props) => {
     );
   };
 
+  const setActiveComponent = (component: JSX.Element) => {
+    setCurrentTab(component);
+  }
+
   return (
-    <View className="relative h-full w-full flex bg-[#131313]">
-      <View className="w-full h-full p-4 flex flex-col flex-1">
-        <View className="w-full flex">
-          <Pressable
-            style={{ borderRadius: 8 }}
-            className=" flex flex-row justify-center items-center w-20 h-10 bg-[#3f3f3f]"
+    <BackgroundMainSection>
+      <View className="w-full h-full p-4 py-8 flex flex-col flex-1">
+        <View className="w-20">
+          <CustomButton
             onPress={goBack}
-          >
-            <Text
-              className="text-center text-sm text-white"
-              style={{
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              BACK
-            </Text>
-          </Pressable>
+            text="Back"
+            buttonStyleType={ButtonStyle.outline}
+            buttonStyleSize={ButtonSize.regular}
+          />
         </View>
         <View
           style={{ gap: 8 }}
@@ -149,63 +144,18 @@ const Profile: React.FC<ProfileProps> = (props) => {
             </Text>
           </View>
         </View>
-
-        <View className="w-full h-12 flex flex-row pr-6">
-          <Pressable
-            className="flex flex-row justify-center items-center flex-1"
-            style={{
-              borderBottomColor: `${styleCurrentTab(
-                <MainProfileInfo logout={logout} />,
-                "border"
-              )}`,
-              borderBottomWidth: 1,
-            }}
-            onPress={() => setCurrentTab(<MainProfileInfo logout={logout} />)}
-          >
-            <Text
-              className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm"
-              style={{
-                fontFamily: "OpenSans_300Light",
-                color: `${styleCurrentTab(<MainProfileInfo logout={logout} />, "text")}`,
-              }}
-            >
-              Data
-            </Text>
-          </Pressable>
-          <Pressable
-            className="flex flex-row justify-center items-center flex-1"
-            style={{
-              borderBottomColor: `${styleCurrentTab(
-                <Records toggleMenuButton={props.toggleMenuButton} />,
-                "border"
-              )}`,
-              borderBottomWidth: 1,
-            }}
-            onPress={() =>
-              setCurrentTab(
-                <Records toggleMenuButton={props.toggleMenuButton} />
-              )
-            }
-          >
-            <Text
-              className="text-gray-200/80 font-light leading-4 text-center w-20 text-sm"
-              style={{
-                fontFamily: "OpenSans_300Light",
-                color: `${styleCurrentTab(
-                  <Records toggleMenuButton={props.toggleMenuButton} />,
-                  "text"
-                )}`,
-              }}
-            >
-              Records
-            </Text>
-          </Pressable>
-          {/* <Pressable className="flex flex-row justify-center items-center" style={{borderBottomColor:`${styleCurrentTab(<Measurements/>,'border')}`,borderBottomWidth:1}}  onPress={()=>setCurrentTab(<Measurements/>)}><Text className="text-gray-200/80 font-light leading-4 text-center w-22 text-sm"  style={{fontFamily:'OpenSans_300Light',color:`${styleCurrentTab(<Measurements/>,'text')}`}}>Measurements</Text></Pressable> */}
-        </View>
+        <TabView
+          tabs={[
+            { label: "Data", component: <MainProfileInfo logout={logout} /> },
+            { label: "Records", component: <Records toggleMenuButton={props.toggleMenuButton} /> },
+          ]}
+          onTabChange={setActiveComponent}
+        />
+      
         <View className="w-full flex-1 mt-4">{currentTab}</View>
       </View>
       {viewLoading ? <ViewLoading /> : <Text></Text>}
-    </View>
+    </BackgroundMainSection>
   );
 };
 export default Profile;

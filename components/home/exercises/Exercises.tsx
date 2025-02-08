@@ -13,6 +13,8 @@ import React from "react";
 import CustomDropdown from "../../elements/Dropdown";
 import { BodyParts } from "../../../enums/BodyParts";
 import { DropdownItem } from "../../../interfaces/Dropdown";
+import Background from "../../elements/BackgroundMainSection";
+import BackgroundMainSection from "../../elements/BackgroundMainSection";
 
 interface ExercisesProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -168,7 +170,7 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
   }, []);
 
   return (
-    <View className="relative flex flex-1 bg-[#121212]">
+    <BackgroundMainSection>
       <View className="flex flex-col p-4" style={{ gap: 32 }}>
         <View className="flex flex-row items-center justify-between">
           <Text
@@ -212,7 +214,7 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 10 }}
             ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
-            />
+          />
           <View className="flex flex-row items-center justify-between">
             <Text
               className="text-lg text-white font-bold"
@@ -236,7 +238,7 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingVertical: 10 }}
             ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
-            />
+          />
         </View>
       </View>
 
@@ -255,7 +257,7 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
           isAdmin={isAdmin}
         />
       )}
-    </View>
+    </BackgroundMainSection>
   );
 };
 

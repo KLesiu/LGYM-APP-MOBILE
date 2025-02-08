@@ -76,9 +76,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const changeGym = async (gym: GymForm) => {
     setGym(gym);
     setIsGymChoiceActive(false);
-    setViewLoading(true);
     getInformationsAboutPlanDays();
-    setViewLoading(false);
   };
 
   const getInformationsAboutPlanDays: VoidFunction =
@@ -89,6 +87,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
       );
       const trainingTypes:PlanDayChoose[] = await response.json();
       setTrainingTypes(trainingTypes);
+      setIsChooseDayActive(true);
         
     };
   const resetChoosePlanDay = () => {

@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native";
 import GymPlace from "../gym/GymPlace";
 import Dialog from "../../elements/Dialog";
+import CustomButton, { ButtonSize } from "../../elements/CustomButton";
 
 interface TrainingGymChooseProps {
   setGym: (gym: GymForm) => void;
@@ -24,8 +25,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
   const getGyms = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${API_URL}/api/gym/${id}/getGyms`);
-    const result = (await response.json()) as GymChoiceInfo[];
-
+    const result = await response.json();
     setGyms(result);
   };
 
@@ -38,11 +38,14 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
         Choose your gym!
       </Text>
       <ScrollView className="w-full">
-        <View style={{ gap: 8 }} className="flex flex-col pb-12">
+        <View className="flex flex-col pb-12">
           {gyms.map((gym, index) => (
-            <Pressable onPress={() => props.setGym(gym)}>
+            <CustomButton
+              buttonStyleSize={ButtonSize.none}
+              onPress={() => props.setGym(gym)}
+            >
               <GymPlace key={index} gym={gym} isEditable={false} />
-            </Pressable>
+            </CustomButton>
           ))}
         </View>
       </ScrollView>

@@ -14,6 +14,7 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import ResponseMessage from "../../../interfaces/ResponseMessage";
+import BackgroundMainSection from "../../elements/BackgroundMainSection";
 
 interface StartProps {
   viewChange: (view: JSX.Element) => void;
@@ -52,18 +53,18 @@ const Start: React.FC<StartProps> = (props) => {
   };
 
   const getRankInfo = async () => {
-      const id = await AsyncStorage.getItem("id");
-      const response = await fetch(`${apiURL}/api/${id}/getUserInfo`);
-      const data: UserInfo = await response.json();
-      setUserInfo(data);
-      setProgress(Math.floor((data.elo / data.nextRank.needElo) * 10000) / 100);
+    const id = await AsyncStorage.getItem("id");
+    const response = await fetch(`${apiURL}/api/${id}/getUserInfo`);
+    const data: UserInfo = await response.json();
+    setUserInfo(data);
+    setProgress(Math.floor((data.elo / data.nextRank.needElo) * 10000) / 100);
   };
 
   const navigateTo = (component: JSX.Element) => {
     props.viewChange(component);
   };
   return (
-    <View className="w-full flex flex-col flex-1 bg-[#121212] ">
+    <BackgroundMainSection>
       <View style={{ gap: 8 }} className="flex h-full w-full flex-col">
         <View
           style={{ borderRadius: 8 }}
@@ -170,7 +171,7 @@ const Start: React.FC<StartProps> = (props) => {
         </View>
       </View>
       {viewLoading ? <ViewLoading /> : <Text></Text>}
-    </View>
+    </BackgroundMainSection>
   );
 };
 export default Start;

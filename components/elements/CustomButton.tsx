@@ -24,6 +24,7 @@ interface ButtonProps {
   buttonStyleSize?: ButtonSize;
   customSlots?: JSX.Element[];
   width?:string,
+  children?:React.ReactNode
 }
 
 const CustomButton: React.FC<ButtonProps> = (props) => {
@@ -47,6 +48,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       className={` ${props.buttonStyleSize ? props.buttonStyleSize : ButtonSize.regular} m-0 ${props.buttonStyleType}  ${props.width}  flex justify-center items-center`}
       onPress={props.onPress}
     >
+      {props.children}
       {props.customSlots ? props.customSlots.map((slot) => <>{slot}</>) :    
       <Text
         className={`${props.textSize ? props.textSize : 'text-base'}  w-full text-center ${textColorClass()}`}

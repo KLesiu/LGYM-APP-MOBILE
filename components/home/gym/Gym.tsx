@@ -9,6 +9,8 @@ import GymFormComponent from "./GymForm";
 import { Message } from "../../../enums/Message";
 import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
+import Background from "../../elements/BackgroundMainSection";
+import BackgroundMainSection from "../../elements/BackgroundMainSection";
 interface GymProps {
   viewChange: (view: JSX.Element) => void;
   toggleMenuButton: (hide: boolean) => void;
@@ -20,7 +22,10 @@ const Gym: React.FC<GymProps> = (props) => {
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
-  const [isDeleteGymConfirmationDialogVisible,setIsDeleteConfirmationDialogVisible] = useState<boolean>(false);
+  const [
+    isDeleteGymConfirmationDialogVisible,
+    setIsDeleteConfirmationDialogVisible,
+  ] = useState<boolean>(false);
 
   useEffect(() => {
     init();
@@ -37,11 +42,11 @@ const Gym: React.FC<GymProps> = (props) => {
     setGyms(result);
   };
 
-
-  const addNewGym = ()=>{
+  const addNewGym = () => {
     setCurrentChosenGym(undefined);
-    openForm();``
-  }
+    openForm();
+    ``;
+  };
   const openForm = () => {
     props.toggleMenuButton(true);
     setIsGymFormVisible(true);
@@ -53,34 +58,33 @@ const Gym: React.FC<GymProps> = (props) => {
     props.toggleMenuButton(false);
   };
 
-
-
-  const deleteDialogVisible = (visible:boolean,gym?:GymChoiceInfo) => {
-    if(visible) setCurrentChosenGym(gym);
+  const deleteDialogVisible = (visible: boolean, gym?: GymChoiceInfo) => {
+    if (visible) setCurrentChosenGym(gym);
     else setCurrentChosenGym(undefined);
     setIsDeleteConfirmationDialogVisible(visible);
-  }
-
-
+  };
 
   const editGym = async (id: string) => {
-    const currentGym = gyms.find((gym)=>gym._id === id);
+    const currentGym = gyms.find((gym) => gym._id === id);
     setCurrentChosenGym(currentGym);
     openForm();
-  }
+  };
 
   const deleteGym = async () => {
-    if(!currentChosenGym) return;
-    const response = await fetch(`${API_URL}/api/gym/${currentChosenGym._id}/deleteGym`, {
-      method: "DELETE",
-    });
+    if (!currentChosenGym) return;
+    const response = await fetch(
+      `${API_URL}/api/gym/${currentChosenGym._id}/deleteGym`,
+      {
+        method: "DELETE",
+      }
+    );
     const result = await response.json();
-    if(result.msg === Message.Deleted) await getGyms();
+    if (result.msg === Message.Deleted) await getGyms();
     setIsDeleteConfirmationDialogVisible(false);
-  }
+  };
 
   return (
-    <View className="relative flex flex-1 bg-[#121212]">
+    <BackgroundMainSection>
       <View className="flex flex-col p-4" style={{ gap: 16 }}>
         <View className="flex flex-col ">
           <View className="flex w-full  justify-between flex-row  items-center">
@@ -108,7 +112,7 @@ const Gym: React.FC<GymProps> = (props) => {
                 key={index}
                 gym={gym}
                 editGym={editGym}
-                deleteGym={()=>deleteDialogVisible(true,gym)}
+                deleteGym={() => deleteDialogVisible(true, gym)}
                 isEditable={true}
               />
             ))}
@@ -116,12 +120,18 @@ const Gym: React.FC<GymProps> = (props) => {
         </ScrollView>
       </View>
       {isGymFormVisible ? (
-          <GymFormComponent closeForm={closeForm} gym={currentChosenGym} />
+        <GymFormComponent closeForm={closeForm} gym={currentChosenGym} />
       ) : (
         <></>
       )}
-       <ConfirmDialog visible={isDeleteGymConfirmationDialogVisible} title={`Delete: ${currentChosenGym ? currentChosenGym.name : ''}`} message={`Are you sure you want to delete?`} onConfirm={deleteGym} onCancel={()=>deleteDialogVisible(false)} />
-    </View>
+      <ConfirmDialog
+        visible={isDeleteGymConfirmationDialogVisible}
+        title={`Delete: ${currentChosenGym ? currentChosenGym.name : ""}`}
+        message={`Are you sure you want to delete?`}
+        onConfirm={deleteGym}
+        onCancel={() => deleteDialogVisible(false)}
+      />
+    </BackgroundMainSection>
   );
 };
 

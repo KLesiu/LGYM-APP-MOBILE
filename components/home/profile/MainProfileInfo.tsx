@@ -39,22 +39,12 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
           </Text>
         </View>
       </View>
-      <View className="flex flex-col justify-around items-center w-full">
-        {/* <Pressable className="flex justify-center items-center rounded-lg h-14 w-full py-4 px-6 bg-[#94e798]">
-      <Text
-          className="text-black text-xl"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          Change password
-        </Text>
-      </Pressable> */}
         <CustomButton
           width="w-full"
           text="Logout"
           onPress={props.logout}
           buttonStyleType={ButtonStyle.success}
         />
-      </View>
     </View>
   );
 };

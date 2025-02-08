@@ -1,4 +1,5 @@
 import { View } from "react-native"
+import BackgroundMainSection from "../../elements/BackgroundMainSection";
 
 interface ChartsProps{
     toggleMenuButton: (hide: boolean) => void;
@@ -6,9 +7,9 @@ interface ChartsProps{
 
 const Charts:React.FC<ChartsProps> = (props) => {
     return(
-        <View>
-            
-        </View>
+        <BackgroundMainSection>
+            <></>
+        </BackgroundMainSection>
     )
 }
 
