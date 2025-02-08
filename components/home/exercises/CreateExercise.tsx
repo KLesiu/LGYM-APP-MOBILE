@@ -40,7 +40,8 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     getBodyParts();
   }, []);
 
-  const handleSelectBodyPart = (item: { label: string; value: string }) => {
+  const handleSelectBodyPart = (item: DropdownItem | null) => {
+    if(!item) return setBodyPart(undefined);
     setBodyPart(item.value as BodyParts);
   }
 
