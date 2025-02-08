@@ -15,6 +15,7 @@ import { Message } from "../../../enums/Message";
 import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
 import { FontWeights } from "../../../enums/FontsProperties";
 import EditIcon from "./../../../img/icons/edit.png"
+import ConfirmDialog from "../../elements/ConfirmDialog";
 interface TrainingPlanProps{
   hideMenuButton:(hide:boolean)=>void
 }
@@ -31,7 +32,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
-  const [planDayId, setPlanDayId] = useState<string>("");
+  const [currentPlanDay, setCurrentPlanDay] = useState<PlanDayVm>();
+  const [isDeletePlanDayConfirmationDialogVisible,setIsDeletePlanDayConfirmationDialogVisible] = useState<boolean>(false);
 
   useEffect(() => {
     init();
@@ -63,15 +65,17 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
       console.error("Failed to fetch plan days", error);
     }
   };
-  const deletePlanDay = async (planDayId: string): Promise<void> => {
+  const deletePlanDay = async (): Promise<void> => {
+    if(!currentPlanDay) return; 
     const response = await fetch(
-      `${apiURL}/api/planDay/${planDayId}/deletePlanDay`
+      `${apiURL}/api/planDay/${currentPlanDay._id}/deletePlanDay`
     );
     if (!response.ok) return console.error("Failed to delete plan day");
     const data = await response.json();
     if (data.msg === Message.Deleted) {
       init();
     }
+    deletePlanDayVisible(false);
   };
   const showPlanConfigPopUp = (): void => {
     props.hideMenuButton(true);
@@ -98,12 +102,12 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     props.hideMenuButton(false);
     init();
   };
-  const editPlanDay = (planDayId: string): void => {
-    setPlanDayId(planDayId)
+  const editPlanDay = (planDay: PlanDayVm): void => {
+    setCurrentPlanDay(planDay)
     showPlanDayForm()
   }
   const addNewPlanDay = ()=>{
-    setPlanDayId("")
+    setCurrentPlanDay(undefined)
     showPlanDayForm()
   }
 
@@ -126,8 +130,8 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
             {item.name}
           </Text>
           <View className="flex flex-row" style={{gap:8}}>
-          <CustomButton  buttonStyleSize={ButtonSize.small} onPress={()=>editPlanDay(item._id)} customSlots={editSlot} />
-          <CustomButton buttonStyleSize={ButtonSize.small}  onPress={()=>deletePlanDay(item._id)} customSlots={removeSlot}/>
+          <CustomButton  buttonStyleSize={ButtonSize.small} onPress={()=>editPlanDay(item)} customSlots={editSlot} />
+          <CustomButton buttonStyleSize={ButtonSize.small}  onPress={()=>deletePlanDayVisible(true,item)} customSlots={removeSlot}/>
           </View>
             
         </View>
@@ -156,6 +160,12 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         return result;
       }
   };
+
+  const deletePlanDayVisible = (visible:boolean,planDay?:PlanDayVm)=>{
+    if(visible) setCurrentPlanDay(planDay);
+    else setCurrentPlanDay(undefined);
+    setIsDeletePlanDayConfirmationDialogVisible(visible);
+  }
 
   return (
     <View className="flex flex-1 relative w-full bg-[#121212]">
@@ -207,10 +217,11 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         <Text></Text>
       )}
       {isPlanDayFormVisible && planConfig ? (
-        <CreatePlanDay planId={planConfig._id} closeForm={hidePlanDayForm} planDayId={planDayId} />
+        <CreatePlanDay planId={planConfig._id} closeForm={hidePlanDayForm} planDayId={currentPlanDay ? currentPlanDay._id : ''} />
       ) : (
         <Text></Text>
       )}
+       <ConfirmDialog visible={isDeletePlanDayConfirmationDialogVisible} title={`Delete: ${currentPlanDay ? currentPlanDay.name : ''}`} message={`Are you sure you want to delete?`} onConfirm={deletePlanDay} onCancel={()=>deletePlanDayVisible(false)} />
     </View>
   );
 };

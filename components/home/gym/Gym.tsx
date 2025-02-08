@@ -8,6 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import GymFormComponent from "./GymForm";
 import { Message } from "../../../enums/Message";
 import React from "react";
+import ConfirmDialog from "../../elements/ConfirmDialog";
 interface GymProps {
   viewChange: (view: JSX.Element) => void;
   toggleMenuButton: (hide: boolean) => void;
@@ -19,6 +20,7 @@ const Gym: React.FC<GymProps> = (props) => {
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
+  const [isDeleteGymConfirmationDialogVisible,setIsDeleteConfirmationDialogVisible] = useState<boolean>(false);
 
   useEffect(() => {
     init();
@@ -53,18 +55,28 @@ const Gym: React.FC<GymProps> = (props) => {
 
 
 
+  const deleteDialogVisible = (visible:boolean,gym?:GymChoiceInfo) => {
+    if(visible) setCurrentChosenGym(gym);
+    else setCurrentChosenGym(undefined);
+    setIsDeleteConfirmationDialogVisible(visible);
+  }
+
+
+
   const editGym = async (id: string) => {
     const currentGym = gyms.find((gym)=>gym._id === id);
     setCurrentChosenGym(currentGym);
     openForm();
   }
 
-  const deleteGym = async (id: string) => {
-    const response = await fetch(`${API_URL}/api/gym/${id}/deleteGym`, {
+  const deleteGym = async () => {
+    if(!currentChosenGym) return;
+    const response = await fetch(`${API_URL}/api/gym/${currentChosenGym._id}/deleteGym`, {
       method: "DELETE",
     });
     const result = await response.json();
     if(result.msg === Message.Deleted) await getGyms();
+    setIsDeleteConfirmationDialogVisible(false);
   }
 
   return (
@@ -96,7 +108,7 @@ const Gym: React.FC<GymProps> = (props) => {
                 key={index}
                 gym={gym}
                 editGym={editGym}
-                deleteGym={deleteGym}
+                deleteGym={()=>deleteDialogVisible(true,gym)}
                 isEditable={true}
               />
             ))}
@@ -110,6 +122,7 @@ const Gym: React.FC<GymProps> = (props) => {
       ) : (
         <></>
       )}
+       <ConfirmDialog visible={isDeleteGymConfirmationDialogVisible} title={`Delete: ${currentChosenGym ? currentChosenGym.name : ''}`} message={`Are you sure you want to delete?`} onConfirm={deleteGym} onCancel={()=>deleteDialogVisible(false)} />
     </View>
   );
 };

@@ -11,6 +11,7 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import React from "react";
+import ConfirmDialog from "../../elements/ConfirmDialog";
 
 interface RecordsProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -21,6 +22,8 @@ const Records: React.FC<RecordsProps> = () => {
   const [records, setRecords] = useState<MainRecordsLast[]>([]);
   const [viewLoading, setViewLoading] = useState<boolean>(true);
   const [exercise, setExercise] = useState<string | undefined>();
+  const [choosenRecord, setChoosenRecord] = useState<MainRecordsLast | undefined>();
+  const [isDeleteRecordConfirmationDialogVisible,setIsDeleteRecordConfirmationDialogVisible] = useState<boolean>(false);
 
   useEffect(() => {
     getRecords();
@@ -47,14 +50,22 @@ const Records: React.FC<RecordsProps> = () => {
     setRecords(result);
     setViewLoading(false);
   };
-  const deleteRecord = async (recordId: string | undefined) => {
-    if (!recordId) return;
+  const deleteRecord = async () => {
+    if (!choosenRecord) return;
     const response = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/mainRecords/${recordId}/deleteMainRecord`
+      `${process.env.REACT_APP_BACKEND}/api/mainRecords/${choosenRecord._id}/deleteMainRecord`
     )
     await response.json();
     await getRecords();
+    deleteDialogVisible(false);
   };
+
+  const deleteDialogVisible = (visible:boolean,record?:MainRecordsLast) => {
+    if(visible) setChoosenRecord(record);
+    else setChoosenRecord(undefined);
+    setIsDeleteRecordConfirmationDialogVisible(visible);
+  }
+
   return (
     <View className="flex  flex-1 relative w-full  bg-[#121212]">
       {popUp ? (
@@ -105,7 +116,7 @@ const Records: React.FC<RecordsProps> = () => {
                           />
                           <CustomButton
                             buttonStyleSize={ButtonSize.none}
-                            onPress={() => deleteRecord(record._id)}
+                            onPress={() => deleteDialogVisible(true,record)}
                             customSlots={[
                               <Image className="w-6 h-6" source={RemoveIcon} />,
                             ]}
@@ -144,6 +155,7 @@ const Records: React.FC<RecordsProps> = () => {
           />
         </View>
       )}
+       <ConfirmDialog visible={isDeleteRecordConfirmationDialogVisible} title={`Delete: ${choosenRecord ? choosenRecord.exerciseDetails.name : ''}`} message={`Are you sure you want to delete?`} onConfirm={deleteRecord} onCancel={()=>deleteDialogVisible(false)} />
     </View>
   );
 };
