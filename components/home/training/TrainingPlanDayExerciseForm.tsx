@@ -7,12 +7,16 @@ import { ExerciseForm } from "../../../interfaces/Exercise";
 import { BodyParts } from "../../../enums/BodyParts";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "../../../interfaces/Dropdown";
-
+import Dialog from "../../elements/Dialog";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
-  addExerciseToPlanDay: (exerciseId:string,series:number,reps:string) => Promise<void>;
-  bodyPart?: BodyParts ;
+  addExerciseToPlanDay: (
+    exerciseId: string,
+    series: number,
+    reps: string
+  ) => Promise<void>;
+  bodyPart?: BodyParts;
 }
 
 const TrainingPlanDayExerciseForm: React.FC<
@@ -46,7 +50,7 @@ const TrainingPlanDayExerciseForm: React.FC<
           bodyPart: props.bodyPart,
         }),
       }
-    )
+    );
     const result = await response.json();
     const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
@@ -57,15 +61,15 @@ const TrainingPlanDayExerciseForm: React.FC<
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllExercises`
-    )
-    if(!response.ok) return;
-    const result = await response.json()
+    );
+    if (!response.ok) return;
+    const result = await response.json();
     const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
     setExercisesToSelect(helpExercisesToSelect);
   };
-  
+
   const clearAutoCompleteQuery = () => {
     // Po wyczyszczeniu query resetujemy stan, aby zapobiec ponownemu wywołaniu
     setClearQuery(false);
@@ -83,20 +87,17 @@ const TrainingPlanDayExerciseForm: React.FC<
       exerciseReps
     );
   };
-  
+
   return (
-    <View
-      className="absolute h-full w-full flex flex-col items-center bg-[#121212] p-4  top-0 z-30 "
-      style={{ gap: 16 }}
-    >
+    <Dialog>
       <Text
-       className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
-       style={{ fontFamily: "OpenSans_700Bold" }}
+        className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
+        style={{ fontFamily: "OpenSans_700Bold" }}
       >
-        ADD EXERCISE TO CURRENT TRAINING
+        Add exercise to the current training
       </Text>
       <View
-       style={{ gap: 16 }}
+        style={{ gap: 16 }}
         className="flex items-center flex-col justify-around w-full "
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
@@ -125,7 +126,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             style={{
               fontFamily: "OpenSans_400Regular",
               backgroundColor: "rgba(30, 30, 30, 0.45)",
-              borderRadius:8
+              borderRadius: 8,
             }}
             className="w-full px-2 py-4  text-white "
             value={numberOfSeries}
@@ -145,8 +146,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             style={{
               fontFamily: "OpenSans_400Regular",
               backgroundColor: "rgba(30, 30, 30, 0.45)",
-              borderRadius:8
-
+              borderRadius: 8,
             }}
             className="w-full px-2 py-4  text-white "
             value={exerciseReps}
@@ -154,11 +154,24 @@ const TrainingPlanDayExerciseForm: React.FC<
           />
         </View>
       </View>
-      <View className="w-full flex flex-row justify-between" style={{gap:16}}>
-      <CustomButton width="flex-1" onPress={props.cancel} buttonStyleType={ButtonStyle.cancel} text="Cancel" />
-      <CustomButton width="flex-1"  onPress={sendNewExercise} buttonStyleType={ButtonStyle.success} text="Add"/>
+      <View
+        className="w-full flex flex-row justify-between"
+        style={{ gap: 16 }}
+      >
+        <CustomButton
+          width="flex-1"
+          onPress={props.cancel}
+          buttonStyleType={ButtonStyle.cancel}
+          text="Cancel"
+        />
+        <CustomButton
+          width="flex-1"
+          onPress={sendNewExercise}
+          buttonStyleType={ButtonStyle.success}
+          text="Add"
+        />
       </View>
-    </View>
+    </Dialog>
   );
 };
 

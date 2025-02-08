@@ -15,6 +15,8 @@ import exercise from "./../../img/icons/exercises.png";
 import plan from "./../../img/icons/plan.png";
 import gym from "./../../img/icons/gym.png";
 import menu from "./../../img/icons/menu.png";
+import charts from "./../../img/icons/charts.png";
+import Charts from "../home/charts/Charts";
 
 interface MenuProps {
   viewChange: (view: JSX.Element) => void;
@@ -68,7 +70,8 @@ const Menu: React.FC<MenuProps> = (props) => {
 
   const items = [
     { icon: addTraining, label: "Training", component: <AddTraining toggleMenuButton={toggleMenuButton} /> },
-    { icon: exercise, label: "Exercises", component: <Exercises viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
+    { icon: exercise, label: "Exercises", component: <Exercises  toggleMenuButton={toggleMenuButton} /> },
+    { icon: charts, label: "Charts", component: <Charts  toggleMenuButton={toggleMenuButton} /> },
     { icon: gym, label: "Gym", component: <Gym viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
     { icon: plan, label: "Plan", component: <TrainingPlan hideMenuButton={toggleMenuButton} /> },
     { icon: history, label: "History", component: <History /> },
@@ -85,16 +88,14 @@ const Menu: React.FC<MenuProps> = (props) => {
             opacity: animatedOpacity,
           }}
           className="absolute items-center justify-center bottom-[-65px]"
-          pointerEvents={isExpanded ? "auto" : "none"} // Nie blokuje elementów, gdy menu jest zamknięte
+          pointerEvents={isExpanded ? "auto" : "none"} 
         >
-          <View style={{ borderRadius: 10000 }} className="relative w-[450px] h-[420px] items-center justify-center bg-[#282424db] -mb-[82px]">
+          <View style={{ borderRadius: 10000 }} className="relative w-[450px] h-[440px] items-center justify-center bg-[#282424db] -mb-[82px]">
             {items.map((item, index) => {
               const totalItems = items.length;
               const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2;
-              const radius = 160;
-              const x = -Math.sin(angle) * radius;
-              const y = Math.cos(angle) * radius;
-
+              const x = -Math.sin(angle) * 160;
+              const y = Math.cos(angle) * 180;
               return (
                 <TouchableOpacity
                   key={index}

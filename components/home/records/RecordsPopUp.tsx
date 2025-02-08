@@ -9,10 +9,11 @@ import { Message } from "../../../enums/Message";
 import { WeightUnits } from "../../../enums/Units";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "../../../interfaces/Dropdown";
+import Dialog from "../../elements/Dialog";
 
 interface RecordsPopUpProps {
-  offPopUp: ()=>void,
-  exerciseId:string | undefined
+  offPopUp: () => void;
+  exerciseId: string | undefined;
 }
 const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const API_URL = process.env.REACT_APP_BACKEND;
@@ -31,7 +32,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
       `${API_URL}/api/exercise/${id}/getAllExercises`
-    )
+    );
     const result = await response.json();
     const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
@@ -45,7 +46,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     setExercisesToSelect(helpExercisesToSelect);
   };
   const clearAutoCompleteQuery = () => setClearQuery(false);
-  
+
   const validator = (input: string): void => {
     if (!input) return setWeight(input);
     const result = isIntValidator(input);
@@ -69,17 +70,14 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         },
         body: JSON.stringify(form),
       }
-    )
-    const result = await response.json()
+    );
+    const result = await response.json();
     if (result.msg === Message.Created) {
       props.offPopUp();
     }
   };
   return (
-    <View
-      style={{ gap: 16 }}
-      className="absolute w-full h-full flex-1 text-white bg-[#121212] flex flex-col"
-    >
+    <Dialog>
       <Text
         className="text-center text-xl text-white"
         style={{
@@ -128,11 +126,24 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
           />
         </View>
       </View>
-      <View className="w-full flex flex-row justify-between" style={{gap:16}}>
-        <CustomButton  text="Cancel" onPress={props.offPopUp} buttonStyleType={ButtonStyle.cancel} width="flex-1"/>
-        <CustomButton  text="Add" onPress={createNewRecord} buttonStyleType={ButtonStyle.success} width="flex-1"/>
+      <View
+        className="w-full flex flex-row justify-between"
+        style={{ gap: 16 }}
+      >
+        <CustomButton
+          text="Cancel"
+          onPress={props.offPopUp}
+          buttonStyleType={ButtonStyle.cancel}
+          width="flex-1"
+        />
+        <CustomButton
+          text="Add"
+          onPress={createNewRecord}
+          buttonStyleType={ButtonStyle.success}
+          width="flex-1"
+        />
       </View>
-    </View>
+    </Dialog>
   );
 };
 export default RecordsPopUp;

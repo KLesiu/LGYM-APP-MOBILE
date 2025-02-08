@@ -15,7 +15,6 @@ import { BodyParts } from "../../../enums/BodyParts";
 import { DropdownItem } from "../../../interfaces/Dropdown";
 
 interface ExercisesProps {
-  viewChange: (view: JSX.Element) => void;
   toggleMenuButton: (hide: boolean) => void;
 }
 

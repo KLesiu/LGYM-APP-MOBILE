@@ -1,12 +1,14 @@
-import { Text, View, TouchableOpacity, Pressable } from "react-native";
+import { Text, View, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import ViewLoading from "../../elements/ViewLoading";
 import MiniLoading from "../../elements/MiniLoading";
-import useInterval from "../../../helpers/hooks/useInterval";
 import TrainingPlanDay from "./TrainingPlanDay";
-import { TrainingSessionScores, TrainingSummary as TrainingSummaryInterface } from "../../../interfaces/Training";
+import {
+  TrainingSessionScores,
+  TrainingSummary as TrainingSummaryInterface,
+} from "../../../interfaces/Training";
 import { ExerciseScoresTrainingForm } from "../../../interfaces/ExercisesScores";
 import { WeightUnits } from "../../../enums/Units";
 import { Message } from "../../../enums/Message";
@@ -16,9 +18,12 @@ import CustomButton from "../../elements/CustomButton";
 import TrainingGymChoose from "./TrainingGymChoose";
 import { GymForm } from "../../../interfaces/Gym";
 import React from "react";
+import Dialog from "../../elements/Dialog";
+import TrainingDayChoose from "./TrainingDayChoose";
+import { PlanDayChoose } from "../../../interfaces/PlanDay";
 
-interface AddTrainingProps{
-  toggleMenuButton:(hide:boolean)=>void
+interface AddTrainingProps {
+  toggleMenuButton: (hide: boolean) => void;
 }
 
 const AddTraining: React.FC<AddTrainingProps> = (props) => {
@@ -30,16 +35,15 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
 
   const [dayId, setDayId] = useState<string>();
   const [isUserHavePlan, setIsUserHavePlan] = useState<boolean>(false);
-  const [chooseDay, setChooseDay] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [trainingSummary,setTrainingSummary]= useState<TrainingSummaryInterface>();
+  const [trainingSummary, setTrainingSummary] =
+    useState<TrainingSummaryInterface>();
   const [showUpdateRankPopUp, setShowUpdateRankPopUp] =
     useState<boolean>(false);
+  const [isChooseDayActive, setIsChooseDayActive] = useState<boolean>(false);
+  const [trainingTypes, setTrainingTypes] = useState<PlanDayChoose[]>([]);
 
-  useInterval(() => {
-    setChooseDay;
-  }, 1000);
   useEffect(() => {
     init();
   }, []);
@@ -63,60 +67,32 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     if (response && Object.keys(response).length) setIsAddTrainingActive(true);
   };
 
-  const getInformationAboutGyms =  () => {
+  const getInformationAboutGyms = () => {
     setViewLoading(true);
     setIsGymChoiceActive(true);
     props.toggleMenuButton(true);
     setViewLoading(false);
-  }
+  };
   const changeGym = async (gym: GymForm) => {
     setGym(gym);
     setIsGymChoiceActive(false);
     setViewLoading(true);
     getInformationsAboutPlanDays();
     setViewLoading(false);
-  }
+  };
 
   const getInformationsAboutPlanDays: VoidFunction =
     async (): Promise<void> => {
-      setLoading(true);
       const id = await AsyncStorage.getItem("id");
       const response = await fetch(
         `${apiURL}/api/planDay/${id}/getPlanDaysTypes`
-      )
-      const trainingTypes = await response.json()
-      setChooseDay(
-        <View className="items-center bg-[#131313] flex flex-col justify-start gap-y-5  h-full absolute m-0 w-full top-0">
-          <Text
-            className="text-3xl text-white"
-            style={{ fontFamily: "OpenSans_700Bold" }}
-          >
-            Choose training day!
-          </Text>
-          {trainingTypes.map((ele: { _id: string; name: string }) => (
-            <TouchableOpacity
-              onPress={() => showDaySection(ele._id)}
-              style={{ borderRadius: 12 }}
-              className="items-center border-[#868686] border-[1px]  flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
-              key={ele._id}
-            >
-              <Text
-                className="text-white text-3xl"
-                style={{
-                  fontFamily: "OpenSans_700Bold",
-                }}
-              >
-                {ele.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-          {loading ? <MiniLoading /> : <Text></Text>}
-        </View>
       );
-      setLoading(false);
+      const trainingTypes:PlanDayChoose[] = await response.json();
+      setTrainingTypes(trainingTypes);
+        
     };
   const resetChoosePlanDay = () => {
-    setChooseDay(<></>);
+    setIsChooseDayActive(false);
   };
 
   const getCurrentPlanDayTraining = async () => {
@@ -128,7 +104,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   };
   const showDaySection = async (day: string): Promise<void> => {
     setViewLoading(true);
-
+    setIsChooseDayActive(false);
     setIsAddTrainingActive(true);
     setDayId(day);
     setViewLoading(false);
@@ -153,7 +129,10 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     setShowUpdateRankPopUp(false);
   };
 
-  const addTraining = async (exercises: TrainingSessionScores[],lastExercisesScores:LastExerciseScores[] | undefined) => {
+  const addTraining = async (
+    exercises: TrainingSessionScores[],
+    lastExercisesScores: LastExerciseScores[] | undefined
+  ) => {
     setViewLoading(true);
     const id = await AsyncStorage.getItem("id");
     const type = dayId;
@@ -178,13 +157,13 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
         createdAt: createdAt,
         exercises: training,
         lastExercisesScores: lastExercisesScores,
-        gym:gym?._id
+        gym: gym?._id,
       }),
-    })
-    const result:TrainingSummaryInterface = await response.json();
+    });
+    const result: TrainingSummaryInterface = await response.json();
     if (result.msg === Message.Created) {
       await hideAndDeleteTrainingSession();
-      setTrainingSummary(result)
+      setTrainingSummary(result);
     }
     showUpdateRankPop();
     setViewLoading(false);
@@ -195,10 +174,15 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
       {isUserHavePlan ? (
         <View className="relative  flex flex-col justify-center items-center h-full w-full">
           {isAddTrainingActive ? (
-            <CustomButton  onPress={getCurrentPlanDayTraining} customSlots={[  <Icon
-              style={{ fontSize: 140, color: "#94e798" }}
-              name="play-circle"
-            />]}/>
+            <CustomButton
+              onPress={getCurrentPlanDayTraining}
+              customSlots={[
+                <Icon
+                  style={{ fontSize: 140, color: "#94e798" }}
+                  name="play-circle"
+                />,
+              ]}
+            />
           ) : (
             <Pressable onPress={getInformationAboutGyms}>
               <Icon
@@ -210,7 +194,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
 
           {loading ? <MiniLoading /> : <Text></Text>}
           {isGymChoiceActive ? <TrainingGymChoose setGym={changeGym} /> : <></>}
-          {chooseDay}
+          {isChooseDayActive? <TrainingDayChoose trainingTypes={trainingTypes} showDaySection={showDaySection} /> : <></>}
 
           {isAddTrainingActive && dayId ? (
             <TrainingPlanDay
@@ -225,7 +209,10 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
             <></>
           )}
           {showUpdateRankPopUp && trainingSummary ? (
-            <TrainingSummary trainingSummary={trainingSummary} closePopUp={hideUpdateRankPopUp} />
+            <TrainingSummary
+              trainingSummary={trainingSummary}
+              closePopUp={hideUpdateRankPopUp}
+            />
           ) : (
             <></>
           )}

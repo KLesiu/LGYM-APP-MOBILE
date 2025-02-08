@@ -116,9 +116,7 @@ const Gym: React.FC<GymProps> = (props) => {
         </ScrollView>
       </View>
       {isGymFormVisible ? (
-        <View className="absolute h-full w-full flex flex-col  bg-[#121212]  top-0 z-30 ">
           <GymFormComponent closeForm={closeForm} gym={currentChosenGym} />
-        </View>
       ) : (
         <></>
       )}

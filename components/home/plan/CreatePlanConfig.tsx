@@ -6,10 +6,11 @@ import ResponseMessage from "../../../interfaces/ResponseMessage";
 import { Message } from "../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
+import Dialog from "../../elements/Dialog";
 
-interface CreatePlanConfigProps{
-  reloadSection:VoidFunction,
-  hidePlanConfig:VoidFunction,
+interface CreatePlanConfigProps {
+  reloadSection: VoidFunction;
+  hidePlanConfig: VoidFunction;
 }
 
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
@@ -63,10 +64,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   };
 
   return (
-    <View
-      style={{ gap: 16 }}
-      className="absolute h-full w-full flex flex-col  bg-[#121212] items-center top-0 z-30 p-4 "
-    >
+    <Dialog>
       <Text
         className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
         style={{ fontFamily: "OpenSans_700Bold" }}
@@ -117,8 +115,16 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           </View>
         </View>
         <View className="flex flex-row justify-between w-full">
-          <CustomButton  text="Cancel" onPress={props.hidePlanConfig} buttonStyleType={ButtonStyle.cancel}/>
-          <CustomButton  text="Next" onPress={sendConfig} buttonStyleType={ButtonStyle.success}/>
+          <CustomButton
+            text="Cancel"
+            onPress={props.hidePlanConfig}
+            buttonStyleType={ButtonStyle.cancel}
+          />
+          <CustomButton
+            text="Next"
+            onPress={sendConfig}
+            buttonStyleType={ButtonStyle.success}
+          />
         </View>
       </View>
       {error ? (
@@ -132,7 +138,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
         ""
       )}
       {viewLoading ? <ViewLoading /> : <Text></Text>}
-    </View>
+    </Dialog>
   );
 };
 

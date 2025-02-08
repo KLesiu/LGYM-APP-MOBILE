@@ -13,7 +13,7 @@ import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import CreateExercise from "../exercises/CreateExercise";
 import { DropdownItem } from "../../../interfaces/Dropdown";
-
+import Dialog from "../../elements/Dialog";
 
 interface CreatePlanDayProps {
   planId: string;
@@ -49,8 +49,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   const getAllExercises = async () => {
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/exercise/${id}/getAllExercises`)
-    const result = await response.json()
+    const response = await fetch(
+      `${apiURL}/api/exercise/${id}/getAllExercises`
+    );
+    const result = await response.json();
     const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
       return { label: exercise.name, value: exercise._id };
     });
@@ -83,29 +85,26 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       }
     );
     const result = await response.json();
-    if (result.msg === Message.Created)props.closeForm();
-    
+    if (result.msg === Message.Created) props.closeForm();
+
     setViewLoading(false);
   };
   const editPlanDay = async () => {
     setViewLoading(true);
-    const exercises = mapExercisesListToSend()
-    const response = await fetch(
-      `${apiURL}/api/planDay/updatePlanDay`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          _id: props.planDayId,
-          name: planDayName,
-          exercises: exercises,
-        }),
-      }
-    );
+    const exercises = mapExercisesListToSend();
+    const response = await fetch(`${apiURL}/api/planDay/updatePlanDay`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        _id: props.planDayId,
+        name: planDayName,
+        exercises: exercises,
+      }),
+    });
     const result = await response.json();
-    if(result.msg === Message.Updated) props.closeForm()
+    if (result.msg === Message.Updated) props.closeForm();
     setViewLoading(false);
   };
   const removeExerciseFromList = (item: ExerciseForPlanDay) => () => {
@@ -189,11 +188,8 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   };
 
   return (
-    <View className="absolute h-full w-full top-0   z-30 ">
-      <View
-        style={{ gap: 16 }}
-        className="flex flex-col bg-[#121212] h-full w-full p-4 relative"
-      >
+    <>
+      <Dialog>
         <Text
           className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
           style={{ fontFamily: "OpenSans_700Bold" }}
@@ -341,14 +337,14 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             )}
           </View>
         </View>
-      </View>
+      </Dialog>
       {isTrainingPlanDayExerciseFormShow ? (
         <CreateExercise closeForm={toggleExerciseForm} />
       ) : (
         <></>
       )}
       {viewLoading ? <ViewLoading /> : <Text></Text>}
-    </View>
+    </>
   );
 };
 

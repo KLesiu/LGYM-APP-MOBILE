@@ -4,9 +4,10 @@ import { GymChoiceInfo, GymForm } from "../../../interfaces/Gym";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native";
 import GymPlace from "../gym/GymPlace";
+import Dialog from "../../elements/Dialog";
 
 interface TrainingGymChooseProps {
-    setGym: (gym:GymForm) => void;
+  setGym: (gym: GymForm) => void;
 }
 
 const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
@@ -23,13 +24,13 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
   const getGyms = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${API_URL}/api/gym/${id}/getGyms`);
-    const result = await response.json() as GymChoiceInfo[];
-    
+    const result = (await response.json()) as GymChoiceInfo[];
+
     setGyms(result);
   };
 
   return (
-    <View className="items-center bg-[#131313] flex flex-col justify-start gap-y-5  h-full absolute m-0 w-full top-0">
+    <Dialog>
       <Text
         className="text-3xl text-white"
         style={{ fontFamily: "OpenSans_700Bold" }}
@@ -39,14 +40,14 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
       <ScrollView className="w-full">
         <View style={{ gap: 8 }} className="flex flex-col pb-12">
           {gyms.map((gym, index) => (
-            <Pressable onPress={()=>props.setGym(gym)}>
+            <Pressable onPress={() => props.setGym(gym)}>
               <GymPlace key={index} gym={gym} isEditable={false} />
             </Pressable>
           ))}
         </View>
       </ScrollView>
-    </View>
+    </Dialog>
   );
 };
 
-export default TrainingGymChoose
+export default TrainingGymChoose;

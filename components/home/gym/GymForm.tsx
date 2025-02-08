@@ -4,6 +4,7 @@ import { GymForm as GymFormVm } from "../../../interfaces/Gym";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Message } from "../../../enums/Message";
+import Dialog from "../../elements/Dialog";
 
 interface GymFormProps {
   closeForm: () => void;
@@ -17,7 +18,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
 
   useEffect(() => {
     if (props.gym) setGymName(props.gym.name);
-  },[])
+  }, []);
 
   const updateGym = async () => {
     const response = await fetch(`${API_URL}/api/gym/editGym`, {
@@ -28,8 +29,8 @@ const GymForm: React.FC<GymFormProps> = (props) => {
       body: JSON.stringify({ name: gymName, _id: props.gym?._id }),
     });
     const result = await response.json();
-    if(result.msg === Message.Updated) props.closeForm();
-  }
+    if (result.msg === Message.Updated) props.closeForm();
+  };
   const createGym = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${API_URL}/api/gym/${id}/addGym`, {
@@ -40,15 +41,11 @@ const GymForm: React.FC<GymFormProps> = (props) => {
       body: JSON.stringify({ name: gymName }),
     });
     const result = await response.json();
-    if(result.msg === Message.Created) props.closeForm();
-    
-  }
+    if (result.msg === Message.Created) props.closeForm();
+  };
 
   return (
-    <View
-      className="absolute top-0 left-0  flex flex-col w-full h-full p-4 bg-[#121212]"
-      style={{ gap: 16 }}
-    >
+    <Dialog>
       {!props.gym ? (
         <Text
           className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
@@ -84,17 +81,33 @@ const GymForm: React.FC<GymFormProps> = (props) => {
           />
         </View>
       </View>
-      <View className="flex flex-row justify-between " style={{gap:8}}>
-        
-        <CustomButton  onPress={props.closeForm} text="Cancel" buttonStyleType={ButtonStyle.cancel} width="flex-1"/>
+      <View className="flex flex-row justify-between " style={{ gap: 8 }}>
+        <CustomButton
+          onPress={props.closeForm}
+          text="Cancel"
+          buttonStyleType={ButtonStyle.cancel}
+          width="flex-1"
+        />
         {props.gym ? (
-        <CustomButton  onPress={updateGym} text="Update" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl" />
-      ) : (
-        <CustomButton  onPress={createGym} text="Create" buttonStyleType={ButtonStyle.success} width="flex-1" textSize="text-xl"/>
-      )}
+          <CustomButton
+            onPress={updateGym}
+            text="Update"
+            buttonStyleType={ButtonStyle.success}
+            width="flex-1"
+            textSize="text-xl"
+          />
+        ) : (
+          <CustomButton
+            onPress={createGym}
+            text="Create"
+            buttonStyleType={ButtonStyle.success}
+            width="flex-1"
+            textSize="text-xl"
+          />
+        )}
       </View>
-    </View>
+    </Dialog>
   );
 };
 
-export default GymForm
+export default GymForm;
