@@ -1,7 +1,7 @@
 import { View } from "react-native";
 
 interface BackgroundMainSectionProps {
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 const BackgroundMainSection: React.FC<BackgroundMainSectionProps> = ({ children }) => {
