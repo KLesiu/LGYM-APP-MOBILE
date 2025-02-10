@@ -35,7 +35,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const [numberOfSeries, setNumberOfSeries] = useState<string>("");
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
-  const [clearQuery, setClearQuery] = useState<boolean>(false); // Nowy stan do czyszczenia query
+  const [clearQuery, setClearQuery] = useState<boolean>(false); 
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   useEffect(() => {
