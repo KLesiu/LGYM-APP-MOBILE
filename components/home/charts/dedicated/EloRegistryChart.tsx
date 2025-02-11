@@ -17,18 +17,11 @@ const EloRegistryChart: React.FC = () => {
       `${API_URL}/api/eloRegistry/${id}/getEloRegistryChart`
     );
     const result = await response.json();
-    console.log(result);
     setData(result);
   };
 
   return data.length ? (
     <View className="h-60 w-full">
-      <Text
-        style={{ fontFamily: "OpenSans_300Light" }}
-        className="  text-white  text-base"
-      >
-        Elo chart:
-      </Text>
       <LineChart data={data} />
     </View>
   ) : (

@@ -69,13 +69,13 @@ const Menu: React.FC<MenuProps> = (props) => {
   });
 
   const items = [
-    { icon: addTraining, label: "Training", component: <AddTraining toggleMenuButton={toggleMenuButton} /> },
+    { icon: home, label: "Home", component: <Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
     { icon: exercise, label: "Exercises", component: <Exercises  toggleMenuButton={toggleMenuButton} /> },
-    { icon: charts, label: "Charts", component: <Charts  toggleMenuButton={toggleMenuButton} /> },
     { icon: gym, label: "Gym", component: <Gym viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
+    { icon: addTraining, label: "Training", component: <AddTraining toggleMenuButton={toggleMenuButton} /> },
     { icon: plan, label: "Plan", component: <TrainingPlan hideMenuButton={toggleMenuButton} /> },
     { icon: history, label: "History", component: <History /> },
-    { icon: home, label: "Home", component: <Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
+    { icon: charts, label: "Charts", component: <Charts  toggleMenuButton={toggleMenuButton} /> },
     { icon: profile, label: "Profile", component: <Profile viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
   ];
 

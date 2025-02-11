@@ -50,6 +50,9 @@ const History: React.FC = () => {
   const getTrainingDates = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${apiURL}/api/${id}/getTrainingDates`);
+    if(response.status === 404){
+      return setTrainingDates([]);
+    }
     const data: Date[] = await response.json();
     const markedDates: MarkedDates[] = data.map((date: Date) => ({
       date: date,

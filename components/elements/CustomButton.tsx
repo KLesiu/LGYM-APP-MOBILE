@@ -6,6 +6,7 @@ export enum ButtonStyle {
     success = "bg-[#94e798]",
     cancel = "bg-[#3f3f3f]",
     outline = "border-[#94e798] border-[1px]",
+    grey = "bg-[#282828]",
     default = "bg-white"
 }
 export enum ButtonSize{
@@ -13,7 +14,8 @@ export enum ButtonSize{
   small ="py-2 px-1",
   regular = 'py-4 px-2',
   xl = 'py-6 px-4',
-  xxl = 'py-8 px-6'
+  xxl = 'py-8 px-6',
+  long = "py-2 px-6"
 }
 interface ButtonProps {
   onPress: () => void;
@@ -35,6 +37,8 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       case ButtonStyle.cancel:
         return 'text-white';
       case ButtonStyle.outline:
+        return 'text-white';
+      case ButtonStyle.grey:
         return 'text-white';
       default:
         return 'text-black';

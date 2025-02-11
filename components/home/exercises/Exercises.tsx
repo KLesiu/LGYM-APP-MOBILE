@@ -150,20 +150,20 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
       <CustomButton
         customSlots={[
           <Text
-            className="text-base text-[#131313] font-bold"
+            className="text-base text-[#94e798] font-bold"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {item.name}
           </Text>,
           <Text
-            className="text-sm text-[#1f1f1f]"
+            className="text-sm text-white"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             BodyPart: {item.bodyPart}
           </Text>,
         ]}
         onPress={() => showExerciseDetails(item)}
-        buttonStyleType={ButtonStyle.success}
+        buttonStyleType={ButtonStyle.grey}
         buttonStyleSize={ButtonSize.xxl}
       />
     );

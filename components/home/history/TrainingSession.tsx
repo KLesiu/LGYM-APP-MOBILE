@@ -15,7 +15,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
       {props.trainings.map((training: TrainingByDateDetails, index: number) => {
         return (
           <View style={{ gap: 8 }} key={index} className="flex flex-col ">
-            <View className="flex flex-row justify-between">
+            <View className="flex flex-col justify-between gap-1">
               <Text
                 style={{ fontFamily: "OpenSans_700Bold" }}
                 className="text-lg text-[#94e798]"
@@ -23,9 +23,9 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                 Training {training.planDay.name}
               </Text>
               <View className="flex flex-row items-center">
-                <Image source={gym} className="w-8 h-8" />
+                <Image source={gym} className="w-4 h-4" />
                 <Text
-                  className="text-sm text-white"
+                  className="text-[11px] text-white"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -53,9 +53,9 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                       {exercise.exerciseDetails.bodyPart}
                     </Text>
                     <View style={{ gap: 8 }} className="flex flex-col ">
-                      {exercise.scoresDetails.map((score) => {
+                      {exercise.scoresDetails.map((score,key) => {
                         return (
-                          <View className="flex flex-row justify-between">
+                          <View key={`series-${key}`} className="flex flex-row justify-between">
                             <Text
                               style={{ fontFamily: "OpenSans_400Regular" }}
                               className="text-white"

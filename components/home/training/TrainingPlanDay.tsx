@@ -26,6 +26,10 @@ import gym from "./../../../img/icons/gym.png";
 import { GymForm } from "../../../interfaces/Gym";
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../elements/CustomButton";
 
 interface TrainingPlanDayProps {
   hideChooseDaySection: () => void;
@@ -198,12 +202,20 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setIsTrainingPlanDayExerciseFormShow(false);
   };
 
-  const incrementSeriesNumber = async(exercise:string,series:number,reps:string) => {
-    await getExerciseToAddFromForm(exercise,series+1,reps,true)
-  }
-  const decrementSeriesNumber = async(exercise:string,series:number,reps:string) => {
-    await getExerciseToAddFromForm(exercise,series-1,reps,true)
-  }
+  const incrementSeriesNumber = async (
+    exercise: string,
+    series: number,
+    reps: string
+  ) => {
+    await getExerciseToAddFromForm(exercise, series + 1, reps, true);
+  };
+  const decrementSeriesNumber = async (
+    exercise: string,
+    series: number,
+    reps: string
+  ) => {
+    await getExerciseToAddFromForm(exercise, series - 1, reps, true);
+  };
 
   const getExercise = async (id: string) => {
     const response = await fetch(`${apiURL}/api/exercise/${id}/getExercise`);
@@ -217,41 +229,45 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     isIncrementDecrement?: boolean
   ) => {
     if (!planDay) return;
-    
+
     const response = await getExercise(exerciseId);
     let newPlanDay: LastScoresPlanDayVm = planDay;
     let exerciseIndex = -1;
-  
+
     if (exerciseWhichBeingSwitched || isIncrementDecrement) {
-      const idExercise = isIncrementDecrement ? exerciseId : exerciseWhichBeingSwitched;
-  
-      exerciseIndex = newPlanDay.exercises.findIndex(e => e.exercise._id=== idExercise);
-  
+      const idExercise = isIncrementDecrement
+        ? exerciseId
+        : exerciseWhichBeingSwitched;
+
+      exerciseIndex = newPlanDay.exercises.findIndex(
+        (e) => e.exercise._id === idExercise
+      );
+
       const response = await deleteExerciseFromPlanDay(idExercise);
       if (!response) return;
-  
+
       newPlanDay = response;
     }
-  
+
     let newPlanDayExercises = [...newPlanDay.exercises];
-  
+
     const newExercise = { exercise: response, series, reps };
-  
+
     if (exerciseIndex !== -1) {
       newPlanDayExercises.splice(exerciseIndex, 0, newExercise);
     } else {
       newPlanDayExercises.push(newExercise);
     }
-  
+
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
-  
+
     if (!newPlanDay) return;
-  
+
     await addExerciseToPlanDay(newPlanDay);
     await getLastExerciseScores(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
   };
-  
+
   const addExerciseToPlanDay = async (newPlanDay: LastScoresPlanDayVm) => {
     setPlanDay(newPlanDay);
     await sendPlanDayToLocalStorage(newPlanDay);
@@ -260,20 +276,16 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     scores: TrainingSessionScores[]
   ): TrainingSessionScores[] | null => {
     const parsedScores = scores.map((score) => {
-      // Zamiana przecinka na kropkę w `reps` i `weight`
       const repsWithDot = score.reps.toString().replace(",", ".");
       const weightWithDot = score.weight.toString().replace(",", ".");
 
-      // Próba sparsowania wartości
       const parsedReps = parseFloat(repsWithDot);
       const parsedWeight = parseFloat(weightWithDot);
 
-      // Sprawdzamy, czy udało się sparsować obie wartości
       if (isNaN(parsedReps) || isNaN(parsedWeight)) {
         return null;
       }
 
-      // Zwracamy nowy obiekt z sparsowanymi wartościami
       return {
         ...score,
         reps: parsedReps,
@@ -281,7 +293,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       };
     });
 
-    // Sprawdzamy, czy wszystkie elementy zostały poprawnie sparsowane
     return parsedScores.includes(null)
       ? null
       : (parsedScores as TrainingSessionScores[]);
@@ -360,10 +371,26 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             </Text>
           </View>
           <View style={{ gap: 16 }} className="flex flex-row">
-            <Pressable onPress={()=>incrementSeriesNumber(`${item.exercise._id}`,item.series,item.reps)}>
+            <Pressable
+              onPress={() =>
+                incrementSeriesNumber(
+                  `${item.exercise._id}`,
+                  item.series,
+                  item.reps
+                )
+              }
+            >
               <Icon name="plus" size={20} color="#94e798" />
             </Pressable>
-            <Pressable onPress={()=>decrementSeriesNumber(`${item.exercise._id}`,item.series,item.reps)}>
+            <Pressable
+              onPress={() =>
+                decrementSeriesNumber(
+                  `${item.exercise._id}`,
+                  item.series,
+                  item.reps
+                )
+              }
+            >
               <Icon name="minus" size={20} color="#94e798" />
             </Pressable>
             <Pressable
@@ -468,16 +495,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     <View className="absolute w-full h-full text-white bg-[#121212] flex flex-col">
       {planDay && Object.keys(planDay).length ? (
         <View
-          style={{ gap: 8 }}
+          style={{ gap: 16 }}
           className="flex flex-col items-center p-4 h-full"
         >
-          <View
-            style={{ gap: 8 }}
-            className="flex flex-row w-full justify-between"
-          >
-            <View className="flex flex-col items-center flex-1 ">
+          <View style={{ gap: 8 }} className="flex flex-col w-full px-2 ">
+            <View className="flex flex-col " style={{gap:4}}>
               <Text
-                className="text-2xl text-white block  font-bold "
+                className="text-2xl text-[#94e798] block  font-bold "
                 style={{
                   fontFamily: "OpenSans_700Bold",
                 }}
@@ -485,9 +509,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 {planDay.name}
               </Text>
               <View className="flex flex-row items-center">
-                <Image source={gym} className="w-8 h-8" />
+                <Image source={gym} className="w-4 h-4" />
                 <Text
-                  className="text-sm text-white"
+                  className="text-[11px] text-white"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -496,35 +520,21 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 </Text>
               </View>
             </View>
-            <View className="flex flex-row items-center" style={{ gap: 8 }}>
-              <Pressable
+            <View className="flex flex-row justify-between" style={{ gap: 8 }}>
+              <CustomButton
                 onPress={props.hideDaySection}
-                style={{ borderRadius: 6 }}
-                className="flex flex-row justify-center items-center w-20 h-16 bg-[#3f3f3f]"
-              >
-                <Text
-                  className="text-center text-[12px] text-white"
-                  style={{
-                    fontFamily: "OpenSans_400Regular",
-                  }}
-                >
-                  Back
-                </Text>
-              </Pressable>
-              <Pressable
+                buttonStyleSize={ButtonSize.long}
+                buttonStyleType={ButtonStyle.outline}
+                textSize="text-sm"
+                text="Back"
+              />
+              <CustomButton
                 onPress={showExerciseForm}
-                style={{ borderRadius: 6 }}
-                className=" flex flex-row justify-center items-center w-28 h-16 bg-[#3f3f3f]"
-              >
-                <Text
-                  className="text-center text-[12px] text-white"
-                  style={{
-                    fontFamily: "OpenSans_400Regular",
-                  }}
-                >
-                  Add Exercise
-                </Text>
-              </Pressable>
+                buttonStyleSize={ButtonSize.long}
+                buttonStyleType={ButtonStyle.success}
+                textSize="text-sm"
+                text="Add Exercise"
+              />
             </View>
           </View>
           <ScrollView

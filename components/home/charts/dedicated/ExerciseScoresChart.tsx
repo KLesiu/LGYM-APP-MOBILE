@@ -14,7 +14,7 @@ const ExerciseScoresChart: React.FC = () => {
     []
   );
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
-  const [clearQuery, setClearQuery] = useState<boolean>(false); // Nowy stan do czyszczenia query
+  const [clearQuery, setClearQuery] = useState<boolean>(false); 
 
   useEffect(() => {
     getAllExercises();
@@ -30,6 +30,8 @@ const ExerciseScoresChart: React.FC = () => {
       return { label: exercise.name, value: exercise._id };
     });
     setExercisesToSelect(helpExercisesToSelect);
+    selectExercise(helpExercisesToSelect[0]);
+
   };
   const clearAutoCompleteQuery = () => {
     setClearQuery(false);
@@ -72,6 +74,7 @@ const ExerciseScoresChart: React.FC = () => {
           data={exercisesToSelect}
           onSelect={(item) => selectExercise(item)}
           value={selectedExercise?.label || ""}
+          valueId = {selectedExercise?.value || ""}
           onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
         />
       </View>

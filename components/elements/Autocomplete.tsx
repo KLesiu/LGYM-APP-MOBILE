@@ -1,51 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import { DropdownItem } from '../../interfaces/Dropdown';
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import { DropdownItem } from "../../interfaces/Dropdown";
 
 interface AutoCompleteProps {
-  data: DropdownItem[];          
-  value?: string | null;       
-  onSelect: (item: DropdownItem) => void; 
-  onClearQuery?: () => void;   
+  data: DropdownItem[];
+  value?: string | null;
+  valueId?: string | null;
+  onSelect: (item: DropdownItem) => void;
+  onClearQuery?: () => void;
 }
 
-const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onClearQuery }) => {
-  const [query, setQuery] = useState('');  
-  const [filteredData, setFilteredData] = useState<DropdownItem[]>([]); 
-  const [selectedItem, setSelectedItem] = useState<DropdownItem | null>(null); 
+const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value,valueId, onSelect, onClearQuery }) => {
+  const [query, setQuery] = useState(value || "");
+  const [filteredData, setFilteredData] = useState<DropdownItem[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
-    if (value) {
-      const selected = data.find(item => item.value === value);
-      setSelectedItem(selected || null);
+    if (value && valueId) {
+      setQuery(value);
+      const selectedItem = data.find(item => item.value === valueId);
+      if (selectedItem) {
+        handleSelect(selectedItem);
+      }
     }
-  }, [value, data]);
+  }, [value]);
 
   useEffect(() => {
     if (query.length > 0) {
       const filtered = data.filter(item =>
         item.label.toLowerCase().includes(query.toLowerCase())
       );
-      if(selectedItem?.label === query) return;
-      if(!filtered.length) return setFilteredData(data);
-      setFilteredData(filtered);
+      setFilteredData(filtered.length ? filtered : data);
+      setShowDropdown(true);
     } else {
       setFilteredData([]);
+      setShowDropdown(false);
     }
   }, [query, data]);
 
   useEffect(() => {
     if (onClearQuery) {
-      setQuery('');  
-      onClearQuery();  
+      setQuery("");
+      onClearQuery();
+      setShowDropdown(false);
     }
   }, [onClearQuery]);
 
   const handleSelect = (item: DropdownItem) => {
-    setSelectedItem(item); 
-    setQuery(item.label);  
-    onSelect(item);      
-    setFilteredData([]);   
+    setQuery(item.label);
+    onSelect(item);
+    setShowDropdown(false);
   };
 
   const renderItem = ({ item }: { item: DropdownItem }) => (
@@ -57,23 +61,20 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
   return (
     <View>
       <TextInput
-        style={{
-          fontFamily: "OpenSans_400Regular",
-          backgroundColor: "rgba(30, 30, 30, 0.45)",
-          borderRadius:8
-        }}
-        
-        className=" w-full  px-2 py-4 text-white  "
+        style={styles.input}
         value={query}
-        onChangeText={setQuery}
+        onChangeText={(text) => {
+          setQuery(text);
+          setShowDropdown(true);
+        }}
       />
 
-      {filteredData.length > 0 && (
+      {showDropdown && filteredData.length > 0 && (
         <View style={styles.dropdown}>
           <FlatList
-            data={filteredData}    
-            renderItem={renderItem} 
-            keyExtractor={(item) => item.value.toString()} 
+            data={filteredData}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.value.toString()}
           />
         </View>
       )}
@@ -82,11 +83,18 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value, onSelect, onCl
 };
 
 const styles = StyleSheet.create({
+  input: {
+    fontFamily: "OpenSans_400Regular",
+    backgroundColor: "rgba(30, 30, 30, 0.45)",
+    borderRadius: 8,
+    padding: 10,
+    color: "white",
+  },
   dropdown: {
     maxHeight: 150,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderRadius: 8,
     marginTop: 5,
     elevation: 5,
@@ -94,7 +102,7 @@ const styles = StyleSheet.create({
   item: {
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: "#ddd",
   },
 });
 

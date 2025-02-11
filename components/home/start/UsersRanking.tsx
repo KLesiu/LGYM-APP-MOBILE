@@ -24,14 +24,14 @@ const UsersRanking: React.FC = () => {
   }, []);
 
   return (
-    <View className="h-full w-full">
+    <View className="h-full w-full flex flex-col gap-2">
       <Text
         className="text-[#94e798] text-lg"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
        Ranking
       </Text>
-      <ScrollView className="flex flex-col py-4 gap-2 smh:h-52 mdh:h-64  ">
+      <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64  ">
       {ranking.length ? (
         ranking.map((ele: UserBaseInfo,index:number) => {
             let color = "text-white"
