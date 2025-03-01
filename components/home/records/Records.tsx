@@ -67,7 +67,7 @@ const Records: React.FC<RecordsProps> = () => {
   }
 
   return (
-    <View className="flex  flex-1 relative w-full  bg-[#121212]">
+    <View className="flex  flex-1 relative w-full  bg-bgColor">
       {popUp ? (
         <RecordsPopUp offPopUp={chagePopUpValue} exerciseId={exercise} />
       ) : (
@@ -95,7 +95,7 @@ const Records: React.FC<RecordsProps> = () => {
                           style={{
                             fontFamily: "OpenSans_700Bold",
                           }}
-                          className="text-xl font-bold text-[#94e798]"
+                          className="text-xl font-bold text-primaryColor"
                         >
                           {record.exerciseDetails.name}
                         </Text>

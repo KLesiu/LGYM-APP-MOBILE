@@ -22,7 +22,7 @@ const Charts: React.FC<ChartsProps> = () => {
           style={{
             fontFamily: "OpenSans_700Bold",
           }}
-          className="text-2xl font-bold text-[#94e798]"
+          className="text-2xl font-bold text-primaryColor"
         >
           Dashboard
         </Text>

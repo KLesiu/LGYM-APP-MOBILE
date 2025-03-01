@@ -1,10 +1,10 @@
-import { Text, View, Image, ScrollView } from "react-native";
+import { Text, View, Image, ScrollView, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "../../elements/ViewLoading";
 import CreatePlanConfig from "./CreatePlanConfig";
-import CreatePlanDay from "./CreatePlanDay";
-import { PlanDayVm } from "../../../interfaces/PlanDay";
+import CreatePlanDay from "./planDay/CreatePlanDay";
+import { PlanDayBaseInfoVm, PlanDayVm } from "../../../interfaces/PlanDay";
 import RemoveIcon from "./../../../img/icons/remove.png";
 import { Message } from "../../../enums/Message";
 import CustomButton, {
@@ -12,7 +12,6 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import { FontWeights } from "../../../enums/FontsProperties";
-import EditIcon from "./../../../img/icons/edit.png";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 interface TrainingPlanProps {
@@ -26,12 +25,12 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     trainingDays: number;
     _id: string;
   }>();
-  const [planDays, setPlanDays] = useState<PlanDayVm[]>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
+  const [planDaysBaseInfo,setPlanDaysBaseInfo] = useState<PlanDayBaseInfoVm[]>([]);
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
-  const [currentPlanDay, setCurrentPlanDay] = useState<PlanDayVm>();
+  const [currentPlanDay, setCurrentPlanDay] = useState<PlanDayBaseInfoVm>();
   const [
     isDeletePlanDayConfirmationDialogVisible,
     setIsDeletePlanDayConfirmationDialogVisible,
@@ -44,29 +43,21 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const init = async () => {
     setViewLoading(true);
     const result = await getUserPlanConfig();
-    if (result) await getPlanDays(result);
+    if(result)await getPlanDaysBaseInfo(result);
     setViewLoading(false);
   };
 
-  const getPlanDays = async (planConfig: {
+  const getPlanDaysBaseInfo = async (planConfig: {
     name: string;
     trainingDays: number;
     _id: string;
-  }): Promise<void> => {
-    try {
-      const response = await fetch(
-        `${apiURL}/api/planDay/${planConfig._id}/getPlanDays`
-      );
-      if (!response.ok) {
-        setPlanDays([]);
-        return;
-      }
-      const data = await response.json();
-      setPlanDays(data);
-    } catch (error) {
-      console.error("Failed to fetch plan days", error);
-    }
-  };
+  }):Promise<void> =>{
+    if(!planConfig || !planConfig._id) return;
+    const response = await fetch(`${apiURL}/api/planDay/${planConfig._id}/getPlanDaysInfo`);
+    const result = await response.json();
+    setPlanDaysBaseInfo(result);
+  }
+
   const deletePlanDay = async (): Promise<void> => {
     if (!currentPlanDay) return;
     const response = await fetch(
@@ -79,15 +70,12 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     }
     deletePlanDayVisible(false);
   };
-  const showPlanConfigPopUp = (): void => {
-    props.hideMenuButton(true);
-    setShowPlanConfig(true);
-  };
-  const hidePlanConfigPopUp = (): void => {
-    props.hideMenuButton(false);
-    setShowPlanConfig(false);
-  };
-  const showPlanDayForm = (): void => {
+  const togglePlanConfigPopUp = (value:boolean): void => {
+    props.hideMenuButton(value);
+    setShowPlanConfig(value);
+  }
+  const showPlanDayForm = (planDay?:PlanDayBaseInfoVm): void => {
+    setCurrentPlanDay(planDay);
     props.hideMenuButton(true);
     setIsPlanDayFormVisible(true);
   };
@@ -101,66 +89,62 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   };
   const reloadSection = (): void => {
     setShowPlanConfig(false);
-    ``;
     props.hideMenuButton(false);
     init();
   };
-  const editPlanDay = (planDay: PlanDayVm): void => {
-    setCurrentPlanDay(planDay);
-    showPlanDayForm();
-  };
-  const addNewPlanDay = () => {
-    setCurrentPlanDay(undefined);
-    showPlanDayForm();
-  };
-
-  const renderPlanDay = ({ item }: { item: PlanDayVm }) => {
+  const renderPlanDay = ({ item }: { item: PlanDayBaseInfoVm }) => {
     const removeSlot: JSX.Element[] = [
       <Image className="w-6 h-6" source={RemoveIcon} />,
     ];
-    const editSlot: JSX.Element[] = [
-      <Image className="w-6 h-6" source={EditIcon} />,
-    ];
     return (
-      <View
-        key={item._id}
-        style={{ borderRadius: 8 }}
-        className="flex flex-col p-4  bg-[#282828]  w-full"
-      >
-        <View className="flex flex-row justify-between w-full">
-          <Text
-            style={{
-              fontFamily: "OpenSans_700Bold",
-            }}
-            className="text-2xl font-bold text-[#94e798]"
-          >
-            {item.name}
-          </Text>
-          <View className="flex flex-row" style={{ gap: 8 }}>
-            <CustomButton
-              buttonStyleSize={ButtonSize.small}
-              onPress={() => editPlanDay(item)}
-              customSlots={editSlot}
-            />
+      <View key={item._id} className="w-full" style={{ gap: 10 }}>
+        <Text
+          style={{ fontFamily: "OpenSans_400Regular" }}
+          className="text-base text-white"
+        >
+          Last training: {item.lastTrainingDate ? new Date(item.lastTrainingDate).toLocaleDateString() : "No training yet" }
+        </Text>
+        <Pressable
+          className="w-full bg-fourthColor flex flex-row p-2 rounded-lg justify-between items-start"
+          style={{ gap: 20 }}
+          onPress={() => showPlanDayForm(item)}
+        >
+          <View className="flex flex-col" style={{ gap: 4 }}>
+            <Text
+              style={{
+                fontFamily: "OpenSans_700Bold",
+              }}
+              className="text-xl font-bold text-white"
+            >
+              {item.name}
+            </Text>
+            <Text
+              style={{
+                fontFamily: "OpenSans_400Regular",
+              }}
+              className="text-base  text-fifthColor"
+            >
+              Exercises: {item.totalNumberOfExercises}
+            </Text>
+            <View className="flex flex-row w-full " style={{ gap: 16 }}>
+              <Text
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+                className="text-base  text-fifthColor"
+              >
+                Total series: {item.totalNumberOfSeries}
+              </Text>
+            </View>
+          </View>
+          <View className="flex justify-center items-center w-12 h-12 bg-secondaryColor70 rounded-lg ">
             <CustomButton
               buttonStyleSize={ButtonSize.small}
               onPress={() => deletePlanDayVisible(true, item)}
               customSlots={removeSlot}
             />
           </View>
-        </View>
-
-        {item.exercises.map((exercise, index) => (
-          <View key={index}>
-            <Text
-              style={{ fontFamily: "OpenSans_400Regular" }}
-              className="text-lg text-white"
-            >
-              {exercise.exercise ? exercise.exercise.name : ""} -{" "}
-              {exercise.series} x {exercise.reps}
-            </Text>
-          </View>
-        ))}
+        </Pressable>
       </View>
     );
   };
@@ -175,8 +159,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
       return result;
     }
   };
-
-  const deletePlanDayVisible = (visible: boolean, planDay?: PlanDayVm) => {
+  const deletePlanDayVisible = (visible: boolean, planDay?: PlanDayBaseInfoVm) => {
     if (visible) setCurrentPlanDay(planDay);
     else setCurrentPlanDay(undefined);
     setIsDeletePlanDayConfirmationDialogVisible(visible);
@@ -184,59 +167,64 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
 
   return (
     <BackgroundMainSection>
-      <View className="w-full h-full p-4 flex flex-col">
+      <View className="w-full h-full flex flex-col">
         {!planConfig ? (
           <View className="flex flex-row w-full">
             <CustomButton
-              onPress={showPlanConfigPopUp}
+              onPress={()=>togglePlanConfigPopUp(true)}
               text="Create plan"
               textWeight={FontWeights.bold}
               buttonStyleType={ButtonStyle.success}
             />
           </View>
         ) : (
-          <Text></Text>
-        )}
-        {planConfig && Object.keys(planConfig).length ? (
-          <View
-            style={{ gap: 16 }}
-            className="flex flex-col h-full items-center"
-          >
-            <View className="flex flex-row w-full justify-around items-center">
-              <Text
-                className="w-full text-lg text-white  font-bold "
-                style={{
-                  fontFamily: "OpenSans_700Bold",
-                }}
-              >
-                Current training plan: {planConfig.name}
-              </Text>
+          <View className="flex flex-col h-full">
+            <View className="p-5" style={{ gap: 32 }}>
+              <View>
+                <Text
+                  className="text-base text-primaryColor  font-bold"
+                  style={{
+                    fontFamily: "OpenSans_700Bold",
+                  }}
+                >
+                  Current training plan:
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: "OpenSans_700Bold",
+                  }}
+                  className="text-3xl text-white font-bold"
+                >
+                  {planConfig.name}
+                </Text>
+              </View>
+              <CustomButton
+                text="Add plan day"
+                onPress={showPlanDayForm}
+                buttonStyleType={ButtonStyle.success}
+                textWeight={FontWeights.bold}
+                buttonStyleSize={ButtonSize.regular}
+                width="w-44"
+              />
             </View>
-            <CustomButton
-              text="Add plan day"
-              onPress={addNewPlanDay}
-              buttonStyleType={ButtonStyle.success}
-              textWeight={FontWeights.bold}
-            />
-            {planDays && planDays.length ? (
+
+            {planDaysBaseInfo && planDaysBaseInfo.length ? (
               <ScrollView className="w-full">
-                <View style={{ gap: 8 }} className="flex flex-col pb-12">
-                  {planDays.map((planDay) => renderPlanDay({ item: planDay }))}
+                <View style={{ gap: 16 }} className="flex flex-col p-5 pb-12">
+                  {planDaysBaseInfo.map((planDay) => renderPlanDay({ item: planDay }))}
                 </View>
               </ScrollView>
             ) : (
               <Text></Text>
             )}
           </View>
-        ) : (
-          <Text></Text>
         )}
       </View>
       {viewLoading ? <ViewLoading /> : <Text></Text>}
       {showPlanConfig ? (
         <CreatePlanConfig
           reloadSection={reloadSection}
-          hidePlanConfig={hidePlanConfigPopUp}
+          hidePlanConfig={()=>togglePlanConfigPopUp(false)}
         />
       ) : (
         <Text></Text>

@@ -68,11 +68,11 @@ const Start: React.FC<StartProps> = (props) => {
       <View style={{ gap: 8 }} className="flex h-full w-full flex-col">
         <View
           style={{ borderRadius: 8 }}
-          className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4 "
+          className="flex w-full justify-between flex-row bg-secondaryColor items-center p-4 "
         >
           <View>
             <Text
-              className="text-[#94e798] text-lg"
+              className="text-primaryColor text-lg"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Last Training:
@@ -116,11 +116,11 @@ const Start: React.FC<StartProps> = (props) => {
         </View>
         <View
           style={{ borderRadius: 8 }}
-          className="flex w-full flex-row justify-between bg-[#1E1E1E73] items-center p-4"
+          className="flex w-full flex-row justify-between bg-secondaryColor items-center p-4"
         >
           <View>
             <Text
-              className="text-[#94e798] text-lg"
+              className="text-primaryColor text-lg"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Progress
@@ -165,7 +165,7 @@ const Start: React.FC<StartProps> = (props) => {
         </View>
         <View
           style={{ borderRadius: 12 }}
-          className="flex w-full justify-between flex-row bg-[#1E1E1E73] items-center p-4  flex-1"
+          className="flex w-full justify-between flex-row bg-secondaryColor items-center p-4  flex-1"
         >
           <UsersRanking />
         </View>

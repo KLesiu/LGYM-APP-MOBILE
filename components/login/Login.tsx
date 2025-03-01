@@ -69,7 +69,7 @@ const Login: React.FC = () => {
     return navigation.navigate("Preload");
   };
   return (
-    <View style={{gap:16}} className="flex items-center flex-col h-full justify-start bg-[#121212]  p-4">
+    <View style={{gap:16}} className="flex items-center flex-col h-full justify-start bg-bgColor  p-4">
       <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
         <Image className="w-full h-full" source={logoLGYM} />
       </Pressable>
@@ -89,7 +89,7 @@ const Login: React.FC = () => {
             onChangeText={(text: string) => setUsername(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgba(30, 30, 30, 0.45)",
+              backgroundColor: "rgb(30, 30, 30)",
               borderRadius:8
             }}
             className="w-full px-2 py-4  text-white "
@@ -107,7 +107,7 @@ const Login: React.FC = () => {
             onChangeText={(text: string) => setPassword(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgba(30, 30, 30, 0.45)",
+              backgroundColor: "rgb(30, 30, 30)",
               borderRadius:8
             }}
             className="w-full px-2 py-4 text-white  "

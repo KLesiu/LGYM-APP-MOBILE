@@ -24,7 +24,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = (
         <View className="w-72 p-4 bg-[#282828] rounded-lg items-center" style={{ gap: 16 }}>
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-2xl font-bold text-[#94e798]"
+            className="text-2xl font-bold text-primaryColor"
           >
             {props.title}
           </Text>

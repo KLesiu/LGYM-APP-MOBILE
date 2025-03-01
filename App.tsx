@@ -47,7 +47,7 @@ const App: React.FC = () => {
   ]
 
   useEffect(() => {
-    StatusBar.setBackgroundColor("#121212");
+    StatusBar.setBackgroundColor("#0A0A0A");
     StatusBar.setBarStyle("light-content");
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",

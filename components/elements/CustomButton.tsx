@@ -3,9 +3,10 @@ import { FontWeights } from "../../enums/FontsProperties";
 import React from "react";
 
 export enum ButtonStyle {
-    success = "bg-[#94e798]",
+    success = "bg-primaryColor",
     cancel = "bg-[#3f3f3f]",
-    outline = "border-[#94e798] border-[1px]",
+    outline = "border-primaryColor border-[1px]",
+    outlineBlack = "border-fifthColor border-[1px]",
     grey = "bg-[#282828]",
     default = "bg-white"
 }
@@ -40,6 +41,8 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
         return 'text-white';
       case ButtonStyle.grey:
         return 'text-white';
+      case ButtonStyle.outlineBlack:
+        return 'text-white';
       default:
         return 'text-black';
     }
@@ -55,7 +58,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       {props.children}
       {props.customSlots ? props.customSlots.map((slot) => <>{slot}</>) :    
       <Text
-        className={`${props.textSize ? props.textSize : 'text-base'}  w-full text-center ${textColorClass()}`}
+        className={`${props.textSize ? props.textSize : 'text-base'} text-center ${textColorClass()}`}
         style={{ fontFamily: props.textWeight ? props.textWeight : FontWeights.regular }}
       >
         {props.text}

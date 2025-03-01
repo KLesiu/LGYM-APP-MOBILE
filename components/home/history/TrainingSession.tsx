@@ -18,7 +18,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
             <View className="flex flex-col justify-between gap-1">
               <Text
                 style={{ fontFamily: "OpenSans_700Bold" }}
-                className="text-lg text-[#94e798]"
+                className="text-lg text-primaryColor"
               >
                 Training {training.planDay.name}
               </Text>

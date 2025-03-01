@@ -46,7 +46,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <View style={{gap:16}} className="flex items-center flex-col h-full justify-start bg-[#121212] p-4">
+    <View style={{gap:16}} className="flex items-center flex-col h-full justify-start bg-bgColor p-4">
       <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
         <Image className="w-full h-full mb-[5%]" source={logoLGYM} />
       </Pressable>
@@ -66,7 +66,7 @@ const Register: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
               borderRadius: 8,
-              backgroundColor: "rgba(30, 30, 30, 0.45)",
+              backgroundColor: "rgb(30, 30, 30)",
             }}
             className="w-full px-2 py-4  text-white "
           />
@@ -82,7 +82,7 @@ const Register: React.FC = () => {
             onChangeText={(text) => setEmail(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgba(30, 30, 30, 0.45)",
+              backgroundColor: "rgb(30, 30, 30)",
               borderRadius: 8,
 
             }}
@@ -101,7 +101,7 @@ const Register: React.FC = () => {
             onChangeText={(text) => setPassword(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgba(30, 30, 30, 0.45)",
+              backgroundColor: "rgb(30, 30, 30)",
               borderRadius: 8,
 
             }}
@@ -120,7 +120,7 @@ const Register: React.FC = () => {
             onChangeText={(text) => setRPassword(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgba(30, 30, 30, 0.45)",
+              backgroundColor: "rgb(30, 30, 30)",
               borderRadius: 8,
 
             }}

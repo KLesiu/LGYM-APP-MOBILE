@@ -24,7 +24,7 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
       <View className="flex flex-row justify-between w-full">
         <Text
           style={{ fontFamily: "OpenSans_700Bold" }}
-          className="text-2xl font-bold text-[#94e798]"
+          className="text-2xl font-bold text-primaryColor"
         >
           {props.gym.name}
         </Text>

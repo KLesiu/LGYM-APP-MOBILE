@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { DropdownItem } from "../../interfaces/Dropdown";
 
 interface AutoCompleteProps {
@@ -10,24 +16,32 @@ interface AutoCompleteProps {
   onClearQuery?: () => void;
 }
 
-const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value,valueId, onSelect, onClearQuery }) => {
+const AutoComplete: React.FC<AutoCompleteProps> = ({
+  data,
+  value,
+  valueId,
+  onSelect,
+  onClearQuery,
+}) => {
   const [query, setQuery] = useState(value || "");
   const [filteredData, setFilteredData] = useState<DropdownItem[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+
 
   useEffect(() => {
     if (value && valueId) {
-      setQuery(value);
-      const selectedItem = data.find(item => item.value === valueId);
-      if (selectedItem) {
-        handleSelect(selectedItem);
+      const item = data.find((item) => item.value === valueId);
+      if (item) {
+        setQuery(item.label);
+        setIsSelected(true);
       }
     }
-  }, [value]);
+  }, [value, valueId]);
 
   useEffect(() => {
-    if (query.length > 0) {
-      const filtered = data.filter(item =>
+    if (query.length > 0 && !isSelected) {
+      const filtered = data.filter((item) =>
         item.label.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredData(filtered.length ? filtered : data);
@@ -47,13 +61,14 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value,valueId, onSele
   }, [onClearQuery]);
 
   const handleSelect = (item: DropdownItem) => {
-    setQuery(item.label);
+    setIsSelected(true)
     onSelect(item);
+    setQuery(item.label);
     setShowDropdown(false);
   };
 
   const renderItem = ({ item }: { item: DropdownItem }) => (
-    <TouchableOpacity style={styles.item} onPress={() => handleSelect(item)}>
+    <TouchableOpacity className="p-4 border-b-[1px] border-b-[#ddd]" onPress={() => handleSelect(item)}>
       <Text>{item.label}</Text>
     </TouchableOpacity>
   );
@@ -61,16 +76,22 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value,valueId, onSele
   return (
     <View>
       <TextInput
-        style={styles.input}
+        style={{
+          fontFamily: "OpenSans_400Regular",
+          backgroundColor: "rgb(30, 30, 30)",
+          borderRadius: 8,
+        }}
+        className=" w-full  px-2 py-4 text-white  "
         value={query}
         onChangeText={(text) => {
           setQuery(text);
           setShowDropdown(true);
+          setIsSelected(false);
         }}
       />
 
       {showDropdown && filteredData.length > 0 && (
-        <View style={styles.dropdown}>
+        <View className="max-h-40 bg-white border-[1px] border-[#ddd] rounded-lg mt-1">
           <FlatList
             data={filteredData}
             renderItem={renderItem}
@@ -81,29 +102,5 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({ data, value,valueId, onSele
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    fontFamily: "OpenSans_400Regular",
-    backgroundColor: "rgba(30, 30, 30, 0.45)",
-    borderRadius: 8,
-    padding: 10,
-    color: "white",
-  },
-  dropdown: {
-    maxHeight: 150,
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    marginTop: 5,
-    elevation: 5,
-  },
-  item: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-});
 
 export default AutoComplete;

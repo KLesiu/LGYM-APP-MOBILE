@@ -28,7 +28,7 @@ const TabView: React.FC<TabViewProps> = ({ tabs, onTabChange }) => {
             <Pressable
               key={index}
               className="flex flex-row justify-center items-center flex-1"
-              style={{ borderBottomColor: isActive ? "#94e798" : "#131313", borderBottomWidth: 2 }}
+              style={{ borderBottomColor: isActive ? "#94e798" : "#0A0A0A", borderBottomWidth: 2 }}
               onPress={() => handleTabPress(tab)}
             >
               <Text

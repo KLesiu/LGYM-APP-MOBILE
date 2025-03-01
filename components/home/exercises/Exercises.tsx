@@ -150,7 +150,7 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
       <CustomButton
         customSlots={[
           <Text
-            className="text-base text-[#94e798] font-bold"
+            className="text-base text-primaryColor font-bold"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {item.name}

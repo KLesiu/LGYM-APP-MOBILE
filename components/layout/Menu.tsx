@@ -80,7 +80,7 @@ const Menu: React.FC<MenuProps> = (props) => {
   ];
 
   return isMenuButtonVisible ? (
-    <View className="flex items-center justify-end bg-[#131313] relative w-full">
+    <View className="flex items-center justify-end bg-bgColor relative w-full">
       {isExpanded && (
         <Animated.View
           style={{
@@ -101,7 +101,7 @@ const Menu: React.FC<MenuProps> = (props) => {
                   key={index}
                   onPress={() => changeView(item.component)}
                   style={{ transform: [{ translateX: x }, { translateY: y }], borderRadius: 10000 }}
-                  className="absolute w-20 h-20 items-center justify-center bg-[#131313] p-1"
+                  className="absolute w-20 h-20 items-center justify-center bg-bgColor p-1"
                 >
                   <Image source={item.icon} className="w-8 h-8" />
                   <Text className="text-gray-400 text-sm font-light">{item.label}</Text>

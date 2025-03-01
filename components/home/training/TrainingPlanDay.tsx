@@ -492,7 +492,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
 
   return (
-    <View className="absolute w-full h-full text-white bg-[#121212] flex flex-col">
+    <View className="absolute w-full h-full text-white bg-bgColor flex flex-col">
       {planDay && Object.keys(planDay).length ? (
         <View
           style={{ gap: 16 }}
@@ -501,7 +501,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           <View style={{ gap: 8 }} className="flex flex-col w-full px-2 ">
             <View className="flex flex-col " style={{gap:4}}>
               <Text
-                className="text-2xl text-[#94e798] block  font-bold "
+                className="text-2xl text-primaryColor block  font-bold "
                 style={{
                   fontFamily: "OpenSans_700Bold",
                 }}
@@ -572,7 +572,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               onPress={() => sendTraining(trainingSessionScores)}
               disabled={!isEnabled}
               style={{ borderRadius: 8 }}
-              className={` flex flex-row justify-center items-center w-28 h-14 bg-[#94e798] ${
+              className={` flex flex-row justify-center items-center w-28 h-14 bg-primaryColor ${
                 !isEnabled ? "opacity-50" : "opacity-100"
               }`}
             >

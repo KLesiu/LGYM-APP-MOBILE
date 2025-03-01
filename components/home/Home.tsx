@@ -13,7 +13,7 @@ const Home:React.FC=()=>{
         setIsLoading(false)
     }
     return(
-        <View className="bg-[#131313] flex flex-col justify-between relative h-full " >
+        <View className="bg-bgColor flex flex-col justify-between relative h-full " >
             {view.type.name === 'Profile'?'':<Header />}
             {view}
             <Menu viewChange={changeView}/>

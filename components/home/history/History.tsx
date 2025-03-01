@@ -78,7 +78,7 @@ const History: React.FC = () => {
           markedDates={trainingDates}
           scrollable
           style={{ width: "100%", height: 150 }}
-          calendarColor={"#131313"}
+          calendarColor={"#0A0A0A"}
           dayContainerStyle={{
             backgroundColor: "rgb(40, 40, 40)",
             borderRadius: 8,

@@ -5,7 +5,7 @@ interface BackgroundMainSectionProps {
 }
 
 const BackgroundMainSection: React.FC<BackgroundMainSectionProps> = ({ children }) => {
-  return <View className="relative flex flex-1 bg-[#121212]">{children}</View>;
+  return <View className="relative flex flex-1 bg-bgColor">{children}</View>;
 };
 
 

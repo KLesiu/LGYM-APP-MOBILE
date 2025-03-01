@@ -66,7 +66,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   return (
     <Dialog>
       <Text
-        className="text-lg text-white border-b-[1px] border-[#94e798] py-1  w-full"
+        className="text-lg text-white border-b-[1px] border-primaryColor py-1  w-full"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Plan Config
@@ -86,7 +86,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgba(30, 30, 30, 0.45)",
+                backgroundColor: "rgb(30, 30, 30)",
                 borderRadius: 8,
               }}
               className="w-full px-2 py-4  text-white "
@@ -104,7 +104,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgba(30, 30, 30, 0.45)",
+                backgroundColor: "rgb(30, 30, 30)",
                 borderRadius: 8,
               }}
               className=" w-full  px-2 py-4 text-white  "
