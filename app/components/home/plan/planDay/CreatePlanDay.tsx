@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -10,6 +10,7 @@ import CreatePlanDayExerciseList from "./CreatePlanDayExerciseList";
 import ViewLoading from "../../../elements/ViewLoading";
 import CreatePlanDaySummary from "./CreatePlanDaySummary";
 import { PlanDayExercisesFormVm } from "./../../../../../interfaces/PlanDay";
+import { BackHandler } from "react-native";
 
 interface CreatePlanDayProps {
   planId: string;
@@ -24,15 +25,37 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const [planDayName, setPlanDayName] = useState<string>("");
   const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(0);
+  const currentStepRef = useRef(currentStep);
+
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   useEffect(() => {
     init();
   }, []);
 
+  useEffect(() => {
+    currentStepRef.current = currentStep;
+  }, [currentStep]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackButton
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, []);
+
   const init = async () => {
-    if (props.planDayId)await getPlanDay();
+    if (props.planDayId) await getPlanDay();
     if (props.isPreview) setCurrentStep(2);
+  };
+
+  const handleBackButton = () => {
+    setCurrentStep(currentStepRef.current - 1);
+    return true;
   };
 
   const mapExercisesListToSend = (exerciseList: ExerciseForPlanDay[]) => {
