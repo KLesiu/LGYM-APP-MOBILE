@@ -74,6 +74,7 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     setViewLoading(false);
   };
   const changeGym = async (gym: GymForm) => {
+    console.log('siema')
     setGym(gym);
     setIsGymChoiceActive(false);
     getInformationsAboutPlanDays();

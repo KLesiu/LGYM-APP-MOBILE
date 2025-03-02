@@ -13,8 +13,8 @@ import {
   ExerciseForm,
   LastExerciseScores,
 } from "./../../../interfaces/Exercise";
-import SwitchIcon from "./../../../img/icons/switch.png";
-import RemoveIcon from "./../../../img/icons/remove.png";
+import SwitchIcon from "./../../../img/icons/switchIcon.svg";
+import RemoveIcon from "./../../../img/icons/deleteIcon.svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../enums/BodyParts";
@@ -22,7 +22,7 @@ import { TrainingSessionScores } from "../../../interfaces/Training";
 import useInterval from "../../../helpers/hooks/useInterval";
 import ViewLoading from "../../elements/ViewLoading";
 import { Message } from "../../../enums/Message";
-import gym from "./../../../img/icons/gym.png";
+import GymIcon from "./../../../img/icons/gymIcon.svg";
 import { GymForm } from "../../../interfaces/Gym";
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -401,12 +401,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 )
               }
             >
-              <Image className="w-6 h-6" source={SwitchIcon} />
+              <SwitchIcon />
             </Pressable>
             <Pressable
               onPress={() => deleteExerciseFromPlanDay(item.exercise._id)}
             >
-              <Image className="w-6 h-6" source={RemoveIcon} />
+              <RemoveIcon />
             </Pressable>
           </View>
         </View>
@@ -509,7 +509,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 {planDay.name}
               </Text>
               <View className="flex flex-row items-center">
-                <Image source={gym} className="w-4 h-4" />
+                <GymIcon />
                 <Text
                   className="text-[11px] text-white"
                   style={{

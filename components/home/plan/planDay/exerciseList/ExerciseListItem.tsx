@@ -1,23 +1,26 @@
 import { View, Text, Pressable } from "react-native";
 import { ExerciseForPlanDay } from "./../../../../../interfaces/Exercise";
 import CustomButton, { ButtonSize } from "./../../../../elements/CustomButton";
-import IconDelete from "./../../../../../img/icons/deleteIcon.svg"
+import IconDelete from "./../../../../../img/icons/deleteIcon.svg";
 interface ExerciseListItemProps {
   exerciseListItem: ExerciseForPlanDay;
-  removeExerciseFromList: (item: ExerciseForPlanDay) => void;
-  editExerciseFromList : (item: ExerciseForPlanDay) => void
+  removeExerciseFromList?: (item: ExerciseForPlanDay) => void;
+  editExerciseFromList?: (item: ExerciseForPlanDay) => void;
 }
 
 const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
   exerciseListItem,
   removeExerciseFromList,
-  editExerciseFromList
+  editExerciseFromList,
 }) => {
   return (
     <Pressable
       className="w-full bg-fourthColor flex flex-row p-2 rounded-lg justify-between items-center"
       style={{ gap: 20 }}
-      onPress={() => editExerciseFromList(exerciseListItem)}
+      disabled={!editExerciseFromList}
+      onPress={() =>
+        editExerciseFromList ? editExerciseFromList(exerciseListItem) : null
+      }
     >
       <View className="flex flex-col" style={{ gap: 4 }}>
         <Text
@@ -49,13 +52,15 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
           </View>
         </View>
       </View>
-      <View className="flex justify-center items-center w-12 h-12 bg-secondaryColor70 rounded-lg ">
-        <CustomButton
-          buttonStyleSize={ButtonSize.small}
-          onPress={()=>removeExerciseFromList(exerciseListItem)}
-          customSlots={[<IconDelete/>]}
-        />
-      </View>
+      {removeExerciseFromList ? (
+        <View className="flex justify-center items-center w-12 h-12 bg-secondaryColor70 rounded-lg ">
+          <CustomButton
+            buttonStyleSize={ButtonSize.small}
+            onPress={() => removeExerciseFromList(exerciseListItem)}
+            customSlots={[<IconDelete />]}
+          />
+        </View>
+      ) : null}
     </Pressable>
   );
 };

@@ -8,9 +8,10 @@ import MiniLoading from "../elements/MiniLoading";
 import CustomButton, { ButtonSize, ButtonStyle } from "../elements/CustomButton";
 import ResponseMessage from "../../interfaces/ResponseMessage";
 import { Message } from "../../enums/Message";
+import ValidationView from "../elements/ValidationView";
 
 const Register: React.FC = () => {
-  const [errors, setErrors] = useState<ResponseMessage[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [rpassword, setRPassword] = useState<string>();
@@ -39,7 +40,7 @@ const Register: React.FC = () => {
     if(result.msg === Message.Created){
       return navigation.navigate("Login");
     }
-    setErrors([result])
+    setErrors([result.msg])
   };
   const goToPreload = () => {
     return navigation.navigate("Preload");
@@ -130,23 +131,7 @@ const Register: React.FC = () => {
       </View>
       <CustomButton  text="Register" onPress={register} width="w-full" buttonStyleType={ButtonStyle.success} buttonStyleSize={ButtonSize.xl} />
       {loading ? <MiniLoading /> : <Text></Text>}
-      <View className="flex flex-col text-center w-[90%]">
-        {errors ? (
-          errors.map((ele, index: number) => (
-            <Text
-              style={{
-                fontFamily: "Caveat_400Regular",
-              }}
-              className="text-red-500 w-full text-center mt-[2%] text-2xl"
-              key={index}
-            >
-              {ele.msg}
-            </Text>
-          ))
-        ) : (
-          <Text></Text>
-        )}
-      </View>
+      <ValidationView errors={errors} />
     </View>
   );
 };

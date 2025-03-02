@@ -7,16 +7,18 @@ import Profile from "../home/profile/Profile";
 import Start from "../home/start/Start";
 import Exercises from "../home/exercises/Exercises";
 import Gym from "../home/gym/Gym";
-import home from "./../../img/icons/home.png";
-import profile from "./../../img/icons/profile.png";
-import history from "./../../img/icons/history.png";
-import addTraining from "./../../img/icons/add.png";
-import exercise from "./../../img/icons/exercises.png";
-import plan from "./../../img/icons/plan.png";
-import gym from "./../../img/icons/gym.png";
-import menu from "./../../img/icons/menu.png";
-import charts from "./../../img/icons/charts.png";
 import Charts from "../home/charts/Charts";
+
+
+import HomeIcon from "./../../img/icons/homeIcon.svg";
+import ProfileIcon from "./../../img/icons/profileIcon.svg";
+import HistoryIcon from "./../../img/icons/calendarIcon.svg";
+import AddTrainingIcon from "./../../img/icons/plusCircleIcon.svg";
+import ExerciseIcon from "./../../img/icons/exercisesIcon.svg";
+import PlanIcon from "./../../img/icons/planIcon.svg";
+import GymIcon from "./../../img/icons/gymIcon.svg";
+import MenuIcon from "./../../img/icons/menuIcon.svg";
+import ChartIcon from "./../../img/icons/chartsIcon.svg";
 
 interface MenuProps {
   viewChange: (view: JSX.Element) => void;
@@ -69,14 +71,14 @@ const Menu: React.FC<MenuProps> = (props) => {
   });
 
   const items = [
-    { icon: home, label: "Home", component: <Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
-    { icon: exercise, label: "Exercises", component: <Exercises  toggleMenuButton={toggleMenuButton} /> },
-    { icon: gym, label: "Gym", component: <Gym viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
-    { icon: addTraining, label: "Training", component: <AddTraining toggleMenuButton={toggleMenuButton} /> },
-    { icon: plan, label: "Plan", component: <TrainingPlan hideMenuButton={toggleMenuButton} /> },
-    { icon: history, label: "History", component: <History /> },
-    { icon: charts, label: "Charts", component: <Charts  toggleMenuButton={toggleMenuButton} /> },
-    { icon: profile, label: "Profile", component: <Profile viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
+    { icon: <HomeIcon/>, label: "Home", component: <Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
+    { icon: <ExerciseIcon/>, label: "Exercises", component: <Exercises  toggleMenuButton={toggleMenuButton} /> },
+    { icon: <GymIcon />, label: "Gym", component: <Gym viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
+    { icon: <AddTrainingIcon />, label: "Training", component: <AddTraining toggleMenuButton={toggleMenuButton} /> },
+    { icon: <PlanIcon />, label: "Plan", component: <TrainingPlan hideMenuButton={toggleMenuButton} /> },
+    { icon: <HistoryIcon />, label: "History", component: <History /> },
+    { icon: <ChartIcon />, label: "Charts", component: <Charts  toggleMenuButton={toggleMenuButton} /> },
+    { icon: <ProfileIcon />, label: "Profile", component: <Profile viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
   ];
 
   return isMenuButtonVisible ? (
@@ -103,7 +105,7 @@ const Menu: React.FC<MenuProps> = (props) => {
                   style={{ transform: [{ translateX: x }, { translateY: y }], borderRadius: 10000 }}
                   className="absolute w-20 h-20 items-center justify-center bg-bgColor p-1"
                 >
-                  <Image source={item.icon} className="w-8 h-8" />
+                  {item.icon}
                   <Text className="text-gray-400 text-sm font-light">{item.label}</Text>
                 </TouchableOpacity>
               );
@@ -128,7 +130,7 @@ const Menu: React.FC<MenuProps> = (props) => {
           zIndex: 9,
         }}
       >
-        <Image source={menu} />
+        <MenuIcon />
       </TouchableOpacity>
     </View>
   ) : null;

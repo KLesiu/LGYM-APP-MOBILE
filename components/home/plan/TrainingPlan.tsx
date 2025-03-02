@@ -5,7 +5,6 @@ import ViewLoading from "../../elements/ViewLoading";
 import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./planDay/CreatePlanDay";
 import { PlanDayBaseInfoVm, PlanDayVm } from "../../../interfaces/PlanDay";
-import RemoveIcon from "./../../../img/icons/remove.png";
 import { Message } from "../../../enums/Message";
 import CustomButton, {
   ButtonSize,
@@ -14,6 +13,7 @@ import CustomButton, {
 import { FontWeights } from "../../../enums/FontsProperties";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
+import TrainingPlanItem from "./TrainingPlanItem";
 interface TrainingPlanProps {
   hideMenuButton: (hide: boolean) => void;
 }
@@ -26,9 +26,14 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     _id: string;
   }>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
-  const [planDaysBaseInfo,setPlanDaysBaseInfo] = useState<PlanDayBaseInfoVm[]>([]);
+  const [planDaysBaseInfo, setPlanDaysBaseInfo] = useState<PlanDayBaseInfoVm[]>(
+    []
+  );
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
+  const [isPreviewPlanDay, setIsPreviewPlanDay] = useState<boolean | undefined>(
+    false
+  );
   const [showPlanConfig, setShowPlanConfig] = useState<boolean>(false);
   const [currentPlanDay, setCurrentPlanDay] = useState<PlanDayBaseInfoVm>();
   const [
@@ -43,7 +48,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   const init = async () => {
     setViewLoading(true);
     const result = await getUserPlanConfig();
-    if(result)await getPlanDaysBaseInfo(result);
+    if (result) await getPlanDaysBaseInfo(result);
     setViewLoading(false);
   };
 
@@ -51,12 +56,14 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     name: string;
     trainingDays: number;
     _id: string;
-  }):Promise<void> =>{
-    if(!planConfig || !planConfig._id) return;
-    const response = await fetch(`${apiURL}/api/planDay/${planConfig._id}/getPlanDaysInfo`);
+  }): Promise<void> => {
+    if (!planConfig || !planConfig._id) return;
+    const response = await fetch(
+      `${apiURL}/api/planDay/${planConfig._id}/getPlanDaysInfo`
+    );
     const result = await response.json();
     setPlanDaysBaseInfo(result);
-  }
+  };
 
   const deletePlanDay = async (): Promise<void> => {
     if (!currentPlanDay) return;
@@ -70,12 +77,16 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     }
     deletePlanDayVisible(false);
   };
-  const togglePlanConfigPopUp = (value:boolean): void => {
+  const togglePlanConfigPopUp = (value: boolean): void => {
     props.hideMenuButton(value);
     setShowPlanConfig(value);
-  }
-  const showPlanDayForm = (planDay?:PlanDayBaseInfoVm): void => {
+  };
+  const showPlanDayForm = (
+    planDay?: PlanDayBaseInfoVm,
+    isPreview?: boolean
+  ): void => {
     setCurrentPlanDay(planDay);
+    setIsPreviewPlanDay(isPreview);
     props.hideMenuButton(true);
     setIsPlanDayFormVisible(true);
   };
@@ -92,62 +103,6 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     props.hideMenuButton(false);
     init();
   };
-  const renderPlanDay = ({ item }: { item: PlanDayBaseInfoVm }) => {
-    const removeSlot: JSX.Element[] = [
-      <Image className="w-6 h-6" source={RemoveIcon} />,
-    ];
-    return (
-      <View key={item._id} className="w-full" style={{ gap: 10 }}>
-        <Text
-          style={{ fontFamily: "OpenSans_400Regular" }}
-          className="text-base text-white"
-        >
-          Last training: {item.lastTrainingDate ? new Date(item.lastTrainingDate).toLocaleDateString() : "No training yet" }
-        </Text>
-        <Pressable
-          className="w-full bg-fourthColor flex flex-row p-2 rounded-lg justify-between items-start"
-          style={{ gap: 20 }}
-          onPress={() => showPlanDayForm(item)}
-        >
-          <View className="flex flex-col" style={{ gap: 4 }}>
-            <Text
-              style={{
-                fontFamily: "OpenSans_700Bold",
-              }}
-              className="text-xl font-bold text-white"
-            >
-              {item.name}
-            </Text>
-            <Text
-              style={{
-                fontFamily: "OpenSans_400Regular",
-              }}
-              className="text-base  text-fifthColor"
-            >
-              Exercises: {item.totalNumberOfExercises}
-            </Text>
-            <View className="flex flex-row w-full " style={{ gap: 16 }}>
-              <Text
-                style={{
-                  fontFamily: "OpenSans_400Regular",
-                }}
-                className="text-base  text-fifthColor"
-              >
-                Total series: {item.totalNumberOfSeries}
-              </Text>
-            </View>
-          </View>
-          <View className="flex justify-center items-center w-12 h-12 bg-secondaryColor70 rounded-lg ">
-            <CustomButton
-              buttonStyleSize={ButtonSize.small}
-              onPress={() => deletePlanDayVisible(true, item)}
-              customSlots={removeSlot}
-            />
-          </View>
-        </Pressable>
-      </View>
-    );
-  };
   const getUserPlanConfig = async () => {
     const id = await AsyncStorage.getItem("id");
 
@@ -159,7 +114,10 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
       return result;
     }
   };
-  const deletePlanDayVisible = (visible: boolean, planDay?: PlanDayBaseInfoVm) => {
+  const deletePlanDayVisible = (
+    visible: boolean,
+    planDay?: PlanDayBaseInfoVm
+  ) => {
     if (visible) setCurrentPlanDay(planDay);
     else setCurrentPlanDay(undefined);
     setIsDeletePlanDayConfirmationDialogVisible(visible);
@@ -171,7 +129,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         {!planConfig ? (
           <View className="flex flex-row w-full">
             <CustomButton
-              onPress={()=>togglePlanConfigPopUp(true)}
+              onPress={() => togglePlanConfigPopUp(true)}
               text="Create plan"
               textWeight={FontWeights.bold}
               buttonStyleType={ButtonStyle.success}
@@ -211,7 +169,14 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
             {planDaysBaseInfo && planDaysBaseInfo.length ? (
               <ScrollView className="w-full">
                 <View style={{ gap: 16 }} className="flex flex-col p-5 pb-12">
-                  {planDaysBaseInfo.map((planDay) => renderPlanDay({ item: planDay }))}
+                  {planDaysBaseInfo.map((planDay) => (
+                    <TrainingPlanItem
+                      key={planDay._id}
+                      item={planDay}
+                      showPlanDayForm={showPlanDayForm}
+                      deletePlanDayVisible={deletePlanDayVisible}
+                    />
+                  ))}
                 </View>
               </ScrollView>
             ) : (
@@ -224,13 +189,14 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
       {showPlanConfig ? (
         <CreatePlanConfig
           reloadSection={reloadSection}
-          hidePlanConfig={()=>togglePlanConfigPopUp(false)}
+          hidePlanConfig={() => togglePlanConfigPopUp(false)}
         />
       ) : (
         <Text></Text>
       )}
       {isPlanDayFormVisible && planConfig ? (
         <CreatePlanDay
+          isPreview={isPreviewPlanDay}
           planId={planConfig._id}
           closeForm={hidePlanDayForm}
           planDayId={currentPlanDay ? currentPlanDay._id : ""}

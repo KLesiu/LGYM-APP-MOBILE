@@ -6,20 +6,23 @@ import {
 import { Message } from "../../../../enums/Message";
 import CreatePlanDayName from "./CreatePlanDayName";
 import Dialog from "../../../elements/Dialog";
-import { PlanDayForm } from "../../../../interfaces/PlanDay";
 import CreatePlanDayExerciseList from "./CreatePlanDayExerciseList";
 import ViewLoading from "../../../elements/ViewLoading";
+import CreatePlanDaySummary from "./CreatePlanDaySummary";
+import { PlanDayExercisesFormVm } from "../../../../interfaces/PlanDay";
 
 interface CreatePlanDayProps {
   planId: string;
   closeForm: () => void;
   planDayId?: string;
+  isPreview?: boolean;
 }
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
 
-  const [planDayForm, setPlanDayFrom] = useState<PlanDayForm>();
+  const [planDayName, setPlanDayName] = useState<string>("");
+  const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
@@ -28,7 +31,8 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   }, []);
 
   const init = async () => {
-    if (props.planDayId) await getPlanDay();
+    if (props.planDayId)await getPlanDay();
+    if (props.isPreview) setCurrentStep(2);
   };
 
   const mapExercisesListToSend = (exerciseList: ExerciseForPlanDay[]) => {
@@ -41,9 +45,26 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     });
     return exercises;
   };
-  const createPlanDay = async (exerciseList: ExerciseForPlanDay[]) => {
+
+  const mapExercisesListFromSend = (exercises: PlanDayExercisesFormVm[]) => {
+    const currentExercisesList = exercises.map(
+      (exerciseInPlanDay: PlanDayExercisesFormVm) => {
+        return {
+          series: exerciseInPlanDay.series,
+          reps: exerciseInPlanDay.reps,
+          exercise: {
+            label: exerciseInPlanDay.exercise.name,
+            value: exerciseInPlanDay.exercise._id,
+          },
+        };
+      }
+    ) as ExerciseForPlanDay[];
+    return currentExercisesList;
+  };
+
+  const createPlanDay = async () => {
     setViewLoading(true);
-    const exercises = mapExercisesListToSend(exerciseList);
+    const exercises = mapExercisesListToSend(exercisesList);
     const response = await fetch(
       `${apiURL}/api/planDay/${props.planId}/createPlanDay`,
       {
@@ -52,7 +73,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: planDayForm?.name,
+          name: planDayName,
           exercises: exercises,
         }),
       }
@@ -62,9 +83,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
     setViewLoading(false);
   };
-  const editPlanDay = async (exerciseList: ExerciseForPlanDay[]) => {
+  const editPlanDay = async () => {
     setViewLoading(true);
-    const exercises = mapExercisesListToSend(exerciseList);
+    const exercises = mapExercisesListToSend(exercisesList);
     const response = await fetch(`${apiURL}/api/planDay/updatePlanDay`, {
       method: "POST",
       headers: {
@@ -72,7 +93,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       },
       body: JSON.stringify({
         _id: props.planDayId,
-        name: planDayForm?.name,
+        name: planDayName,
         exercises: exercises,
       }),
     });
@@ -83,36 +104,66 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   const goToNext = () => {
     setCurrentStep(currentStep + 1);
-  }
+  };
   const goBack = () => {
     setCurrentStep(currentStep - 1);
-  }
+  };
+
   const getPlanDay = async () => {
     const response = await fetch(
       `${apiURL}/api/planDay/${props.planDayId}/getPlanDay`
     );
     const result = await response.json();
-    setPlanDayFrom(result);
+    setPlanDayName(result.name);
+    setExercisesList(mapExercisesListFromSend(result.exercises));
   };
 
-  const renderStep = ():JSX.Element=>{
-    switch(currentStep){
+  const savePlan = async () => {
+    if (props.planDayId) await editPlanDay();
+    else await createPlanDay();
+  };
+
+  const renderStep = (): JSX.Element => {
+    switch (currentStep) {
       case -1:
         props.closeForm();
       case 0:
-        return <CreatePlanDayName goBack={goBack} goToNext={goToNext} />
+        return (
+          <CreatePlanDayName
+            goBack={goBack}
+            goToNext={goToNext}
+            setPlanName={setPlanDayName}
+            planDayName={planDayName}
+          />
+        );
       case 1:
-        return <CreatePlanDayExerciseList goBack={goBack} goToNext={goToNext} />
+        return (
+          <CreatePlanDayExerciseList
+            goBack={goBack}
+            goToNext={goToNext}
+            setExerciseList={setExercisesList}
+            exerciseList={exercisesList}
+          />
+        );
+      case 2:
+        return (
+          <CreatePlanDaySummary
+            closeForm={props.closeForm}
+            goBack={goBack}
+            isPreview={props.isPreview}
+            saveCurrentPlan={savePlan}
+            planDayName={planDayName}
+            exercisesList={exercisesList}
+          />
+        );
       default:
-        return <></>
+        return <></>;
     }
-  }
+  };
 
   return (
     <>
-      <Dialog>
-        {renderStep()}
-      </Dialog>
+      <Dialog>{renderStep()}</Dialog>
       {viewLoading ? <ViewLoading /> : <></>}
     </>
   );

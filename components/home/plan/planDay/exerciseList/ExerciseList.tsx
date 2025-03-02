@@ -5,8 +5,8 @@ import { useEffect } from "react";
 
 interface ExerciseListProps {
   exerciseList: ExerciseForPlanDay[];
-  removeExerciseFromList: (item: ExerciseForPlanDay) => void;
-  editExerciseFromList: (item: ExerciseForPlanDay) => void;
+  removeExerciseFromList?: (item: ExerciseForPlanDay) => void;
+  editExerciseFromList?: (item: ExerciseForPlanDay) => void;
 }
 
 const ExerciseList: React.FC<ExerciseListProps> = (props) => {

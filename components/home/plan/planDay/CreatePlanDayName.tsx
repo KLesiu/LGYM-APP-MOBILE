@@ -1,18 +1,34 @@
-import { useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import PlanNameIcon from "./../../../..//img/icons/planIcon.svg";
 import CustomButton, {
-  ButtonSize,
   ButtonStyle,
 } from "../../../elements/CustomButton";
+import ValidationView from "../../../elements/ValidationView";
+import { useState } from "react";
+import { Message } from "../../../../enums/Message";
 
 interface CreatePlanDayNameProps {
   goBack: () => void;
   goToNext: () => void;
+  setPlanName: (name: string) => void;
+  planDayName: string;
 }
 
 const CreatePlanDayName: React.FC<CreatePlanDayNameProps> = (props) => {
-  const [planDayName, setPlanDayName] = useState<string>("");
+
+  const [errors, setErrors] = useState<string[]>([]);
+
+  const goNextSection = () => {
+    if(validateForm()){
+      return props.goToNext();
+    }
+    setErrors([Message.FieldRequired])
+  }
+
+  const validateForm = () => {
+    if(!props.planDayName.length) return false;
+    return true;
+  }
   return (
     <View className="w-full h-full">
       <View className="px-5 py-2">
@@ -47,8 +63,8 @@ const CreatePlanDayName: React.FC<CreatePlanDayNameProps> = (props) => {
               borderRadius: 8,
             }}
             className=" w-full  px-2 py-4 text-white  "
-            onChangeText={(text: string) => setPlanDayName(text)}
-            value={planDayName}
+            onChangeText={(text: string) => props.setPlanName(text)}
+            value={props.planDayName}
           />
         </View>
       </View>
@@ -61,11 +77,12 @@ const CreatePlanDayName: React.FC<CreatePlanDayNameProps> = (props) => {
         />
         <CustomButton
           buttonStyleType={ButtonStyle.default}
-          onPress={props.goToNext}
+          onPress={goNextSection}
           text="Next"
           width="flex-1"
         />
       </View>
+      <ValidationView errors={errors} />
     </View>
   );
 };

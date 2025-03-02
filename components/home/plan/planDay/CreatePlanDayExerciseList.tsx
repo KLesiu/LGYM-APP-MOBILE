@@ -14,13 +14,14 @@ import ViewLoading from "../../../elements/ViewLoading";
 interface CreatePlanDayExerciseListProps {
   goBack: () => void;
   goToNext: () => void;
+  setExerciseList: (exerciseList: ExerciseForPlanDay[]) => void;
+  exerciseList: ExerciseForPlanDay[];
 }
 
 const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
   props
 ) => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
-  const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
   );
@@ -52,7 +53,7 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
       exercise: selectedExercise,
     };
 
-    setExercisesList([...exercisesList, exercise]);
+    props.setExerciseList([...props.exerciseList, exercise]);
 
     setNumberOfSeries("");
     setExerciseReps("");
@@ -64,10 +65,10 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
     setClearQuery(false);
   };
   const removeExerciseFromList = (item: ExerciseForPlanDay) => {
-    const newList = exercisesList.filter(
+    const newList = props.exerciseList.filter(
       (exercise: ExerciseForPlanDay) => exercise !== item
     );
-    setExercisesList(newList);
+    props.setExerciseList(newList);
   };
 
   const getAllExercises = async () => {
@@ -97,6 +98,11 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
     setExerciseReps(item.reps);
     removeExerciseFromList(item);
   };
+
+
+  const goNextSection = () => {
+    props.goToNext();
+  }
 
   return (
     <View className="w-full h-full">
@@ -186,7 +192,7 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
         </View>
       </View>
       <ExerciseList
-        exerciseList={exercisesList}
+        exerciseList={props.exerciseList}
         removeExerciseFromList={removeExerciseFromList}
         editExerciseFromList={editExerciseFromList}
       />
@@ -199,7 +205,7 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
         />
         <CustomButton
           buttonStyleType={ButtonStyle.default}
-          onPress={props.goToNext}
+          onPress={goNextSection}
           text="Next"
           width="flex-1"
         />

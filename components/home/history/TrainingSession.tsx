@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, Image } from "react-native";
 import { TrainingByDateDetails } from "../../../interfaces/Training";
-import gym from "./../../../img/icons/gym.png";
+import GymIcon from "./../../../img/icons/gymIcon.svg";
+import Card from "../../elements/Card";
 
 interface TrainingSessionProps {
   trainings: TrainingByDateDetails[];
@@ -23,7 +24,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                 Training {training.planDay.name}
               </Text>
               <View className="flex flex-row items-center">
-                <Image source={gym} className="w-4 h-4" />
+                <GymIcon />
                 <Text
                   className="text-[11px] text-white"
                   style={{
@@ -38,41 +39,46 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
             <ScrollView contentContainerStyle={{ gap: 8 }}>
               {training.exercises.map((exercise, key) => {
                 return (
-                  <View
-                    style={{ gap: 8, borderRadius: 8 }}
-                    key={`exercise_${key}`}
-                    className="w-full flex flex-col p-4  bg-[#282828]  border-b-[1px] border-b-white"
-                  >
-                    <Text
-                      style={{
-                        fontFamily: "OpenSans_700Bold",
-                      }}
-                      className="text-base font-bold text-white  border-b-[1px] border-b-white"
+                  <Card>
+                    <View
+                      style={{ gap: 8 }}
+                      key={`exercise_${key}`}
+                      className=" w-full flex flex-col border-b-[1px] border-b-white"
                     >
-                      {exercise.exerciseDetails.name}:{" "}
-                      {exercise.exerciseDetails.bodyPart}
-                    </Text>
-                    <View style={{ gap: 8 }} className="flex flex-col ">
-                      {exercise.scoresDetails.map((score,key) => {
-                        return (
-                          <View key={`series-${key}`} className="flex flex-row justify-between">
-                            <Text
-                              style={{ fontFamily: "OpenSans_400Regular" }}
-                              className="text-white"
+                      <Text
+                        style={{
+                          fontFamily: "OpenSans_700Bold",
+                        }}
+                        className="text-base font-bold text-white  border-b-[1px] border-b-white"
+                      >
+                        {exercise.exerciseDetails.name}:{" "}
+                        {exercise.exerciseDetails.bodyPart}
+                      </Text>
+                      <View style={{ gap: 8 }} className="flex flex-col ">
+                        {exercise.scoresDetails.map((score, key) => {
+                          return (
+                            <View
+                              key={`series-${key}`}
+                              className="flex flex-row justify-between"
                             >
-                              Series: {score.series}
-                            </Text>
-                            <Text
-                              style={{ fontFamily: "OpenSans_400Regular" }}
-                              className="text-white"
-                            >
-                              {score.reps} x {score.weight} {score.unit}
-                            </Text>
-                          </View>
-                        );
-                      })}
+                              <Text
+                                style={{ fontFamily: "OpenSans_400Regular" }}
+                                className="text-white"
+                              >
+                                Series: {score.series}
+                              </Text>
+                              <Text
+                                style={{ fontFamily: "OpenSans_400Regular" }}
+                                className="text-white"
+                              >
+                                {score.reps} x {score.weight} {score.unit}
+                              </Text>
+                            </View>
+                          );
+                        })}
+                      </View>
                     </View>
-                  </View>
+                  </Card>
                 );
               })}
             </ScrollView>

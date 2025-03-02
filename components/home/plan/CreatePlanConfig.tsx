@@ -28,32 +28,28 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
 
   const submitPlanConfig = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACKEND}/api/${id}/createPlan`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            trainingDays: numberOfDays,
-            name: planName,
-          }),
-        }
-      );
-      if (!response.ok) {
-        console.error("Failed to send plan config");
-        return setError(Message.TryAgain);
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND}/api/${id}/createPlan`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trainingDays: numberOfDays,
+          name: planName,
+        }),
       }
-      const data: ResponseMessage = await response.json();
-      if (data.msg === Message.Created) {
-        return props.reloadSection();
-      } else {
-        return setError(data.msg);
-      }
-    } catch (error) {
-      setError(Message.TryAgain);
+    );
+    if (!response.ok) {
+      console.error("Failed to send plan config");
+      return setError(Message.TryAgain);
+    }
+    const data: ResponseMessage = await response.json();
+    if (data.msg === Message.Created) {
+      return props.reloadSection();
+    } else {
+      return setError(data.msg);
     }
   };
 

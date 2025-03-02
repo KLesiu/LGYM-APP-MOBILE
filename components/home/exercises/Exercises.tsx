@@ -15,6 +15,7 @@ import { BodyParts } from "../../../enums/BodyParts";
 import { DropdownItem } from "../../../interfaces/Dropdown";
 import Background from "../../elements/BackgroundMainSection";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
+import Card from "../../elements/Card";
 
 interface ExercisesProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -147,25 +148,24 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
 
   const renderExerciseItem = useCallback(({ item }: { item: ExerciseForm }) => {
     return (
-      <CustomButton
-        customSlots={[
-          <Text
-            className="text-base text-primaryColor font-bold"
-            style={{ fontFamily: "OpenSans_700Bold" }}
-          >
-            {item.name}
-          </Text>,
-          <Text
-            className="text-sm text-white"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            BodyPart: {item.bodyPart}
-          </Text>,
-        ]}
-        onPress={() => showExerciseDetails(item)}
-        buttonStyleType={ButtonStyle.grey}
-        buttonStyleSize={ButtonSize.xxl}
-      />
+      <View className="h-20">
+        <Card onPress={() => showExerciseDetails(item)} customClasses="h-full">
+          <View className="flex flex-col">
+            <Text
+              className="text-base text-primaryColor font-bold"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              {item.name}
+            </Text>
+            <Text
+              className="text-sm text-white"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              BodyPart: {item.bodyPart}
+            </Text>
+          </View>
+        </Card>
+      </View>
     );
   }, []);
 
