@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddTraining from "../training/AddTraining";
@@ -18,21 +18,24 @@ import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
 
 const Start: React.FC = () => {
-  const { viewChange, toggleMenuButton, apiURL } = useHomeContext();
+  const { viewChange, apiURL } = useHomeContext();
   const [lastTrainingInfo, setLastTrainingInfo] = useState<LastTrainingInfo>();
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const [error, setError] = useState<string>("");
   const [progress, setProgress] = useState<number>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
+
   useEffect(() => {
     initStart();
   }, []);
-  const initStart = async () => {
+
+  const initStart = useCallback(async () => {
     setViewLoading(true);
     await getLastTrainingInfo();
     await getRankInfo();
     setViewLoading(false);
-  };
+  }, []);
+
   const getLastTrainingInfo = async () => {
     try {
       const id = await AsyncStorage.getItem("id");
@@ -56,9 +59,10 @@ const Start: React.FC = () => {
     setProgress(Math.floor((data.elo / data.nextRank.needElo) * 10000) / 100);
   };
 
-  const navigateTo = (component: JSX.Element) => {
+  const navigateTo = useCallback((component: JSX.Element) => {
     viewChange(component);
-  };
+  }, []);
+
   return (
     <BackgroundMainSection>
       <View style={{ gap: 8 }} className="flex h-full w-full flex-col">

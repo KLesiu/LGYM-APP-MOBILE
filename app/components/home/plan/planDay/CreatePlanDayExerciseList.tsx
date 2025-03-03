@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { DropdownItem } from "./../../../../../interfaces/Dropdown";
 import {
@@ -14,10 +14,13 @@ import ExerciseList from "./exerciseList/ExerciseList";
 import CreateExercise from "../../exercises/CreateExercise";
 import ViewLoading from "../../../elements/ViewLoading";
 import { usePlanDay } from "./CreatePlanDayContext";
+import { useHomeContext } from "../../HomeContext";
 
 const CreatePlanDayExerciseList: React.FC = () => {
-  const { exercisesList, setExercisesList, goBack, goToNext, apiURL } =
+  const { exercisesList, setExercisesList, goBack, goToNext } =
     usePlanDay();
+
+  const {apiURL} = useHomeContext()
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
   );
@@ -39,7 +42,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
     await getAllExercises();
   };
 
-  const addToList = (): void => {
+  const addToList = useCallback((): void => {
     if (!isIntValidator(numberOfSeries)) return;
     if (!numberOfSeries || !exerciseReps || !selectedExercise) return;
 
@@ -56,16 +59,18 @@ const CreatePlanDayExerciseList: React.FC = () => {
     setSelectedExercise(undefined);
 
     setClearQuery(true);
-  };
-  const clearAutoCompleteQuery = () => {
+  },[numberOfSeries, exerciseReps, selectedExercise, exercisesList]); 
+
+  const clearAutoCompleteQuery = useCallback(() => {
     setClearQuery(false);
-  };
-  const removeExerciseFromList = (item: ExerciseForPlanDay) => {
+  },[])
+  
+  const removeExerciseFromList = useCallback((item: ExerciseForPlanDay) => {
     const newList = exercisesList.filter(
       (exercise: ExerciseForPlanDay) => exercise !== item
     );
     setExercisesList(newList);
-  };
+  },[exercisesList]);
 
   const getAllExercises = async () => {
     const id = await AsyncStorage.getItem("id");
@@ -79,12 +84,12 @@ const CreatePlanDayExerciseList: React.FC = () => {
     setExercisesToSelect(helpExercisesToSelect);
   };
 
-  const toggleExerciseForm = async () => {
+  const toggleExerciseForm = useCallback( async () => {
     setIsTrainingPlanDayExerciseFormShow(!isTrainingPlanDayExerciseFormShow);
     await getAllExercises();
-  };
+  },[isTrainingPlanDayExerciseFormShow])
 
-  const editExerciseFromList = (item: ExerciseForPlanDay) => {
+  const editExerciseFromList = useCallback((item: ExerciseForPlanDay) => {
     setSelectedExercise(
       exercisesToSelect.find(
         (exercise) => exercise.value === item.exercise.value
@@ -93,11 +98,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
     setNumberOfSeries(item.series.toString());
     setExerciseReps(item.reps);
     removeExerciseFromList(item);
-  };
-
-  const goNextSection = () => {
-    goToNext();
-  };
+  },[exercisesToSelect]);
 
   return (
     <View className="w-full h-full">
@@ -200,7 +201,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
         />
         <CustomButton
           buttonStyleType={ButtonStyle.default}
-          onPress={goNextSection}
+          onPress={goToNext}
           text="Next"
           width="flex-1"
         />

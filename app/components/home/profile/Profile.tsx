@@ -1,5 +1,5 @@
 import { Text, View, Pressable } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { UserProfileInfo } from "../.././../../interfaces/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserInfo } from "./../../../../interfaces/User";
@@ -19,7 +19,7 @@ import TabView from "../../elements/TabView";
 import { useHomeContext } from "../HomeContext";
 
 const Profile: React.FC = () => {
-  const { apiURL, toggleMenuButton,viewChange } = useHomeContext();
+  const { apiURL, toggleMenuButton, viewChange } = useHomeContext();
   const router = useRouter();
   const [yourProfile, setYourProfile] = useState<UserProfileInfo>();
   const [profileRank, setProfileRank] = useState<string>("");
@@ -27,26 +27,28 @@ const Profile: React.FC = () => {
   const [profileElo, setProfileElo] = useState<number>();
   const [rankComponent, setRankComponent] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
-  const logout = async (): Promise<void> => {
-    const keys = await AsyncStorage.getAllKeys();
-    keys.forEach((ele) => deleteFromStorage(ele));
-    router.navigate("/");
-  };
-  const [currentTab, setCurrentTab] = useState<JSX.Element>(
-    <MainProfileInfo logout={logout} />
-  );
 
   useEffect(() => {
     init();
   }, []);
 
-  const init = async (): Promise<void> => {
+  const logout = async (): Promise<void> => {
+    const keys = await AsyncStorage.getAllKeys();
+    keys.forEach((ele) => deleteFromStorage(ele));
+    router.push("/");
+  };
+
+  const [currentTab, setCurrentTab] = useState<JSX.Element>(
+    <MainProfileInfo logout={logout} />
+  );
+
+  const init = useCallback(async (): Promise<void> => {
     setViewLoading(true);
     toggleMenuButton(true);
     await getDataFromStorage();
     await getUserEloPoints();
     setViewLoading(false);
-  };
+  }, []);
 
   const getDataFromStorage = async (): Promise<void> => {
     const username = await AsyncStorage.getItem("username");
@@ -55,6 +57,7 @@ const Profile: React.FC = () => {
     setYourProfile({ name: username!, email: email! });
     await checkMoreUserInfo(id!);
   };
+
   const getUserEloPoints = async (): Promise<void> => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
@@ -80,14 +83,14 @@ const Profile: React.FC = () => {
     await AsyncStorage.removeItem(key);
   };
 
-  const goBack = () => {
+  const goBack = useCallback(() => {
     toggleMenuButton(false);
     viewChange(<Start />);
-  };
+  }, []);
 
-  const setActiveComponent = (component: JSX.Element) => {
+  const setActiveComponent = useCallback((component: JSX.Element) => {
     setCurrentTab(component);
-  };
+  }, []);
 
   return (
     <BackgroundMainSection>

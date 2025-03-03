@@ -1,12 +1,10 @@
-import { View, Text, FlatList,BackHandler } from "react-native";
-import { useEffect, useState, useCallback } from "react";
+import { View, Text, FlatList, BackHandler } from "react-native";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { ExerciseForm } from "./../../../../interfaces/Exercise";
 import ViewLoading from "../../elements/ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateExercise from "./CreateExercise";
-import CustomButton, {
-  ButtonStyle,
-} from "../../elements/CustomButton";
+import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { FontWeights } from "./../../../../enums/FontsProperties";
 import React from "react";
 import CustomDropdown from "../../elements/Dropdown";
@@ -16,19 +14,10 @@ import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import Card from "../../elements/Card";
 import { useHomeContext } from "../HomeContext";
 
-
-
 const Exercises: React.FC = () => {
-  const API_URL = process.env.REACT_APP_BACKEND;
-  const {toggleMenuButton} = useHomeContext();
+  const { setIsMenuButtonVisible, apiURL } = useHomeContext();
   const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
   const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
-  const [filteredGlobalExercises, setFilteredGlobalExercises] = useState<
-    ExerciseForm[]
-  >([]);
-  const [filteredUserExercises, setFilteredUserExercises] = useState<
-    ExerciseForm[]
-  >([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isExerciseDetailsVisible, setIsExerciseDetailsVisible] =
     useState<boolean>(false);
@@ -40,41 +29,33 @@ const Exercises: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
   const [bodyPart, setBodyPart] = useState<BodyParts | null>(null);
-  const [bodyPartsToSelect, setBodyPartsToSelect] = useState<DropdownItem[]>(
-    []
-  );
 
   useEffect(() => {
     init();
   }, []);
 
-  useEffect(() => {
-    filterExercises();
-  }, [bodyPart, globalExercises, userExercises]);
-
-  const init = async () => {
+  const init = useCallback(async () => {
     setIsLoading(true);
     await getAllGlobalExercises();
     await getAllUserExercises();
     await checkIsAdmin();
-    getBodyParts();
     setIsLoading(false);
-  };
+  }, []);
 
-  const getAllGlobalExercises = async () => {
+  const getAllGlobalExercises = useCallback(async () => {
     const response = await fetch(
-      `${API_URL}/api/exercise/getAllGlobalExercises`
+      `${apiURL}/api/exercise/getAllGlobalExercises`
     );
     if (response.ok) {
       const result = await response.json();
       setGlobalExercises(result);
     }
-  };
+  }, []);
 
   const getAllUserExercises = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
-      `${API_URL}/api/exercise/${id}/getAllUserExercises`
+      `${apiURL}/api/exercise/${id}/getAllUserExercises`
     );
     if (response.ok) {
       const result = await response.json();
@@ -84,65 +65,63 @@ const Exercises: React.FC = () => {
 
   const checkIsAdmin = async () => {
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${API_URL}/api/${id}/isAdmin`);
+    const response = await fetch(`${apiURL}/api/${id}/isAdmin`);
     const result = await response.json();
     setIsAdmin(result);
   };
 
-  const getBodyParts = () => {
+  const bodyPartsToSelect = useMemo(() => {
     const array: DropdownItem[] = Object.values(BodyParts).map((item) => ({
       label: item,
       value: item,
     }));
-    setBodyPartsToSelect(array);
-  };
+    return array;
+  }, []);
 
-  const filterExercises = () => {
-    if (!bodyPart) {
-      setFilteredGlobalExercises(globalExercises);
-      setFilteredUserExercises(userExercises);
-    } else {
-      setFilteredGlobalExercises(
-        globalExercises.filter((exercise) => exercise.bodyPart === bodyPart)
-      );
-      setFilteredUserExercises(
-        userExercises.filter((exercise) => exercise.bodyPart === bodyPart)
-      );
-    }
-  };
+  const filteredGlobalExercises = useMemo(() => {
+    return bodyPart
+      ? globalExercises.filter((exercise) => exercise.bodyPart === bodyPart)
+      : globalExercises;
+  }, [bodyPart, globalExercises]);
 
-  const handleSelectBodyPart = async (item: DropdownItem | null) => {
+  const filteredUserExercises = useMemo(() => {
+    return bodyPart
+      ? userExercises.filter((exercise) => exercise.bodyPart === bodyPart)
+      : userExercises;
+  }, [bodyPart, userExercises]);
+
+  const handleSelectBodyPart = useCallback((item: DropdownItem | null) => {
     setBodyPart(item ? (item.value as BodyParts) : null);
-  };
+  }, []);
 
-  const showExerciseDetails = (exercise: ExerciseForm): void => {
+  const showExerciseDetails = useCallback((exercise: ExerciseForm): void => {
     setSelectedExercise(exercise);
-    toggleMenuButton(true);
+    setIsMenuButtonVisible(false);
     setIsExerciseDetailsVisible(true);
-  };
+  }, []);
 
-  const closeExerciseDetails = async (): Promise<void> => {
+  const closeExerciseDetails = useCallback(async (): Promise<void> => {
     setIsExerciseDetailsVisible(false);
     setSelectedExercise(undefined);
     await getAllUserExercises();
-    toggleMenuButton(false);
-  };
+    setIsMenuButtonVisible(true);
+  }, []);
 
-  const openExerciseForm = (): void => {
-    toggleMenuButton(true);
+  const openExerciseForm = useCallback((): void => {
+    setIsMenuButtonVisible(false);
     setIsExerciseFormVisible(true);
-  };
-  const openGlobalExerciseForm = (): void => {
+  }, []);
+  const openGlobalExerciseForm = useCallback((): void => {
     setIsGlobal(true);
     openExerciseForm();
-  };
+  }, []);
 
-  const closeAddExerciseForm = async () => {
+  const closeAddExerciseForm = useCallback(async () => {
     await getAllUserExercises();
     await getAllGlobalExercises();
     setIsExerciseFormVisible(false);
-    toggleMenuButton(false);
-  };
+    setIsMenuButtonVisible(true);
+  },[]) 
 
   const renderExerciseItem = useCallback(({ item }: { item: ExerciseForm }) => {
     return (

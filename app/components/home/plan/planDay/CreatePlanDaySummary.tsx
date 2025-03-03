@@ -1,6 +1,5 @@
 import { View, Text } from "react-native";
 import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
-import { ExerciseForPlanDay } from "./../../../../../interfaces/Exercise";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";

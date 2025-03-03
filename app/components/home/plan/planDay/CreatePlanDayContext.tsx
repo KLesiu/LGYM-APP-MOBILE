@@ -1,5 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 import { ExerciseForPlanDay } from "../../../../../interfaces/Exercise";
+import { useHomeContext } from "../../HomeContext";
 
 interface PlanDayContextType {
   planDayName: string;
@@ -10,7 +11,6 @@ interface PlanDayContextType {
   setCurrentStep: (step: number) => void;
   goToNext: () => void;
   goBack: () => void;
-  apiURL: string;
   closeForm: () => void;
 }
 
@@ -29,24 +29,39 @@ interface PlanDayProviderProps {
   closeForm: () => void;
 }
 
-const PlanDayProvider:React.FC<PlanDayProviderProps> = ({children,closeForm}) => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+const PlanDayProvider: React.FC<PlanDayProviderProps> = ({
+  children,
+  closeForm,
+}) => {
   const [planDayName, setPlanDayName] = useState<string>("");
   const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(0);
-  
-  const goToNext = () => {
+
+  const goToNext = useCallback(() => {
     setCurrentStep(currentStep + 1);
-  };
-  const goBack = () => {
+  }, [currentStep]);
+
+  const goBack = useCallback(() => {
     setCurrentStep(currentStep - 1);
-  };
+  }, [currentStep]);
 
   return (
-    <PlanDayContext.Provider value={{ planDayName, setPlanDayName, exercisesList, setExercisesList,currentStep,setCurrentStep,goToNext,goBack,apiURL,closeForm }}>
+    <PlanDayContext.Provider
+      value={{
+        planDayName,
+        setPlanDayName,
+        exercisesList,
+        setExercisesList,
+        currentStep,
+        setCurrentStep,
+        goToNext,
+        goBack,
+        closeForm,
+      }}
+    >
       {children}
     </PlanDayContext.Provider>
   );
 };
 
-export default PlanDayProvider
+export default PlanDayProvider;

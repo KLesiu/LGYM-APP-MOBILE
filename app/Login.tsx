@@ -53,11 +53,11 @@ const Login: React.FC = () => {
 
     setErrors([]);
     setLoading(false);
-    router.navigate("/Home");
+    router.push("/Home");
   };
 
   const goToPreload = () => {
-    router.navigate("/");
+    router.push("/");
   };
   return (
     <View

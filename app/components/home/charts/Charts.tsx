@@ -3,14 +3,15 @@ import { View, Text } from "react-native";
 import EloRegistryChart from "./dedicated/EloRegistryChart";
 import ExerciseScoresChart from "./dedicated/ExerciseScoresChart";
 import TabView from "../../elements/TabView";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 const Charts: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<JSX.Element>(
     <EloRegistryChart />
   );
-  const setActiveComponent = (component: JSX.Element) => {
+  const setActiveComponent = useCallback((component: JSX.Element) => {
     setCurrentTab(component);
-  };
+  }, []);
+  
   return (
     <BackgroundMainSection>
       <View className="flex flex-col p-4" style={{ gap: 16 }}>

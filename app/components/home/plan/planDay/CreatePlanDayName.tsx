@@ -2,7 +2,7 @@ import { View, Text, TextInput } from "react-native";
 import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ValidationView from "../../../elements/ValidationView";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Message } from "./../../../../../enums/Message";
 import { usePlanDay } from "./CreatePlanDayContext";
 
@@ -12,16 +12,17 @@ const CreatePlanDayName: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
 
   const goNextSection = () => {
-    if (validateForm()) {
+    if (validateForm) {
       return goToNext();
     }
     setErrors([Message.FieldRequired]);
   };
 
-  const validateForm = () => {
+  const validateForm = useMemo(() => {
     if (!planDayName.length) return false;
     return true;
-  };
+  },[planDayName])
+   
   return (
     <View className="w-full h-full">
       <View className="px-5 py-2">

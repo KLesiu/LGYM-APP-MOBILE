@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { BodyParts } from "./../../../../enums/BodyParts";
 import { Message } from "./../../../../enums/Message";
@@ -24,9 +24,6 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [description, setDescription] = useState<string | undefined>("");
   const [error, setError] = useState<string>();
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
-  const [bodyPartsToSelect, setBodyPartsToSelect] = useState<DropdownItem[]>(
-    []
-  );
 
   useEffect(() => {
     if (props.form) {
@@ -37,18 +34,17 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         setIsBlocked(!props.isAdmin);
       }
     }
-    getBodyParts();
   }, []);
 
-  const handleSelectBodyPart = (item: DropdownItem | null) => {
+  const handleSelectBodyPart = useCallback((item: DropdownItem | null) => {
     if (!item) return setBodyPart(undefined);
     setBodyPart(item.value as BodyParts);
-  };
+  }, []);
 
-  const create = async () => {
+  const create = useCallback(async () => {
     if (props.isGlobal) await createGlobalExercise();
     else await createExercise();
-  };
+  }, [props.isGlobal]);
 
   const createExercise = async (): Promise<void> => {
     if (!validateForm()) return;
@@ -90,13 +86,14 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     else setError(result.msg);
   };
 
-  const validateForm = (): boolean => {
+  const validateForm = useCallback((): boolean => {
     if (!exerciseName || !bodyPart) {
       setError(Message.FieldRequired);
       return false;
     }
     return true;
-  };
+  }, [exerciseName, bodyPart]);
+
   const updateExercise = async (): Promise<void> => {
     if (!exerciseName || !bodyPart)
       return setError("Name and body part are required!");
@@ -117,133 +114,133 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     else setError(result.msg);
   };
 
-  const getBodyParts = () => {
+  const bodyPartsToSelect = useMemo(() => {
     const array: DropdownItem[] = Object.values(BodyParts).map((item) => {
       return {
         label: item,
         value: item,
       };
     });
-    setBodyPartsToSelect(array);
-  };
+    return array;
+  }, []);
 
   return (
     <Dialog>
-        {!props.form ? (
-          <Text
-            className="text-lg text-white border-b-[1px] border-primaryColor py-1  w-full"
-            style={{ fontFamily: "OpenSans_700Bold" }}
-          >
-            New Exercise
-          </Text>
-        ) : (
-          <Text></Text>
-        )}
+      {!props.form ? (
+        <Text
+          className="text-lg text-white border-b-[1px] border-primaryColor py-1  w-full"
+          style={{ fontFamily: "OpenSans_700Bold" }}
+        >
+          New Exercise
+        </Text>
+      ) : (
+        <Text></Text>
+      )}
 
-        <View style={{ gap: 16 }} className="flex flex-col w-full">
-          <View style={{ gap: 8 }} className="flex flex-col w-full  ">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
-            >
-              Name:
-            </Text>
-            <TextInput
-              style={{
-                fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
-                borderRadius: 8,
-              }}
-              className="w-full px-2 py-4  text-white "
-              onChangeText={(text: string) => setExerciseName(text)}
-              value={exerciseName}
-              readOnly={isBlocked}
-            />
-          </View>
-          <View style={{ gap: 8 }} className="flex flex-col w-full  ">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
-            >
-              BodyPart:
-            </Text>
-            <View>
-              {isBlocked ? (
-                <Text
-                  style={{ fontFamily: "OpenSans_300Light" }}
-                  className="text-white text-base"
-                >
-                  {bodyPart}
-                </Text>
-              ) : (
-                <CustomDropdown
-                  value={bodyPart}
-                  data={bodyPartsToSelect}
-                  onSelect={handleSelectBodyPart}
-                />
-              )}
-            </View>
-          </View>
-          <View style={{ gap: 8 }} className="flex flex-col w-full  ">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
-            >
-              Description:
-            </Text>
-            <TextInput
-              style={{
-                fontFamily: "OpenSans_400Regular",
-                borderRadius: 8,
-                backgroundColor: "rgb(30, 30, 30)",
-              }}
-              className="w-full px-2 py-4  text-white "
-              multiline
-              onChangeText={(text: string) => setDescription(text)}
-              value={description}
-              readOnly={isBlocked}
-            />
-          </View>
-        </View>
-        <View className="flex flex-row justify-between " style={{ gap: 8 }}>
-          <CustomButton
-            onPress={props.closeForm}
-            text="Cancel"
-            buttonStyleType={ButtonStyle.cancel}
-            width="flex-1"
-          />
-          {!isBlocked && (
-            <>
-              {props.form ? (
-                <CustomButton
-                  onPress={updateExercise}
-                  text="Update"
-                  buttonStyleType={ButtonStyle.success}
-                  width="flex-1"
-                  textSize="text-xl"
-                />
-              ) : (
-                <CustomButton
-                  onPress={create}
-                  text="Create"
-                  buttonStyleType={ButtonStyle.success}
-                  width="flex-1"
-                  textSize="text-xl"
-                />
-              )}
-            </>
-          )}
-        </View>
-        {error ? (
+      <View style={{ gap: 16 }} className="flex flex-col w-full">
+        <View style={{ gap: 8 }} className="flex flex-col w-full  ">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="text-red-500 text-lg"
+            className="text-white text-base"
           >
-            {error}
+            Name:
           </Text>
-        ) : (
-          ""
+          <TextInput
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              backgroundColor: "rgb(30, 30, 30)",
+              borderRadius: 8,
+            }}
+            className="w-full px-2 py-4  text-white "
+            onChangeText={(text: string) => setExerciseName(text)}
+            value={exerciseName}
+            readOnly={isBlocked}
+          />
+        </View>
+        <View style={{ gap: 8 }} className="flex flex-col w-full  ">
+          <Text
+            style={{ fontFamily: "OpenSans_300Light" }}
+            className="text-white text-base"
+          >
+            BodyPart:
+          </Text>
+          <View>
+            {isBlocked ? (
+              <Text
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="text-white text-base"
+              >
+                {bodyPart}
+              </Text>
+            ) : (
+              <CustomDropdown
+                value={bodyPart}
+                data={bodyPartsToSelect}
+                onSelect={handleSelectBodyPart}
+              />
+            )}
+          </View>
+        </View>
+        <View style={{ gap: 8 }} className="flex flex-col w-full  ">
+          <Text
+            style={{ fontFamily: "OpenSans_300Light" }}
+            className="text-white text-base"
+          >
+            Description:
+          </Text>
+          <TextInput
+            style={{
+              fontFamily: "OpenSans_400Regular",
+              borderRadius: 8,
+              backgroundColor: "rgb(30, 30, 30)",
+            }}
+            className="w-full px-2 py-4  text-white "
+            multiline
+            onChangeText={(text: string) => setDescription(text)}
+            value={description}
+            readOnly={isBlocked}
+          />
+        </View>
+      </View>
+      <View className="flex flex-row justify-between " style={{ gap: 8 }}>
+        <CustomButton
+          onPress={props.closeForm}
+          text="Cancel"
+          buttonStyleType={ButtonStyle.cancel}
+          width="flex-1"
+        />
+        {!isBlocked && (
+          <>
+            {props.form ? (
+              <CustomButton
+                onPress={updateExercise}
+                text="Update"
+                buttonStyleType={ButtonStyle.success}
+                width="flex-1"
+                textSize="text-xl"
+              />
+            ) : (
+              <CustomButton
+                onPress={create}
+                text="Create"
+                buttonStyleType={ButtonStyle.success}
+                width="flex-1"
+                textSize="text-xl"
+              />
+            )}
+          </>
         )}
+      </View>
+      {error ? (
+        <Text
+          style={{ fontFamily: "OpenSans_300Light" }}
+          className="text-red-500 text-lg"
+        >
+          {error}
+        </Text>
+      ) : (
+        ""
+      )}
     </Dialog>
   );
 };

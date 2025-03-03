@@ -1,10 +1,10 @@
 import { Text, View, ScrollView, Pressable, Image } from "react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import RecordsPopUp from "./RecordsPopUp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "../../elements/ViewLoading";
 import { MainRecordsLast } from "./../../../../interfaces/MainRecords";
-import RemoveIcon from "./../../../../img/icons/deleteIcon.svg"
+import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
 import ProgressIcon from "./../../../../img/icons/progress.png";
 import CustomButton, {
   ButtonSize,
@@ -34,18 +34,21 @@ const Records: React.FC<RecordsProps> = () => {
     getRecords();
   }, []);
 
-  const chagePopUpValue: VoidFunction = (): void => {
+  const chagePopUpValue: VoidFunction = useCallback((): void => {
     setPopUp(false);
     getRecords();
-  };
-  const showPopUp = () => {
+  }, []);
+
+  const showPopUp = useCallback(() => {
     setPopUp(true);
-  };
-  const updateSettedExerciseRecord = (exerciseId: string | undefined): void => {
+  },[])
+
+  const updateSettedExerciseRecord = useCallback( (exerciseId: string | undefined): void => {
     if (!exerciseId) return;
     setExercise(exerciseId);
     showPopUp();
-  };
+  },[])
+
   const getRecords = async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
@@ -55,6 +58,7 @@ const Records: React.FC<RecordsProps> = () => {
     setRecords(result);
     setViewLoading(false);
   };
+
   const deleteRecord = async () => {
     if (!choosenRecord) return;
     const response = await fetch(
@@ -65,11 +69,11 @@ const Records: React.FC<RecordsProps> = () => {
     deleteDialogVisible(false);
   };
 
-  const deleteDialogVisible = (visible: boolean, record?: MainRecordsLast) => {
+  const deleteDialogVisible = useCallback((visible: boolean, record?: MainRecordsLast) => {
     if (visible) setChoosenRecord(record);
     else setChoosenRecord(undefined);
     setIsDeleteRecordConfirmationDialogVisible(visible);
-  };
+  },[]);
 
   return (
     <View className="flex  flex-1 relative w-full  bg-bgColor">

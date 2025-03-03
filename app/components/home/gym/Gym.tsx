@@ -3,20 +3,17 @@ import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { FontWeights } from "./../../../../enums/FontsProperties";
 import GymPlace from "./GymPlace";
 import { GymChoiceInfo } from "./../../../../interfaces/Gym";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GymFormComponent from "./GymForm";
 import { Message } from "./../../../../enums/Message";
 import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
-import Background from "../../elements/BackgroundMainSection";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
 
-const Gym: React.FC= () => {
-  const API_URL = process.env.REACT_APP_BACKEND;
-
-  const { toggleMenuButton } = useHomeContext();
+const Gym: React.FC = () => {
+  const { toggleMenuButton, apiURL } = useHomeContext();
 
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
@@ -36,43 +33,49 @@ const Gym: React.FC= () => {
 
   const getGyms = async () => {
     const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${API_URL}/api/gym/${id}/getGyms`);
+    const response = await fetch(`${apiURL}/api/gym/${id}/getGyms`);
     const result = await response.json();
     setGyms(result);
   };
 
-  const addNewGym = () => {
+  const addNewGym = useCallback(() => {
     setCurrentChosenGym(undefined);
     openForm();
-    ``;
-  };
-  const openForm = () => {
+  }, []);
+
+  const openForm = useCallback(() => {
     toggleMenuButton(true);
     setIsGymFormVisible(true);
-  };
+  }, []);
 
-  const closeForm = async () => {
+  const closeForm = useCallback(async () => {
     await getGyms();
     setIsGymFormVisible(false);
     toggleMenuButton(false);
-  };
+  }, []);
 
-  const deleteDialogVisible = (visible: boolean, gym?: GymChoiceInfo) => {
-    if (visible) setCurrentChosenGym(gym);
-    else setCurrentChosenGym(undefined);
-    setIsDeleteConfirmationDialogVisible(visible);
-  };
+  const deleteDialogVisible = useCallback(
+    (visible: boolean, gym?: GymChoiceInfo) => {
+      if (visible) setCurrentChosenGym(gym);
+      else setCurrentChosenGym(undefined);
+      setIsDeleteConfirmationDialogVisible(visible);
+    },
+    []
+  );
 
-  const editGym = async (id: string) => {
-    const currentGym = gyms.find((gym) => gym._id === id);
-    setCurrentChosenGym(currentGym);
-    openForm();
-  };
+  const editGym = useCallback(
+    async (id: string) => {
+      const currentGym = gyms.find((gym) => gym._id === id);
+      setCurrentChosenGym(currentGym);
+      openForm();
+    },
+    [gyms]
+  );
 
   const deleteGym = async () => {
     if (!currentChosenGym) return;
     const response = await fetch(
-      `${API_URL}/api/gym/${currentChosenGym._id}/deleteGym`,
+      `${apiURL}/api/gym/${currentChosenGym._id}/deleteGym`,
       {
         method: "DELETE",
       }

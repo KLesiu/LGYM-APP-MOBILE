@@ -1,4 +1,4 @@
-import {  View, Text } from "react-native";
+import { View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { UserProfileInfo } from "./../../../../interfaces/User";
@@ -39,12 +39,12 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
           </Text>
         </View>
       </View>
-        <CustomButton
-          width="w-full"
-          text="Logout"
-          onPress={props.logout}
-          buttonStyleType={ButtonStyle.success}
-        />
+      <CustomButton
+        width="w-full"
+        text="Logout"
+        onPress={props.logout}
+        buttonStyleType={ButtonStyle.success}
+      />
     </View>
   );
 };

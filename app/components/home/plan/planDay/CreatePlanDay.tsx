@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -12,6 +12,7 @@ import CreatePlanDaySummary from "./CreatePlanDaySummary";
 import { PlanDayExercisesFormVm } from "./../../../../../interfaces/PlanDay";
 import { BackHandler } from "react-native";
 import { usePlanDay } from "./CreatePlanDayContext";
+import { useHomeContext } from "../../HomeContext";
 
 interface CreatePlanDayProps {
   planId: string;
@@ -28,8 +29,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     currentStep,
     setCurrentStep,
     closeForm,
-    apiURL,
   } = usePlanDay();
+
+  const {apiURL} = useHomeContext();
 
   const currentStepRef = useRef(currentStep);
 
@@ -58,12 +60,12 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     if (props.isPreview) setCurrentStep(2);
   };
 
-  const handleBackButton = () => {
+  const handleBackButton = useCallback(() => {
     setCurrentStep(currentStepRef.current - 1);
     return true;
-  };
+  },[currentStepRef.current]) 
 
-  const mapExercisesListToSend = (exerciseList: ExerciseForPlanDay[]) => {
+  const mapExercisesListToSend = useCallback( (exerciseList: ExerciseForPlanDay[]) => {
     const exercises = exerciseList.map((exercise: ExerciseForPlanDay) => {
       return {
         exercise: exercise.exercise.value,
@@ -72,9 +74,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       };
     });
     return exercises;
-  };
+  },[]);
 
-  const mapExercisesListFromSend = (exercises: PlanDayExercisesFormVm[]) => {
+  const mapExercisesListFromSend = useCallback((exercises: PlanDayExercisesFormVm[]) => {
     const currentExercisesList = exercises.map(
       (exerciseInPlanDay: PlanDayExercisesFormVm) => {
         return {
@@ -88,7 +90,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       }
     ) as ExerciseForPlanDay[];
     return currentExercisesList;
-  };
+  },[]) 
 
   const createPlanDay = async () => {
     setViewLoading(true);
@@ -111,6 +113,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
     setViewLoading(false);
   };
+
   const editPlanDay = async () => {
     setViewLoading(true);
     const exercises = mapExercisesListToSend(exercisesList);
@@ -139,10 +142,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setExercisesList(mapExercisesListFromSend(result.exercises));
   };
 
-  const savePlan = async () => {
+  const savePlan = useCallback(async () => {
     if (props.planDayId) await editPlanDay();
     else await createPlanDay();
-  };
+  },[props.planDayId]) ;
 
   const renderStep = (): JSX.Element => {
     switch (currentStep) {

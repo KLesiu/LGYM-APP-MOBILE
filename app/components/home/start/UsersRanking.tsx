@@ -7,30 +7,29 @@ import { UserBaseInfo } from "./../../../../interfaces/User";
 const UsersRanking: React.FC = () => {
   const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [ranking, setRanking] = useState<UserBaseInfo[]>([]);
-  const [myInfo,setMyInfo] = useState<UserBaseInfo>();
-  const [myPosition,setMyPosition] = useState<number>();  
-
-  const getRanking = async () => {
-    const response = await fetch(`${apiURL}/api/getUsersRanking`);
-    const result = await response.json() as UserBaseInfo[];
-    setRanking(result);
-    const username = await AsyncStorage.getItem("username");
-    if (!username) return;
-    const currentMyRanking = result.find((ele: UserBaseInfo,index:number) => {
-      if(ele.name === username){
-        setMyPosition(index+1);
-        return true;
-      }
-      return false;
-    });
-    if(!currentMyRanking) return;
-    setMyInfo(currentMyRanking);
-
-  };
+  const [myInfo, setMyInfo] = useState<UserBaseInfo>();
+  const [myPosition, setMyPosition] = useState<number>();
 
   useEffect(() => {
     getRanking();
   }, []);
+
+  const getRanking = async () => {
+    const response = await fetch(`${apiURL}/api/getUsersRanking`);
+    const result = (await response.json()) as UserBaseInfo[];
+    setRanking(result);
+    const username = await AsyncStorage.getItem("username");
+    if (!username) return;
+    const currentMyRanking = result.find((ele: UserBaseInfo, index: number) => {
+      if (ele.name === username) {
+        setMyPosition(index + 1);
+        return true;
+      }
+      return false;
+    });
+    if (!currentMyRanking) return;
+    setMyInfo(currentMyRanking);
+  };
 
   return (
     <View className="h-full w-full flex flex-col gap-2">
@@ -45,7 +44,7 @@ const UsersRanking: React.FC = () => {
           className={"text-primaryColor"}
           style={{ fontFamily: "OpenSans_400Regular" }}
         >
-          {myPosition}. {myInfo? `${myInfo.name} - ${myInfo.elo}ELO` : ''} 
+          {myPosition}. {myInfo ? `${myInfo.name} - ${myInfo.elo}ELO` : ""}
         </Text>
       </View>
       <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64  ">
@@ -56,7 +55,7 @@ const UsersRanking: React.FC = () => {
             if (myInfo && ele.name === myInfo.name) {
               color = "text-primaryColor";
             }
-            if(index === 0){
+            if (index === 0) {
               fontSize = "text-lg";
             }
             return (

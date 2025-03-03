@@ -3,7 +3,7 @@ import { GymChoiceInfo, GymForm } from "./../../../../interfaces/Gym";
 import CustomButton, { ButtonSize } from "../../elements/CustomButton";
 import EditIcon from "./../../../../img/icons/editIcon.svg";
 import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
-import React from "react";
+import React, { useMemo } from "react";
 import Card from "../../elements/Card";
 
 interface GymPlaceProps {
@@ -15,14 +15,22 @@ interface GymPlaceProps {
 
 const GymPlace: React.FC<GymPlaceProps> = (props) => {
   const { lastTrainingInfo } = props.gym;
-  const trainingDate =
-    lastTrainingInfo && lastTrainingInfo.createdAt
-      ? new Date(props.gym.lastTrainingInfo.createdAt).toLocaleDateString()
-      : "";
-  const trainingName =
-    lastTrainingInfo && lastTrainingInfo.type && lastTrainingInfo.type.name
-      ? lastTrainingInfo.type.name
-      : "";
+  const trainingDate = useMemo(
+    () =>
+      lastTrainingInfo && lastTrainingInfo.createdAt
+        ? new Date(props.gym.lastTrainingInfo.createdAt).toLocaleDateString()
+        : "",
+    [lastTrainingInfo]
+  );
+
+  const trainingName = useMemo(
+    () =>
+      lastTrainingInfo && lastTrainingInfo.type && lastTrainingInfo.type.name
+        ? lastTrainingInfo.type.name
+        : "",
+    [lastTrainingInfo]
+  );
+
   return (
     <Card>
       <View className="flex flex-col">
@@ -40,7 +48,9 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
                 onPress={() =>
                   props.editGym ? props.editGym(`${props.gym._id}`) : null
                 }
-                customSlots={[<EditIcon fill={'white'} width={24} height={24}/>]}
+                customSlots={[
+                  <EditIcon fill={"white"} width={24} height={24} />,
+                ]}
               />
               <CustomButton
                 buttonStyleSize={ButtonSize.small}

@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useCallback, useContext, useRef, useState } from "react";
 import { createContext } from "react";
 import { Animated } from "react-native";
 
@@ -40,12 +40,12 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
   const animation = useRef(new Animated.Value(0)).current;
 
-  const toggleMenuButton = (hide: boolean) => {
+  const toggleMenuButton = useCallback((hide: boolean) => {
     toggleMenu();
     setIsMenuButtonVisible(!hide);
-  };
+  },[])
 
-  const toggleMenu = () => {
+  const toggleMenu = useCallback(() => {
     if (isExpanded) {
       Animated.timing(animation, {
         toValue: 0,
@@ -60,12 +60,13 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
         useNativeDriver: false,
       }).start();
     }
-  };
+  },[isExpanded,animation]) ;
 
-  const changeView = (component: React.JSX.Element) => {
+  const changeView = useCallback((component: React.JSX.Element) => {
     toggleMenu();
     viewChange(component);
-  };
+  },[]);
+  
   return (
     <HomeContext.Provider
       value={{

@@ -1,5 +1,5 @@
 import { Text, View, Image, ScrollView, Pressable } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "../../elements/ViewLoading";
 import CreatePlanConfig from "./CreatePlanConfig";
@@ -14,11 +14,11 @@ import { FontWeights } from "./../../../../enums/FontsProperties";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import TrainingPlanItem from "./TrainingPlanItem";
-import  PlanDayProvider  from "./planDay/CreatePlanDayContext";
+import PlanDayProvider from "./planDay/CreatePlanDayContext";
 import { useHomeContext } from "../HomeContext";
 
 const TrainingPlan: React.FC = () => {
-  const { apiURL, toggleMenuButton } = useHomeContext();
+  const { apiURL, setIsMenuButtonVisible } = useHomeContext();
   const [planConfig, setPlanConfig] = useState<{
     name: string;
     trainingDays: number;
@@ -76,35 +76,38 @@ const TrainingPlan: React.FC = () => {
     }
     deletePlanDayVisible(false);
   };
-  const togglePlanConfigPopUp = (value: boolean): void => {
-    toggleMenuButton(value);
-    setShowPlanConfig(value);
-  };
-  const showPlanDayForm = (
-    planDay?: PlanDayBaseInfoVm,
-    isPreview?: boolean
-  ): void => {
-    setCurrentPlanDay(planDay);
-    setIsPreviewPlanDay(isPreview);
-    toggleMenuButton(true);
-    setIsPlanDayFormVisible(true);
-  };
 
-  const hidePlanDayForm = async (): Promise<void> => {
+  const togglePlanConfigPopUp = useCallback((value: boolean): void => {
+    setIsMenuButtonVisible(!value);
+    setShowPlanConfig(value);
+  }, []);
+
+  const showPlanDayForm = useCallback(
+    (planDay?: PlanDayBaseInfoVm, isPreview?: boolean): void => {
+      setCurrentPlanDay(planDay);
+      setIsPreviewPlanDay(isPreview);
+      setIsMenuButtonVisible(false);
+      setIsPlanDayFormVisible(true);
+    },
+    []
+  );
+
+  const hidePlanDayForm = useCallback(async (): Promise<void> => {
     setViewLoading(true);
     setIsPlanDayFormVisible(false);
-    toggleMenuButton(false);
+    setIsMenuButtonVisible(true);
     setViewLoading(false);
     await init();
-  };
-  const reloadSection = async(): Promise<void> => {
+  }, []);
+
+  const reloadSection = useCallback(async (): Promise<void> => {
     setShowPlanConfig(false);
-    toggleMenuButton(false);
+    setIsMenuButtonVisible(true);
     await init();
-  };
+  }, []);
+
   const getUserPlanConfig = async () => {
     const id = await AsyncStorage.getItem("id");
-
     const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`);
     const result = await response.json();
     if (Object.keys(result)[0] === "msg") setPlanConfig(undefined);
@@ -113,14 +116,15 @@ const TrainingPlan: React.FC = () => {
       return result;
     }
   };
-  const deletePlanDayVisible = (
-    visible: boolean,
-    planDay?: PlanDayBaseInfoVm
-  ) => {
-    if (visible) setCurrentPlanDay(planDay);
-    else setCurrentPlanDay(undefined);
-    setIsDeletePlanDayConfirmationDialogVisible(visible);
-  };
+
+  const deletePlanDayVisible = useCallback(
+    (visible: boolean, planDay?: PlanDayBaseInfoVm) => {
+      if (visible) setCurrentPlanDay(planDay);
+      else setCurrentPlanDay(undefined);
+      setIsDeletePlanDayConfirmationDialogVisible(visible);
+    },
+    []
+  );
 
   return (
     <BackgroundMainSection>
