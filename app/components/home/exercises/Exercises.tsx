@@ -14,14 +14,13 @@ import { BodyParts } from "./../../../../enums/BodyParts";
 import { DropdownItem } from "./../../../../interfaces/Dropdown";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import Card from "../../elements/Card";
+import { useHomeContext } from "../HomeContext";
 
 
-interface ExercisesProps {
-  toggleMenuButton: (hide: boolean) => void;
-}
 
-const Exercises: React.FC<ExercisesProps> = (props) => {
+const Exercises: React.FC = () => {
   const API_URL = process.env.REACT_APP_BACKEND;
+  const {toggleMenuButton} = useHomeContext();
   const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
   const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
   const [filteredGlobalExercises, setFilteredGlobalExercises] = useState<
@@ -118,7 +117,7 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
 
   const showExerciseDetails = (exercise: ExerciseForm): void => {
     setSelectedExercise(exercise);
-    props.toggleMenuButton(true);
+    toggleMenuButton(true);
     setIsExerciseDetailsVisible(true);
   };
 
@@ -126,11 +125,11 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
     setIsExerciseDetailsVisible(false);
     setSelectedExercise(undefined);
     await getAllUserExercises();
-    props.toggleMenuButton(false);
+    toggleMenuButton(false);
   };
 
   const openExerciseForm = (): void => {
-    props.toggleMenuButton(true);
+    toggleMenuButton(true);
     setIsExerciseFormVisible(true);
   };
   const openGlobalExerciseForm = (): void => {
@@ -142,7 +141,7 @@ const Exercises: React.FC<ExercisesProps> = (props) => {
     await getAllUserExercises();
     await getAllGlobalExercises();
     setIsExerciseFormVisible(false);
-    props.toggleMenuButton(false);
+    toggleMenuButton(false);
   };
 
   const renderExerciseItem = useCallback(({ item }: { item: ExerciseForm }) => {

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { DropdownItem } from "./../../../../../interfaces/Dropdown";
-import { ExerciseForm, ExerciseForPlanDay } from "./../../../../../interfaces/Exercise";
+import {
+  ExerciseForm,
+  ExerciseForPlanDay,
+} from "./../../../../../interfaces/Exercise";
 import { isIntValidator } from "./../../../../../helpers/numberValidator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
@@ -10,18 +13,11 @@ import AutoComplete from "../../../elements/Autocomplete";
 import ExerciseList from "./exerciseList/ExerciseList";
 import CreateExercise from "../../exercises/CreateExercise";
 import ViewLoading from "../../../elements/ViewLoading";
+import { usePlanDay } from "./CreatePlanDayContext";
 
-interface CreatePlanDayExerciseListProps {
-  goBack: () => void;
-  goToNext: () => void;
-  setExerciseList: (exerciseList: ExerciseForPlanDay[]) => void;
-  exerciseList: ExerciseForPlanDay[];
-}
-
-const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
-  props
-) => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+const CreatePlanDayExerciseList: React.FC = () => {
+  const { exercisesList, setExercisesList, goBack, goToNext, apiURL } =
+    usePlanDay();
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
   );
@@ -53,7 +49,7 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
       exercise: selectedExercise,
     };
 
-    props.setExerciseList([...props.exerciseList, exercise]);
+    setExercisesList([...exercisesList, exercise]);
 
     setNumberOfSeries("");
     setExerciseReps("");
@@ -65,10 +61,10 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
     setClearQuery(false);
   };
   const removeExerciseFromList = (item: ExerciseForPlanDay) => {
-    const newList = props.exerciseList.filter(
+    const newList = exercisesList.filter(
       (exercise: ExerciseForPlanDay) => exercise !== item
     );
-    props.setExerciseList(newList);
+    setExercisesList(newList);
   };
 
   const getAllExercises = async () => {
@@ -99,10 +95,9 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
     removeExerciseFromList(item);
   };
 
-
   const goNextSection = () => {
-    props.goToNext();
-  }
+    goToNext();
+  };
 
   return (
     <View className="w-full h-full">
@@ -192,14 +187,14 @@ const CreatePlanDayExerciseList: React.FC<CreatePlanDayExerciseListProps> = (
         </View>
       </View>
       <ExerciseList
-        exerciseList={props.exerciseList}
+        exerciseList={exercisesList}
         removeExerciseFromList={removeExerciseFromList}
         editExerciseFromList={editExerciseFromList}
       />
       <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
-          onPress={props.goBack}
+          onPress={goBack}
           text="Back"
           width="flex-1"
         />

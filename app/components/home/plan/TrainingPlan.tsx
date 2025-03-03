@@ -14,12 +14,11 @@ import { FontWeights } from "./../../../../enums/FontsProperties";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import TrainingPlanItem from "./TrainingPlanItem";
-interface TrainingPlanProps {
-  hideMenuButton: (hide: boolean) => void;
-}
+import  PlanDayProvider  from "./planDay/CreatePlanDayContext";
+import { useHomeContext } from "../HomeContext";
 
-const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+const TrainingPlan: React.FC = () => {
+  const { apiURL, toggleMenuButton } = useHomeContext();
   const [planConfig, setPlanConfig] = useState<{
     name: string;
     trainingDays: number;
@@ -78,7 +77,7 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
     deletePlanDayVisible(false);
   };
   const togglePlanConfigPopUp = (value: boolean): void => {
-    props.hideMenuButton(value);
+    toggleMenuButton(value);
     setShowPlanConfig(value);
   };
   const showPlanDayForm = (
@@ -87,21 +86,21 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
   ): void => {
     setCurrentPlanDay(planDay);
     setIsPreviewPlanDay(isPreview);
-    props.hideMenuButton(true);
+    toggleMenuButton(true);
     setIsPlanDayFormVisible(true);
   };
 
   const hidePlanDayForm = async (): Promise<void> => {
     setViewLoading(true);
     setIsPlanDayFormVisible(false);
-    props.hideMenuButton(false);
+    toggleMenuButton(false);
     setViewLoading(false);
-    init();
+    await init();
   };
-  const reloadSection = (): void => {
+  const reloadSection = async(): Promise<void> => {
     setShowPlanConfig(false);
-    props.hideMenuButton(false);
-    init();
+    toggleMenuButton(false);
+    await init();
   };
   const getUserPlanConfig = async () => {
     const id = await AsyncStorage.getItem("id");
@@ -195,12 +194,13 @@ const TrainingPlan: React.FC<TrainingPlanProps> = (props) => {
         <Text></Text>
       )}
       {isPlanDayFormVisible && planConfig ? (
-        <CreatePlanDay
-          isPreview={isPreviewPlanDay}
-          planId={planConfig._id}
-          closeForm={hidePlanDayForm}
-          planDayId={currentPlanDay ? currentPlanDay._id : ""}
-        />
+        <PlanDayProvider closeForm={hidePlanDayForm}>
+          <CreatePlanDay
+            isPreview={isPreviewPlanDay}
+            planId={planConfig._id}
+            planDayId={currentPlanDay ? currentPlanDay._id : ""}
+          />
+        </PlanDayProvider>
       ) : (
         <Text></Text>
       )}

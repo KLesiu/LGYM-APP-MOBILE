@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect,createContext } from "react";
 import { View, TouchableOpacity, Image, Text, Animated } from "react-native";
 import TrainingPlan from "../home/plan/TrainingPlan";
 import History from "../home/history/History";
@@ -19,46 +19,21 @@ import PlanIcon from "./../../../img/icons/planIcon.svg";
 import GymIcon from "./../../../img/icons/gymIcon.svg";
 import MenuIcon from "./../../../img/icons/menuIcon.svg";
 import ChartIcon from "./../../../img/icons/chartsIcon.svg";
+import { useHomeContext } from "../home/HomeContext";
+
+
+
 
 interface MenuProps {
   viewChange: (view: JSX.Element) => void;
 }
 
 const Menu: React.FC<MenuProps> = (props) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
-  const animation = useRef(new Animated.Value(0)).current;
+  const {isExpanded,setIsExpanded,isMenuButtonVisible,setIsMenuButtonVisible,animation,changeView,toggleMenu} = useHomeContext()
 
   useEffect(() => {
-    props.viewChange(<Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} />);
+    props.viewChange(<Start  />);
   }, []);
-
-  const toggleMenu = () => {
-    if (isExpanded) {
-      Animated.timing(animation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start(() => setIsExpanded(false)); // Ukrywamy menu po zakończeniu animacji
-    } else {
-      setIsExpanded(true);
-      Animated.timing(animation, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
-    }
-  };
-
-  const changeView = (component: React.JSX.Element) => {
-    toggleMenu();
-    props.viewChange(component);
-  };
-
-  const toggleMenuButton = (hide: boolean) => {
-    toggleMenu();
-    setIsMenuButtonVisible(!hide);
-  };
 
   const animatedScale = animation.interpolate({
     inputRange: [0, 1],
@@ -71,14 +46,14 @@ const Menu: React.FC<MenuProps> = (props) => {
   });
 
   const items = [
-    { icon: <HomeIcon/>, label: "Home", component: <Start viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
-    { icon: <ExerciseIcon/>, label: "Exercises", component: <Exercises  toggleMenuButton={toggleMenuButton} /> },
-    { icon: <GymIcon />, label: "Gym", component: <Gym viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
-    { icon: <AddTrainingIcon />, label: "Training", component: <AddTraining toggleMenuButton={toggleMenuButton} /> },
-    { icon: <PlanIcon />, label: "Plan", component: <TrainingPlan hideMenuButton={toggleMenuButton} /> },
+    { icon: <HomeIcon/>, label: "Home", component: <Start/> },
+    { icon: <ExerciseIcon/>, label: "Exercises", component: <Exercises/> },
+    { icon: <GymIcon />, label: "Gym", component: <Gym /> },
+    { icon: <AddTrainingIcon />, label: "Training", component: <AddTraining/> },
+    { icon: <PlanIcon />, label: "Plan", component: <TrainingPlan /> },
     { icon: <HistoryIcon />, label: "History", component: <History /> },
-    { icon: <ChartIcon />, label: "Charts", component: <Charts  toggleMenuButton={toggleMenuButton} /> },
-    { icon: <ProfileIcon />, label: "Profile", component: <Profile viewChange={props.viewChange} toggleMenuButton={toggleMenuButton} /> },
+    { icon: <ChartIcon />, label: "Charts", component: <Charts/> },
+    { icon: <ProfileIcon />, label: "Profile", component: <Profile/> },
   ];
 
   return isMenuButtonVisible ? (

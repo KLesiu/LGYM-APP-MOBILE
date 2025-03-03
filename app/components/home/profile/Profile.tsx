@@ -16,14 +16,10 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import TabView from "../../elements/TabView";
+import { useHomeContext } from "../HomeContext";
 
-interface ProfileProps {
-  toggleMenuButton: (hide: boolean) => void;
-  viewChange: (view: JSX.Element) => void;
-}
-
-const Profile: React.FC<ProfileProps> = (props) => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+const Profile: React.FC = () => {
+  const { apiURL, toggleMenuButton,viewChange } = useHomeContext();
   const router = useRouter();
   const [yourProfile, setYourProfile] = useState<UserProfileInfo>();
   const [profileRank, setProfileRank] = useState<string>("");
@@ -46,7 +42,7 @@ const Profile: React.FC<ProfileProps> = (props) => {
 
   const init = async (): Promise<void> => {
     setViewLoading(true);
-    props.toggleMenuButton(true);
+    toggleMenuButton(true);
     await getDataFromStorage();
     await getUserEloPoints();
     setViewLoading(false);
@@ -85,18 +81,13 @@ const Profile: React.FC<ProfileProps> = (props) => {
   };
 
   const goBack = () => {
-    props.toggleMenuButton(false);
-    props.viewChange(
-      <Start
-        viewChange={props.viewChange}
-        toggleMenuButton={props.toggleMenuButton}
-      />
-    );
+    toggleMenuButton(false);
+    viewChange(<Start />);
   };
 
   const setActiveComponent = (component: JSX.Element) => {
     setCurrentTab(component);
-  }
+  };
 
   return (
     <BackgroundMainSection>
@@ -144,11 +135,14 @@ const Profile: React.FC<ProfileProps> = (props) => {
         <TabView
           tabs={[
             { label: "Data", component: <MainProfileInfo logout={logout} /> },
-            { label: "Records", component: <Records toggleMenuButton={props.toggleMenuButton} /> },
+            {
+              label: "Records",
+              component: <Records toggleMenuButton={toggleMenuButton} />,
+            },
           ]}
           onTabChange={setActiveComponent}
         />
-      
+
         <View className="w-full flex-1 mt-4">{currentTab}</View>
       </View>
       {viewLoading ? <ViewLoading /> : <Text></Text>}

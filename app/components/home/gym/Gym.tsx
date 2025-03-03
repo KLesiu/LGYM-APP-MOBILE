@@ -11,13 +11,12 @@ import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import Background from "../../elements/BackgroundMainSection";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
-interface GymProps {
-  viewChange: (view: JSX.Element) => void;
-  toggleMenuButton: (hide: boolean) => void;
-}
+import { useHomeContext } from "../HomeContext";
 
-const Gym: React.FC<GymProps> = (props) => {
+const Gym: React.FC= () => {
   const API_URL = process.env.REACT_APP_BACKEND;
+
+  const { toggleMenuButton } = useHomeContext();
 
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
@@ -48,14 +47,14 @@ const Gym: React.FC<GymProps> = (props) => {
     ``;
   };
   const openForm = () => {
-    props.toggleMenuButton(true);
+    toggleMenuButton(true);
     setIsGymFormVisible(true);
   };
 
   const closeForm = async () => {
     await getGyms();
     setIsGymFormVisible(false);
-    props.toggleMenuButton(false);
+    toggleMenuButton(false);
   };
 
   const deleteDialogVisible = (visible: boolean, gym?: GymChoiceInfo) => {

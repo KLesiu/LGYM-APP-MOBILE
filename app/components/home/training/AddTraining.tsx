@@ -20,13 +20,12 @@ import { GymForm } from "./../../../../interfaces/Gym";
 import React from "react";
 import TrainingDayChoose from "./TrainingDayChoose";
 import { PlanDayChoose } from "./../../../../interfaces/PlanDay";
+import { useHomeContext } from "../HomeContext";
 
-interface AddTrainingProps {
-  toggleMenuButton: (hide: boolean) => void;
-}
 
-const AddTraining: React.FC<AddTrainingProps> = (props) => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+
+const AddTraining: React.FC = () => {
+  const {toggleMenuButton,apiURL} = useHomeContext();
   const [isAddTrainingActive, setIsAddTrainingActive] =
     useState<boolean>(false);
   const [isGymChoiceActive, setIsGymChoiceActive] = useState<boolean>(false);
@@ -69,11 +68,10 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
   const getInformationAboutGyms = () => {
     setViewLoading(true);
     setIsGymChoiceActive(true);
-    props.toggleMenuButton(true);
+    toggleMenuButton(true);
     setViewLoading(false);
   };
   const changeGym = async (gym: GymForm) => {
-    console.log('siema')
     setGym(gym);
     setIsGymChoiceActive(false);
     getInformationsAboutPlanDays();
@@ -107,11 +105,11 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     setIsAddTrainingActive(true);
     setDayId(day);
     setViewLoading(false);
-    props.toggleMenuButton(true);
+    toggleMenuButton(true);
   };
   const hideDaySection = () => {
     setDayId("");
-    props.toggleMenuButton(false);
+    toggleMenuButton(false);
   };
   const hideAndDeleteTrainingSession = async () => {
     await AsyncStorage.removeItem("planDay");
@@ -120,11 +118,11 @@ const AddTraining: React.FC<AddTrainingProps> = (props) => {
     hideDaySection();
   };
   const showUpdateRankPop = (): void => {
-    props.toggleMenuButton(true);
+    toggleMenuButton(true);
     setShowUpdateRankPopUp(true);
   };
   const hideUpdateRankPopUp = (): void => {
-    props.toggleMenuButton(false);
+    toggleMenuButton(false);
     setShowUpdateRankPopUp(false);
   };
 

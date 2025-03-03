@@ -1,34 +1,27 @@
 import { View, Text, TextInput } from "react-native";
 import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
-import CustomButton, {
-  ButtonStyle,
-} from "../../../elements/CustomButton";
+import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ValidationView from "../../../elements/ValidationView";
 import { useState } from "react";
 import { Message } from "./../../../../../enums/Message";
+import { usePlanDay } from "./CreatePlanDayContext";
 
-interface CreatePlanDayNameProps {
-  goBack: () => void;
-  goToNext: () => void;
-  setPlanName: (name: string) => void;
-  planDayName: string;
-}
-
-const CreatePlanDayName: React.FC<CreatePlanDayNameProps> = (props) => {
+const CreatePlanDayName: React.FC = () => {
+  const { planDayName, setPlanDayName, goBack, goToNext } = usePlanDay();
 
   const [errors, setErrors] = useState<string[]>([]);
 
   const goNextSection = () => {
-    if(validateForm()){
-      return props.goToNext();
+    if (validateForm()) {
+      return goToNext();
     }
-    setErrors([Message.FieldRequired])
-  }
+    setErrors([Message.FieldRequired]);
+  };
 
   const validateForm = () => {
-    if(!props.planDayName.length) return false;
+    if (!planDayName.length) return false;
     return true;
-  }
+  };
   return (
     <View className="w-full h-full">
       <View className="px-5 py-2">
@@ -63,15 +56,15 @@ const CreatePlanDayName: React.FC<CreatePlanDayNameProps> = (props) => {
               borderRadius: 8,
             }}
             className=" w-full  px-2 py-4 text-white  "
-            onChangeText={(text: string) => props.setPlanName(text)}
-            value={props.planDayName}
+            onChangeText={(text: string) => setPlanDayName(text)}
+            value={planDayName}
           />
         </View>
       </View>
       <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
-          onPress={props.goBack}
+          onPress={goBack}
           text="Back"
           width="flex-1"
         />

@@ -11,20 +11,26 @@ import ViewLoading from "../../../elements/ViewLoading";
 import CreatePlanDaySummary from "./CreatePlanDaySummary";
 import { PlanDayExercisesFormVm } from "./../../../../../interfaces/PlanDay";
 import { BackHandler } from "react-native";
+import { usePlanDay } from "./CreatePlanDayContext";
 
 interface CreatePlanDayProps {
   planId: string;
-  closeForm: () => void;
   planDayId?: string;
   isPreview?: boolean;
 }
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+  const {
+    planDayName,
+    exercisesList,
+    setPlanDayName,
+    setExercisesList,
+    currentStep,
+    setCurrentStep,
+    closeForm,
+    apiURL,
+  } = usePlanDay();
 
-  const [planDayName, setPlanDayName] = useState<string>("");
-  const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
-  const [currentStep, setCurrentStep] = useState<number>(0);
   const currentStepRef = useRef(currentStep);
 
   const [viewLoading, setViewLoading] = useState<boolean>(false);
@@ -42,7 +48,6 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       "hardwareBackPress",
       handleBackButton
     );
-
     return () => {
       backHandler.remove();
     };
@@ -102,7 +107,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       }
     );
     const result = await response.json();
-    if (result.msg === Message.Created) props.closeForm();
+    if (result.msg === Message.Created) closeForm();
 
     setViewLoading(false);
   };
@@ -121,15 +126,8 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       }),
     });
     const result = await response.json();
-    if (result.msg === Message.Updated) props.closeForm();
+    if (result.msg === Message.Updated) closeForm();
     setViewLoading(false);
-  };
-
-  const goToNext = () => {
-    setCurrentStep(currentStep + 1);
-  };
-  const goBack = () => {
-    setCurrentStep(currentStep - 1);
   };
 
   const getPlanDay = async () => {
@@ -149,34 +147,16 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const renderStep = (): JSX.Element => {
     switch (currentStep) {
       case -1:
-        props.closeForm();
+        closeForm();
       case 0:
-        return (
-          <CreatePlanDayName
-            goBack={goBack}
-            goToNext={goToNext}
-            setPlanName={setPlanDayName}
-            planDayName={planDayName}
-          />
-        );
+        return <CreatePlanDayName />;
       case 1:
-        return (
-          <CreatePlanDayExerciseList
-            goBack={goBack}
-            goToNext={goToNext}
-            setExerciseList={setExercisesList}
-            exerciseList={exercisesList}
-          />
-        );
+        return <CreatePlanDayExerciseList />;
       case 2:
         return (
           <CreatePlanDaySummary
-            closeForm={props.closeForm}
-            goBack={goBack}
             isPreview={props.isPreview}
             saveCurrentPlan={savePlan}
-            planDayName={planDayName}
-            exercisesList={exercisesList}
           />
         );
       default:

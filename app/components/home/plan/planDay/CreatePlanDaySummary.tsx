@@ -3,17 +3,16 @@ import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import { ExerciseForPlanDay } from "./../../../../../interfaces/Exercise";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
+import { usePlanDay } from "./CreatePlanDayContext";
 
 interface CreatePlanDaySummaryProps {
-  goBack: () => void;
   saveCurrentPlan: () => Promise<void>;
-  planDayName: string;
-  exercisesList: ExerciseForPlanDay[];
   isPreview?: boolean;
-  closeForm?: () => void;
 }
 
 const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
+  const { exercisesList, goBack,planDayName,closeForm} =
+    usePlanDay();
   return (
     <View className="w-full h-full">
       <View className="px-5 py-2">
@@ -29,23 +28,23 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
             className="text-xl text-white"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
-            {props.planDayName}
+            {planDayName}
           </Text>
         </View>
       </View>
-      <ExerciseList exerciseList={props.exercisesList} />
+      <ExerciseList exerciseList={exercisesList} />
       <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
-        {props.isPreview && props.closeForm ? (
+        {props.isPreview && closeForm ? (
           <CustomButton
             buttonStyleType={ButtonStyle.outlineBlack}
-            onPress={props.closeForm}
+            onPress={closeForm}
             text="Close"
             width="flex-1"
           />
         ) : (
           <CustomButton
             buttonStyleType={ButtonStyle.outlineBlack}
-            onPress={props.goBack}
+            onPress={goBack}
             text="Back"
             width="flex-1"
           />

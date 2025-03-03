@@ -1,4 +1,4 @@
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { FontWeights } from "../../../enums/FontsProperties";
 import React from "react";
 
@@ -56,7 +56,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       onPress={props.onPress}
     >
       {props.children}
-      {props.customSlots ? props.customSlots.map((slot) => <>{slot}</>) :    
+      {props.customSlots ? props.customSlots.map((slot,index) => <View key={index}>{slot}</View>) :    
       <Text
         className={`${props.textSize ? props.textSize : 'text-base'} text-center ${textColorClass()}`}
         style={{ fontFamily: props.textWeight ? props.textWeight : FontWeights.regular }}

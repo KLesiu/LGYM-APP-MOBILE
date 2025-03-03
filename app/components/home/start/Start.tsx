@@ -15,14 +15,10 @@ import CustomButton, {
 } from "../../elements/CustomButton";
 import ResponseMessage from "./../../../../interfaces/ResponseMessage";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
+import { useHomeContext } from "../HomeContext";
 
-interface StartProps {
-  viewChange: (view: JSX.Element) => void;
-  toggleMenuButton: (hide: boolean) => void;
-}
-
-const Start: React.FC<StartProps> = (props) => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+const Start: React.FC = () => {
+  const { viewChange, toggleMenuButton, apiURL } = useHomeContext();
   const [lastTrainingInfo, setLastTrainingInfo] = useState<LastTrainingInfo>();
   const [userInfo, setUserInfo] = useState<UserInfo>();
   const [error, setError] = useState<string>("");
@@ -61,7 +57,7 @@ const Start: React.FC<StartProps> = (props) => {
   };
 
   const navigateTo = (component: JSX.Element) => {
-    props.viewChange(component);
+    viewChange(component);
   };
   return (
     <BackgroundMainSection>
@@ -105,11 +101,7 @@ const Start: React.FC<StartProps> = (props) => {
           </View>
           <CustomButton
             buttonStyleSize={ButtonSize.xl}
-            onPress={() =>
-              navigateTo(
-                <AddTraining toggleMenuButton={props.toggleMenuButton} />
-              )
-            }
+            onPress={() => navigateTo(<AddTraining />)}
             buttonStyleType={ButtonStyle.success}
             text="New"
           />

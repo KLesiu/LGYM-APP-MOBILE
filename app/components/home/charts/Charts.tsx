@@ -4,11 +4,7 @@ import EloRegistryChart from "./dedicated/EloRegistryChart";
 import ExerciseScoresChart from "./dedicated/ExerciseScoresChart";
 import TabView from "../../elements/TabView";
 import { useState } from "react";
-interface ChartsProps {
-  toggleMenuButton: (hide: boolean) => void;
-}
-
-const Charts: React.FC<ChartsProps> = () => {
+const Charts: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<JSX.Element>(
     <EloRegistryChart />
   );
