@@ -9,7 +9,7 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ children, onPress, customClasses }) => {
   return onPress ? (
     <Pressable
-      className={`w-full bg-fourthColor flex flex-row p-4 rounded-lg justify-between items-start ${customClasses}`}
+      className={`w-full bg-fourthColor flex flex-row p-4 rounded-lg justify-between items-start border-[1px] border-thirdColor ${customClasses}`}
       style={{ gap: 20 }}
       onPress={onPress}
     >
@@ -17,7 +17,7 @@ const Card: React.FC<CardProps> = ({ children, onPress, customClasses }) => {
     </Pressable>
   ) : (
     <View
-      className={`w-full bg-fourthColor flex flex-row p-4 rounded-lg justify-between items-start ${customClasses}`}
+      className={`w-full bg-fourthColor flex flex-row p-4 rounded-lg justify-between items-start border-[1px] border-thirdColor ${customClasses}`}
       style={{ gap: 20 }}
     >
       {children}

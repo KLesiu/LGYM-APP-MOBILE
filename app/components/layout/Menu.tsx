@@ -29,7 +29,7 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = (props) => {
-  const {isExpanded,setIsExpanded,isMenuButtonVisible,setIsMenuButtonVisible,animation,changeView,toggleMenu} = useHomeContext()
+  const {isExpanded,isMenuButtonVisible,animation,changeView,toggleMenu} = useHomeContext()
 
   useEffect(() => {
     props.viewChange(<Start  />);
