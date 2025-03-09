@@ -1,132 +1,116 @@
-import { View, Text, FlatList, BackHandler } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { ExerciseForm } from "./../../../../interfaces/Exercise";
+import { ExerciseForm } from "../../../../interfaces/Exercise";
 import ViewLoading from "../../elements/ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateExercise from "./CreateExercise";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { FontWeights } from "./../../../../enums/FontsProperties";
+import { FontWeights } from "../../../../enums/FontsProperties";
 import React from "react";
 import CustomDropdown from "../../elements/Dropdown";
-import { BodyParts } from "./../../../../enums/BodyParts";
-import { DropdownItem } from "./../../../../interfaces/Dropdown";
+import { BodyParts } from "../../../../enums/BodyParts";
+import { DropdownItem } from "../../../../interfaces/Dropdown";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import Card from "../../elements/Card";
 import { useHomeContext } from "../HomeContext";
 
 const Exercises: React.FC = () => {
-  const { setIsMenuButtonVisible, apiURL } = useHomeContext();
+  const { toggleMenuButton, apiURL, hideMenu } = useHomeContext();
   const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
   const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isExerciseDetailsVisible, setIsExerciseDetailsVisible] =
-    useState<boolean>(false);
-  const [isExerciseFormVisible, setIsExerciseFormVisible] =
-    useState<boolean>(false);
-  const [selectedExercise, setSelectedExercise] = useState<
-    ExerciseForm | undefined
-  >();
+  const [selectedExercise, setSelectedExercise] = useState<ExerciseForm | null>(
+    null
+  );
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
   const [bodyPart, setBodyPart] = useState<BodyParts | null>(null);
+  const [isExerciseFormVisible, setIsExerciseFormVisible] = useState(false);
 
   useEffect(() => {
     init();
   }, []);
 
-  const init = useCallback(async () => {
+  const init = async () => {
     setIsLoading(true);
-    await getAllGlobalExercises();
-    await getAllUserExercises();
-    await checkIsAdmin();
+    await Promise.all([
+      getAllGlobalExercises(),
+      getAllUserExercises(),
+      checkIsAdmin(),
+    ]);
     setIsLoading(false);
-  }, []);
+  };
 
   const getAllGlobalExercises = useCallback(async () => {
     const response = await fetch(
       `${apiURL}/api/exercise/getAllGlobalExercises`
     );
-    if (response.ok) {
-      const result = await response.json();
-      setGlobalExercises(result);
-    }
-  }, []);
+    if (response.ok) setGlobalExercises(await response.json());
+  }, [apiURL]);
 
-  const getAllUserExercises = async () => {
+  const getAllUserExercises = useCallback(async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(
       `${apiURL}/api/exercise/${id}/getAllUserExercises`
     );
-    if (response.ok) {
-      const result = await response.json();
-      setUserExercises(result);
-    }
-  };
+    if (response.ok) setUserExercises(await response.json());
+  }, [apiURL]);
 
-  const checkIsAdmin = async () => {
+  const checkIsAdmin = useCallback(async () => {
     const id = await AsyncStorage.getItem("id");
     const response = await fetch(`${apiURL}/api/${id}/isAdmin`);
-    const result = await response.json();
-    setIsAdmin(result);
-  };
+    setIsAdmin(await response.json());
+  }, [apiURL]);
 
-  const bodyPartsToSelect = useMemo(() => {
-    const array: DropdownItem[] = Object.values(BodyParts).map((item) => ({
-      label: item,
-      value: item,
-    }));
-    return array;
-  }, []);
+  const bodyPartsToSelect = useMemo(
+    () =>
+      Object.values(BodyParts).map((item) => ({ label: item, value: item })),
+    []
+  );
 
-  const filteredGlobalExercises = useMemo(() => {
-    return bodyPart
-      ? globalExercises.filter((exercise) => exercise.bodyPart === bodyPart)
-      : globalExercises;
-  }, [bodyPart, globalExercises]);
-
-  const filteredUserExercises = useMemo(() => {
-    return bodyPart
-      ? userExercises.filter((exercise) => exercise.bodyPart === bodyPart)
-      : userExercises;
-  }, [bodyPart, userExercises]);
+  const filteredExercises = useCallback(
+    (exercises: ExerciseForm[]) =>
+      bodyPart ? exercises.filter((e) => e.bodyPart === bodyPart) : exercises,
+    [bodyPart]
+  );
 
   const handleSelectBodyPart = useCallback((item: DropdownItem | null) => {
     setBodyPart(item ? (item.value as BodyParts) : null);
   }, []);
 
-  const showExerciseDetails = useCallback((exercise: ExerciseForm): void => {
-    setSelectedExercise(exercise);
-    setIsMenuButtonVisible(false);
-    setIsExerciseDetailsVisible(true);
-  }, []);
+  const handleExerciseDetails = useCallback(
+    (exercise: ExerciseForm) => {
+      setSelectedExercise(exercise);
+      toggleMenuButton(true);
+      setIsExerciseFormVisible(true);
+    },
+    [toggleMenuButton]
+  );
 
-  const closeExerciseDetails = useCallback(async (): Promise<void> => {
-    setIsExerciseDetailsVisible(false);
-    setSelectedExercise(undefined);
-    await getAllUserExercises();
-    setIsMenuButtonVisible(true);
-  }, []);
-
-  const openExerciseForm = useCallback((): void => {
-    setIsMenuButtonVisible(false);
-    setIsExerciseFormVisible(true);
-  }, []);
-  const openGlobalExerciseForm = useCallback((): void => {
-    setIsGlobal(true);
-    openExerciseForm();
-  }, []);
-
-  const closeAddExerciseForm = useCallback(async () => {
-    await getAllUserExercises();
-    await getAllGlobalExercises();
+  const closeExerciseForm = useCallback(async () => {
+    await Promise.all([getAllUserExercises(), getAllGlobalExercises()]);
     setIsExerciseFormVisible(false);
-    setIsMenuButtonVisible(true);
-  },[]) 
+    setSelectedExercise(null);
+    toggleMenuButton(false);
+    hideMenu();
+  }, [getAllUserExercises, getAllGlobalExercises, toggleMenuButton]);
 
-  const renderExerciseItem = useCallback(({ item }: { item: ExerciseForm }) => {
-    return (
+  const openExerciseForm = useCallback(
+    (global = false) => {
+      setIsGlobal(global);
+      setIsExerciseFormVisible(true);
+      toggleMenuButton(true);
+    },
+    [toggleMenuButton]
+  );
+
+  const renderExerciseItem = useCallback(
+    ({ item }: { item: ExerciseForm }) => (
       <View className="h-20">
-        <Card onPress={() => showExerciseDetails(item)} customClasses="h-full">
+        <Card
+          onPress={() => handleExerciseDetails(item)}
+          customClasses="h-full"
+        >
           <View className="flex flex-col">
             <Text
               className="text-base text-primaryColor font-bold"
@@ -143,8 +127,9 @@ const Exercises: React.FC = () => {
           </View>
         </Card>
       </View>
-    );
-  }, []);
+    ),
+    [handleExerciseDetails]
+  );
 
   return (
     <BackgroundMainSection>
@@ -171,20 +156,17 @@ const Exercises: React.FC = () => {
             >
               Global exercises:
             </Text>
-            {isAdmin ? (
+            {isAdmin && (
               <CustomButton
-                onPress={openGlobalExerciseForm}
+                onPress={() => openExerciseForm(true)}
                 textWeight={FontWeights.bold}
                 buttonStyleType={ButtonStyle.success}
                 text="Add new exercise"
               />
-            ) : (
-              <></>
             )}
           </View>
-
           <FlatList
-            data={filteredGlobalExercises}
+            data={filteredExercises(globalExercises)}
             renderItem={renderExerciseItem}
             keyExtractor={(item) => `${item._id}`}
             horizontal
@@ -200,15 +182,14 @@ const Exercises: React.FC = () => {
               User exercises:
             </Text>
             <CustomButton
-              onPress={openExerciseForm}
+              onPress={() => openExerciseForm()}
               textWeight={FontWeights.bold}
               buttonStyleType={ButtonStyle.success}
               text="Add new exercise"
             />
           </View>
-
           <FlatList
-            data={filteredUserExercises}
+            data={filteredExercises(userExercises)}
             renderItem={renderExerciseItem}
             keyExtractor={(item) => `${item._id}`}
             horizontal
@@ -222,16 +203,10 @@ const Exercises: React.FC = () => {
       {isLoading && <ViewLoading />}
       {isExerciseFormVisible && (
         <CreateExercise
-          closeForm={closeAddExerciseForm}
+          closeForm={closeExerciseForm}
           isAdmin={isAdmin}
           isGlobal={isGlobal}
-        />
-      )}
-      {isExerciseDetailsVisible && selectedExercise && (
-        <CreateExercise
-          closeForm={closeExerciseDetails}
-          form={selectedExercise}
-          isAdmin={isAdmin}
+          form={selectedExercise ?? undefined}
         />
       )}
     </BackgroundMainSection>

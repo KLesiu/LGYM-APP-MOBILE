@@ -24,15 +24,13 @@ import { useHomeContext } from "../home/HomeContext";
 
 
 
-interface MenuProps {
-  viewChange: (view: JSX.Element) => void;
-}
 
-const Menu: React.FC<MenuProps> = (props) => {
+
+const Menu: React.FC = () => {
   const {isExpanded,isMenuButtonVisible,animation,changeView,toggleMenu} = useHomeContext()
 
   useEffect(() => {
-    props.viewChange(<Start  />);
+    changeView(<Start  />);
   }, []);
 
   const animatedScale = animation.interpolate({

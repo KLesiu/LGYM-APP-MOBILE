@@ -13,7 +13,7 @@ import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
 
 const Gym: React.FC = () => {
-  const { toggleMenuButton, apiURL } = useHomeContext();
+  const { toggleMenuButton, apiURL ,hideMenu} = useHomeContext();
 
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
@@ -52,6 +52,7 @@ const Gym: React.FC = () => {
     await getGyms();
     setIsGymFormVisible(false);
     toggleMenuButton(false);
+    hideMenu()
   }, []);
 
   const deleteDialogVisible = useCallback(

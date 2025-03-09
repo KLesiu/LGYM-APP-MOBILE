@@ -18,7 +18,7 @@ import PlanDayProvider from "./planDay/CreatePlanDayContext";
 import { useHomeContext } from "../HomeContext";
 
 const TrainingPlan: React.FC = () => {
-  const { apiURL, setIsMenuButtonVisible } = useHomeContext();
+  const { apiURL, toggleMenuButton,hideMenu } = useHomeContext();
   const [planConfig, setPlanConfig] = useState<{
     name: string;
     trainingDays: number;
@@ -78,7 +78,7 @@ const TrainingPlan: React.FC = () => {
   };
 
   const togglePlanConfigPopUp = useCallback((value: boolean): void => {
-    setIsMenuButtonVisible(!value);
+    toggleMenuButton(value);
     setShowPlanConfig(value);
   }, []);
 
@@ -86,7 +86,7 @@ const TrainingPlan: React.FC = () => {
     (planDay?: PlanDayBaseInfoVm, isPreview?: boolean): void => {
       setCurrentPlanDay(planDay);
       setIsPreviewPlanDay(isPreview);
-      setIsMenuButtonVisible(false);
+      toggleMenuButton(true);
       setIsPlanDayFormVisible(true);
     },
     []
@@ -95,14 +95,15 @@ const TrainingPlan: React.FC = () => {
   const hidePlanDayForm = useCallback(async (): Promise<void> => {
     setViewLoading(true);
     setIsPlanDayFormVisible(false);
-    setIsMenuButtonVisible(true);
+    toggleMenuButton(false);
     setViewLoading(false);
+    hideMenu()
     await init();
   }, []);
 
   const reloadSection = useCallback(async (): Promise<void> => {
     setShowPlanConfig(false);
-    setIsMenuButtonVisible(true);
+    toggleMenuButton(false);
     await init();
   }, []);
 
@@ -130,7 +131,7 @@ const TrainingPlan: React.FC = () => {
     <BackgroundMainSection>
       <View className="w-full h-full flex flex-col">
         {!planConfig ? (
-          <View className="flex flex-row w-full">
+          <View className="flex flex-row w-full justify-center items-center h-full">
             <CustomButton
               onPress={() => togglePlanConfigPopUp(true)}
               text="Create plan"

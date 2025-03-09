@@ -36,7 +36,7 @@ const Register: React.FC = () => {
     const result:  ResponseMessage = await response.json();
     setLoading(false)
     if(result.msg === Message.Created){
-      return router.navigate("Login");
+      return router.push("Login");
     }
     setErrors([result.msg])
   };

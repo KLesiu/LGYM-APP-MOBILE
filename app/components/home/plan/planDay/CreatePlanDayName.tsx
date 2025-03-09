@@ -34,7 +34,7 @@ const CreatePlanDayName: React.FC = () => {
         </Text>
       </View>
       <View className="px-5" style={{ gap: 16 }}>
-        <View className="flex flex-row" style={{ gap: 8 }}>
+        <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <PlanNameIcon />
           <Text
             className="text-xl text-white"
