@@ -32,7 +32,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
   return (
     <Dialog>
       <Text
-        className="text-3xl text-white"
+        className="text-3xl text-[#141414]"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Choose your gym!

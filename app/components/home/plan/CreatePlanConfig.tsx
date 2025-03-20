@@ -62,7 +62,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   return (
     <Dialog>
       <Text
-        className="text-lg text-white border-b-[1px] border-primaryColor py-1  w-full"
+        className="text-lg text-[#141414] border-b-[1px] border-[#20BC2D] py-1  w-full"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Plan Config
@@ -75,17 +75,17 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           <View style={{ gap: 8 }} className="flex flex-col w-full  ">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
+              className="text-[#141414] text-base"
             >
               Plan name:
             </Text>
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                backgroundColor: "#FFFFFF",
                 borderRadius: 8,
               }}
-              className="w-full px-2 py-4  text-white "
+              className="w-full px-2 py-4  text-[#141414] "
               onChangeText={(text: string) => setPlanName(text)}
               value={planName}
             />
@@ -93,17 +93,17 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           <View style={{ gap: 8 }} className="flex flex-col w-full ">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  text-base"
+              className="  text-[#141414]  text-base"
             >
               How many days per week?
             </Text>
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                backgroundColor: "#FFFFFF",
                 borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white  "
+              className=" w-full  px-2 py-4 text-[#141414]  "
               keyboardType="numeric"
               onChangeText={validator}
               value={numberOfDays}

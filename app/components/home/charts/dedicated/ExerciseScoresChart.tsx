@@ -66,7 +66,7 @@ const ExerciseScoresChart: React.FC = () => {
       <View className="flex flex-col w-full">
         <Text
           style={{ fontFamily: "OpenSans_300Light" }}
-          className="  text-white  text-base"
+          className="  text-[#141414]  text-base"
         >
           Exercise:
         </Text>

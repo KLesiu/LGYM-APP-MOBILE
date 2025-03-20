@@ -19,7 +19,7 @@ import TabView from "../../elements/TabView";
 import { useHomeContext } from "../HomeContext";
 
 const Profile: React.FC = () => {
-  const { apiURL, toggleMenuButton, viewChange } = useHomeContext();
+  const { apiURL, toggleMenuButton, changeView } = useHomeContext();
   const router = useRouter();
   const [yourProfile, setYourProfile] = useState<UserProfileInfo>();
   const [profileRank, setProfileRank] = useState<string>("");
@@ -85,7 +85,7 @@ const Profile: React.FC = () => {
 
   const goBack = useCallback(() => {
     toggleMenuButton(false);
-    viewChange(<Start />);
+    changeView(<Start />);
   }, []);
 
   const setActiveComponent = useCallback((component: JSX.Element) => {
@@ -110,26 +110,26 @@ const Profile: React.FC = () => {
           <View className="flex ">{rankComponent}</View>
           <View style={{ gap: 4 }} className="flex flex-col items-center">
             <Text
-              className="text-primaryColor font-bold w-full text-center text-2xl"
+              className="text-[#20BC2D] font-bold w-full text-center text-2xl"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               {yourProfile?.name}
             </Text>
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-gray-200/80 font-light leading-4"
+              className="text-[#121212] font-light leading-4"
             >
               {profileRank}
             </Text>
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-gray-200/80 font-light leading-4"
+              className="text-[#121212] font-light leading-4"
             >
               {profileElo} Elo
             </Text>
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-gray-200/80 font-light leading-4"
+              className="text-[#121212] font-light leading-4"
             >
               Member since: {memberSince}
             </Text>

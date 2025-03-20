@@ -104,7 +104,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="text-3xl text-white"
+          className="text-3xl text-[#141414]"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Create plan list
@@ -112,9 +112,11 @@ const CreatePlanDayExerciseList: React.FC = () => {
       </View>
       <View className="px-5" style={{ gap: 16 }}>
         <View className="flex flex-row" style={{ gap: 8 }}>
-          <PlanNameIcon />
+        <View className="bg-[#121212] p-1 rounded-lg">
+            <PlanNameIcon />
+          </View>
           <Text
-            className="text-xl text-white"
+            className="text-xl text-[#141414]"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             New Exercises
@@ -123,7 +125,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
         <View style={{ gap: 4 }} className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="  text-white  text-base"
+            className="  text-[#141414]  text-base"
           >
             Exercise name
           </Text>
@@ -139,17 +141,17 @@ const CreatePlanDayExerciseList: React.FC = () => {
           <View style={{ gap: 4 }} className="flex flex-col flex-1">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  text-base"
+              className="  text-[#141414]  text-base"
             >
               Series:
             </Text>
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                backgroundColor: "#FFFFFF",
                 borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white  "
+              className=" w-full  px-2 py-4 text-[#141414]  "
               keyboardType="numeric"
               value={numberOfSeries}
               onChangeText={(text: string) => setNumberOfSeries(text)}
@@ -158,17 +160,17 @@ const CreatePlanDayExerciseList: React.FC = () => {
           <View style={{ gap: 4 }} className="flex flex-col flex-1">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
+              className="text-[#141414] text-base"
             >
               Reps:
             </Text>
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                backgroundColor: "#FFFFFF",
                 borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white  "
+              className=" w-full  px-2 py-4 text-[#141414]  "
               value={exerciseReps}
               onChangeText={(text: string) => setExerciseReps(text)}
             />

@@ -167,7 +167,7 @@ const AddTraining: React.FC = () => {
   };
 
   return (
-    <View className="bg-bgColor flex-1 w-full">
+    <View className="bg-[#F0EFF2] flex-1 w-full">
       {isUserHavePlan ? (
         <View className="relative  flex flex-col justify-center items-center h-full w-full">
           {isAddTrainingActive ? (
@@ -175,7 +175,7 @@ const AddTraining: React.FC = () => {
               onPress={getCurrentPlanDayTraining}
               customSlots={[
                 <Icon
-                  style={{ fontSize: 140, color: "#94e798" }}
+                  style={{ fontSize: 140, color: "#20BC2D" }}
                   name="play-circle"
                 />,
               ]}
@@ -183,7 +183,7 @@ const AddTraining: React.FC = () => {
           ) : (
             <Pressable onPress={getInformationAboutGyms}>
               <Icon
-                style={{ fontSize: 140, color: "#94e798" }}
+                style={{ fontSize: 140, color: "#20BC2D" }}
                 name="plus-circle"
               />
             </Pressable>
@@ -217,7 +217,7 @@ const AddTraining: React.FC = () => {
       ) : (
         <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center p-4">
           <Text
-            className="text-white text-xl text-center"
+            className="text-[#141414] text-xl text-center"
             style={{
               fontFamily: "OpenSans_400Regular",
             }}

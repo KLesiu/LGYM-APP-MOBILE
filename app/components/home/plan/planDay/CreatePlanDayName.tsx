@@ -21,13 +21,13 @@ const CreatePlanDayName: React.FC = () => {
   const validateForm = useMemo(() => {
     if (!planDayName.length) return false;
     return true;
-  },[planDayName])
-   
+  }, [planDayName]);
+
   return (
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="text-3xl text-white"
+          className="text-3xl text-[#141414]"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           New Plan Day
@@ -35,9 +35,11 @@ const CreatePlanDayName: React.FC = () => {
       </View>
       <View className="px-5" style={{ gap: 16 }}>
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
-          <PlanNameIcon />
+          <View className="bg-[#121212] p-1 rounded-lg">
+            <PlanNameIcon />
+          </View>
           <Text
-            className="text-xl text-white"
+            className="text-xl text-[#141414]"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             Set a plan name
@@ -46,17 +48,17 @@ const CreatePlanDayName: React.FC = () => {
         <View style={{ gap: 4 }} className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="  text-white  text-base"
+            className="  text-[#141414]  text-base"
           >
             Name:
           </Text>
           <TextInput
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
+              backgroundColor: "#FFFFFF",
               borderRadius: 8,
             }}
-            className=" w-full  px-2 py-4 text-white  "
+            className=" w-full  px-2 py-4 text-[#141414]  "
             onChangeText={(text: string) => setPlanDayName(text)}
             value={planDayName}
           />

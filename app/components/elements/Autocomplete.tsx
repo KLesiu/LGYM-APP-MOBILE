@@ -78,10 +78,10 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
       <TextInput
         style={{
           fontFamily: "OpenSans_400Regular",
-          backgroundColor: "rgb(30, 30, 30)",
+          backgroundColor: "#FFFFFF",
           borderRadius: 8,
         }}
-        className=" w-full  px-2 py-4 text-white  "
+        className=" w-full  px-2 py-4 text-[#141414]  "
         value={query}
         onChangeText={(text) => {
           setQuery(text);

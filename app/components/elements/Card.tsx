@@ -11,7 +11,7 @@ const Card: React.FC<CardProps> = ({ children, onPress, customClasses = "" }) =>
 
   return (
     <Container
-      className={`w-full bg-fourthColor flex flex-row p-4 rounded-lg justify-between items-start border border-thirdColor ${customClasses}`}
+      className={`w-full bg-white flex flex-row p-4 rounded-lg justify-between items-start border border-thirdColor ${customClasses}`}
       style={{ gap: 20 }}
       {...(onPress && { onPress })}
     >

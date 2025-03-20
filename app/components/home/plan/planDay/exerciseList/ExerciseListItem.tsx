@@ -27,7 +27,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
           style={{
             fontFamily: "OpenSans_400Regular",
           }}
-          className="text-xl  text-white"
+          className="text-xl  text-[#141414]"
         >
           {exerciseListItem.exercise.label}
         </Text>

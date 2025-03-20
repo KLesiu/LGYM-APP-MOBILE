@@ -36,10 +36,10 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
   return (
     <View
       style={{ gap: 16 }}
-      className="absolute h-full w-full flex flex-col  bg-bgColor items-center top-0 z-30 p-4 "
+      className="absolute h-full w-full flex flex-col  bg-[#F0EFF2] items-center top-0 z-30 p-4 "
     >
       <Text
-        className="text-lg text-white border-b-[1px] border-primaryColor py-1  w-full"
+        className="text-lg text-[#141414] border-b-[1px] border-[#20BC2D] py-1  w-full"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Training Summary
@@ -60,13 +60,13 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
           <View className=" bg-secondaryColor w-full  p-4">
             <View style={{ gap: 8 }} className="flex flex-row items-center">
               <Text
-                className="text-primaryColor text-lg"
+                className="text-[#20BC2D] text-lg"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
                 Best progress:
               </Text>
               <Text
-                className="text-white text-base"
+                className="text-[#141414] text-base"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 {bestProgress.exercise}
@@ -75,21 +75,21 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
 
             <View style={{ gap: 8 }} className="flex flex-col  justify-around">
               <Text
-                className="text-white text-sm"
+                className="text-[#141414] text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 Series number: {bestProgress.series}
               </Text>
               <View style={{ gap: 8 }} className="flex flex-row">
                 <Text
-                  className="text-white text-sm"
+                  className="text-[#141414] text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Reps:
                 </Text>
                 {bestProgress.repsScore >= 0 ? (
                   <Text
-                    className="text-primaryColor text-sm"
+                    className="text-[#20BC2D] text-sm"
                     style={{ fontFamily: "OpenSans_400Regular" }}
                   >
                     +{bestProgress.repsScore}
@@ -105,14 +105,14 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
               </View>
               <View style={{ gap: 8 }} className="flex flex-row">
                 <Text
-                  className="text-white text-sm"
+                  className="text-[#141414] text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Weight:
                 </Text>
                 {bestProgress.weightScore >= 0 ? (
                   <Text
-                    className="text-primaryColor text-sm"
+                    className="text-[#20BC2D] text-sm"
                     style={{ fontFamily: "OpenSans_400Regular" }}
                   >
                     +{bestProgress.weightScore}kg
@@ -137,7 +137,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
                 Worst Regress:{" "}
               </Text>
               <Text
-                className="text-white text-base"
+                className="text-[#141414] text-base"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 {worseRegress.exercise}
@@ -145,21 +145,21 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
             </View>
             <View style={{ gap: 8 }} className="flex flex-col  justify-around">
               <Text
-                className="text-white text-sm"
+                className="text-[#141414] text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 Series number: {worseRegress.series}
               </Text>
               <View style={{ gap: 8 }} className="flex flex-row">
                 <Text
-                  className="text-white text-sm"
+                  className="text-[#141414] text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Reps:
                 </Text>
                 {worseRegress.repsScore >= 0 ? (
                   <Text
-                    className="text-primaryColor text-sm"
+                    className="text-[#20BC2D] text-sm"
                     style={{ fontFamily: "OpenSans_400Regular" }}
                   >
                     +{worseRegress.repsScore}
@@ -175,14 +175,14 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
               </View>
               <View style={{ gap: 8 }} className="flex flex-row">
                 <Text
-                  className="text-white text-sm"
+                  className="text-[#141414] text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Weight:
                 </Text>
                 {worseRegress.weightScore >= 0 ? (
                   <Text
-                    className="text-primaryColor text-sm"
+                    className="text-[#20BC2D] text-sm"
                     style={{ fontFamily: "OpenSans_400Regular" }}
                   >
                     +{worseRegress.weightScore}kg
@@ -205,7 +205,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
         >
           <View>
             <Text
-              className="text-primaryColor text-lg"
+              className="text-[#20BC2D] text-lg"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Progress
@@ -213,13 +213,13 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
             <View className="flex flex-col h-36 justify-around">
               <View className="flex flex-col gap-2">
                 <Text
-                  className="text-white text-sm"
+                  className="text-[#141414] text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Current Rank: {props.trainingSummary.profileRank.name}
                 </Text>
                 <Text
-                  className="text-white text-sm"
+                  className="text-[#141414] text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Elo: (
@@ -232,7 +232,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
                   )
                 </Text>
                 <Text
-                  className="text-white text-sm"
+                  className="text-[#141414] text-sm"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
                   Next Rank:{" "}
@@ -249,7 +249,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
                 <Text></Text>
               )}
               <Text
-                className="text-white text-sm"
+                className="text-[#141414] text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 Completed: {progress ? progress : <Text></Text>}%
@@ -263,7 +263,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
         <Pressable
           onPress={() => props.closePopUp()}
           style={{ borderRadius: 8 }}
-          className={` flex flex-row justify-center items-center w-28 h-14 bg-primaryColor`}
+          className={` flex flex-row justify-center items-center w-28 h-14 bg-[#20BC2D]`}
         >
           <Text
             className="text-base"

@@ -44,7 +44,7 @@ const Menu: React.FC = () => {
   });
 
   const items = [
-    { icon: <HomeIcon/>, label: "Home", component: <Start/> },
+    { icon: <HomeIcon />, label: "Home", component: <Start/> },
     { icon: <ExerciseIcon/>, label: "Exercises", component: <Exercises/> },
     { icon: <GymIcon />, label: "Gym", component: <Gym /> },
     { icon: <AddTrainingIcon />, label: "Training", component: <AddTraining/> },
@@ -55,7 +55,7 @@ const Menu: React.FC = () => {
   ];
 
   return isMenuButtonVisible ? (
-    <View className="flex items-center justify-end bg-bgColor relative w-full">
+    <View className="flex items-center justify-end bg-[#F0EFF2] relative w-full">
       {isExpanded && (
         <Animated.View
           style={{
@@ -65,7 +65,7 @@ const Menu: React.FC = () => {
           className="absolute items-center justify-center bottom-[-65px]"
           pointerEvents={isExpanded ? "auto" : "none"} 
         >
-          <View style={{ borderRadius: 10000 }} className="relative w-[450px] h-[440px] items-center justify-center bg-[#282424db] -mb-[82px]">
+          <View style={{ borderRadius: 10000 }} className="relative w-[450px] h-[440px] items-center justify-center bg-[#c5c4c4db] -mb-[82px]">
             {items.map((item, index) => {
               const totalItems = items.length;
               const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2;
@@ -76,7 +76,7 @@ const Menu: React.FC = () => {
                   key={index}
                   onPress={() => changeView(item.component)}
                   style={{ transform: [{ translateX: x }, { translateY: y }], borderRadius: 10000 }}
-                  className="absolute w-20 h-20 items-center justify-center bg-bgColor p-1"
+                  className="absolute w-20 h-20 items-center justify-center bg-[#494949] p-1"
                 >
                   {item.icon}
                   <Text className="text-gray-400 text-sm font-light">{item.label}</Text>
@@ -97,7 +97,7 @@ const Menu: React.FC = () => {
           width: 64,
           height: 64,
           borderRadius: 32,
-          backgroundColor: "#94e798",
+          backgroundColor: "#20BC2D",
           alignItems: "center",
           justifyContent: "center",
           zIndex: 9,

@@ -37,7 +37,7 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
         <View className="flex flex-row justify-between w-full">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-2xl font-bold text-primaryColor"
+            className="text-2xl font-bold text-[#20BC2D]"
           >
             {props.gym.name}
           </Text>
@@ -57,7 +57,7 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
                 onPress={() =>
                   props.deleteGym ? props.deleteGym(`${props.gym._id}`) : null
                 }
-                customSlots={[<RemoveIcon />]}
+                customSlots={[<RemoveIcon stroke={'black'} />]}
               />
             </View>
           ) : (
@@ -67,7 +67,7 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
         <View className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_400Regular" }}
-            className="text-lg text-white"
+            className="text-lg text-[#141414]"
           >
             Last training: {`${trainingDate} ${trainingName}`}
           </Text>

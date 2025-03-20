@@ -349,12 +349,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       <View
         style={{ borderRadius: 8 }}
         key={item.exercise._id}
-        className="flex flex-col w-full   bg-[#282828] p-4  "
+        className="flex flex-col w-full   bg-[#ffff] p-4  "
       >
         <View className="flex flex-row justify-between">
           <View className="flex flex-row" style={{ gap: 8 }}>
             <Text
-              className="text-base text-white font-bold max-w-[150px]"
+              className="text-base text-[#141414] font-bold max-w-[150px]"
               style={{
                 fontFamily: "OpenSans_700Bold",
               }}
@@ -362,7 +362,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               {item.exercise.name}
             </Text>
             <Text
-              className="text-base text-white font-bold max-w-[150px]"
+              className="text-base text-[#141414] font-bold max-w-[150px]"
               style={{
                 fontFamily: "OpenSans_400Regular",
               }}
@@ -380,7 +380,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 )
               }
             >
-              <Icon name="plus" size={20} color="#94e798" />
+              <Icon name="plus" size={20} color="#20BC2D" />
             </Pressable>
             <Pressable
               onPress={() =>
@@ -391,7 +391,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 )
               }
             >
-              <Icon name="minus" size={20} color="#94e798" />
+              <Icon name="minus" size={20} color="#20BC2D" />
             </Pressable>
             <Pressable
               onPress={() =>
@@ -401,19 +401,19 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 )
               }
             >
-              <SwitchIcon fill={'white'} width={24} height={24} />
+              <SwitchIcon stroke={'black'} width={24} height={24} />
             </Pressable>
             <Pressable
               onPress={() => deleteExerciseFromPlanDay(item.exercise._id)}
             >
-              <RemoveIcon />
+              <RemoveIcon stroke={'black'} />
             </Pressable>
           </View>
         </View>
 
         <View style={{ gap: 16 }} className="flex w-full flex-col">
           <Text
-            className="text-gray-300 text-[10px] pb-1 border-b-[1px] mb-1 border-white"
+            className="text-black text-[10px] pb-1 border-b-[1px] mb-1 border-white"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Last scores: {stringScores?.join(", ")} (kg)
@@ -436,7 +436,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                       className="flex flex-row  items-center"
                     >
                       <Text
-                        className="text-white text-sm font-light"
+                        className="text-[#141414] text-sm font-light"
                         style={{ fontFamily: "OpenSans_300Light" }}
                       >
                         Reps:
@@ -453,7 +453,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                         value={savedScore ? `${savedScore.reps}` : ""}
                         keyboardType="numeric"
                         style={{ borderRadius: 8 }}
-                        className="text-sm  border-[#575757] w-20  border-[1px] text-white p-1"
+                        className="text-sm  border-[#575757] w-20  border-[1px] text-[#141414] p-1"
                       />
                     </View>
                     <View
@@ -461,7 +461,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                       className="flex flex-row items-center   "
                     >
                       <Text
-                        className="text-white text-sm font-light"
+                        className="text-[#141414] text-sm font-light"
                         style={{ fontFamily: "OpenSans_300Light" }}
                       >
                         Weight:
@@ -478,7 +478,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                         style={{ borderRadius: 8 }}
                         value={savedScore ? `${savedScore.weight}` : ""}
                         keyboardType="numeric"
-                        className="text-sm   border-[#575757] w-20  border-[1px] text-white p-1 "
+                        className="text-sm   border-[#575757] w-20  border-[1px] text-[#141414] p-1 "
                       />
                     </View>
                   </View>
@@ -492,7 +492,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
 
   return (
-    <View className="absolute w-full h-full text-white bg-bgColor flex flex-col">
+    <View className="absolute w-full h-full text-[#141414] bg-[#F0EFF2] flex flex-col">
       {planDay && Object.keys(planDay).length ? (
         <View
           style={{ gap: 16 }}
@@ -501,7 +501,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           <View style={{ gap: 8 }} className="flex flex-col w-full px-2 ">
             <View className="flex flex-col " style={{gap:4}}>
               <Text
-                className="text-2xl text-primaryColor block  font-bold "
+                className="text-2xl text-[#20BC2D] block  font-bold "
                 style={{
                   fontFamily: "OpenSans_700Bold",
                 }}
@@ -509,9 +509,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 {planDay.name}
               </Text>
               <View className="flex flex-row items-center">
-                <GymIcon />
+                <GymIcon stroke={'black'} />
                 <Text
-                  className="text-[11px] text-white"
+                  className="text-[11px] text-[#141414]"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -557,7 +557,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               }`}
             >
               <Text
-                className="text-center text-base text-white"
+                className="text-center text-base text-[#ffff]"
                 style={{
                   fontFamily: "OpenSans_400Regular",
                 }}
@@ -572,7 +572,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               onPress={() => sendTraining(trainingSessionScores)}
               disabled={!isEnabled}
               style={{ borderRadius: 8 }}
-              className={` flex flex-row justify-center items-center w-28 h-14 bg-primaryColor ${
+              className={` flex flex-row justify-center items-center w-28 h-14 bg-[#20BC2D] ${
                 !isEnabled ? "opacity-50" : "opacity-100"
               }`}
             >

@@ -1,6 +1,6 @@
 {
   "name": "lgym-app-mobile",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "main": "expo-router/entry",
   "scripts": {
     "start": "npx expo start",
@@ -47,7 +47,8 @@
     "react-native-web": "~0.19.13",
     "uniqid": "^5.4.0",
     "victory-native": "^41.16.1",
-    "expo-router": "~4.0.17"
+    "expo-router": "~4.0.17",
+    "expo-linking": "~7.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

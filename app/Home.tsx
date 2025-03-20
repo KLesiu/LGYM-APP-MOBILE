@@ -33,7 +33,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <View className="bg-bgColor flex flex-col justify-between relative h-full ">
+    <View className="bg-[#F0EFF2] flex flex-col justify-between relative h-full ">
       <HomeProvider viewChange={changeView}>
         {view.type.name === "Profile" ? "" : <Header />}
         {view}

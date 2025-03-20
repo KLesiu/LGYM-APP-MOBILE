@@ -3,9 +3,9 @@ import React from "react";
 const ViewLoading: React.FC = () => {
 
   return (
-    <View className=" w-full h-full bg-[#28292a] absolute top-0  flex flex-row justify-center items-center z-50">
+    <View className=" w-full h-full bg-[#ffff] absolute top-0  flex flex-row justify-center items-center z-50">
       <Text
-        className="text-xl text-white"
+        className="text-xl text-[#121212]"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Loading...

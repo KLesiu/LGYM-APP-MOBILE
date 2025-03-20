@@ -17,10 +17,10 @@ const Loading: React.FC<LoadingProps> = (props) => {
   };
 
   return (
-    <View className="bg-bgColor h-full  w-full absolute flex flex-col items-center z-[6]" >
-      <Image source={logoLGYM} className="w-[70%] h-[40%]" />
-      <View className="flex flex-col mx-[5%] mt-[40%] w-[90%]">
-        <View style={{borderRadius:12}} className="border-[2px] border-gray-500 w-full  h-1/5">
+    <View className="bg-[#F0EFF2] h-full  w-full absolute flex flex-col items-center z-[6]" >
+      
+      <View className="flex flex-col justify-center h-full mx-[5%] w-[90%]">
+        <View style={{borderRadius:12}} className="border-[2px] border-gray-500 w-full  h-10">
           <View
             style={{
               width: `${width}%`,
@@ -33,7 +33,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
           style={{
             fontFamily: "Caveat_400Regular"
           }}
-          className="text-[40px] text-white text-center w-full mt-12"
+          className="text-[40px] text-[#141414] text-center w-full mt-12"
         >
           Loading...
         </Text>

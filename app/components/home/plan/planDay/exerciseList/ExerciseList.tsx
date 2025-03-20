@@ -14,13 +14,13 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
       <View className="flex flex-row justify-between">
         <Text
           style={{ fontFamily: "OpenSans_700Bold" }}
-          className="text-white text-base"
+          className="text-[#141414] text-base"
         >
           Exercises List:
         </Text>
         <Text
           style={{ fontFamily: "OpenSans_400Regular" }}
-          className="text-white text-base"
+          className="text-[#141414] text-base"
         >
           {props.exerciseList.length} Total
         </Text>
@@ -38,7 +38,7 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
             ))
           ) : (
             <Text
-              className="text-white"
+              className="text-[#141414]"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
               No exercises added yet.

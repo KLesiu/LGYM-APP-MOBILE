@@ -16,15 +16,17 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="text-3xl text-white"
+          className="text-3xl text-[#141414]"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Summary
         </Text>
         <View className="flex flex-row" style={{ gap: 8 }}>
-          <PlanNameIcon />
+        <View className="bg-[#121212] p-1 rounded-lg">
+            <PlanNameIcon />
+          </View>
           <Text
-            className="text-xl text-white"
+            className="text-xl text-[#141414]"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             {planDayName}

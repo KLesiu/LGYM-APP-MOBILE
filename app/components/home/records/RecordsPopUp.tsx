@@ -79,18 +79,18 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   return (
     <Dialog>
       <Text
-        className="text-center text-xl text-white"
+        className="text-center text-xl text-[#141414]"
         style={{
           fontFamily: "OpenSans_400Regular",
         }}
       >
         {props.exerciseId && selectedExercise ? "EDIT RECORD" : "NEW RECORD"}
       </Text>
-      <View className="flex flex-col p-2" style={{ gap: 16 }}>
+      <View className="flex flex-col w-full p-2" style={{ gap: 16 }}>
         <View className="flex flex-col w-full">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            className="text-[#141414] text-xl"
           >
             Exercise:
           </Text>
@@ -113,7 +113,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         <View className="flex flex-col w-full">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            className="text-[#141414] text-xl"
           >
             Weight:
           </Text>

@@ -76,7 +76,7 @@ const Records: React.FC<RecordsProps> = () => {
   },[]);
 
   return (
-    <View className="flex  flex-1 relative w-full  bg-bgColor">
+    <View className="flex  flex-1 relative w-full  ">
       {popUp ? (
         <RecordsPopUp offPopUp={chagePopUpValue} exerciseId={exercise} />
       ) : (
@@ -97,14 +97,14 @@ const Records: React.FC<RecordsProps> = () => {
                     <View
                       style={{ borderRadius: 8 }}
                       key={record._id}
-                      className="w-full bg-[#282828]  p-4 "
+                      className="w-full bg-[#ffff]  p-4 "
                     >
                       <View className="flex flex-row justify-between">
                         <Text
                           style={{
                             fontFamily: "OpenSans_700Bold",
                           }}
-                          className="text-xl font-bold text-primaryColor"
+                          className="text-xl font-bold text-[#20BC2D]"
                         >
                           {record.exerciseDetails.name}
                         </Text>
@@ -126,20 +126,20 @@ const Records: React.FC<RecordsProps> = () => {
                           <CustomButton
                             buttonStyleSize={ButtonSize.none}
                             onPress={() => deleteDialogVisible(true, record)}
-                            customSlots={[<RemoveIcon />]}
+                            customSlots={[<RemoveIcon stroke={'black'} />]}
                           />
                         </View>
                       </View>
 
                       <Text
                         style={{ fontFamily: "OpenSans_400Regular" }}
-                        className="text-base text-white"
+                        className="text-base text-[#141414]"
                       >
                         Weight: {record.weight} {record.unit}
                       </Text>
                       <Text
                         style={{ fontFamily: "OpenSans_400Regular" }}
-                        className="text-base text-white"
+                        className="text-base text-[#141414]"
                       >
                         Date: {new Date(record.date).toLocaleString()}
                       </Text>

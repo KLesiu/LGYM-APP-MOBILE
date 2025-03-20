@@ -144,7 +144,7 @@ const TrainingPlan: React.FC = () => {
             <View className="p-5" style={{ gap: 32 }}>
               <View>
                 <Text
-                  className="text-base text-primaryColor  font-bold"
+                  className="text-base text-[#20BC2D]  font-bold"
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
@@ -155,7 +155,7 @@ const TrainingPlan: React.FC = () => {
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
-                  className="text-3xl text-white font-bold"
+                  className="text-3xl text-[#141414] font-bold"
                 >
                   {planConfig.name}
                 </Text>

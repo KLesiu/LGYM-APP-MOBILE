@@ -92,7 +92,7 @@ const Gym: React.FC = () => {
         <View className="flex flex-col ">
           <View className="flex w-full  justify-between flex-row  items-center">
             <Text
-              className="text-lg text-white  font-bold "
+              className="text-lg text-[#141414]  font-bold "
               style={{
                 fontFamily: "OpenSans_700Bold",
               }}

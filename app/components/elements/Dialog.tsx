@@ -8,7 +8,7 @@ interface DialogProps {
 const Dialog: React.FC<DialogProps> = ({ children }) => {
   return (
     <View
-      className="absolute top-0 left-0  flex flex-col w-full h-full items-center bg-bgColor"
+      className="absolute top-0 left-0  flex flex-col w-full h-full items-center bg-[#F0EFF2]"
       style={{ gap: 16 }}
     >
       {children}

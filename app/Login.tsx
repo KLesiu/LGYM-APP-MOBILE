@@ -6,15 +6,17 @@ import MiniLoading from "./components/elements/MiniLoading";
 
 import ShowIcon from "./../img/icons/showIcon.svg";
 import HideIcon from "./../img/icons/hideIcon.svg";
-import CustomButton, { ButtonSize, ButtonStyle } from "./components/elements/CustomButton";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "./components/elements/CustomButton";
 import { Message } from "../enums/Message";
 import ValidationView from "./components/elements/ValidationView";
-import { useRouter } from "expo-router"; 
-
+import { useRouter } from "expo-router";
 
 const Login: React.FC = () => {
   const apiURL = `${process.env.REACT_APP_BACKEND}/api/login`;
-  const router = useRouter(); 
+  const router = useRouter();
 
   const [errors, setErrors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -62,10 +64,23 @@ const Login: React.FC = () => {
   return (
     <View
       style={{ gap: 16 }}
-      className="flex items-center flex-col h-full justify-start bg-bgColor  p-4"
+      className="flex items-center flex-col h-full justify-start bg-[#F0EFF2]  p-4"
     >
-      <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
-        <Image className="w-full h-full" source={logoLGYM} />
+      <Pressable onPress={goToPreload}>
+        <View className="flex flex-row items-end ">
+          <Text
+            style={{ fontFamily: "OpenSans_700", fontSize: 120 }}
+            className="text-[#20BC2D] font-extrabold"
+          >
+            L
+          </Text>
+          <Text
+            style={{ fontFamily: "OpenSans_700", fontSize: 70 }}
+            className="text-black font-bold"
+          >
+            GYM
+          </Text>
+        </View>
       </Pressable>
 
       <View
@@ -74,7 +89,7 @@ const Login: React.FC = () => {
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base"
+            className="text-[#141414] text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Username
@@ -83,16 +98,16 @@ const Login: React.FC = () => {
             onChangeText={(text: string) => setUsername(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
+              backgroundColor: "#FFFFFF",
               borderRadius: 8,
             }}
-            className="w-full px-2 py-4  text-white "
+            className="w-full px-2 py-4  text-[#141414] "
             autoComplete="given-name"
           />
         </View>
         <View className="flex flex-col w-full relative" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base"
+            className="text-[#141414] text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Password
@@ -101,10 +116,10 @@ const Login: React.FC = () => {
             onChangeText={(text: string) => setPassword(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
+              backgroundColor: "#FFFFFF",
               borderRadius: 8,
             }}
-            className="w-full px-2 py-4 text-white  "
+            className="w-full px-2 py-4 text-[#141414]  "
             secureTextEntry={secureTextEntry}
           />
           <Pressable

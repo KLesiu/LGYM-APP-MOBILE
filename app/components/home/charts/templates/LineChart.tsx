@@ -22,8 +22,8 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
   }, [state, data]);
 
   const font = useFont(OpenSans_700Bold, 12);
-  const labelColor = "white";
-  const lineColor = "#94e798";
+  const labelColor = "black";
+  const lineColor = "#20BC2D";
   return (
     <CartesianChart
       data={data}

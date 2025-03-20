@@ -1,19 +1,17 @@
-import {
-  Text,
-  Image,
-  View,
-  ImageBackground,
-} from "react-native";
+import { Text, Image, View, ImageBackground } from "react-native";
 import logoLGYM from "./../img/logoLGYM.png";
 import backgroundLGYM from "./../img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
-import { useRouter } from "expo-router"; 
+import { useRouter } from "expo-router";
 import Loading from "./components/elements/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CustomButton, { ButtonSize, ButtonStyle } from "./components/elements/CustomButton";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "./components/elements/CustomButton";
 
 const Preload: React.FC = () => {
-  const router = useRouter(); 
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const apiURL = `${process.env.REACT_APP_BACKEND}/api/checkToken`;
@@ -41,11 +39,11 @@ const Preload: React.FC = () => {
   };
 
   const handleLoginPress: VoidFunction = (): void => {
-    router.push("/Login"); 
+    router.push("/Login");
   };
 
   const handleRegisterPress: VoidFunction = (): void => {
-    router.push("/Register"); 
+    router.push("/Register");
   };
 
   const offLoading: VoidFunction = (): void => {
@@ -53,35 +51,41 @@ const Preload: React.FC = () => {
   };
 
   return (
-    <View className="h-full bg-[#282828]">
-      <ImageBackground
-        resizeMode="cover"
-        className="h-full w-full"
-        source={backgroundLGYM}
+    <View className="h-full bg-[#F0EFF2]">
+      <View
+        style={{ gap: 16 }}
+        className="flex-1 items-center flex  justify-center h-full p-4"
       >
-        <View className="bg-[#5c5c5cb3] h-full w-full">
-          <View
-            style={{ gap: 16 }}
-            className="flex-1 items-center flex bg-[#111111e2] justify-center h-full p-4"
+        <View className="flex flex-row items-end ">
+          <Text
+            style={{ fontFamily: "OpenSans_700", fontSize: 120 }}
+            className="text-[#20BC2D] font-extrabold"
           >
-            <Image source={logoLGYM} className="w-[70%] h-2/5" />
-            <CustomButton
-              text="SIGN IN"
-              onPress={handleLoginPress}
-              buttonStyleSize={ButtonSize.xl}
-              buttonStyleType={ButtonStyle.success}
-              width="w-full"
-            />
-            <CustomButton
-              text="SIGN UP"
-              onPress={handleRegisterPress}
-              buttonStyleType={ButtonStyle.outline}
-              width="w-full"
-              buttonStyleSize={ButtonSize.xl}
-            />
-          </View>
+            L
+          </Text>
+          <Text
+            style={{ fontFamily: "OpenSans_700", fontSize: 70 }}
+            className="text-black font-bold"
+          >
+            GYM
+          </Text>
         </View>
-      </ImageBackground>
+
+        <CustomButton
+          text="SIGN IN"
+          onPress={handleLoginPress}
+          buttonStyleSize={ButtonSize.xl}
+          buttonStyleType={ButtonStyle.success}
+          width="w-full"
+        />
+        <CustomButton
+          text="SIGN UP"
+          onPress={handleRegisterPress}
+          buttonStyleType={ButtonStyle.outline}
+          width="w-full"
+          buttonStyleSize={ButtonSize.xl}
+        />
+      </View>
 
       {isLoading ? <Loading offLoading={offLoading} /> : <Text></Text>}
     </View>

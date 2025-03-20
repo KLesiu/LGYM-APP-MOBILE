@@ -11,13 +11,13 @@ const Header: React.FC = () => {
     getName();
   }, []);
   return (
-    <View className="bg-bgColor h-16 py-4 px-5 flex flex-row justify-end items-center">
+    <View className="bg-[#F0EFF2] h-16 py-4 px-5 flex flex-row justify-end items-center">
       <View
         style={{ borderRadius: 10000 }}
-        className="flex items-center justify-center w-8 h-8  bg-primaryColor "
+        className="flex items-center justify-center w-8 h-8  bg-[#20BC2D] "
       >
         <Text
-          className="text-bgColor text-xl font-bold"
+          className="text-[#141414] text-xl font-bold"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           {name[0]}

@@ -19,14 +19,14 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
             <View className="flex flex-col justify-between gap-1">
               <Text
                 style={{ fontFamily: "OpenSans_700Bold" }}
-                className="text-lg text-primaryColor"
+                className="text-lg text-[#20BC2D]"
               >
                 Training {training.planDay.name}
               </Text>
               <View className="flex flex-row items-center">
                 <GymIcon />
                 <Text
-                  className="text-[11px] text-white"
+                  className="text-[11px] text-[#141414]"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -49,7 +49,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                         style={{
                           fontFamily: "OpenSans_700Bold",
                         }}
-                        className="text-base font-bold text-white  border-b-[1px] border-b-white"
+                        className="text-base font-bold text-[#141414]  border-b-[1px] border-b-white"
                       >
                         {exercise.exerciseDetails.name}:{" "}
                         {exercise.exerciseDetails.bodyPart}
@@ -63,13 +63,13 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                             >
                               <Text
                                 style={{ fontFamily: "OpenSans_400Regular" }}
-                                className="text-white"
+                                className="text-[#141414]"
                               >
                                 Series: {score.series}
                               </Text>
                               <Text
                                 style={{ fontFamily: "OpenSans_400Regular" }}
-                                className="text-white"
+                                className="text-[#141414]"
                               >
                                 {score.reps} x {score.weight} {score.unit}
                               </Text>

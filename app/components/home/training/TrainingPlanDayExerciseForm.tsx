@@ -91,7 +91,7 @@ const TrainingPlanDayExerciseForm: React.FC<
   return (
     <Dialog>
       <Text
-        className="text-lg text-white border-b-[1px] border-primaryColor py-1  w-full"
+        className="text-lg text-[#141414] border-b-[1px] border-[#20BC2D] py-1  w-full"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Add exercise to the current training
@@ -102,7 +102,7 @@ const TrainingPlanDayExerciseForm: React.FC<
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-gray-200/80 font-light leading-4 text-base"
+            className="text-[#121212] font-light leading-4 text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Exercise:
@@ -117,7 +117,7 @@ const TrainingPlanDayExerciseForm: React.FC<
 
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-gray-200/80 font-light leading-4 text-base"
+            className="text-[#121212] font-light leading-4 text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Series:
@@ -125,10 +125,10 @@ const TrainingPlanDayExerciseForm: React.FC<
           <TextInput
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
+              backgroundColor: "#FFFFFF",
               borderRadius: 8,
             }}
-            className="w-full px-2 py-4  text-white "
+            className="w-full px-2 py-4  text-[#141414] "
             value={numberOfSeries}
             keyboardType="numeric"
             onChangeText={validator}
@@ -137,7 +137,7 @@ const TrainingPlanDayExerciseForm: React.FC<
 
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-gray-200/80 font-light leading-4 text-base"
+            className="text-[#121212] font-light leading-4 text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Reps:
@@ -145,10 +145,10 @@ const TrainingPlanDayExerciseForm: React.FC<
           <TextInput
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
+              backgroundColor: "#FFFFFF",
               borderRadius: 8,
             }}
-            className="w-full px-2 py-4  text-white "
+            className="w-full px-2 py-4  text-[#141414] "
             value={exerciseReps}
             onChangeText={(text: string) => setExerciseReps(text)}
           />

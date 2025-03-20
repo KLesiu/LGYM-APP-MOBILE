@@ -19,7 +19,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
     <View key={item._id} className="w-full" style={{ gap: 10 }}>
       <Text
         style={{ fontFamily: "OpenSans_400Regular" }}
-        className="text-base text-white"
+        className="text-base text-[#141414]"
       >
         Last training:{" "}
         {item.lastTrainingDate
@@ -32,7 +32,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             style={{
               fontFamily: "OpenSans_700Bold",
             }}
-            className="text-xl font-bold text-white"
+            className="text-xl font-bold text-[#141414]"
           >
             {item.name}
           </Text>

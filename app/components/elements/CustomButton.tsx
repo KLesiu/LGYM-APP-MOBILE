@@ -3,9 +3,9 @@ import { FontWeights } from "../../../enums/FontsProperties";
 import React from "react";
 
 export enum ButtonStyle {
-    success = "bg-primaryColor",
-    cancel = "bg-[#3f3f3f]",
-    outline = "border-primaryColor border-[1px]",
+    success = "bg-[#20BC2D]",
+    cancel = "bg-gray-300",
+    outline = "border-[#20BC2D] border-[1px]",
     outlineBlack = "border-fifthColor border-[1px]",
     grey = "bg-[#282828]",
     default = "bg-white"
@@ -36,13 +36,13 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       case ButtonStyle.success:
         return 'text-black';
       case ButtonStyle.cancel:
-        return 'text-white';
+        return 'text-[#ffff]';
       case ButtonStyle.outline:
-        return 'text-white';
+        return 'text-[#141414]';
       case ButtonStyle.grey:
-        return 'text-white';
+        return 'text-[#141414]';
       case ButtonStyle.outlineBlack:
-        return 'text-white';
+        return 'text-[#141414]';
       default:
         return 'text-black';
     }

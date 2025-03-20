@@ -21,16 +21,16 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = (
       onRequestClose={props.onCancel}
     >
       <View className="flex-1 justify-center items-center bg-black/50">
-        <View className="w-72 p-4 bg-[#282828] rounded-lg items-center" style={{ gap: 16 }}>
+        <View className="w-72 p-4 bg-[#ffff] rounded-lg items-center" style={{ gap: 16 }}>
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-2xl font-bold text-primaryColor"
+            className="text-2xl font-bold text-[#20BC2D]"
           >
             {props.title}
           </Text>
           <Text
             style={{ fontFamily: "OpenSans_400Regular" }}
-            className="text-lg text-white"
+            className="text-lg text-[#141414]"
           >
             {props.message}
           </Text>

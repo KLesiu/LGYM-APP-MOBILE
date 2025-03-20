@@ -113,13 +113,13 @@ const Exercises: React.FC = () => {
         >
           <View className="flex flex-col">
             <Text
-              className="text-base text-primaryColor font-bold"
+              className="text-base text-[#20BC2D] font-bold"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               {item.name}
             </Text>
             <Text
-              className="text-sm text-white"
+              className="text-sm text-[#141414]"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               BodyPart: {item.bodyPart}
@@ -136,7 +136,7 @@ const Exercises: React.FC = () => {
       <View className="flex flex-col p-4" style={{ gap: 32 }}>
         <View className="flex flex-row items-center justify-between">
           <Text
-            className="text-white text-lg font-bold"
+            className="text-[#141414] text-lg font-bold"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Filter by body part:
@@ -151,7 +151,7 @@ const Exercises: React.FC = () => {
         <View>
           <View className="flex flex-row items-center justify-between">
             <Text
-              className="text-lg text-white font-bold"
+              className="text-lg text-[#141414] font-bold"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Global exercises:
@@ -176,7 +176,7 @@ const Exercises: React.FC = () => {
           />
           <View className="flex flex-row items-center justify-between">
             <Text
-              className="text-lg text-white font-bold"
+              className="text-lg text-[#141414] font-bold"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               User exercises:

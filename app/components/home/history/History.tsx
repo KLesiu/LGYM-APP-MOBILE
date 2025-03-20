@@ -56,7 +56,7 @@ const History: React.FC = () => {
     const data: Date[] = await response.json();
     const markedDates: MarkedDates[] = data.map((date: Date) => ({
       date: date,
-      dots: [{ color: "#94e798" }],
+      dots: [{ color: "#20BC2D" }],
     }));
     setTrainingDates(markedDates);
   };
@@ -78,24 +78,23 @@ const History: React.FC = () => {
           markedDates={trainingDates}
           scrollable
           style={{ width: "100%", height: 150 }}
-          calendarColor={"#0A0A0A"}
           dayContainerStyle={{
-            backgroundColor: "rgb(40, 40, 40)",
+            backgroundColor: "#ffff",
             borderRadius: 8,
             padding: 4,
           }}
           calendarHeaderStyle={{
-            color: "white",
+            color: "#121212",
             fontSize: 22,
             paddingBottom: 16,
           }}
           dateNumberStyle={{ color: "#5A5A5A", fontSize: 16 }}
           dateNameStyle={{ color: "#5A5A5A", fontSize: 14 }}
           highlightDateContainerStyle={{
-            backgroundColor: "#94e798",
+            backgroundColor: "#20BC2D",
           }}
           highlightDateNumberContainerStyle={{
-            backgroundColor: "#94e798",
+            backgroundColor: "#20BC2D",
           }}
           highlightDateNameStyle={{
             fontSize: 14,
@@ -106,7 +105,7 @@ const History: React.FC = () => {
           iconContainer={{
             height: 30,
             width: 30,
-            backgroundColor: "#94e798",
+            backgroundColor: "#20BC2D",
             borderRadius: 4,
           }}
           numDaysInWeek={5}
@@ -117,7 +116,7 @@ const History: React.FC = () => {
           <View className="flex justify-center w-full h-1/2 items-center p-4">
             <Text
               style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-white text-xl text-center"
+              className="text-[#141414] text-xl text-center"
             >
               You dont have training session this day!
             </Text>

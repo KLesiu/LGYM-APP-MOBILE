@@ -10,7 +10,7 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({trainingTypes,show
   return (
     <Dialog>
       <Text
-        className="text-3xl text-white"
+        className="text-3xl text-[#141414]"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Choose training day!
@@ -23,7 +23,7 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({trainingTypes,show
           key={ele._id}
         >
           <Text
-            className="text-white text-3xl"
+            className="text-[#141414] text-3xl"
             style={{
               fontFamily: "OpenSans_700Bold",
             }}
