@@ -3,7 +3,7 @@
     "name": "LGYM-APP",
     "slug": "lgym-app-mobile",
     "scheme": "lgymappmobile",
-    "version": "3.0.10",
+    "version": "3.0.12",
     "orientation": "portrait",
     "icon": "./assets/logoLGYMNew.png",
     "userInterfaceStyle": "dark",
@@ -25,7 +25,7 @@
         "backgroundColor": "#ffffff"
       },
       "buildToolsVersion": "35.0.0",
-      "versionCode": 16,
+      "versionCode": 18,
       "package": "com.lesiuuu.lgymappmobile"
     },
     "web": {
