@@ -380,7 +380,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 )
               }
             >
-              <Icon name="plus" size={20} color="#94e798" />
+              <Icon name="plus" size={20} color="#20BC2D" />
             </Pressable>
             <Pressable
               onPress={() =>
@@ -391,7 +391,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 )
               }
             >
-              <Icon name="minus" size={20} color="#94e798" />
+              <Icon name="minus" size={20} color="#20BC2D" />
             </Pressable>
             <Pressable
               onPress={() =>

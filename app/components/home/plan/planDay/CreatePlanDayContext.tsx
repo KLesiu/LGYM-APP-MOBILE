@@ -35,7 +35,7 @@ const PlanDayProvider: React.FC<PlanDayProviderProps> = ({
 }) => {
   const [planDayName, setPlanDayName] = useState<string>("");
   const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
-  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [currentStep, setCurrentStep] = useState<number>(-2);
 
   const goToNext = useCallback(() => {
     setCurrentStep(currentStep + 1);

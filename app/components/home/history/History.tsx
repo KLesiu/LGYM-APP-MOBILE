@@ -78,7 +78,6 @@ const History: React.FC = () => {
           markedDates={trainingDates}
           scrollable
           style={{ width: "100%", height: 150 }}
-          calendarColor={"#0A0A0A"}
           dayContainerStyle={{
             backgroundColor: "rgb(40, 40, 40)",
             borderRadius: 8,
@@ -92,10 +91,10 @@ const History: React.FC = () => {
           dateNumberStyle={{ color: "#5A5A5A", fontSize: 16 }}
           dateNameStyle={{ color: "#5A5A5A", fontSize: 14 }}
           highlightDateContainerStyle={{
-            backgroundColor: "#94e798",
+            backgroundColor: "#20BC2D",
           }}
           highlightDateNumberContainerStyle={{
-            backgroundColor: "#94e798",
+            backgroundColor: "#20BC2D",
           }}
           highlightDateNameStyle={{
             fontSize: 14,
@@ -106,7 +105,7 @@ const History: React.FC = () => {
           iconContainer={{
             height: 30,
             width: 30,
-            backgroundColor: "#94e798",
+            backgroundColor: "#20BC2D",
             borderRadius: 4,
           }}
           numDaysInWeek={5}

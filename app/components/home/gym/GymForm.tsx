@@ -48,10 +48,11 @@ const GymForm: React.FC<GymFormProps> = (props) => {
     if (result.msg === Message.Created) return props.closeForm();
     setError(result.msg);
   };
-  const handleSubmit = useCallback(() => {
+  
+  const handleSubmit = () => {
     if (props.gym) updateGym();
     else createGym();
-  }, [props.gym]);
+  };
 
   return (
     <Dialog>

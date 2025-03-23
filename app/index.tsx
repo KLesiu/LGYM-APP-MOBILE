@@ -4,7 +4,7 @@ import {
   View,
   ImageBackground,
 } from "react-native";
-import logoLGYM from "./../img/logoLGYM.png";
+import logoLGYM from "./../assets/logoLGYMNew.png";
 import backgroundLGYM from "./../img/backgroundLGYMApp500.png";
 import { useState, useEffect } from "react";
 import { useRouter } from "expo-router"; 
@@ -53,16 +53,16 @@ const Preload: React.FC = () => {
   };
 
   return (
-    <View className="h-full bg-[#282828]">
+    <View className="h-full bg-bgColor">
       <ImageBackground
         resizeMode="cover"
         className="h-full w-full"
         source={backgroundLGYM}
       >
-        <View className="bg-[#5c5c5cb3] h-full w-full">
+        <View className="bg-[#000000ec] h-full w-full">
           <View
             style={{ gap: 16 }}
-            className="flex-1 items-center flex bg-[#111111e2] justify-center h-full p-4"
+            className="flex-1 items-center flex bg-[#1b1b1bde] justify-center h-full p-4"
           >
             <Image source={logoLGYM} className="w-[70%] h-2/5" />
             <CustomButton

@@ -100,6 +100,13 @@ const CreatePlanDayExerciseList: React.FC = () => {
     removeExerciseFromList(item);
   },[exercisesToSelect]);
 
+
+  const validator = (input: string): void => {
+    if (!input) return setNumberOfSeries(input);
+    const result = isIntValidator(input);
+    if (result) setNumberOfSeries(input);
+  };
+
   return (
     <View className="w-full h-full">
       <View className="px-5 py-2">
@@ -146,13 +153,11 @@ const CreatePlanDayExerciseList: React.FC = () => {
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
-                borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white  "
+              className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
               keyboardType="numeric"
               value={numberOfSeries}
-              onChangeText={(text: string) => setNumberOfSeries(text)}
+              onChangeText={validator}
             />
           </View>
           <View style={{ gap: 4 }} className="flex flex-col flex-1">
@@ -165,10 +170,8 @@ const CreatePlanDayExerciseList: React.FC = () => {
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
-                borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white  "
+              className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
               value={exerciseReps}
               onChangeText={(text: string) => setExerciseReps(text)}
             />

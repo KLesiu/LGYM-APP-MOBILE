@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
-import logoLGYM from "./../img/logoLGYM.png";
+import logoLGYM from "./../assets/logoLGYMNew.png";
 import { useRouter } from "expo-router"; 
 import MiniLoading from "./components/elements/MiniLoading";
 import CustomButton, { ButtonSize, ButtonStyle } from "./components/elements/CustomButton";
@@ -41,7 +41,7 @@ const Register: React.FC = () => {
     setErrors([result.msg])
   };
   const goToPreload = () => {
-    return router.navigate("/");
+    return router.push("/");
   };
 
   return (
@@ -64,10 +64,8 @@ const Register: React.FC = () => {
             onChangeText={(text) => setUsername(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              borderRadius: 8,
-              backgroundColor: "rgb(30, 30, 30)",
             }}
-            className="w-full px-2 py-4  text-white "
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
@@ -81,11 +79,8 @@ const Register: React.FC = () => {
             onChangeText={(text) => setEmail(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
-              borderRadius: 8,
-
             }}
-            className="w-full px-2 py-4  text-white "
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
@@ -100,11 +95,8 @@ const Register: React.FC = () => {
             onChangeText={(text) => setPassword(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
-              borderRadius: 8,
-
             }}
-            className="w-full px-2 py-4 text-white "
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg text-white "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
@@ -119,11 +111,8 @@ const Register: React.FC = () => {
             onChangeText={(text) => setRPassword(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
-              borderRadius: 8,
-
             }}
-            className="w-full px-2 py-4  text-white "
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
           />
         </View>
       </View>

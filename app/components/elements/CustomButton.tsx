@@ -58,7 +58,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       {props.children}
       {props.customSlots ? props.customSlots.map((slot,index) => <View key={index}>{slot}</View>) :    
       <Text
-        className={`${props.textSize ? props.textSize : 'text-base'} text-center ${textColorClass()}`}
+        className={`${props.textSize ? props.textSize : 'text-base'} text-center ${textColorClass()} w-full`}
         style={{ fontFamily: props.textWeight ? props.textWeight : FontWeights.regular }}
       >
         {props.text}

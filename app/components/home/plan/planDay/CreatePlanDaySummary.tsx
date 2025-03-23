@@ -3,15 +3,21 @@ import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";
+import { ExerciseForPlanDay } from "../../../../../interfaces/Exercise";
 
 interface CreatePlanDaySummaryProps {
-  saveCurrentPlan: () => Promise<void>;
+  saveCurrentPlan: (planName:string,exercisesArg:ExerciseForPlanDay[]) => Promise<void>;
   isPreview?: boolean;
 }
 
 const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
   const { exercisesList, goBack,planDayName,closeForm} =
     usePlanDay();
+
+  const savePlan = async()=>{
+    await props.saveCurrentPlan(planDayName,exercisesList)
+  }
+
   return (
     <View className="w-full h-full">
       <View className="px-5 py-2">
@@ -51,7 +57,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
 
         <CustomButton
           buttonStyleType={ButtonStyle.success}
-          onPress={() => props.saveCurrentPlan()}
+          onPress={savePlan}
           text="Save"
           width="flex-1"
         />

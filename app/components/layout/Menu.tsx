@@ -89,19 +89,7 @@ const Menu: React.FC = () => {
 
       <TouchableOpacity
         onPress={toggleMenu}
-        style={{
-          position: "absolute",
-          bottom: 32,
-          left: "50%",
-          transform: [{ translateX: -32 }],
-          width: 64,
-          height: 64,
-          borderRadius: 32,
-          backgroundColor: "#94e798",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 9,
-        }}
+        className="bg-primaryColor rounded-full absolute bottom-8 left-1/2 transform -translate-x-8 w-16 h-16 items-center justify-center z-10"
       >
         <MenuIcon />
       </TouchableOpacity>

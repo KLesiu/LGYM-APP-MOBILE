@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "../../elements/ViewLoading";
 import { MainRecordsLast } from "./../../../../interfaces/MainRecords";
 import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
-import ProgressIcon from "./../../../../img/icons/progress.png";
+import ProgressIcon from "./../../../../img/icons/progressIcon.svg";
 import CustomButton, {
   ButtonSize,
   ButtonStyle,
@@ -41,13 +41,16 @@ const Records: React.FC<RecordsProps> = () => {
 
   const showPopUp = useCallback(() => {
     setPopUp(true);
-  },[])
+  }, []);
 
-  const updateSettedExerciseRecord = useCallback( (exerciseId: string | undefined): void => {
-    if (!exerciseId) return;
-    setExercise(exerciseId);
-    showPopUp();
-  },[])
+  const updateSettedExerciseRecord = useCallback(
+    (exerciseId: string | undefined): void => {
+      if (!exerciseId) return;
+      setExercise(exerciseId);
+      showPopUp();
+    },
+    []
+  );
 
   const getRecords = async () => {
     const id = await AsyncStorage.getItem("id");
@@ -69,16 +72,19 @@ const Records: React.FC<RecordsProps> = () => {
     deleteDialogVisible(false);
   };
 
-  const deleteDialogVisible = useCallback((visible: boolean, record?: MainRecordsLast) => {
-    if (visible) setChoosenRecord(record);
-    else setChoosenRecord(undefined);
-    setIsDeleteRecordConfirmationDialogVisible(visible);
-  },[]);
+  const deleteDialogVisible = useCallback(
+    (visible: boolean, record?: MainRecordsLast) => {
+      if (visible) setChoosenRecord(record);
+      else setChoosenRecord(undefined);
+      setIsDeleteRecordConfirmationDialogVisible(visible);
+    },
+    []
+  );
 
   return (
     <View className="flex  flex-1 relative w-full  bg-bgColor">
       {popUp ? (
-        <RecordsPopUp offPopUp={chagePopUpValue} exerciseId={exercise} />
+          <RecordsPopUp offPopUp={chagePopUpValue} exerciseId={exercise} />
       ) : (
         <View
           style={{ gap: 16 }}
@@ -117,10 +123,7 @@ const Records: React.FC<RecordsProps> = () => {
                               )
                             }
                             customSlots={[
-                              <Image
-                                className="w-6 h-6"
-                                source={ProgressIcon}
-                              />,
+                              <ProgressIcon />
                             ]}
                           />
                           <CustomButton

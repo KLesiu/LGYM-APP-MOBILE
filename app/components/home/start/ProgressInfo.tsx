@@ -43,7 +43,7 @@ const ProgressInfo: React.FC = () => {
         </Text>
         <View className="flex flex-col h-36 justify-around">
           {userInfo ? (
-            <View className="flex flex-col gap-2">
+            <View className="flex flex-col" style={{gap:8}}>
               <Text
                 className="text-white text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}

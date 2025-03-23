@@ -5,10 +5,10 @@
     "scheme": "lgymappmobile",
     "version": "3.0.10",
     "orientation": "portrait",
-    "icon": "./assets/logoLGYMPlay.png",
+    "icon": "./assets/logoLGYMNew.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/logoLGYMPlay.png",
+      "image": "./assets/logoLGYMNew.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logoLGYMPlay.png",
+        "foregroundImage": "./assets/logoLGYMNew.png",
         "backgroundColor": "#ffffff"
       },
       "buildToolsVersion": "35.0.0",

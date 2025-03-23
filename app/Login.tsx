@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
-import logoLGYM from "./../img/logoLGYM.png";
+import logoLGYM from "./../assets/logoLGYMNew.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MiniLoading from "./components/elements/MiniLoading";
 
@@ -83,10 +83,8 @@ const Login: React.FC = () => {
             onChangeText={(text: string) => setUsername(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
-              borderRadius: 8,
             }}
-            className="w-full px-2 py-4  text-white "
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
             autoComplete="given-name"
           />
         </View>
@@ -101,10 +99,9 @@ const Login: React.FC = () => {
             onChangeText={(text: string) => setPassword(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
-              borderRadius: 8,
+
             }}
-            className="w-full px-2 py-4 text-white  "
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg text-white  "
             secureTextEntry={secureTextEntry}
           />
           <Pressable
@@ -112,7 +109,7 @@ const Login: React.FC = () => {
             className="absolute top-[39%] h-[50px]   text-sm flex items-center justify-center   right-2"
             onPress={() => setSecureTextEntry(!secureTextEntry)}
           >
-            {secureTextEntry ? <ShowIcon /> : <HideIcon />}
+            {secureTextEntry ? <ShowIcon stroke={'white'} /> : <HideIcon stroke={'white'}/>}
           </Pressable>
         </View>
       </View>

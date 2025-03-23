@@ -111,11 +111,11 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     else setError(result.msg);
   };
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = () => {
     if (props.isGlobal) createGlobalExercise();
     else if (props.form) updateExercise();
     else createExercise();
-  }, [props.isGlobal, props.form]);
+  };
 
   const bodyPartsToSelect = useMemo(() => {
     const array: DropdownItem[] = Object.values(BodyParts).map((item) => {

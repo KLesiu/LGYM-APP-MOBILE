@@ -58,6 +58,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const init = async () => {
     if (props.planDayId) await getPlanDay();
     if (props.isPreview) setCurrentStep(2);
+    else setCurrentStep(0);
   };
 
   const handleBackButton = useCallback(() => {
@@ -92,9 +93,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     return currentExercisesList;
   },[]) 
 
-  const createPlanDay = async () => {
+  const createPlanDay = async (planNameArg:string, exercisesArg:ExerciseForPlanDay[]) => {
     setViewLoading(true);
-    const exercises = mapExercisesListToSend(exercisesList);
+    const exercises = mapExercisesListToSend(exercisesArg);
     const response = await fetch(
       `${apiURL}/api/planDay/${props.planId}/createPlanDay`,
       {
@@ -103,7 +104,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: planDayName,
+          name: planNameArg,
           exercises: exercises,
         }),
       }
@@ -114,9 +115,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setViewLoading(false);
   };
 
-  const editPlanDay = async () => {
+  const editPlanDay = async (planNameArg:string, exercisesArg:ExerciseForPlanDay[]) => {
     setViewLoading(true);
-    const exercises = mapExercisesListToSend(exercisesList);
+    const exercises = mapExercisesListToSend(exercisesArg);
     const response = await fetch(`${apiURL}/api/planDay/updatePlanDay`, {
       method: "POST",
       headers: {
@@ -124,7 +125,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       },
       body: JSON.stringify({
         _id: props.planDayId,
-        name: planDayName,
+        name: planNameArg,
         exercises: exercises,
       }),
     });
@@ -142,10 +143,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setExercisesList(mapExercisesListFromSend(result.exercises));
   };
 
-  const savePlan = useCallback(async () => {
-    if (props.planDayId) await editPlanDay();
-    else await createPlanDay();
-  },[props.planDayId]) ;
+  const savePlan = async (planNameArg:string, exercisesArg:ExerciseForPlanDay[]) => {
+    if (props.planDayId) await editPlanDay(planNameArg, exercisesArg);
+    else await createPlanDay(planDayName,exercisesArg);
+  } ;
 
   const renderStep = (): JSX.Element => {
     switch (currentStep) {

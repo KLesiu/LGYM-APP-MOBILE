@@ -1,4 +1,4 @@
-import logoLGYM from "./../../../img/logoLGYM.png";
+import logoLGYM from "./../../../assets/logoLGYMNew.png"
 import { Text, Image, View } from "react-native";
 import { useState, useEffect } from "react";
 interface LoadingProps{
@@ -20,13 +20,13 @@ const Loading: React.FC<LoadingProps> = (props) => {
     <View className="bg-bgColor h-full  w-full absolute flex flex-col items-center z-[6]" >
       <Image source={logoLGYM} className="w-[70%] h-[40%]" />
       <View className="flex flex-col mx-[5%] mt-[40%] w-[90%]">
-        <View style={{borderRadius:12}} className="border-[2px] border-gray-500 w-full  h-1/5">
+        <View style={{borderRadius:12}} className="border-[2px] border-secondaryColor w-full  h-1/5">
           <View
             style={{
               width: `${width}%`,
               borderRadius:12
             }}
-            className="bg-gray-500  h-full z-[7]"
+            className="bg-primaryColor  h-full z-[7]"
           ></View>
         </View>
         <Text

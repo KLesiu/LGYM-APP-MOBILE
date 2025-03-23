@@ -81,23 +81,23 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       <Text
         className="text-center text-xl text-white"
         style={{
-          fontFamily: "OpenSans_400Regular",
+          fontFamily: "OpenSans_700Bold",
         }}
       >
         {props.exerciseId && selectedExercise ? "EDIT RECORD" : "NEW RECORD"}
       </Text>
-      <View className="flex flex-col p-2" style={{ gap: 16 }}>
+      <View className="flex flex-col w-full p-2" style={{ gap: 16 }}>
         <View className="flex flex-col w-full">
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
           >
             Exercise:
           </Text>
           {props.exerciseId && selectedExercise ? (
             <TextInput
-              style={{ fontFamily: "OpenSans_400Regular", borderRadius: 8 }}
-              className="bg-white h-12 text-black p-4 "
+              style={{ fontFamily: "OpenSans_400Regular" }}
+              className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
               readOnly={true}
               value={selectedExercise.label}
             />
@@ -112,14 +112,14 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         </View>
         <View className="flex flex-col w-full">
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-white text-xl"
+            className="text-white text-base"
+            style={{ fontFamily: "OpenSans_300Light" }}
           >
             Weight:
           </Text>
           <TextInput
-            style={{ fontFamily: "OpenSans_400Regular", borderRadius: 8 }}
-            className="bg-white h-12 text-black p-4 "
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
             onChangeText={validator}
             value={weight}
             keyboardType="numeric"

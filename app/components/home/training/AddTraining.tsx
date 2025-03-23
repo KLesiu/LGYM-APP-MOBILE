@@ -107,6 +107,12 @@ const AddTraining: React.FC = () => {
     setViewLoading(false);
     toggleMenuButton(true);
   };
+  
+  const cancelGymChoice = () => {
+    setIsGymChoiceActive(false);
+    toggleMenuButton(false);
+  }
+
   const hideDaySection = () => {
     setDayId("");
     toggleMenuButton(false);
@@ -175,7 +181,7 @@ const AddTraining: React.FC = () => {
               onPress={getCurrentPlanDayTraining}
               customSlots={[
                 <Icon
-                  style={{ fontSize: 140, color: "#94e798" }}
+                  style={{ fontSize: 140, color: "#20BC2D" }}
                   name="play-circle"
                 />,
               ]}
@@ -183,14 +189,14 @@ const AddTraining: React.FC = () => {
           ) : (
             <Pressable onPress={getInformationAboutGyms}>
               <Icon
-                style={{ fontSize: 140, color: "#94e798" }}
+                style={{ fontSize: 140, color: "#20BC2D" }}
                 name="plus-circle"
               />
             </Pressable>
           )}
 
           {loading ? <MiniLoading /> : <Text></Text>}
-          {isGymChoiceActive ? <TrainingGymChoose setGym={changeGym} /> : <></>}
+          {isGymChoiceActive ? <TrainingGymChoose goBack={cancelGymChoice} setGym={changeGym} /> : <></>}
           {isChooseDayActive? <TrainingDayChoose trainingTypes={trainingTypes} showDaySection={showDaySection} /> : <></>}
 
           {isAddTrainingActive && dayId ? (

@@ -19,7 +19,7 @@ import TabView from "../../elements/TabView";
 import { useHomeContext } from "../HomeContext";
 
 const Profile: React.FC = () => {
-  const { apiURL, toggleMenuButton, viewChange } = useHomeContext();
+  const { apiURL, toggleMenuButton, changeView } = useHomeContext();
   const router = useRouter();
   const [yourProfile, setYourProfile] = useState<UserProfileInfo>();
   const [profileRank, setProfileRank] = useState<string>("");
@@ -85,7 +85,7 @@ const Profile: React.FC = () => {
 
   const goBack = useCallback(() => {
     toggleMenuButton(false);
-    viewChange(<Start />);
+    changeView(<Start />);
   }, []);
 
   const setActiveComponent = useCallback((component: JSX.Element) => {

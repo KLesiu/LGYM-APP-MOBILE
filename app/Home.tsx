@@ -34,13 +34,13 @@ const Home: React.FC = () => {
 
   return (
     <View className="bg-bgColor flex flex-col justify-between relative h-full ">
+      {isLoading ? <Loading offLoading={offLoading} /> : ""}
       <HomeProvider viewChange={changeView}>
         {view.type.name === "Profile" ? "" : <Header />}
         {view}
-        <Menu viewChange={changeView} />
+        <Menu/>
       </HomeProvider>
 
-      {isLoading ? <Loading offLoading={offLoading} /> : ""}
     </View>
   );
 };
