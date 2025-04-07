@@ -1,39 +1,64 @@
 import { PlanDayChoose } from "./../../../../interfaces/PlanDay";
 import Dialog from "../../elements/Dialog";
-import {Text, TouchableOpacity} from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import TrainingDayToChoose from "./TrainingDayToChoose";
+import CustomButton, { ButtonSize } from "../../elements/CustomButton";
+import { useEffect, useState } from "react";
+import { useHomeContext } from "../HomeContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 interface TrainingDayChooseProps {
-    trainingTypes: PlanDayChoose[];
-    showDaySection: (day: string) => Promise<void>;
+  showDaySection: (day: string) => Promise<void>;
 }
 
-const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({trainingTypes,showDaySection}) => {
+const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
+  showDaySection,
+}) => {
+  const { apiURL } = useHomeContext();
+  const [trainingTypes, setTrainingTypes] = useState<PlanDayChoose[]>([]);
+
+  useEffect(() => {
+    init();
+  },[])
+
+  const init = async () => {
+    await getInformationsAboutPlanDays();
+  }
+
+  const getInformationsAboutPlanDays =
+    async (): Promise<void> => {
+      const id = await AsyncStorage.getItem("id");
+      const response = await fetch(
+        `${apiURL}/api/planDay/${id}/getPlanDaysTypes`
+      );
+      const trainingTypes: PlanDayChoose[] = await response.json();
+      setTrainingTypes(trainingTypes);
+    };
   return (
     <Dialog>
-      <Text
-        className="text-3xl text-white"
-        style={{ fontFamily: "OpenSans_700Bold" }}
+      <View
+        className="flex flex-col justify-center w-full p-4"
+        style={{ gap: 16 }}
       >
-        Choose training day!
-      </Text>
-      {trainingTypes.map((ele: { _id: string; name: string }) => (
-        <TouchableOpacity
-          onPress={() => showDaySection(ele._id)}
-          style={{ borderRadius: 12 }}
-          className="items-center border-[#868686] border-[1px]  flex text-[10px] justify-center mt-5 h-[10%] opacity-100 w-[70%]"
-          key={ele._id}
+        <Text
+          className="text-[28px] text-white"
+          style={{ fontFamily: "OpenSans_700Bold" }}
         >
-          <Text
-            className="text-white text-3xl"
-            style={{
-              fontFamily: "OpenSans_700Bold",
-            }}
-          >
-            {ele.name}
-          </Text>
-        </TouchableOpacity>
-      ))}
+          Choose training day!
+        </Text>
+        <View className="flex flex-col">
+          {trainingTypes.map((ele: PlanDayChoose, index: number) => (
+            <CustomButton
+              key={index}
+              buttonStyleSize={ButtonSize.none}
+              onPress={() => showDaySection(ele._id)}
+            >
+              <TrainingDayToChoose trainingType={ele} />
+            </CustomButton>
+          ))}
+        </View>
+      </View>
     </Dialog>
   );
 };
 
-export default TrainingDayChoose
+export default TrainingDayChoose;

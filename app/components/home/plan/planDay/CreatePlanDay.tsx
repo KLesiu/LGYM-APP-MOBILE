@@ -23,7 +23,6 @@ interface CreatePlanDayProps {
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const {
     planDayName,
-    exercisesList,
     setPlanDayName,
     setExercisesList,
     currentStep,
@@ -31,7 +30,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     closeForm,
   } = usePlanDay();
 
-  const {apiURL} = useHomeContext();
+  const { apiURL } = useHomeContext();
 
   const currentStepRef = useRef(currentStep);
 
@@ -62,38 +61,49 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   };
 
   const handleBackButton = useCallback(() => {
-    setCurrentStep(currentStepRef.current - 1);
+    if (props.isPreview) closeForm();
+    else setCurrentStep(currentStepRef.current - 1);
+
     return true;
-  },[currentStepRef.current]) 
+  }, [currentStepRef.current, props.isPreview]);
 
-  const mapExercisesListToSend = useCallback( (exerciseList: ExerciseForPlanDay[]) => {
-    const exercises = exerciseList.map((exercise: ExerciseForPlanDay) => {
-      return {
-        exercise: exercise.exercise.value,
-        series: exercise.series,
-        reps: exercise.reps,
-      };
-    });
-    return exercises;
-  },[]);
-
-  const mapExercisesListFromSend = useCallback((exercises: PlanDayExercisesFormVm[]) => {
-    const currentExercisesList = exercises.map(
-      (exerciseInPlanDay: PlanDayExercisesFormVm) => {
+  const mapExercisesListToSend = useCallback(
+    (exerciseList: ExerciseForPlanDay[]) => {
+      const exercises = exerciseList.map((exercise: ExerciseForPlanDay) => {
         return {
-          series: exerciseInPlanDay.series,
-          reps: exerciseInPlanDay.reps,
-          exercise: {
-            label: exerciseInPlanDay.exercise.name,
-            value: exerciseInPlanDay.exercise._id,
-          },
+          exercise: exercise.exercise.value,
+          series: exercise.series,
+          reps: exercise.reps,
         };
-      }
-    ) as ExerciseForPlanDay[];
-    return currentExercisesList;
-  },[]) 
+      });
+      return exercises;
+    },
+    []
+  );
 
-  const createPlanDay = async (planNameArg:string, exercisesArg:ExerciseForPlanDay[]) => {
+  const mapExercisesListFromSend = useCallback(
+    (exercises: PlanDayExercisesFormVm[]) => {
+      const currentExercisesList = exercises.map(
+        (exerciseInPlanDay: PlanDayExercisesFormVm) => {
+          return {
+            series: exerciseInPlanDay.series,
+            reps: exerciseInPlanDay.reps,
+            exercise: {
+              label: exerciseInPlanDay.exercise.name,
+              value: exerciseInPlanDay.exercise._id,
+            },
+          };
+        }
+      ) as ExerciseForPlanDay[];
+      return currentExercisesList;
+    },
+    []
+  );
+
+  const createPlanDay = async (
+    planNameArg: string,
+    exercisesArg: ExerciseForPlanDay[]
+  ) => {
     setViewLoading(true);
     const exercises = mapExercisesListToSend(exercisesArg);
     const response = await fetch(
@@ -115,7 +125,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setViewLoading(false);
   };
 
-  const editPlanDay = async (planNameArg:string, exercisesArg:ExerciseForPlanDay[]) => {
+  const editPlanDay = async (
+    planNameArg: string,
+    exercisesArg: ExerciseForPlanDay[]
+  ) => {
     setViewLoading(true);
     const exercises = mapExercisesListToSend(exercisesArg);
     const response = await fetch(`${apiURL}/api/planDay/updatePlanDay`, {
@@ -143,10 +156,13 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     setExercisesList(mapExercisesListFromSend(result.exercises));
   };
 
-  const savePlan = async (planNameArg:string, exercisesArg:ExerciseForPlanDay[]) => {
+  const savePlan = async (
+    planNameArg: string,
+    exercisesArg: ExerciseForPlanDay[]
+  ) => {
     if (props.planDayId) await editPlanDay(planNameArg, exercisesArg);
-    else await createPlanDay(planDayName,exercisesArg);
-  } ;
+    else await createPlanDay(planDayName, exercisesArg);
+  };
 
   const renderStep = (): JSX.Element => {
     switch (currentStep) {

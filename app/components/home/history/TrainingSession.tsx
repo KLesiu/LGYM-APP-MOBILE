@@ -39,7 +39,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
             <ScrollView contentContainerStyle={{ gap: 8 }}>
               {training.exercises.map((exercise, key) => {
                 return (
-                  <Card>
+                  <Card key={key}>
                     <View
                       style={{ gap: 8 }}
                       key={`exercise_${key}`}

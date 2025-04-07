@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import ViewLoading from "../../elements/ViewLoading";
 import MiniLoading from "../../elements/MiniLoading";
-import TrainingPlanDay from "./TrainingPlanDay";
+import TrainingPlanDay from "./trainingPlanDay/TrainingPlanDay";
 import {
   TrainingSessionScores,
   TrainingSummary as TrainingSummaryInterface,
@@ -40,7 +40,6 @@ const AddTraining: React.FC = () => {
   const [showUpdateRankPopUp, setShowUpdateRankPopUp] =
     useState<boolean>(false);
   const [isChooseDayActive, setIsChooseDayActive] = useState<boolean>(false);
-  const [trainingTypes, setTrainingTypes] = useState<PlanDayChoose[]>([]);
 
   useEffect(() => {
     init();
@@ -74,20 +73,10 @@ const AddTraining: React.FC = () => {
   const changeGym = async (gym: GymForm) => {
     setGym(gym);
     setIsGymChoiceActive(false);
-    getInformationsAboutPlanDays();
+    setIsChooseDayActive(true);
   };
 
-  const getInformationsAboutPlanDays: VoidFunction =
-    async (): Promise<void> => {
-      const id = await AsyncStorage.getItem("id");
-      const response = await fetch(
-        `${apiURL}/api/planDay/${id}/getPlanDaysTypes`
-      );
-      const trainingTypes:PlanDayChoose[] = await response.json();
-      setTrainingTypes(trainingTypes);
-      setIsChooseDayActive(true);
-        
-    };
+
   const resetChoosePlanDay = () => {
     setIsChooseDayActive(false);
   };
@@ -197,7 +186,7 @@ const AddTraining: React.FC = () => {
 
           {loading ? <MiniLoading /> : <Text></Text>}
           {isGymChoiceActive ? <TrainingGymChoose goBack={cancelGymChoice} setGym={changeGym} /> : <></>}
-          {isChooseDayActive? <TrainingDayChoose trainingTypes={trainingTypes} showDaySection={showDaySection} /> : <></>}
+          {isChooseDayActive? <TrainingDayChoose  showDaySection={showDaySection} /> : <></>}
 
           {isAddTrainingActive && dayId ? (
             <TrainingPlanDay

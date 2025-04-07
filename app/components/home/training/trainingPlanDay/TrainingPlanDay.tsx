@@ -7,29 +7,29 @@ import {
   Image,
   Switch as SwitchComp,
 } from "react-native";
-import { LastScoresPlanDayVm, PlanDayVm } from "./../../../../interfaces/PlanDay";
+import { LastScoresPlanDayVm, PlanDayVm } from "../../../../../interfaces/PlanDay";
 import { useEffect, useState } from "react";
 import {
   ExerciseForm,
   LastExerciseScores,
-} from "./../../../../interfaces/Exercise";
-import SwitchIcon from "./../../../../img/icons/switchIcon.svg";
-import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
+} from "../../../../../interfaces/Exercise";
+import SwitchIcon from "./../../../../../img/icons/switchIcon.svg";
+import RemoveIcon from "./../../../../../img/icons/deleteIcon.svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
-import { BodyParts } from "./../../../../enums/BodyParts";
-import { TrainingSessionScores } from "./../../../../interfaces/Training";
-import useInterval from "./../../../../helpers/hooks/useInterval";
-import ViewLoading from "../../elements/ViewLoading";
-import { Message } from "./../../../../enums/Message";
-import GymIcon from "./../../../../img/icons/gymIcon.svg";
-import { GymForm } from "./../../../../interfaces/Gym";
+import { BodyParts } from "../../../../../enums/BodyParts";
+import { TrainingSessionScores } from "../../../../../interfaces/Training";
+import useInterval from "../../../../../helpers/hooks/useInterval";
+import ViewLoading from "../../../elements/ViewLoading";
+import { Message } from "../../../../../enums/Message";
+import GymIcon from "./../../../../../img/icons/gymIcon.svg";
+import { GymForm } from "../../../../../interfaces/Gym";
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import CustomButton, {
   ButtonSize,
   ButtonStyle,
-} from "../../elements/CustomButton";
+} from "../../../elements/CustomButton";
 
 interface TrainingPlanDayProps {
   hideChooseDaySection: () => void;
@@ -371,7 +371,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             </Text>
           </View>
           <View style={{ gap: 16 }} className="flex flex-row">
-            <Pressable
+            {/* <Pressable
               onPress={() =>
                 incrementSeriesNumber(
                   `${item.exercise._id}`,
@@ -392,7 +392,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
               }
             >
               <Icon name="minus" size={20} color="#20BC2D" />
-            </Pressable>
+            </Pressable> */}
             <Pressable
               onPress={() =>
                 showExerciseFormByBodyPart(

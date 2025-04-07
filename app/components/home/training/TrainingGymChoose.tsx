@@ -5,7 +5,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ScrollView } from "react-native";
 import GymPlace from "../gym/GymPlace";
 import Dialog from "../../elements/Dialog";
-import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../elements/CustomButton";
 import ValidationView from "../../elements/ValidationView";
 import { useHomeContext } from "../HomeContext";
 
@@ -15,7 +18,7 @@ interface TrainingGymChooseProps {
 }
 
 const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
-  const {apiURL} = useHomeContext();
+  const { apiURL } = useHomeContext();
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   const [errors, setErrors] = useState<string[]>([]);
   useEffect(() => {
@@ -37,35 +40,39 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = (props) => {
 
   return (
     <Dialog>
-      <Text
-        className="text-3xl text-white"
-        style={{ fontFamily: "OpenSans_700Bold" }}
-      >
-        Choose your gym!
-      </Text>
-      {errors.length ? (
-        (
+      <View className="flex flex-col items-start justify-center w-full p-4" style={{ gap: 16 }}>
+        <Text
+          className="text-[28px] text-white"
+          style={{ fontFamily: "OpenSans_700Bold" }}
+        >
+          Choose your gym!
+        </Text>
+        {errors.length ? (
           <View>
-             <CustomButton text="Back" buttonStyleSize={ButtonSize.regular} buttonStyleType={ButtonStyle.cancel} onPress={props.goBack}
-  />
+            <CustomButton
+              text="Back"
+              buttonStyleSize={ButtonSize.regular}
+              buttonStyleType={ButtonStyle.cancel}
+              onPress={props.goBack}
+            />
             <ValidationView errors={errors} />
           </View>
-        )
-      ) : (
-        <ScrollView className="w-full">
-          <View className="flex flex-col pb-12">
-            {gyms.map((gym, index) => (
-              <CustomButton
-                key={index}
-                buttonStyleSize={ButtonSize.none}
-                onPress={() => props.setGym(gym)}
-              >
-                <GymPlace gym={gym} isEditable={false} />
-              </CustomButton>
-            ))}
-          </View>
-        </ScrollView>
-      )}
+        ) : (
+          <ScrollView className="w-full">
+            <View className="flex flex-col pb-12">
+              {gyms.map((gym, index) => (
+                <CustomButton
+                  key={index}
+                  buttonStyleSize={ButtonSize.none}
+                  onPress={() => props.setGym(gym)}
+                >
+                  <GymPlace gym={gym} isEditable={false} />
+                </CustomButton>
+              ))}
+            </View>
+          </ScrollView>
+        )}
+      </View>
     </Dialog>
   );
 };

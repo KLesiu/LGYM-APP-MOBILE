@@ -1,6 +1,7 @@
-import React, { useCallback, useContext, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { createContext } from "react";
-import { Animated } from "react-native";
+import { Animated, BackHandler } from "react-native";
+import Start from "./start/Start";
 
 interface HomeContextProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -33,6 +34,26 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange }) => 
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
   const animation = useRef(new Animated.Value(0)).current;
+
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackButton
+    );
+    return () => {
+      backHandler.remove();
+    };
+  }, []);
+
+
+
+  const handleBackButton = useCallback(()=>{
+    changeView(<Start />);
+    toggleMenuButton(false)
+    return true;
+  },[])
+
 
   const toggleMenu = useCallback(() => {
     setIsExpanded((prev) => {

@@ -1,13 +1,13 @@
 import { View, Text, TextInput, Pressable } from "react-native";
-import AutoComplete from "../../elements/Autocomplete";
+import AutoComplete from "../../../elements/Autocomplete";
 import { useEffect, useState } from "react";
-import { isIntValidator } from "./../../../../helpers/numberValidator";
+import { isIntValidator } from "../../../../../helpers/numberValidator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ExerciseForm } from "./../../../../interfaces/Exercise";
-import { BodyParts } from "./../../../../enums/BodyParts";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { DropdownItem } from "./../../../../interfaces/Dropdown";
-import Dialog from "../../elements/Dialog";
+import { ExerciseForm } from "../../../../../interfaces/Exercise";
+import { BodyParts } from "../../../../../enums/BodyParts";
+import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
+import { DropdownItem } from "../../../../../interfaces/Dropdown";
+import Dialog from "../../../elements/Dialog";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;

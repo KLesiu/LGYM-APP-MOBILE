@@ -37,7 +37,7 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
         <View className="flex flex-row justify-between w-full">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-2xl font-bold text-primaryColor"
+            className="text-xl font-bold text-white"
           >
             {props.gym.name}
           </Text>
@@ -67,7 +67,7 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
         <View className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_400Regular" }}
-            className="text-lg text-white"
+            className="text-base text-fifthColor"
           >
             Last training: {`${trainingDate} ${trainingName}`}
           </Text>
