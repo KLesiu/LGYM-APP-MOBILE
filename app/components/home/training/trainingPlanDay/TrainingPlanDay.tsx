@@ -32,7 +32,6 @@ import CustomButton, {
 } from "../../../elements/CustomButton";
 
 interface TrainingPlanDayProps {
-  hideChooseDaySection: () => void;
   hideDaySection: () => void;
   hideAndDeleteTrainingSession: () => void;
   addTraining: (
@@ -114,7 +113,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     }
   };
   const initExercisePlanDay = async () => {
-    props.hideChooseDaySection();
     const isPlanDayFromStorage = await getPlanDayFromLocalStorage();
 
     if (isPlanDayFromStorage) return;

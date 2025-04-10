@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect,createContext } from "react";
 import { View, TouchableOpacity, Image, Text, Animated } from "react-native";
 import TrainingPlan from "../home/plan/TrainingPlan";
 import History from "../home/history/History";
-import AddTraining from "../home/training/AddTraining";
+import AddTraining from "../home/training/Training";
 import Profile from "../home/profile/Profile";
 import Start from "../home/start/Start";
 import Exercises from "../home/exercises/Exercises";

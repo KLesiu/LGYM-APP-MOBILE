@@ -1,10 +1,10 @@
-import { PlanDayChoose } from "./../../../../interfaces/PlanDay";
-import Dialog from "../../elements/Dialog";
+import { PlanDayChoose } from "../../../../../interfaces/PlanDay";
+import Dialog from "../../../elements/Dialog";
 import { Text, TouchableOpacity, View } from "react-native";
-import TrainingDayToChoose from "./TrainingDayToChoose";
-import CustomButton, { ButtonSize } from "../../elements/CustomButton";
+import TrainingDayToChoose from "./elements/TrainingDayToChoose";
+import CustomButton, { ButtonSize } from "../../../elements/CustomButton";
 import { useEffect, useState } from "react";
-import { useHomeContext } from "../HomeContext";
+import { useHomeContext } from "../../HomeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 interface TrainingDayChooseProps {
   showDaySection: (day: string) => Promise<void>;

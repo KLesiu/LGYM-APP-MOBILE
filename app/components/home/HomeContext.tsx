@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from "rea
 import { createContext } from "react";
 import { Animated, BackHandler } from "react-native";
 import Start from "./start/Start";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface HomeContextProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -12,6 +13,7 @@ interface HomeContextProps {
   hideMenu: () => void;
   changeView: (component: React.JSX.Element) => void;
   apiURL: string;
+  userId:string;
 }
 
 const HomeContext = createContext<HomeContextProps | null>(null);
@@ -33,6 +35,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange }) => 
   const apiURL = process.env.REACT_APP_BACKEND || "";
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
+  const [userId,setUserId] = useState<string>("");
   const animation = useRef(new Animated.Value(0)).current;
 
 
@@ -46,12 +49,23 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange }) => 
     };
   }, []);
 
+  useEffect(() => { 
+    getUserId();
+  },[])
+
 
 
   const handleBackButton = useCallback(()=>{
     changeView(<Start />);
     toggleMenuButton(false)
     return true;
+  },[])
+
+  const getUserId = useCallback(async () => {
+    const id = await AsyncStorage.getItem("id");
+    if(id){
+      setUserId(id);
+    }
   },[])
 
 
@@ -96,7 +110,8 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange }) => 
         isMenuButtonVisible,
         changeView,
         apiURL,
-        hideMenu
+        hideMenu,
+        userId
       }}
     >
       {children}

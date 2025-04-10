@@ -3,7 +3,7 @@ import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "../../elements/CustomButton";
-import AddTraining from "../training/AddTraining";
+import AddTraining from "../training/Training";
 import { useCallback, useEffect, useState } from "react";
 import { LastTrainingInfo } from "../../../../interfaces/Training";
 import { useHomeContext } from "../HomeContext";

@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import { ExerciseForPlanDay } from "../../../../../interfaces/Exercise";
-import { useHomeContext } from "../../HomeContext";
 
 interface PlanDayContextType {
   planDayName: string;
