@@ -6,11 +6,15 @@ import Loading from "./components/elements/Loading";
 import HomeProvider, { useHomeContext } from "./components/home/HomeContext";
 const Home: React.FC = () => {
   const [view, setView] = useState<JSX.Element>(<View></View>);
+  const [isHeaderShow, setIsHeaderShow] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const changeView = (view: JSX.Element) => {
     setView(view);
   };
+  const changeHeaderVisibility = (isVisible: boolean) => {
+    setIsHeaderShow(isVisible);
+  }
   const offLoading = () => {
     setIsLoading(false);
   };
@@ -18,8 +22,8 @@ const Home: React.FC = () => {
   return (
     <View className="bg-bgColor flex flex-col justify-between relative h-full ">
       {isLoading ? <Loading offLoading={offLoading} /> : ""}
-      <HomeProvider viewChange={changeView}>
-        {view.type.name === "Profile" ? "" : <Header />}
+      <HomeProvider viewChange={changeView} changeHeaderVisibility={changeHeaderVisibility}>
+        {isHeaderShow ? <Header /> : ""}
         {view}
         <Menu/>
       </HomeProvider>

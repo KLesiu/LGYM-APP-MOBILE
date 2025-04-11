@@ -16,6 +16,7 @@ import {
   TrainingSummary as TrainingSummaryInterface,
 } from "./../../../../interfaces/Training";
 import { useHomeContext } from "../HomeContext";
+import TrainingPlanDayProvider from "./trainingPlanDay/TrainingPlanDayContext";
 
 interface TrainingViewProps {}
 
@@ -78,19 +79,19 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     resetWithoutStep();
   };
 
-    /// Reset training view to default state and hide menu button but without changing step
+  /// Reset training view to default state and hide menu button but without changing step
   const resetWithoutStep = () => {
     setGym(undefined);
     setDayId("");
     setTrainingSummary(undefined);
     toggleMenuButton(false);
-  }
+  };
 
   /// Go back from TrainingPlanDay and set step to PLAN_DAY_TO_RESUME
   const goBackFromTrainingPlanDay = () => {
     setStep(TrainingViewSteps.PLAN_DAY_TO_RESUME);
     resetWithoutStep();
-  }
+  };
 
   /// Get active plan day from localStorage, set gym and show TrainingPlanDay.
   const getCurrentPlanDayTraining = async () => {
@@ -108,8 +109,6 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     toggleMenuButton(true);
     console.log("dayId", day);
   };
-
-
 
   /// Delete information about training session from localStorage and hide TrainingPlanDay
   const hideAndDeleteTrainingSession = async () => {
@@ -163,7 +162,6 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
   );
 
   const renderView = useCallback(() => {
-    console.log(step);
     switch (step) {
       case TrainingViewSteps.CHOOSE_GYM:
         return (
@@ -173,13 +171,15 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
         return <TrainingDayChoose showDaySection={showDaySection} />;
       case TrainingViewSteps.TRAINING_PLAN_DAY:
         return (
-          <TrainingPlanDay
-            hideDaySection={goBackFromTrainingPlanDay}
-            hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
-            addTraining={addTraining}
-            dayId={dayId as string}
-            gym={gym}
-          />
+          <TrainingPlanDayProvider gym={gym}>
+            <TrainingPlanDay
+              hideDaySection={goBackFromTrainingPlanDay}
+              hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
+              addTraining={addTraining}
+              dayId={dayId as string}
+              gym={gym}
+            />
+          </TrainingPlanDayProvider>
         );
       case TrainingViewSteps.TRAINING_SUMMARY:
         return (
@@ -189,10 +189,7 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
           />
         );
       default:
-        return (
-          <>
-          </>
-        );
+        return <></>;
     }
   }, [step]);
 

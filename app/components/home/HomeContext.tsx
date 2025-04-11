@@ -14,6 +14,7 @@ interface HomeContextProps {
   changeView: (component: React.JSX.Element) => void;
   apiURL: string;
   userId:string;
+  changeHeaderVisibility: (isVisible: boolean) => void;
 }
 
 const HomeContext = createContext<HomeContextProps | null>(null);
@@ -29,9 +30,10 @@ export const useHomeContext = () => {
 interface HomeProviderProps {
   children: React.ReactNode;
   viewChange: (view: JSX.Element) => void;
+  changeHeaderVisibility: (isVisible: boolean) => void;
 }
 
-const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange }) => {
+const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,changeHeaderVisibility }) => {
   const apiURL = process.env.REACT_APP_BACKEND || "";
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
@@ -100,6 +102,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange }) => 
     [isExpanded, toggleMenu, viewChange]
   );
 
+
   return (
     <HomeContext.Provider
       value={{
@@ -111,7 +114,8 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange }) => 
         changeView,
         apiURL,
         hideMenu,
-        userId
+        userId,
+        changeHeaderVisibility
       }}
     >
       {children}
