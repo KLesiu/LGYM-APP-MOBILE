@@ -2,12 +2,23 @@ import { View, Text } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import TrainingPlanDayExerciseListCard from "./TrainingPlanDayExerciseListCard";
 import { ScrollView } from "react-native";
+import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
 
-interface TrainingPlanDayExercisesListProps {}
+interface TrainingPlanDayExercisesListProps {
+  deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
+    | {
+        exercises: PlanDayExercisesFormVm[];
+        gym: string;
+        _id: string;
+        name: string;
+      }
+    | undefined
+  >;
+}
 
 const TrainingPlanDayExercisesList: React.FC<
   TrainingPlanDayExercisesListProps
-> = () => {
+> = ({ deleteExerciseFromPlan }) => {
   const { exercisesInPlanList } = useTrainingPlanDay();
   return (
     <View className="flex flex-col w-full px-5" style={{ gap: 8 }}>
@@ -31,7 +42,7 @@ const TrainingPlanDayExercisesList: React.FC<
           <TrainingPlanDayExerciseListCard
             key={index}
             exercise={exercise}
-            isDone={false}
+            deleteExerciseFromPlan={deleteExerciseFromPlan}
           />
         ))}
       </ScrollView>

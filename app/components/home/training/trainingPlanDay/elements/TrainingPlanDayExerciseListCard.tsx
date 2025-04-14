@@ -1,24 +1,72 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
 import Checkbox from "../../../../elements/Checkbox";
 import RemoveIcon from "./../../../../../../img/icons/deleteIcon.svg";
+import { useTrainingPlanDay } from "../TrainingPlanDayContext";
+import { useEffect, useState } from "react";
+import { TrainingSessionScores } from "../../../../../../interfaces/Training";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../../../elements/CustomButton";
 
 interface TrainingPlanDayExerciseListCardProps {
   exercise: PlanDayExercisesFormVm;
-  isDone: boolean;
   key: number;
+  deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
+  | {
+      exercises: PlanDayExercisesFormVm[];
+      gym: string;
+      _id: string;
+      name: string;
+    }
+  | undefined
+>;
+
 }
 
 const TrainingPlanDayExerciseListCard: React.FC<
   TrainingPlanDayExerciseListCardProps
-> = ({ key, exercise, isDone }) => {
+> = ({ key, exercise,deleteExerciseFromPlan }) => {
+  const { setCurrentExercise, trainingSessionScores } = useTrainingPlanDay();
+  const [isDone, setIsDone] = useState(false);
+
+  useEffect(() => {
+    checkIsExerciseDone();
+  }, [trainingSessionScores]);
+
+  const checkIsExerciseDone = () => {
+    const foundExerciseSeries = trainingSessionScores.filter(
+      (exerciseInSession) =>
+        exerciseInSession.exercise._id === exercise.exercise._id
+    );
+    let isExerciseDone = true;
+    for (let index = 0; index < foundExerciseSeries.length; index++) {
+      const exerciseInSession = foundExerciseSeries[index];
+      if (!checkIsExerciseHaveScore(exerciseInSession)) {
+        isExerciseDone = false;
+      }
+    }
+    setIsDone(isExerciseDone);
+  };
+
+  const checkIsExerciseHaveScore = (
+    trainingSessionScore: TrainingSessionScores
+  ) => {
+    if (trainingSessionScore.reps || trainingSessionScore.weight) {
+      return true;
+    }
+    return false;
+  };
+
   return (
-    <View
+    <Pressable
+      onPress={() => setCurrentExercise(exercise)}
       className="bg-secondaryColor flex flex-row items-center justify-between w-full p-2  rounded-lg"
       key={key}
     >
       <View className="flex flex-row items-center" style={{ gap: 20 }}>
-        <Checkbox value={true} />
+        <Checkbox value={isDone} />
         <View>
           <Text
             className="text-base text-white "
@@ -39,9 +87,14 @@ const TrainingPlanDayExerciseListCard: React.FC<
         </View>
       </View>
       <View className="w-12 h-12 flex justify-center items-center">
-        <RemoveIcon width={20} height={20} />
+        <CustomButton
+          onPress={() => deleteExerciseFromPlan(exercise.exercise._id)}
+          buttonStyleSize={ButtonSize.none}
+          buttonStyleType={ButtonStyle.none}
+          customSlots={[<RemoveIcon width={20} height={20} />]}
+        />
       </View>
-    </View>
+    </Pressable>
   );
 };
 

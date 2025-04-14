@@ -8,7 +8,8 @@ export enum ButtonStyle {
     outline = "border-primaryColor border-[1px]",
     outlineBlack = "border-fifthColor border-[1px]",
     grey = "bg-[#282828]",
-    default = "bg-white"
+    default = "bg-white",
+    none = "bg-transparent",
 }
 export enum ButtonSize{
   none= "p-0",
@@ -16,7 +17,8 @@ export enum ButtonSize{
   regular = 'py-4 px-2',
   xl = 'py-6 px-4',
   xxl = 'py-8 px-6',
-  long = "py-2 px-6"
+  long = "py-2 px-6",
+  square = "p-3",
 }
 interface ButtonProps {
   onPress: () => void;

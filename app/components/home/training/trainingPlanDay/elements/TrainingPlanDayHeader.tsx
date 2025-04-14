@@ -1,8 +1,4 @@
 import { View, Text, Pressable } from "react-native";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../../../elements/CustomButton";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import GymIcon from "./../../../../../../img/icons/gymIcon.svg";
 import BackIcon from "./../../../../../../img/icons/backIcon.svg"

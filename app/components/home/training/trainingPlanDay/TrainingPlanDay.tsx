@@ -10,10 +10,6 @@ import useInterval from "../../../../../helpers/hooks/useInterval";
 import ViewLoading from "../../../elements/ViewLoading";
 import { GymForm } from "../../../../../interfaces/Gym";
 import React from "react";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../../elements/CustomButton";
 import { useHomeContext } from "../../HomeContext";
 import { useTrainingPlanDay } from "./TrainingPlanDayContext";
 import TrainingPlanDayHeader from "./elements/TrainingPlanDayHeader";
@@ -22,6 +18,8 @@ import TrainingPlanDayActionsButtons from "./elements/TrainingPlanDayActionsButt
 import TrainingPlanDayExerciseLastScoresInfo from "./elements/TrainingPlanDayExerciseLastScoresInfo";
 import TrainingPlanDayExerciseView from "./elements/TrainingPlanDayExerciseView";
 import TrainingPlanDayExercisesList from "./elements/TrainingPlanDayExercisesList";
+import TrainingPlanDayExerciseHeader from "./elements/TrainingPlanDayExerciseHeader";
+import TrainingPlanDayHeaderButtons from "./elements/TrainingPlanDayHeaderButtons";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -56,15 +54,18 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
-  const [startInterval, setStartInterval] = useState<boolean>(false);
+  const [intervalDelay, setIntervalDelay] = useState<number | null>(null);
 
   useInterval(() => {
-    if (!startInterval) return;
     saveTrainingSessionScores();
-  }, 1000);
+  }, intervalDelay);
 
   useEffect(() => {
     init();
+    return ()=>{
+      setIntervalDelay(null);
+      changeHeaderVisibility(true);
+    }
   }, []);
 
   /// Initialize the component
@@ -74,7 +75,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     await loadTrainingSessionScores();
     changeHeaderVisibility(false);
     setViewLoading(false);
-    setStartInterval(true);
+    setIntervalDelay(1000);
   };
 
   /// Get information about plan day from local storage or API
@@ -163,7 +164,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
 
   /// Delete exercise from plan day
-  const deleteExerciseFromPlanDay = async (exerciseId: string | undefined) => {
+  const deleteExerciseFromPlanDay = async (exerciseId: string | undefined,isIncrementDecrement=false) => {
     if (!exerciseId) return;
     const newPlanDayExercises = planDay?.exercises.filter(
       (exercise) => exercise.exercise._id !== exerciseId
@@ -172,6 +173,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const newPlanDay = { ...planDay, exercises: newPlanDayExercises };
     await sendPlanDayToLocalStorage(newPlanDay);
     setPlanDay(newPlanDay);
+    if(!isIncrementDecrement)setCurrentExercise(newPlanDay.exercises[0]);
     return newPlanDay;
   };
 
@@ -199,23 +201,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
 
 
-  /// Increment the series number of an current exercise
-  const incrementSeriesNumber = async (
-    exercise: string,
-    series: number,
-    reps: string
-  ) => {
-    await getExerciseToAddFromForm(exercise, series + 1, reps, true);
-  };
-  
-  /// Decrement the series number of an current exercise
-  const decrementSeriesNumber = async (
-    exercise: string,
-    series: number,
-    reps: string
-  ) => {
-    await getExerciseToAddFromForm(exercise, series - 1, reps, true);
-  };
+
+
 
   const getExercise = async (id: string) => {
     const response = await fetch(`${apiURL}/api/exercise/${id}/getExercise`);
@@ -243,7 +230,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         (e) => e.exercise._id === idExercise
       );
 
-      const response = await deleteExerciseFromPlanDay(idExercise);
+      const response = await deleteExerciseFromPlanDay(idExercise,true);
       if (!response) return;
 
       newPlanDay = response;
@@ -262,7 +249,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
 
     if (!newPlanDay) return;
-
+    if(isIncrementDecrement)setCurrentExercise(newExercise)
     await addExerciseToPlanDay(newPlanDay);
     await getLastExerciseScores(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
@@ -272,6 +259,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setPlanDay(newPlanDay);
     await sendPlanDayToLocalStorage(newPlanDay);
   };
+  
   const parseScoresIfValid = (
     scores: TrainingSessionScores[]
   ): TrainingSessionScores[] | null => {
@@ -297,6 +285,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       ? null
       : (parsedScores as TrainingSessionScores[]);
   };
+
   const sendTraining = (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
     if (!result) return;
@@ -309,38 +298,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         <View style={{ gap: 16 }} className="flex flex-col items-center h-full">
           <View style={{ gap: 16 }} className="flex flex-col w-full ">
             <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
-            <View className="flex flex-col px-5">
-              <Text
-                className="text-3xl text-white  font-bold "
-                style={{
-                  fontFamily: "OpenSans_700Bold",
-                }}
-              >
-                Pull ups
-              </Text>
-              <Text
-                className="text-base text-white "
-                style={{
-                  fontFamily: "OpenSans_400Regular",
-                }}
-              >
-                3x10-15
-              </Text>
-            </View>
-            <View className="flex flex-row justify-between px-5">
-              <CustomButton
-                onPress={showExerciseForm}
-                buttonStyleSize={ButtonSize.regular}
-                buttonStyleType={ButtonStyle.success}
-                textSize="text-base"
-                text="Add Exercise"
-              />
-            </View>
+            <TrainingPlanDayExerciseHeader />
+            <TrainingPlanDayHeaderButtons showExerciseForm={showExerciseForm} />
           </View>
-          <TrainingPlanDayActionsButtons />
+          <TrainingPlanDayActionsButtons  getExerciseToAddFromForm={getExerciseToAddFromForm} deleteExerciseFromPlan={deleteExerciseFromPlanDay}/>
           <TrainingPlanDayExerciseLastScoresInfo />
           <TrainingPlanDayExerciseView />
-          <TrainingPlanDayExercisesList />
+          <TrainingPlanDayExercisesList  deleteExerciseFromPlan={deleteExerciseFromPlanDay}/>
           <TrainingPlanDayFooterButtons
             sendTraining={sendTraining}
             hideAndDeleteTrainingSession={props.hideAndDeleteTrainingSession}

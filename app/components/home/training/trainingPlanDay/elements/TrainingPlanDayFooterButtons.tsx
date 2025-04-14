@@ -13,7 +13,7 @@ const TrainingPlanDayFooterButtons:React.FC<TrainingPlanDayFooterButtonsProps> =
     const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
     
     return(
-        <View className="w-full flex flex-row justify-between">
+        <View className="w-full flex flex-row justify-between px-5">
         <Pressable
           onPress={hideAndDeleteTrainingSession}
           disabled={!isEnabled}

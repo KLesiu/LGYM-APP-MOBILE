@@ -1,6 +1,5 @@
 import { View, Text, TextInput, ScrollView } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
-import { useEffect } from "react";
 import { ExerciseForm } from "../../../../../../interfaces/Exercise";
 import { TrainingSessionScores } from "../../../../../../interfaces/Training";
 
@@ -11,10 +10,6 @@ const TrainingPlanDayExerciseView: React.FC<
 > = () => {
   const { currentExercise, trainingSessionScores, setTrainingSessionScores } =
     useTrainingPlanDay();
-
-  useEffect(() => {
-    console.log("currentExercise", currentExercise);
-  }, [currentExercise]);
 
   const updateExerciseScore = async (
     exercise: ExerciseForm,
