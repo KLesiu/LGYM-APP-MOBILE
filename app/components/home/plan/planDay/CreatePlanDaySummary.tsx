@@ -6,17 +6,19 @@ import { usePlanDay } from "./CreatePlanDayContext";
 import { ExerciseForPlanDay } from "../../../../../interfaces/Exercise";
 
 interface CreatePlanDaySummaryProps {
-  saveCurrentPlan: (planName:string,exercisesArg:ExerciseForPlanDay[]) => Promise<void>;
+  saveCurrentPlan: (
+    planName: string,
+    exercisesArg: ExerciseForPlanDay[]
+  ) => Promise<void>;
   isPreview?: boolean;
 }
 
 const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
-  const { exercisesList, goBack,planDayName,closeForm} =
-    usePlanDay();
+  const { exercisesList, goBack, planDayName, closeForm } = usePlanDay();
 
-  const savePlan = async()=>{
-    await props.saveCurrentPlan(planDayName,exercisesList)
-  }
+  const savePlan = async () => {
+    await props.saveCurrentPlan(planDayName, exercisesList);
+  };
 
   return (
     <View className="w-full h-full">
@@ -39,28 +41,21 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
       </View>
       <ExerciseList exerciseList={exercisesList} />
       <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
-        {props.isPreview && closeForm ? (
+        <CustomButton
+          buttonStyleType={ButtonStyle.outlineBlack}
+          onPress={props.isPreview ? closeForm : goBack}
+          text={props.isPreview ? "Close" : "Back"}
+          width="flex-1"
+        />
+
+        {!props.isPreview && (
           <CustomButton
-            buttonStyleType={ButtonStyle.outlineBlack}
-            onPress={closeForm}
-            text="Close"
-            width="flex-1"
-          />
-        ) : (
-          <CustomButton
-            buttonStyleType={ButtonStyle.outlineBlack}
-            onPress={goBack}
-            text="Back"
+            buttonStyleType={ButtonStyle.success}
+            onPress={savePlan}
+            text="Save"
             width="flex-1"
           />
         )}
-
-        <CustomButton
-          buttonStyleType={ButtonStyle.success}
-          onPress={savePlan}
-          text="Save"
-          width="flex-1"
-        />
       </View>
     </View>
   );

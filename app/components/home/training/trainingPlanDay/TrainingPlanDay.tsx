@@ -20,6 +20,8 @@ import TrainingPlanDayExerciseView from "./elements/TrainingPlanDayExerciseView"
 import TrainingPlanDayExercisesList from "./elements/TrainingPlanDayExercisesList";
 import TrainingPlanDayExerciseHeader from "./elements/TrainingPlanDayExerciseHeader";
 import TrainingPlanDayHeaderButtons from "./elements/TrainingPlanDayHeaderButtons";
+import CreatePlanDay from "../../plan/planDay/CreatePlanDay";
+import PlanDayProvider from "../../plan/planDay/CreatePlanDayContext";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -47,6 +49,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     isTrainingPlanDayExerciseFormShow,
     setIsTrainingPlanDayExerciseFormShow,
   ] = useState<boolean>(false);
+  const [isPlanShow, setIsPlanShow] = useState<boolean>(false);
   const [bodyPart, setBodyPart] = useState<BodyParts | undefined>();
   const [exerciseWhichBeingSwitched, setExerciseWhichBeingSwitched] = useState<
     string | undefined
@@ -62,10 +65,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   useEffect(() => {
     init();
-    return ()=>{
+    return () => {
       setIntervalDelay(null);
       changeHeaderVisibility(true);
-    }
+    };
   }, []);
 
   /// Initialize the component
@@ -164,7 +167,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
 
   /// Delete exercise from plan day
-  const deleteExerciseFromPlanDay = async (exerciseId: string | undefined,isIncrementDecrement=false) => {
+  const deleteExerciseFromPlanDay = async (
+    exerciseId: string | undefined,
+    isIncrementDecrement = false
+  ) => {
     if (!exerciseId) return;
     const newPlanDayExercises = planDay?.exercises.filter(
       (exercise) => exercise.exercise._id !== exerciseId
@@ -173,7 +179,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const newPlanDay = { ...planDay, exercises: newPlanDayExercises };
     await sendPlanDayToLocalStorage(newPlanDay);
     setPlanDay(newPlanDay);
-    if(!isIncrementDecrement)setCurrentExercise(newPlanDay.exercises[0]);
+    if (!isIncrementDecrement) setCurrentExercise(newPlanDay.exercises[0]);
     return newPlanDay;
   };
 
@@ -199,10 +205,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const hideExerciseForm = () => {
     setIsTrainingPlanDayExerciseFormShow(false);
   };
-
-
-
-
 
   const getExercise = async (id: string) => {
     const response = await fetch(`${apiURL}/api/exercise/${id}/getExercise`);
@@ -230,7 +232,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         (e) => e.exercise._id === idExercise
       );
 
-      const response = await deleteExerciseFromPlanDay(idExercise,true);
+      const response = await deleteExerciseFromPlanDay(idExercise, true);
       if (!response) return;
 
       newPlanDay = response;
@@ -249,7 +251,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
 
     if (!newPlanDay) return;
-    if(isIncrementDecrement)setCurrentExercise(newExercise)
+    if (isIncrementDecrement) setCurrentExercise(newExercise);
     await addExerciseToPlanDay(newPlanDay);
     await getLastExerciseScores(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
@@ -259,7 +261,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setPlanDay(newPlanDay);
     await sendPlanDayToLocalStorage(newPlanDay);
   };
-  
+
   const parseScoresIfValid = (
     scores: TrainingSessionScores[]
   ): TrainingSessionScores[] | null => {
@@ -292,6 +294,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     props.addTraining(result, lastExerciseScores);
   };
 
+  const togglePlanShow = () => {
+    setIsPlanShow(!isPlanShow);
+  };
+
   return (
     <View className="absolute w-full h-full text-white bg-bgColor flex flex-col">
       {planDay && Object.keys(planDay).length ? (
@@ -301,10 +307,17 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             <TrainingPlanDayExerciseHeader />
             <TrainingPlanDayHeaderButtons showExerciseForm={showExerciseForm} />
           </View>
-          <TrainingPlanDayActionsButtons  getExerciseToAddFromForm={getExerciseToAddFromForm} deleteExerciseFromPlan={deleteExerciseFromPlanDay}/>
+          <TrainingPlanDayActionsButtons
+            getExerciseToAddFromForm={getExerciseToAddFromForm}
+            deleteExerciseFromPlan={deleteExerciseFromPlanDay}
+            showExerciseFormByBodyPart={showExerciseFormByBodyPart}
+            togglePlanShow={togglePlanShow}
+          />
           <TrainingPlanDayExerciseLastScoresInfo />
           <TrainingPlanDayExerciseView />
-          <TrainingPlanDayExercisesList  deleteExerciseFromPlan={deleteExerciseFromPlanDay}/>
+          <TrainingPlanDayExercisesList
+            deleteExerciseFromPlan={deleteExerciseFromPlanDay}
+          />
           <TrainingPlanDayFooterButtons
             sendTraining={sendTraining}
             hideAndDeleteTrainingSession={props.hideAndDeleteTrainingSession}
@@ -319,6 +332,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           addExerciseToPlanDay={getExerciseToAddFromForm}
           bodyPart={bodyPart}
         />
+      ) : (
+        <></>
+      )}
+      {isPlanShow ? (
+        <PlanDayProvider closeForm={togglePlanShow}>
+            <CreatePlanDay isPreview={true} planDayId={planDay?._id} />
+        </PlanDayProvider>
       ) : (
         <></>
       )}

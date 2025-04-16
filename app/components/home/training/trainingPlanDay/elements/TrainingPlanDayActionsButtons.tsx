@@ -11,6 +11,7 @@ import CustomButton, {
 } from "../../../../elements/CustomButton";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
+import { BodyParts } from "../../../../../../enums/BodyParts";
 
 interface TrainingPlanDayActionsButtonsProps {
   getExerciseToAddFromForm: (
@@ -28,22 +29,25 @@ interface TrainingPlanDayActionsButtonsProps {
       }
     | undefined
   >;
+  showExerciseFormByBodyPart:(bodyPart: BodyParts, exerciseToSwitchId: string) => void;
+  togglePlanShow: ()=>void
 }
 
 const TrainingPlanDayActionsButtons: React.FC<
   TrainingPlanDayActionsButtonsProps
-> = ({ getExerciseToAddFromForm,deleteExerciseFromPlan }) => {
+> = ({ getExerciseToAddFromForm,deleteExerciseFromPlan,showExerciseFormByBodyPart,togglePlanShow }) => {
+
   const buttons = [
     {
       icon: <PlanIcon width={24} height={24} />,
-      action: () => {},
+      action: () => togglePlanShow(),
       isActive: false,
     },
-    {
-      icon: <RecordsIcon width={24} height={24} color={"#ffff"} />,
-      action: () => {},
-      isActive: false,
-    },
+    // {
+    //   icon: <RecordsIcon width={24} height={24} color={"#ffff"} />,
+    //   action: () => {},
+    //   isActive: false,
+    // },
     {
       icon: <GymIcon width={24} height={24} />,
       action: () => {},
@@ -51,7 +55,7 @@ const TrainingPlanDayActionsButtons: React.FC<
     },
     {
       icon: <SwitchIcon width={24} height={24} />,
-      action: () => {},
+      action: () => showExerciseFormByBodyPart(currentExercise?.exercise.bodyPart as BodyParts, `${currentExercise?.exercise._id}`),
       isActive: false,
     },
     {

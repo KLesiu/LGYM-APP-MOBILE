@@ -15,7 +15,7 @@ import { usePlanDay } from "./CreatePlanDayContext";
 import { useHomeContext } from "../../HomeContext";
 
 interface CreatePlanDayProps {
-  planId: string;
+  planId?: string;
   planDayId?: string;
   isPreview?: boolean;
 }
