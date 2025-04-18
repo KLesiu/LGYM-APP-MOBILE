@@ -1,5 +1,4 @@
 import { View, Text } from "react-native";
-import { LastScoresPlanDayVm } from "../../../../../interfaces/PlanDay";
 import { useEffect, useState } from "react";
 import { LastExerciseScores } from "../../../../../interfaces/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,13 +21,13 @@ import TrainingPlanDayExerciseHeader from "./elements/TrainingPlanDayExerciseHea
 import TrainingPlanDayHeaderButtons from "./elements/TrainingPlanDayHeaderButtons";
 import CreatePlanDay from "../../plan/planDay/CreatePlanDay";
 import PlanDayProvider from "../../plan/planDay/CreatePlanDayContext";
+import { PlanDayVm } from "../../../../../interfaces/PlanDay";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
   hideAndDeleteTrainingSession: () => void;
   addTraining: (
     exercises: TrainingSessionScores[],
-    lastExercisesScores: LastExerciseScores[] | undefined
   ) => Promise<void>;
   dayId: string;
   gym: GymForm | undefined;
@@ -40,9 +39,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     planDay,
     setPlanDay,
     trainingSessionScores,
-    setLastExerciseScores,
     setTrainingSessionScores,
-    lastExerciseScores,
     setCurrentExercise,
   } = useTrainingPlanDay();
   const [
@@ -105,44 +102,21 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     );
   };
 
-  /// Get last exercise scores from API
-  const getLastExerciseScores = async (
-    plan: LastScoresPlanDayVm
-  ): Promise<LastExerciseScores[] | void> => {
-    const response = await fetch(
-      `${apiURL}/api/exercise/${userId}/getLastExerciseScores`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(plan),
-      }
-    );
-    const result = await response.json();
-    setLastExerciseScores(result);
-    return result;
-  };
-
+  
   /// Get information about plan day from API
   const getInformationAboutPlanDay = async () => {
     const response = await fetch(
       `${apiURL}/api/planDay/${props.dayId}/getPlanDay`
     );
-    const result = await response.json();
-    const planDayInfo: LastScoresPlanDayVm = {
-      ...result,
-      gym: props.gym,
-    };
+    const result = await response.json() as PlanDayVm;
 
-    setPlanDay(planDayInfo);
-    setCurrentExercise(planDayInfo.exercises[0]);
-    await getLastExerciseScores(planDayInfo);
-    await sendPlanDayToLocalStorage(planDayInfo);
+    setPlanDay(result);
+    setCurrentExercise(result.exercises[0]);
+    await sendPlanDayToLocalStorage(result);
   };
 
   /// Save plan day to local storage
-  const sendPlanDayToLocalStorage = async (planDay: LastScoresPlanDayVm) => {
+  const sendPlanDayToLocalStorage = async (planDay: PlanDayVm) => {
     await AsyncStorage.setItem("planDay", JSON.stringify(planDay));
   };
 
@@ -156,13 +130,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     )
       return false;
     const result = JSON.parse(planDay);
-    const planDayInfo = {
-      ...result,
-      gym: props.gym,
-    } as LastScoresPlanDayVm;
-    setPlanDay(planDayInfo);
-    setCurrentExercise(planDayInfo.exercises[0]);
-    await getLastExerciseScores(planDayInfo);
+    setPlanDay(result);
+    setCurrentExercise(result.exercises[0]);
     return true;
   };
 
@@ -220,7 +189,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     if (!planDay) return;
 
     const response = await getExercise(exerciseId);
-    let newPlanDay: LastScoresPlanDayVm = planDay;
+    let newPlanDay: PlanDayVm = planDay;
     let exerciseIndex = -1;
 
     if (exerciseWhichBeingSwitched || isIncrementDecrement) {
@@ -253,11 +222,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     if (!newPlanDay) return;
     if (isIncrementDecrement) setCurrentExercise(newExercise);
     await addExerciseToPlanDay(newPlanDay);
-    await getLastExerciseScores(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
   };
 
-  const addExerciseToPlanDay = async (newPlanDay: LastScoresPlanDayVm) => {
+  const addExerciseToPlanDay = async (newPlanDay: PlanDayVm) => {
     setPlanDay(newPlanDay);
     await sendPlanDayToLocalStorage(newPlanDay);
   };
@@ -291,7 +259,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const sendTraining = (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
     if (!result) return;
-    props.addTraining(result, lastExerciseScores);
+    props.addTraining(result);
   };
 
   const togglePlanShow = () => {

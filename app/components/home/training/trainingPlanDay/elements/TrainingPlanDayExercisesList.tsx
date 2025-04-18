@@ -8,7 +8,6 @@ interface TrainingPlanDayExercisesListProps {
   deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
     | {
         exercises: PlanDayExercisesFormVm[];
-        gym: string;
         _id: string;
         name: string;
       }

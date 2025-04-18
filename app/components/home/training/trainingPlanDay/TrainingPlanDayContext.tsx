@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { LastScoresPlanDayVm, PlanDayExercisesFormVm } from "../../../../../interfaces/PlanDay";
+import {  PlanDayExercisesFormVm, PlanDayVm } from "../../../../../interfaces/PlanDay";
 import { TrainingSessionScores } from "../../../../../interfaces/Training";
 import { LastExerciseScores } from "../../../../../interfaces/Exercise";
 import { GymForm } from "../../../../../interfaces/Gym";
 
 interface TrainingPlanDayContextType {
-    setPlanDay: (planDay: LastScoresPlanDayVm) => void;
-    planDay: LastScoresPlanDayVm | undefined;
+    setPlanDay: (planDay: PlanDayVm) => void;
+    planDay: PlanDayVm | undefined;
     setTrainingSessionScores: (
       scores: Array<TrainingSessionScores>) => void;
     trainingSessionScores: Array<TrainingSessionScores>;
@@ -42,7 +42,7 @@ interface TrainingPlanDayProviderProps {
 const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   children,gym
 }) => {
-  const [planDay, setPlanDay] = useState<LastScoresPlanDayVm>();
+  const [planDay, setPlanDay] = useState<PlanDayVm>();
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
   >([]);

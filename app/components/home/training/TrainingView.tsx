@@ -121,7 +121,6 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
   /// Submit training and delete training session from localStorage then show summary.
   const addTraining = async (
     exercises: TrainingSessionScores[],
-    lastExercisesScores: LastExerciseScores[] | undefined
   ) => {
     const type = dayId;
     const createdAt = new Date();
@@ -144,7 +143,6 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
         type: type,
         createdAt: createdAt,
         exercises: training,
-        lastExercisesScores: lastExercisesScores,
         gym: gym?._id,
       }),
     });

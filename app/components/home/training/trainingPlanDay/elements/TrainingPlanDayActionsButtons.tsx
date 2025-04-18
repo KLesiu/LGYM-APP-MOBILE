@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import PlanIcon from "./../../../../../../img/icons/planIcon.svg";
 import GymIcon from "./../../../../../../img/icons/gymIcon.svg";
-import RecordsIcon from "./../../../../../../img/icons/recordsIcon.svg";
 import SwitchIcon from "./../../../../../../img/icons/switchIcon.svg";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import RemoveIcon from "./../../../../../../img/icons/deleteIcon.svg";
