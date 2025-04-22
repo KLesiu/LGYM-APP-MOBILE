@@ -20,7 +20,7 @@ const TrainingPlanDayExercisesList: React.FC<
 > = ({ deleteExerciseFromPlan }) => {
   const { exercisesInPlanList } = useTrainingPlanDay();
   return (
-    <View className="flex flex-col w-full px-5" style={{ gap: 8 }}>
+    <View className="flex flex-col w-full px-5 flex-1" style={{ gap: 8 }}>
       <Text
         className="text-sm text-white "
         style={{
@@ -30,7 +30,7 @@ const TrainingPlanDayExercisesList: React.FC<
         Exercise list
       </Text>
       <ScrollView
-        className="w-full max-h-52"
+        className="w-full flex-1"
         contentContainerStyle={{
           display: "flex",
           alignItems: "center",

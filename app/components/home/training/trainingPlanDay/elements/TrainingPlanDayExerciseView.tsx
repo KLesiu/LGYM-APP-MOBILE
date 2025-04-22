@@ -36,7 +36,7 @@ const TrainingPlanDayExerciseView: React.FC<
     setTrainingSessionScores(updatedScores as Array<TrainingSessionScores>);
   };
   return (
-    <View className="w-full px-5 flex flex-col" style={{ gap: 4 }}>
+    <View className="w-full px-5 flex flex-col flex-1" style={{ gap: 4 }}>
       <View className="flex flex-row justify-between">
         <Text
           className="text-sm text-white "
@@ -64,7 +64,7 @@ const TrainingPlanDayExerciseView: React.FC<
         </Text>
       </View>
       <ScrollView
-        className="w-full max-h-44"
+        className="w-full flex-1"
         contentContainerStyle={{
           display: "flex",
           alignItems: "center",

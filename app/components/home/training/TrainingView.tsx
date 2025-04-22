@@ -98,22 +98,27 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     const response = await AsyncStorage.getItem("planDay");
     if (!response) return;
     const result = JSON.parse(response);
-    setGym(result.gym);
+
+    const responseGym = await AsyncStorage.getItem("gym");
+    if(!responseGym) return;
+    const resultGym = JSON.parse(responseGym) as GymForm;
+    setGym(resultGym);
     showDaySection(result._id);
   };
+  
 
   /// Show TrainingPlanDay and hide day choice popUp
   const showDaySection = async (day: string): Promise<void> => {
     setStep(TrainingViewSteps.TRAINING_PLAN_DAY);
     setDayId(day);
     toggleMenuButton(true);
-    console.log("dayId", day);
   };
 
   /// Delete information about training session from localStorage and hide TrainingPlanDay
   const hideAndDeleteTrainingSession = async () => {
     await AsyncStorage.removeItem("planDay");
     await AsyncStorage.removeItem("trainingSessionScores");
+    await AsyncStorage.removeItem("gym");
     setStep(TrainingViewSteps.None);
     resetTrainingView();
   };

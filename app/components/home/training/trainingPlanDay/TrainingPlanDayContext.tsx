@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {  PlanDayExercisesFormVm, PlanDayVm } from "../../../../../interfaces/PlanDay";
 import { TrainingSessionScores } from "../../../../../interfaces/Training";
-import { LastExerciseScores } from "../../../../../interfaces/Exercise";
 import { GymForm } from "../../../../../interfaces/Gym";
 
 interface TrainingPlanDayContextType {
@@ -10,14 +9,14 @@ interface TrainingPlanDayContextType {
     setTrainingSessionScores: (
       scores: Array<TrainingSessionScores>) => void;
     trainingSessionScores: Array<TrainingSessionScores>;
-    lastExerciseScores: LastExerciseScores[] | undefined;
-    setLastExerciseScores: (scores: LastExerciseScores[]) => void;
     currentExercise: PlanDayExercisesFormVm | undefined;
     setCurrentExercise: (exercise: PlanDayExercisesFormVm) => void;
     gym: GymForm | undefined;
     planDayName:string,
-    gymName:string,
-    exercisesInPlanList:PlanDayExercisesFormVm[] | undefined
+    exercisesInPlanList:PlanDayExercisesFormVm[] | undefined,
+    isGymFilterActive:boolean
+    setIsGymFilterActive: (isActive:boolean) => void
+    toggleGymFilter: () => void
 }
 
 const TrainingPlanDayContext = createContext<TrainingPlanDayContextType | null>(
@@ -46,9 +45,8 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
   >([]);
-  const [lastExerciseScores, setLastExerciseScores] =
-    useState<LastExerciseScores[]>();
   const [currentExercise, setCurrentExercise] = useState<PlanDayExercisesFormVm>();
+  const [isGymFilterActive, setIsGymFilterActive] = useState(true);
 
   useEffect(() => {
     if (planDay && planDay.exercises) {
@@ -74,11 +72,13 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   }, [planDay]);
 
   const planDayName = useMemo(()=>planDay?.name ?? "",[planDay?.name])
-  const gymName = useMemo(()=>gym?.name ?? "",[gym?.name])
   const exercisesInPlanList = useMemo(()=>planDay?.exercises,[planDay])
 
+  const toggleGymFilter = () => {
+    setIsGymFilterActive((prev) => !prev);}
+
   return (
-    <TrainingPlanDayContext.Provider value={{exercisesInPlanList,currentExercise,setCurrentExercise,setPlanDay,gym,gymName,planDayName, planDay,setLastExerciseScores,lastExerciseScores,trainingSessionScores,setTrainingSessionScores}}>
+    <TrainingPlanDayContext.Provider value={{exercisesInPlanList,currentExercise,setCurrentExercise,setPlanDay,gym,planDayName, planDay,trainingSessionScores,setTrainingSessionScores,toggleGymFilter, isGymFilterActive,setIsGymFilterActive}}>
       {children}
     </TrainingPlanDayContext.Provider>
   );

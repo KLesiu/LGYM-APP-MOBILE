@@ -26,9 +26,7 @@ import { PlanDayVm } from "../../../../../interfaces/PlanDay";
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
   hideAndDeleteTrainingSession: () => void;
-  addTraining: (
-    exercises: TrainingSessionScores[],
-  ) => Promise<void>;
+  addTraining: (exercises: TrainingSessionScores[]) => Promise<void>;
   dayId: string;
   gym: GymForm | undefined;
 }
@@ -102,13 +100,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     );
   };
 
-  
   /// Get information about plan day from API
   const getInformationAboutPlanDay = async () => {
     const response = await fetch(
       `${apiURL}/api/planDay/${props.dayId}/getPlanDay`
     );
-    const result = await response.json() as PlanDayVm;
+    const result = (await response.json()) as PlanDayVm;
 
     setPlanDay(result);
     setCurrentExercise(result.exercises[0]);
@@ -118,6 +115,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   /// Save plan day to local storage
   const sendPlanDayToLocalStorage = async (planDay: PlanDayVm) => {
     await AsyncStorage.setItem("planDay", JSON.stringify(planDay));
+    await AsyncStorage.setItem("gym", JSON.stringify(props.gym));
   };
 
   /// Get plan day from local storage
@@ -269,23 +267,30 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   return (
     <View className="absolute w-full h-full text-white bg-bgColor flex flex-col">
       {planDay && Object.keys(planDay).length ? (
-        <View style={{ gap: 16 }} className="flex flex-col items-center h-full">
-          <View style={{ gap: 16 }} className="flex flex-col w-full ">
-            <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
-            <TrainingPlanDayExerciseHeader />
-            <TrainingPlanDayHeaderButtons showExerciseForm={showExerciseForm} />
+        <View style={{gap:8}} className=" h-full flex flex-col justify-between pb-4">
+          <View
+            className="flex flex-col items-center flex-1"
+            style={{ gap: 16 }}
+          >
+            <View style={{ gap: 16 }} className="flex flex-col w-full ">
+              <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
+              <TrainingPlanDayExerciseHeader />
+              <TrainingPlanDayHeaderButtons
+                showExerciseForm={showExerciseForm}
+              />
+            </View>
+            <TrainingPlanDayActionsButtons
+              getExerciseToAddFromForm={getExerciseToAddFromForm}
+              deleteExerciseFromPlan={deleteExerciseFromPlanDay}
+              showExerciseFormByBodyPart={showExerciseFormByBodyPart}
+              togglePlanShow={togglePlanShow}
+            />
+            <TrainingPlanDayExerciseLastScoresInfo />
+            <TrainingPlanDayExerciseView />
+            <TrainingPlanDayExercisesList
+              deleteExerciseFromPlan={deleteExerciseFromPlanDay}
+            />
           </View>
-          <TrainingPlanDayActionsButtons
-            getExerciseToAddFromForm={getExerciseToAddFromForm}
-            deleteExerciseFromPlan={deleteExerciseFromPlanDay}
-            showExerciseFormByBodyPart={showExerciseFormByBodyPart}
-            togglePlanShow={togglePlanShow}
-          />
-          <TrainingPlanDayExerciseLastScoresInfo />
-          <TrainingPlanDayExerciseView />
-          <TrainingPlanDayExercisesList
-            deleteExerciseFromPlan={deleteExerciseFromPlanDay}
-          />
           <TrainingPlanDayFooterButtons
             sendTraining={sendTraining}
             hideAndDeleteTrainingSession={props.hideAndDeleteTrainingSession}
@@ -305,7 +310,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       )}
       {isPlanShow ? (
         <PlanDayProvider closeForm={togglePlanShow}>
-            <CreatePlanDay isPreview={true} planDayId={planDay?._id} />
+          <CreatePlanDay isPreview={true} planDayId={planDay?._id} />
         </PlanDayProvider>
       ) : (
         <></>

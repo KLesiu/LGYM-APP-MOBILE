@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { View } from "react-native";
 import PlanIcon from "./../../../../../../img/icons/planIcon.svg";
 import GymIcon from "./../../../../../../img/icons/gymIcon.svg";
@@ -12,6 +13,15 @@ import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
 import { BodyParts } from "../../../../../../enums/BodyParts";
 
+enum ActionButtonsEnum {
+  PLAN = "PLAN",
+  GYM = "GYM",
+  SWITCH = "SWITCH",
+  INCREMENT = "INCREMENT",
+  DECREMENT = "DECREMENT",
+  REMOVE = "REMOVE",
+}
+
 interface TrainingPlanDayActionsButtonsProps {
   getExerciseToAddFromForm: (
     exerciseId: string,
@@ -19,80 +29,114 @@ interface TrainingPlanDayActionsButtonsProps {
     reps: string,
     isIncrementDecrement?: boolean
   ) => Promise<void>;
-  deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
+  deleteExerciseFromPlan: (
+    exerciseId: string | undefined
+  ) => Promise<
     | {
         exercises: PlanDayExercisesFormVm[];
-        gym: string;
         _id: string;
         name: string;
       }
     | undefined
   >;
-  showExerciseFormByBodyPart:(bodyPart: BodyParts, exerciseToSwitchId: string) => void;
-  togglePlanShow: ()=>void
+  showExerciseFormByBodyPart: (
+    bodyPart: BodyParts,
+    exerciseToSwitchId: string
+  ) => void;
+  togglePlanShow: () => void;
 }
 
 const TrainingPlanDayActionsButtons: React.FC<
   TrainingPlanDayActionsButtonsProps
-> = ({ getExerciseToAddFromForm,deleteExerciseFromPlan,showExerciseFormByBodyPart,togglePlanShow }) => {
+> = ({
+  getExerciseToAddFromForm,
+  deleteExerciseFromPlan,
+  showExerciseFormByBodyPart,
+  togglePlanShow,
+}) => {
+  const { toggleGymFilter, currentExercise } = useTrainingPlanDay();
 
-  const buttons = [
+  const [buttons, setButtons] = useState([
     {
       icon: <PlanIcon width={24} height={24} />,
-      action: () => togglePlanShow(),
+      actionId: ActionButtonsEnum.PLAN,
       isActive: false,
     },
-    // {
-    //   icon: <RecordsIcon width={24} height={24} color={"#ffff"} />,
-    //   action: () => {},
-    //   isActive: false,
-    // },
     {
       icon: <GymIcon width={24} height={24} />,
-      action: () => {},
-      isActive: false,
+      actionId: ActionButtonsEnum.GYM,
+      isActive: true,
     },
     {
       icon: <SwitchIcon width={24} height={24} />,
-      action: () => showExerciseFormByBodyPart(currentExercise?.exercise.bodyPart as BodyParts, `${currentExercise?.exercise._id}`),
+      actionId: ActionButtonsEnum.SWITCH,
       isActive: false,
     },
     {
       icon: <Icon name="plus" size={24} color={"#ffff"} />,
-      action: ()=> incrementSeriesNumber(`${currentExercise?.exercise._id}`,currentExercise?.series!, currentExercise?.reps!),
+      actionId: ActionButtonsEnum.INCREMENT,
       isActive: false,
     },
     {
       icon: <Icon name="minus" size={24} color={"#ffff"} />,
-      action: () => decrementSeriesNumber(`${currentExercise?.exercise._id}`,currentExercise?.series!, currentExercise?.reps!),
+      actionId: ActionButtonsEnum.DECREMENT,
       isActive: false,
     },
     {
       icon: <RemoveIcon width={24} height={24} />,
-      action: () => deleteExerciseFromPlan(currentExercise?.exercise._id),
+      actionId: ActionButtonsEnum.REMOVE,
       isActive: false,
     },
-  ];
+  ]);
 
-  const {currentExercise} = useTrainingPlanDay()
-
-  /// Increment the series number of an current exercise
-  const incrementSeriesNumber = async (
-    exercise: string,
-    series: number,
-    reps: string
-  ) => {
-    await getExerciseToAddFromForm(exercise, series + 1, reps, true);
+  const toggleButtonActive = (id: ActionButtonsEnum) => {
+    setButtons((prev) =>
+      prev.map((b) =>
+        b.actionId === id ? { ...b, isActive: !b.isActive } : b
+      )
+    );
   };
 
-  /// Decrement the series number of an current exercise
-  const decrementSeriesNumber = async (
-    exercise: string,
-    series: number,
-    reps: string
-  ) => {
-    await getExerciseToAddFromForm(exercise, series - 1, reps, true);
+  const handleButtonPress = async (id: ActionButtonsEnum) => {
+    switch (id) {
+      case ActionButtonsEnum.PLAN:
+        togglePlanShow();
+        break;
+      case ActionButtonsEnum.GYM:
+        toggleGymFilter();
+        toggleButtonActive(ActionButtonsEnum.GYM);
+        break;
+      case ActionButtonsEnum.SWITCH:
+        if (currentExercise)
+          showExerciseFormByBodyPart(
+            currentExercise.exercise.bodyPart,
+            currentExercise.exercise._id!
+          );
+        break;
+      case ActionButtonsEnum.INCREMENT:
+        if (currentExercise)
+          await getExerciseToAddFromForm(
+            currentExercise.exercise._id!,
+            currentExercise.series + 1,
+            currentExercise.reps,
+            true
+          );
+        break;
+      case ActionButtonsEnum.DECREMENT:
+        if (currentExercise)
+          await getExerciseToAddFromForm(
+            currentExercise.exercise._id!,
+            currentExercise.series - 1,
+            currentExercise.reps,
+            true
+          );
+        break;
+      case ActionButtonsEnum.REMOVE:
+        await deleteExerciseFromPlan(currentExercise?.exercise._id);
+        break;
+    }
   };
+
   return (
     <View
       className="flex flex-row justify-between px-5 w-full"
@@ -102,8 +146,10 @@ const TrainingPlanDayActionsButtons: React.FC<
         <CustomButton
           key={index}
           buttonStyleSize={ButtonSize.square}
-          buttonStyleType={ButtonStyle.grey}
-          onPress={button.action}
+          buttonStyleType={
+            button.isActive ? ButtonStyle.outline : ButtonStyle.grey
+          }
+          onPress={() => handleButtonPress(button.actionId)}
           customSlots={[button.icon]}
         />
       ))}
