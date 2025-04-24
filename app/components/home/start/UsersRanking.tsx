@@ -34,29 +34,29 @@ const UsersRanking: React.FC = () => {
   return (
     <View className="h-full w-full flex flex-col gap-2">
       <Text
-        className="text-primaryColor text-lg"
+        className="text-primaryColor smallPhone:text-base midPhone:text-lg"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Ranking
       </Text>
-      <View className="flex flex-row ">
+      {/* <View className="flex flex-row ">
         <Text
           className={"text-primaryColor"}
           style={{ fontFamily: "OpenSans_400Regular" }}
         >
           {myPosition}. {myInfo ? `${myInfo.name} - ${myInfo.elo}ELO` : ""}
         </Text>
-      </View>
+      </View> */}
       <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64  ">
         {ranking.length ? (
           ranking.map((ele: UserBaseInfo, index: number) => {
             let color = "text-white";
-            let fontSize = "text-sm";
+            let fontSize = "smallPhone:text-[12px] midPhone:text-sm";
             if (myInfo && ele.name === myInfo.name) {
               color = "text-primaryColor";
             }
             if (index === 0) {
-              fontSize = "text-lg";
+              fontSize = "smallPhone:text-base midPhone:text-lg";
             }
             return (
               <View className="flex flex-row " key={index}>

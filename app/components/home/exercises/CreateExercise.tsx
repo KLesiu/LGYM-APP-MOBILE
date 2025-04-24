@@ -132,7 +132,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       <View className="w-full h-full">
         <View className="px-5 py-2">
           <Text
-            className="text-3xl text-white"
+            className="smallPhone:text-2xl midPhone:text-3xl text-white"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {props.form ? "Edit Exercise" : "New Exercise"}
@@ -142,7 +142,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View className="flex flex-row items-center" style={{ gap: 8 }}>
             <ExerciseIcon />
             <Text
-              className="text-xl text-white"
+              className="smallPhone:text-lg midPhone:text-xl text-white"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Set an exercise
@@ -151,7 +151,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  text-base"
+              className="  text-white smallPhone:text-sm midPhone:text-base"
             >
               Name:
             </Text>
@@ -170,7 +170,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
+              className="  text-white smallPhone:text-sm midPhone:text-base"
             >
               BodyPart:
             </Text>
@@ -194,7 +194,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
+              className="  text-white smallPhone:text-sm midPhone:text-base"
             >
               Description:
             </Text>

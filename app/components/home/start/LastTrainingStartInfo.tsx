@@ -37,7 +37,7 @@ const LastTrainingStartInfo: React.FC = () => {
     >
       <View>
         <Text
-          className="text-primaryColor text-lg"
+          className="text-primaryColor smallPhone:text-base midPhone:text-lg"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Last Training:
@@ -45,13 +45,13 @@ const LastTrainingStartInfo: React.FC = () => {
         {!error && lastTrainingInfo && Object.keys(lastTrainingInfo).length ? (
           <View className="flex">
             <Text
-              className="text-white text-sm"
+              className="text-white smallPhone:text-[12px] midPhone:text-sm"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Date: {new Date(lastTrainingInfo.createdAt!).toLocaleString()}
             </Text>
             <Text
-              className="text-white text-sm"
+              className="text-white smallPhone:text-[12px] midPhone:text-sm"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Type: {lastTrainingInfo.planDay.name}
@@ -59,7 +59,7 @@ const LastTrainingStartInfo: React.FC = () => {
           </View>
         ) : (
           <Text
-            className="text-white text-sm"
+            className="text-white smallPhone:text-[12px] midPhone:text-sm"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             {error}

@@ -40,7 +40,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
   return (
     <View>
       <TouchableOpacity style={styles.button} onPress={toggleDropdown}>
-        <Text style={styles.buttonText}>
+        <Text className="smallPhone:text-base midPhone:text-lg">
           {selectedItem ? selectedItem.label : "Choose option"}
         </Text>
       </TouchableOpacity>
@@ -74,9 +74,6 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 5,
     alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 16,
   },
   overlay: {
     flex: 1,

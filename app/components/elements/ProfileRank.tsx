@@ -5,6 +5,7 @@ interface ProfileRankProps{
     rank:string
 }
 
+
 const ProfileRank:React.FC<ProfileRankProps>=(props)=>{
     const [rankSrc,setSrcRank] = useState<ImageProps>()
     const getRank = async()=>{
@@ -23,6 +24,6 @@ const ProfileRank:React.FC<ProfileRankProps>=(props)=>{
         getRank()
     },[])
    
-    return   <Image className="h-24 w-24"  source={rankSrc as ImageProps} />
+    return   <Image className="smallPhone:h-20 smallPhone:w-20 midPhone:h-24 midPhone:w-24 "  source={rankSrc as ImageProps} />
 }
 export default ProfileRank

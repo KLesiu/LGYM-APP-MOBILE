@@ -14,8 +14,8 @@ export enum ButtonStyle {
 export enum ButtonSize{
   none= "p-0",
   small ="py-2 px-1",
-  regular = 'py-4 px-2',
-  xl = 'py-6 px-4',
+  regular = 'smallPhone:py-2 smallPhone:px-1 middPhone:py-4 midPhone:px-2',
+  xl = 'smallPhone:py-4 smallPhone:px-2 midPhone:py-6 midPhone:px-4',
   xxl = 'py-8 px-6',
   long = "py-2 px-6",
   square = "p-3",

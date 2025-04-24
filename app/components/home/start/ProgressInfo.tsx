@@ -36,35 +36,35 @@ const ProgressInfo: React.FC = () => {
     <Card customClasses="items-center">
       <View>
         <Text
-          className="text-primaryColor text-lg"
+          className="text-primaryColor smallPhone:text-base midPhone:text-lg"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Progress
         </Text>
-        <View className="flex flex-col h-36 justify-around">
+        <View className="flex flex-col justify-around">
           {userInfo ? (
-            <View className="flex flex-col" style={{gap:8}}>
+            <View className="flex flex-col " style={{gap:8}}>
               <Text
-                className="text-white text-sm"
+                className="text-white smallPhone:text-[12px] midPhone:text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 Current Rank: {userInfo.profileRank}
               </Text>
               <Text
-                className="text-white text-sm"
+                className="text-white smallPhone:text-[12px] midPhone:text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 Elo: {userInfo.elo}
               </Text>
               <Text
-                className="text-white text-sm"
+                className="text-white smallPhone:text-[12px] midPhone:text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 Next Rank: {userInfo.nextRank.name}
               </Text>
               {progress > 0 && <ProgressBar width={progress} />}
               <Text
-                className="text-white text-sm"
+                className="text-white smallPhone:text-[12px] midPhone:text-sm"
                 style={{ fontFamily: "OpenSans_400Regular" }}
               >
                 Completed: {progress}%
