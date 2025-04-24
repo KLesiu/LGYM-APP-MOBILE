@@ -1,22 +1,29 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import {  PlanDayExercisesFormVm, PlanDayVm } from "../../../../../interfaces/PlanDay";
+import {
+  PlanDayExercisesFormVm,
+  PlanDayVm,
+} from "../../../../../interfaces/PlanDay";
 import { TrainingSessionScores } from "../../../../../interfaces/Training";
 import { GymForm } from "../../../../../interfaces/Gym";
+import { LastExerciseScoresWithGym } from "../../../../../interfaces/Exercise";
 
 interface TrainingPlanDayContextType {
-    setPlanDay: (planDay: PlanDayVm) => void;
-    planDay: PlanDayVm | undefined;
-    setTrainingSessionScores: (
-      scores: Array<TrainingSessionScores>) => void;
-    trainingSessionScores: Array<TrainingSessionScores>;
-    currentExercise: PlanDayExercisesFormVm | undefined;
-    setCurrentExercise: (exercise: PlanDayExercisesFormVm) => void;
-    gym: GymForm | undefined;
-    planDayName:string,
-    exercisesInPlanList:PlanDayExercisesFormVm[] | undefined,
-    isGymFilterActive:boolean
-    setIsGymFilterActive: (isActive:boolean) => void
-    toggleGymFilter: () => void
+  setPlanDay: (planDay: PlanDayVm) => void;
+  planDay: PlanDayVm | undefined;
+  setTrainingSessionScores: (scores: Array<TrainingSessionScores>) => void;
+  trainingSessionScores: Array<TrainingSessionScores>;
+  currentExercise: PlanDayExercisesFormVm | undefined;
+  setCurrentExercise: (exercise: PlanDayExercisesFormVm) => void;
+  gym: GymForm | undefined;
+  planDayName: string;
+  exercisesInPlanList: PlanDayExercisesFormVm[] | undefined;
+  isGymFilterActive: boolean;
+  setIsGymFilterActive: (isActive: boolean) => void;
+  toggleGymFilter: () => void;
+  lastExerciseScoresWithGym: LastExerciseScoresWithGym[];
+  setLastExerciseScoresWithGym: (
+    lastExerciseScoresWithGym: LastExerciseScoresWithGym[]
+  ) => void;
 }
 
 const TrainingPlanDayContext = createContext<TrainingPlanDayContextType | null>(
@@ -39,15 +46,19 @@ interface TrainingPlanDayProviderProps {
 }
 
 const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
-  children,gym
+  children,
+  gym,
 }) => {
   const [planDay, setPlanDay] = useState<PlanDayVm>();
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
   >([]);
-  const [currentExercise, setCurrentExercise] = useState<PlanDayExercisesFormVm>();
+  const [currentExercise, setCurrentExercise] =
+    useState<PlanDayExercisesFormVm>();
   const [isGymFilterActive, setIsGymFilterActive] = useState(true);
-
+  const [lastExerciseScoresWithGym, setLastExerciseScoresWithGym] = useState<
+    LastExerciseScoresWithGym[]
+  >([]);
   useEffect(() => {
     if (planDay && planDay.exercises) {
       const initialScores = planDay.exercises.flatMap((exercise) => {
@@ -71,14 +82,32 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
     }
   }, [planDay]);
 
-  const planDayName = useMemo(()=>planDay?.name ?? "",[planDay?.name])
-  const exercisesInPlanList = useMemo(()=>planDay?.exercises,[planDay])
+  const planDayName = useMemo(() => planDay?.name ?? "", [planDay?.name]);
+  const exercisesInPlanList = useMemo(() => planDay?.exercises, [planDay]);
 
   const toggleGymFilter = () => {
-    setIsGymFilterActive((prev) => !prev);}
+    setIsGymFilterActive((prev) => !prev);
+  };
 
   return (
-    <TrainingPlanDayContext.Provider value={{exercisesInPlanList,currentExercise,setCurrentExercise,setPlanDay,gym,planDayName, planDay,trainingSessionScores,setTrainingSessionScores,toggleGymFilter, isGymFilterActive,setIsGymFilterActive}}>
+    <TrainingPlanDayContext.Provider
+      value={{
+        exercisesInPlanList,
+        currentExercise,
+        setCurrentExercise,
+        setPlanDay,
+        gym,
+        planDayName,
+        planDay,
+        trainingSessionScores,
+        setTrainingSessionScores,
+        toggleGymFilter,
+        isGymFilterActive,
+        setIsGymFilterActive,
+        lastExerciseScoresWithGym,
+        setLastExerciseScoresWithGym
+      }}
+    >
       {children}
     </TrainingPlanDayContext.Provider>
   );

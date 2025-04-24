@@ -9,7 +9,7 @@ interface TrainingPlanDayExerciseLastScoresInfoProps {}
 const TrainingPlanDayExerciseLastScoresInfo: React.FC<
   TrainingPlanDayExerciseLastScoresInfoProps
 > = () => {
-  const { gym, isGymFilterActive, currentExercise } = useTrainingPlanDay();
+  const { gym, isGymFilterActive, currentExercise ,lastExerciseScoresWithGym,setLastExerciseScoresWithGym} = useTrainingPlanDay();
   const { apiURL, userId } = useHomeContext();
   const [lastExerciseScoresText, setLastExerciseScoresText] =
     useState<string>();
@@ -31,12 +31,28 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
           series: currentExercise?.series,
           reps: currentExercise?.reps,
           exerciseId: currentExercise?.exercise._id,
+          exerciseName:currentExercise?.exercise.name
         }),
       }
     );
     const result = await response.json() as LastExerciseScoresWithGym;
+    if(isGymFilterActive && !checkIsExerciseScoresExistsInState(result)){
+        const newLastExerciseScoresWithGym = [...lastExerciseScoresWithGym, result]
+        setLastExerciseScoresWithGym(newLastExerciseScoresWithGym);
+    }
     setLastExerciseScoresText(createLastExerciseScoresText(result));
   };
+
+  const checkIsExerciseScoresExistsInState = (lastExerciseScoresWithGymArg:LastExerciseScoresWithGym)=>{
+      const { seriesScores ,exerciseId} = lastExerciseScoresWithGymArg;
+      let isExist = false
+      lastExerciseScoresWithGym.forEach((lastExerciseScores) => {
+        if(lastExerciseScores.exerciseId === exerciseId && lastExerciseScores.seriesScores.length === seriesScores.length){
+          isExist = true;
+        }
+      })
+      return isExist;
+  }
 
   const createLastExerciseScoresText = (
     lastExerciseScores: LastExerciseScoresWithGym

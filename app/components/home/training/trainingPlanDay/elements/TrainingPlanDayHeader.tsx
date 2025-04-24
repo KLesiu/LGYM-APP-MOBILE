@@ -11,7 +11,7 @@ interface TrainingPlanDayHeaderProps {
 const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
   hideDaySection,
 }) => {
-  const { gymName, planDayName } = useTrainingPlanDay();
+  const { gym, planDayName } = useTrainingPlanDay();
   return (
     <Header customClasses="justify-between">
       <Pressable onPress={hideDaySection}  style={{ borderRadius: 10000 }}
@@ -35,7 +35,7 @@ const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
               fontFamily: "OpenSans_400Regular",
             }}
           >
-            {gymName}
+            {gym?.name}
           </Text>
         </View>
       </View>

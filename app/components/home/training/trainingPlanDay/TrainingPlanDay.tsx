@@ -4,7 +4,7 @@ import { LastExerciseScores } from "../../../../../interfaces/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
-import { TrainingSessionScores } from "../../../../../interfaces/Training";
+import { TrainingForm, TrainingSessionScores } from "../../../../../interfaces/Training";
 import useInterval from "../../../../../helpers/hooks/useInterval";
 import ViewLoading from "../../../elements/ViewLoading";
 import { GymForm } from "../../../../../interfaces/Gym";
@@ -22,13 +22,19 @@ import TrainingPlanDayHeaderButtons from "./elements/TrainingPlanDayHeaderButton
 import CreatePlanDay from "../../plan/planDay/CreatePlanDay";
 import PlanDayProvider from "../../plan/planDay/CreatePlanDayContext";
 import { PlanDayVm } from "../../../../../interfaces/PlanDay";
+import { Message } from "../../../../../enums/Message";
+import { WeightUnits } from "../../../../../enums/Units";
+import { ExerciseScoresTrainingForm } from "../../../../../interfaces/ExercisesScores";
+import { TrainingSummary } from "../../../../../interfaces/Training";
+import { TrainingViewSteps } from "../TrainingView";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
-  hideAndDeleteTrainingSession: () => void;
-  addTraining: (exercises: TrainingSessionScores[]) => Promise<void>;
+  hideAndDeleteTrainingSession: () => Promise<void>;
   dayId: string;
   gym: GymForm | undefined;
+  setStep: (step: number) => void;
+  setTrainingSummary: (trainingSummary: TrainingSummary) => void;
 }
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
@@ -39,6 +45,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     trainingSessionScores,
     setTrainingSessionScores,
     setCurrentExercise,
+    gym,
+    lastExerciseScoresWithGym,
   } = useTrainingPlanDay();
   const [
     isTrainingPlanDayExerciseFormShow,
@@ -82,6 +90,46 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     if (isPlanDayFromStorage) return;
     await getInformationAboutPlanDay();
   };
+
+    /// Submit training and delete training session from localStorage then show summary.
+    const addTraining = async (
+      exercises: TrainingSessionScores[],
+    ) => {
+      const type = props.dayId;
+      const createdAt = new Date();
+      const training = exercises.map((ele: TrainingSessionScores) => {
+        const exerciseScoresTrainingForm: ExerciseScoresTrainingForm = {
+          exercise: `${ele.exercise._id}`,
+          reps: ele.reps,
+          series: ele.series,
+          weight: ele.weight,
+          unit: WeightUnits.KILOGRAMS,
+        };
+        return exerciseScoresTrainingForm;
+      });
+  
+  
+      const body:TrainingForm = {
+        type: type!,
+        createdAt: createdAt,
+        exercises: training,
+        gym: gym?._id!,
+        lastExercisesScores: lastExerciseScoresWithGym
+      }
+      const response = await fetch(`${apiURL}/api/${userId}/addTraining`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const result: TrainingSummary = await response.json();
+      if (result.msg === Message.Created) {
+        await props.hideAndDeleteTrainingSession();
+        props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
+        props.setTrainingSummary(result);
+      }
+    };
 
   /// Load training session scores from local storage
   const loadTrainingSessionScores = async () => {
@@ -218,7 +266,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
 
     if (!newPlanDay) return;
-    if (isIncrementDecrement) setCurrentExercise(newExercise);
+    setCurrentExercise(newExercise);
     await addExerciseToPlanDay(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
   };
@@ -254,10 +302,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       : (parsedScores as TrainingSessionScores[]);
   };
 
-  const sendTraining = (exercises: TrainingSessionScores[]) => {
+  const sendTraining = async(exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
     if (!result) return;
-    props.addTraining(result);
+    await addTraining(result);
   };
 
   const togglePlanShow = () => {
@@ -267,7 +315,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   return (
     <View className="absolute w-full h-full text-white bg-bgColor flex flex-col">
       {planDay && Object.keys(planDay).length ? (
-        <View style={{gap:8}} className=" h-full flex flex-col justify-between pb-4">
+        <View
+          style={{ gap: 8 }}
+          className=" h-full flex flex-col justify-between pb-4"
+        >
           <View
             className="flex flex-col items-center flex-1"
             style={{ gap: 16 }}

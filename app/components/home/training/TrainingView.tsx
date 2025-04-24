@@ -12,6 +12,7 @@ import { LastExerciseScores } from "../../../../interfaces/Exercise";
 import { ExerciseScoresTrainingForm } from "../../../../interfaces/ExercisesScores";
 import { GymForm } from "../../../../interfaces/Gym";
 import {
+  TrainingForm,
   TrainingSessionScores,
   TrainingSummary as TrainingSummaryInterface,
 } from "./../../../../interfaces/Training";
@@ -20,7 +21,7 @@ import TrainingPlanDayProvider from "./trainingPlanDay/TrainingPlanDayContext";
 
 interface TrainingViewProps {}
 
-enum TrainingViewSteps {
+export enum TrainingViewSteps {
   None = -1,
   CHOOSE_GYM = 0,
   CHOOSE_DAY = 1,
@@ -30,7 +31,7 @@ enum TrainingViewSteps {
 }
 
 const TrainingView: React.FC<TrainingViewProps> = () => {
-  const { apiURL, userId, toggleMenuButton } = useHomeContext();
+  const {  toggleMenuButton } = useHomeContext();
 
   ///GYM
   const [gym, setGym] = useState<GymForm>();
@@ -123,41 +124,7 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     resetTrainingView();
   };
 
-  /// Submit training and delete training session from localStorage then show summary.
-  const addTraining = async (
-    exercises: TrainingSessionScores[],
-  ) => {
-    const type = dayId;
-    const createdAt = new Date();
-    const training = exercises.map((ele: TrainingSessionScores) => {
-      const exerciseScoresTrainingForm: ExerciseScoresTrainingForm = {
-        exercise: `${ele.exercise._id}`,
-        reps: ele.reps,
-        series: ele.series,
-        weight: ele.weight,
-        unit: WeightUnits.KILOGRAMS,
-      };
-      return exerciseScoresTrainingForm;
-    });
-    const response = await fetch(`${apiURL}/api/${userId}/addTraining`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        type: type,
-        createdAt: createdAt,
-        exercises: training,
-        gym: gym?._id,
-      }),
-    });
-    const result: TrainingSummaryInterface = await response.json();
-    if (result.msg === Message.Created) {
-      await hideAndDeleteTrainingSession();
-      setStep(TrainingViewSteps.TRAINING_SUMMARY);
-      setTrainingSummary(result);
-    }
-  };
+
 
   const isAddTrainingActive = useMemo(
     () => step === TrainingViewSteps.PLAN_DAY_TO_RESUME,
@@ -178,9 +145,10 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
             <TrainingPlanDay
               hideDaySection={goBackFromTrainingPlanDay}
               hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
-              addTraining={addTraining}
               dayId={dayId as string}
               gym={gym}
+              setStep={setStep}
+              setTrainingSummary={setTrainingSummary}
             />
           </TrainingPlanDayProvider>
         );
