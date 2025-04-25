@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { DropdownItem } from "./../../../../../interfaces/Dropdown";
 import {
@@ -15,6 +15,8 @@ import CreateExercise from "../../exercises/CreateExercise";
 import ViewLoading from "../../../elements/ViewLoading";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { useHomeContext } from "../../HomeContext";
+import useDeviceCategory from "../../../../../helpers/hooks/useDeviceCategory";
+import { DeviceCategory } from "../../../../../enums/DeviceCategory";
 
 const CreatePlanDayExerciseList: React.FC = () => {
   const { exercisesList, setExercisesList, goBack, goToNext } =
@@ -33,6 +35,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
   const [viewLoading, setViewLoading] = useState<boolean>(false);
+  const  deviceCategory  = useDeviceCategory();
 
   useEffect(() => {
     init();
@@ -64,6 +67,15 @@ const CreatePlanDayExerciseList: React.FC = () => {
   const clearAutoCompleteQuery = useCallback(() => {
     setClearQuery(false);
   },[])
+
+  const returnGap = useMemo(()=>{
+    switch (deviceCategory) {
+      case DeviceCategory.SMALL:
+        return 8;
+      default:
+        return 16;
+    }
+  },[deviceCategory])
   
   const removeExerciseFromList = useCallback((item: ExerciseForPlanDay) => {
     const newList = exercisesList.filter(
@@ -111,17 +123,17 @@ const CreatePlanDayExerciseList: React.FC = () => {
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="text-3xl text-white"
+          className="smallPhone:text-xl midPhone:text-3xl text-white"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Create plan list
         </Text>
       </View>
-      <View className="px-5" style={{ gap: 16 }}>
+      <View className="px-5" style={{ gap:returnGap }}>
         <View className="flex flex-row" style={{ gap: 8 }}>
           <PlanNameIcon />
           <Text
-            className="text-xl text-white"
+            className="smallPhone:text-base midPhone:text-xl text-white"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             New Exercises
@@ -130,7 +142,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
         <View style={{ gap: 4 }} className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="  text-white  text-base"
+            className="  text-white  smallPhone:text-sm  midPhone:text-base"
           >
             Exercise name
           </Text>
@@ -146,7 +158,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
           <View style={{ gap: 4 }} className="flex flex-col flex-1">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  text-base"
+              className="  text-white  smallPhone:text-sm  midPhone:text-base"
             >
               Series:
             </Text>
@@ -163,7 +175,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
           <View style={{ gap: 4 }} className="flex flex-col flex-1">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white text-base"
+              className="text-white smallPhone:text-sm  midPhone:text-base"
             >
               Reps:
             </Text>
@@ -195,7 +207,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
         removeExerciseFromList={removeExerciseFromList}
         editExerciseFromList={editExerciseFromList}
       />
-      <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
+      <View className="px-5 flex flex-row justify-between" style={{ gap: 20 }}>
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
           onPress={goBack}

@@ -81,90 +81,82 @@ const Records: React.FC<RecordsProps> = () => {
     []
   );
 
-  return (
-    <View className="flex  flex-1 relative w-full  bg-bgColor">
-      {popUp ? (
-          <RecordsPopUp offPopUp={chagePopUpValue} exerciseId={exercise} />
+  return popUp ? (
+    <RecordsPopUp offPopUp={chagePopUpValue} exerciseId={exercise} />
+  ) : (
+    <View
+      style={{ gap: 16 }}
+      className="flex flex-col items-center w-full h-full"
+    >
+      {viewLoading ? (
+        <ViewLoading />
       ) : (
-        <View
-          style={{ gap: 16 }}
-          className="flex flex-col items-center w-full h-full"
+        <ScrollView
+          className="w-full h-full"
+          contentContainerStyle={{ padding: 10 }}
         >
-          {viewLoading ? (
-            <ViewLoading />
-          ) : (
-            <ScrollView
-              className="w-full h-full"
-              contentContainerStyle={{ padding: 10 }}
-            >
-              {records && records.length ? (
-                <View className="flex flex-col w-full" style={{ gap: 8 }}>
-                  {records.map((record) => (
-                    <View
-                      style={{ borderRadius: 8 }}
-                      key={record._id}
-                      className="w-full bg-[#282828]  p-4 "
+          {records && records.length ? (
+            <View className="flex flex-col w-full" style={{ gap: 8 }}>
+              {records.map((record) => (
+                <View
+                  style={{ borderRadius: 8 }}
+                  key={record._id}
+                  className="w-full bg-[#282828] smallPhone:p-3  midPhone:p-4 "
+                >
+                  <View className="flex flex-row justify-between">
+                    <Text
+                      style={{
+                        fontFamily: "OpenSans_700Bold",
+                      }}
+                      className="smallPhone:text-base midPhone:text-xl font-bold text-primaryColor"
                     >
-                      <View className="flex flex-row justify-between">
-                        <Text
-                          style={{
-                            fontFamily: "OpenSans_700Bold",
-                          }}
-                          className="text-xl font-bold text-primaryColor"
-                        >
-                          {record.exerciseDetails.name}
-                        </Text>
-                        <View style={{ gap: 16 }} className="flex flex-row">
-                          <CustomButton
-                            buttonStyleSize={ButtonSize.none}
-                            onPress={() =>
-                              updateSettedExerciseRecord(
-                                record.exerciseDetails._id
-                              )
-                            }
-                            customSlots={[
-                              <ProgressIcon />
-                            ]}
-                          />
-                          <CustomButton
-                            buttonStyleSize={ButtonSize.none}
-                            onPress={() => deleteDialogVisible(true, record)}
-                            customSlots={[<RemoveIcon />]}
-                          />
-                        </View>
-                      </View>
-
-                      <Text
-                        style={{ fontFamily: "OpenSans_400Regular" }}
-                        className="text-base text-white"
-                      >
-                        Weight: {record.weight} {record.unit}
-                      </Text>
-                      <Text
-                        style={{ fontFamily: "OpenSans_400Regular" }}
-                        className="text-base text-white"
-                      >
-                        Date: {new Date(record.date).toLocaleString()}
-                      </Text>
+                      {record.exerciseDetails.name}
+                    </Text>
+                    <View style={{ gap: 16 }} className="flex flex-row">
+                      <CustomButton
+                        buttonStyleSize={ButtonSize.none}
+                        onPress={() =>
+                          updateSettedExerciseRecord(record.exerciseDetails._id)
+                        }
+                        customSlots={[<ProgressIcon />]}
+                      />
+                      <CustomButton
+                        buttonStyleSize={ButtonSize.none}
+                        onPress={() => deleteDialogVisible(true, record)}
+                        customSlots={[<RemoveIcon />]}
+                      />
                     </View>
-                  ))}
+                  </View>
+
+                  <Text
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                    className="smallPhone:text-sm midPhone:text-base text-white"
+                  >
+                    Weight: {record.weight} {record.unit}
+                  </Text>
+                  <Text
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                    className="smallPhone:text-sm midPhone:text-base text-white"
+                  >
+                    Date: {new Date(record.date).toLocaleString()}
+                  </Text>
                 </View>
-              ) : (
-                <></>
-              )}
-            </ScrollView>
+              ))}
+            </View>
+          ) : (
+            <></>
           )}
-          <CustomButton
-            text="Add new records"
-            onPress={() => {
-              setExercise(undefined);
-              showPopUp();
-            }}
-            width="w-full"
-            buttonStyleType={ButtonStyle.success}
-          />
-        </View>
+        </ScrollView>
       )}
+      <CustomButton
+        text="Add new records"
+        onPress={() => {
+          setExercise(undefined);
+          showPopUp();
+        }}
+        width="w-full"
+        buttonStyleType={ButtonStyle.success}
+      />
       <ConfirmDialog
         visible={isDeleteRecordConfirmationDialogVisible}
         title={`Delete: ${

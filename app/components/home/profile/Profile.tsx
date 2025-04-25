@@ -94,23 +94,22 @@ const Profile: React.FC = () => {
 
   return (
     <BackgroundMainSection>
-      <View className="w-full h-full p-4 py-8 flex flex-col flex-1">
-        <View className="w-20">
+      <View className="w-full h-full p-4 relative  flex flex-col flex-1">
           <CustomButton
             onPress={goBack}
             text="Back"
             buttonStyleType={ButtonStyle.outline}
             buttonStyleSize={ButtonSize.regular}
+            width="w-20"
           />
-        </View>
         <View
           style={{ gap: 8 }}
-          className="flex items-center flex-col py-3 px-6"
+          className="flex items-center flex-col px-6"
         >
           <View className="flex ">{rankComponent}</View>
           <View style={{ gap: 4 }} className="flex flex-col items-center">
             <Text
-              className="text-primaryColor font-bold w-full text-center text-2xl"
+              className="text-primaryColor font-bold w-full text-center smallPhone:text-lg midPhone:text-2xl"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               {yourProfile?.name}
@@ -146,7 +145,7 @@ const Profile: React.FC = () => {
           onTabChange={setActiveComponent}
         />
 
-        <View className="w-full flex-1 mt-4">{currentTab}</View>
+        <View className="w-full flex-1">{currentTab}</View>
       </View>
       {viewLoading ? <ViewLoading /> : <Text></Text>}
     </BackgroundMainSection>

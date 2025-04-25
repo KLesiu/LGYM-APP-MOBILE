@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { View } from "react-native";
 import PlanIcon from "./../../../../../../img/icons/planIcon.svg";
 import GymIcon from "./../../../../../../img/icons/gymIcon.svg";
@@ -12,6 +12,8 @@ import CustomButton, {
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
 import { BodyParts } from "../../../../../../enums/BodyParts";
+import useDeviceCategory from "../../../../../../helpers/hooks/useDeviceCategory";
+
 
 enum ActionButtonsEnum {
   PLAN = "PLAN",
@@ -56,38 +58,69 @@ const TrainingPlanDayActionsButtons: React.FC<
 }) => {
   const { toggleGymFilter, currentExercise } = useTrainingPlanDay();
 
+  const deviceCategory = useDeviceCategory();
+
+  const setIconsSize = useMemo(()=>{
+    let size = 24;
+    switch (deviceCategory) {
+      case "smallPhone":
+        size = 16;
+        break;
+      case "bugdetPhone":
+        size = 18;
+        break;
+      case "midPhone":
+        size = 24;
+        break;
+      case "largePhone":
+        size = 24;
+        break;
+      case "maxPhone":
+        size = 24;
+        break;
+      case "ultraPhone":
+        size = 24;
+        break;
+      default:
+        size = 24;
+    }
+    return size;
+  }, [deviceCategory]) 
+
   const [buttons, setButtons] = useState([
     {
-      icon: <PlanIcon width={24} height={24} />,
+      icon: <PlanIcon width={setIconsSize} height={setIconsSize}/>,
       actionId: ActionButtonsEnum.PLAN,
       isActive: false,
     },
     {
-      icon: <GymIcon width={24} height={24} />,
+      icon: <GymIcon width={setIconsSize} height={setIconsSize} />,
       actionId: ActionButtonsEnum.GYM,
       isActive: true,
     },
     {
-      icon: <SwitchIcon width={24} height={24} />,
+      icon: <SwitchIcon width={setIconsSize} height={setIconsSize} />,
       actionId: ActionButtonsEnum.SWITCH,
       isActive: false,
     },
     {
-      icon: <Icon name="plus" size={24} color={"#ffff"} />,
+      icon: <Icon name="plus" size={setIconsSize} color={"#ffff"} />,
       actionId: ActionButtonsEnum.INCREMENT,
       isActive: false,
     },
     {
-      icon: <Icon name="minus" size={24} color={"#ffff"} />,
+      icon: <Icon name="minus" size={setIconsSize} color={"#ffff"} />,
       actionId: ActionButtonsEnum.DECREMENT,
       isActive: false,
     },
     {
-      icon: <RemoveIcon width={24} height={24} />,
+      icon: <RemoveIcon width={setIconsSize} height={setIconsSize} />,
       actionId: ActionButtonsEnum.REMOVE,
       isActive: false,
     },
   ]);
+
+
 
   const toggleButtonActive = (id: ActionButtonsEnum) => {
     setButtons((prev) =>

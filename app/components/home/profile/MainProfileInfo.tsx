@@ -19,7 +19,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
     setEmail(email as string);
   };
   return (
-    <View className="bg-bgColor flex flex-col flex-1 justify-between  items-center  w-full px-4">
+    <View className="bg-bgColor flex flex-col flex-1 justify-between  items-center  w-full px-4 py-2">
       <View style={{ gap: 8 }} className="flex flex-col w-full">
         <Text
           style={{ fontFamily: "OpenSans_300Light" }}

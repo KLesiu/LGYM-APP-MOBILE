@@ -78,70 +78,72 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   };
   return (
     <Dialog>
-      <Text
-        className="text-center text-xl text-white"
-        style={{
-          fontFamily: "OpenSans_700Bold",
-        }}
-      >
-        {props.exerciseId && selectedExercise ? "EDIT RECORD" : "NEW RECORD"}
-      </Text>
-      <View className="flex flex-col w-full p-2" style={{ gap: 16 }}>
-        <View className="flex flex-col w-full">
-          <Text
-            className="text-white text-base"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Exercise:
-          </Text>
-          {props.exerciseId && selectedExercise ? (
+      <View className="w-full h-full">
+        <Text
+          className="text-center smallPhone:text-base  midPhone:text-xl text-white"
+          style={{
+            fontFamily: "OpenSans_700Bold",
+          }}
+        >
+          {props.exerciseId && selectedExercise ? "Edit record" : "New record"}
+        </Text>
+        <View className="flex flex-col w-full p-2" style={{ gap: 8 }}>
+          <View className="flex flex-col w-full">
+            <Text
+              className="text-white smallPhone:text-sm midPhone:text-base"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Exercise:
+            </Text>
+            {props.exerciseId && selectedExercise ? (
+              <TextInput
+                style={{ fontFamily: "OpenSans_400Regular" }}
+                className="w-full smallPhone:px-1 smallPhone:py-3 midPhone:px-2 midPhone:py-4 bg-secondaryColor rounded-lg  text-white "
+                readOnly={true}
+                value={selectedExercise.label}
+              />
+            ) : (
+              <AutoComplete
+                data={exercisesToSelect}
+                onSelect={(item) => setSelectedExercise(item)}
+                value={selectedExercise?.label || ""}
+                onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
+              />
+            )}
+          </View>
+          <View className="flex flex-col w-full">
+            <Text
+              className="text-white smallPhone:text-sm midPhone:text-base"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Weight:
+            </Text>
             <TextInput
               style={{ fontFamily: "OpenSans_400Regular" }}
-              className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
-              readOnly={true}
-              value={selectedExercise.label}
+              className="w-fullsmallPhone:px-1 smallPhone:py-3 midPhone:px-2 midPhone:py-4 bg-secondaryColor rounded-lg  text-white "
+              onChangeText={validator}
+              value={weight}
+              keyboardType="numeric"
             />
-          ) : (
-            <AutoComplete
-              data={exercisesToSelect}
-              onSelect={(item) => setSelectedExercise(item)}
-              value={selectedExercise?.label || ""}
-              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
-            />
-          )}
+          </View>
         </View>
-        <View className="flex flex-col w-full">
-          <Text
-            className="text-white text-base"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Weight:
-          </Text>
-          <TextInput
-            style={{ fontFamily: "OpenSans_400Regular" }}
-            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
-            onChangeText={validator}
-            value={weight}
-            keyboardType="numeric"
+        <View
+          className="w-full flex flex-row justify-between"
+          style={{ gap: 16 }}
+        >
+          <CustomButton
+            text="Cancel"
+            onPress={props.offPopUp}
+            buttonStyleType={ButtonStyle.cancel}
+            width="flex-1"
+          />
+          <CustomButton
+            text="Add"
+            onPress={createNewRecord}
+            buttonStyleType={ButtonStyle.success}
+            width="flex-1"
           />
         </View>
-      </View>
-      <View
-        className="w-full flex flex-row justify-between"
-        style={{ gap: 16 }}
-      >
-        <CustomButton
-          text="Cancel"
-          onPress={props.offPopUp}
-          buttonStyleType={ButtonStyle.cancel}
-          width="flex-1"
-        />
-        <CustomButton
-          text="Add"
-          onPress={createNewRecord}
-          buttonStyleType={ButtonStyle.success}
-          width="flex-1"
-        />
       </View>
     </Dialog>
   );

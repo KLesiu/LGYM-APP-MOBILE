@@ -61,14 +61,14 @@ const TrainingPlanDayExerciseListCard: React.FC<
   return (
     <Pressable
       onPress={() => setCurrentExercise(exercise)}
-      className="bg-secondaryColor flex flex-row items-center justify-between w-full p-2  rounded-lg"
+      className="bg-secondaryColor flex flex-row items-center justify-between w-full smallPhone:p-1 midPhone:p-2  rounded-lg"
       key={key}
     >
       <View className="flex flex-row items-center" style={{ gap: 20 }}>
         <Checkbox value={isDone} />
         <View>
           <Text
-            className="text-base text-white "
+            className="smallPhone:text-sm  midPhone:text-base text-white "
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
@@ -76,7 +76,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
             {exercise.exercise.name}
           </Text>
           <Text
-            className="text-sm text-white "
+            className="smallPhone:text-[12px] midPhone:text-sm text-white "
             style={{
               fontFamily: "OpenSans_300Light",
             }}

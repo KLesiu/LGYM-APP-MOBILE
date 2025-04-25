@@ -29,7 +29,9 @@ interface ButtonProps {
   buttonStyleSize?: ButtonSize;
   customSlots?: JSX.Element[];
   width?:string,
-  children?:React.ReactNode
+  children?:React.ReactNode,
+  disabled?:boolean,
+  customClasses?:string,
 }
 
 const CustomButton: React.FC<ButtonProps> = (props) => {
@@ -54,7 +56,8 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
   return (
     <Pressable
       style={{ borderRadius: 8 }}
-      className={` ${props.buttonStyleSize ? props.buttonStyleSize : ButtonSize.regular} m-0 ${props.buttonStyleType}  ${props.width}  flex justify-center items-center`}
+      disabled={props.disabled}
+      className={` ${props.buttonStyleSize ? props.buttonStyleSize : ButtonSize.regular} m-0 ${props.buttonStyleType}  ${props.width} ${props.customClasses}  flex justify-center items-center ${props.disabled ? 'opacity-50' : 'opacity-100'}`}
       onPress={props.onPress}
     >
       {props.children}

@@ -15,9 +15,8 @@ const TrainingPlanDayHeaderButtons: React.FC<
     <View className="flex flex-row justify-between px-5">
       <CustomButton
         onPress={showExerciseForm}
-        buttonStyleSize={ButtonSize.regular}
         buttonStyleType={ButtonStyle.success}
-        textSize="text-base"
+        textSize="smallPhone:text-sm midPhone:text-base"
         text="Add Exercise"
       />
     </View>

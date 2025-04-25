@@ -141,10 +141,10 @@ const TrainingPlan: React.FC = () => {
           </View>
         ) : (
           <View className="flex flex-col h-full">
-            <View className="p-5" style={{ gap: 32 }}>
+            <View className="p-5" style={{ gap: 16 }}>
               <View>
                 <Text
-                  className="text-base text-primaryColor  font-bold"
+                  className="smallPhone:text-sm midPhone:text-base text-primaryColor  font-bold"
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
@@ -155,7 +155,7 @@ const TrainingPlan: React.FC = () => {
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
-                  className="text-3xl text-white font-bold"
+                  className="smallPhone:text-xl midPhone:text-3xl text-white font-bold"
                 >
                   {planConfig.name}
                 </Text>
