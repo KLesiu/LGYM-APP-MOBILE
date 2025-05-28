@@ -23,10 +23,12 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@shopify/react-native-skia": "1.5.0",
+    "axios": "^1.9.0",
     "expo": "^52.0.0",
     "expo-app-loading": "^2.1.1",
     "expo-font": "~13.0.3",
     "expo-location": "~18.0.5",
+    "expo-router": "~4.0.17",
     "expo-splash-screen": "~0.29.21",
     "expo-status-bar": "~2.0.1",
     "expo-updates": "~0.26.16",
@@ -46,8 +48,7 @@
     "react-native-vector-icons": "^10.0.2",
     "react-native-web": "~0.19.13",
     "uniqid": "^5.4.0",
-    "victory-native": "^41.16.1",
-    "expo-router": "~4.0.17"
+    "victory-native": "^41.16.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

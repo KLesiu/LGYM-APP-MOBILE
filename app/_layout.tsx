@@ -2,7 +2,6 @@ import { Stack } from "expo-router";
 import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { NativeWindStyleSheet } from "nativewind";
-import { Alert, BackHandler, StatusBar } from "react-native";
 import {
   OpenSans_400Regular,
   OpenSans_700Bold,
