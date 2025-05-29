@@ -10,6 +10,7 @@ import {
 } from "@expo-google-fonts/open-sans";
 import { Caveat_400Regular } from "@expo-google-fonts/caveat";
 import { NavigationContainer } from "@react-navigation/native";
+import AppProvider from "./AppContext";
 
 NativeWindStyleSheet.setOutput({ default: "native" });
 
@@ -39,7 +40,9 @@ const Layout: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <Stack screenOptions={{ headerShown: false }} />
+      <AppProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+      </AppProvider>
     </NavigationContainer>
   );
 };

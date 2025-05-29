@@ -1,10 +1,9 @@
 import { View, Text } from "react-native";
+import { useAppContext } from "../../AppContext";
+interface ValidationViewProps {}
 
-interface ValidationViewProps {
-  errors?: string[];
-}
-
-const ValidationView: React.FC<ValidationViewProps> = ({ errors }) => {
+const ValidationView: React.FC<ValidationViewProps> = () => {
+  const { errors } = useAppContext();
   return (
     <>
       {errors && errors.length ? (

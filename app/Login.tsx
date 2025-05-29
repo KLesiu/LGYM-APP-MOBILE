@@ -1,58 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MiniLoading from "./components/elements/MiniLoading";
-
 import ShowIcon from "./../img/icons/showIcon.svg";
 import HideIcon from "./../img/icons/hideIcon.svg";
-import CustomButton, { ButtonSize, ButtonStyle } from "./components/elements/CustomButton";
-import { Message } from "../enums/Message";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "./components/elements/CustomButton";
 import ValidationView from "./components/elements/ValidationView";
-import { useRouter } from "expo-router"; 
-
+import { useRouter, usePathname } from "expo-router";
+import { useAppContext } from "./AppContext";
 
 const Login: React.FC = () => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}/api/login`;
-  const router = useRouter(); 
-
-  const [errors, setErrors] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
-  const login = async (): Promise<void> => {
-    setLoading(true);
-    if (!username || !password) {
-      setLoading(false);
-      setErrors([Message.FieldRequired]);
-      return;
-    }
-    const response = await fetch(apiURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: username,
-        password: password,
-      }),
-    });
-    if (!response.ok) {
-      setLoading(false);
-      setErrors([Message.DidntFind]);
-      return;
-    }
-    const data = await response.json();
+  const { postAPI, setErrors } = useAppContext();
 
-    await AsyncStorage.setItem("token", data.token);
-    await AsyncStorage.setItem("username", data.req.name);
-    await AsyncStorage.setItem("id", data.req._id);
-    await AsyncStorage.setItem("email", data.req.email);
-
+  useEffect(() => {
     setErrors([]);
-    setLoading(false);
+  }, [usePathname()]);
+
+  const login = async (): Promise<void> => {
+    await postAPI("/login", loginSuccessCallback, {
+      name: username,
+      password: password,
+    });
+  };
+
+  const loginSuccessCallback = async (response: any) => {
+    await AsyncStorage.setItem("token", response.token);
+    await AsyncStorage.setItem("username", response.req.name);
+    await AsyncStorage.setItem("id", response.req._id);
+    await AsyncStorage.setItem("email", response.req.email);
     router.push("/Home");
   };
 
@@ -99,7 +83,6 @@ const Login: React.FC = () => {
             onChangeText={(text: string) => setPassword(text)}
             style={{
               fontFamily: "OpenSans_400Regular",
-
             }}
             className="w-full px-2 py-4 bg-secondaryColor rounded-lg text-white  "
             secureTextEntry={secureTextEntry}
@@ -109,7 +92,11 @@ const Login: React.FC = () => {
             className="absolute top-[39%] h-[50px]   text-sm flex items-center justify-center   right-2"
             onPress={() => setSecureTextEntry(!secureTextEntry)}
           >
-            {secureTextEntry ? <ShowIcon stroke={'white'} /> : <HideIcon stroke={'white'}/>}
+            {secureTextEntry ? (
+              <ShowIcon stroke={"white"} />
+            ) : (
+              <HideIcon stroke={"white"} />
+            )}
           </Pressable>
         </View>
       </View>
@@ -120,8 +107,8 @@ const Login: React.FC = () => {
         text="Login"
         buttonStyleSize={ButtonSize.xl}
       />
-      {loading ? <MiniLoading /> : <Text></Text>}
-      <ValidationView errors={errors} />
+      <MiniLoading />
+      <ValidationView />
     </View>
   );
 };

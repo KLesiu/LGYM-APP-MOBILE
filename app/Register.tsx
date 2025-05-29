@@ -1,51 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
-import { useRouter } from "expo-router"; 
+import { usePathname, useRouter } from "expo-router";
 import MiniLoading from "./components/elements/MiniLoading";
-import CustomButton, { ButtonSize, ButtonStyle } from "./components/elements/CustomButton";
-import ResponseMessage from "../interfaces/ResponseMessage";
-import { Message } from "../enums/Message";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "./components/elements/CustomButton";
 import ValidationView from "./components/elements/ValidationView";
+import { useAppContext } from "./AppContext";
+import { Message } from "../enums/Message";
 
 const Register: React.FC = () => {
-  const [errors, setErrors] = useState<string[]>([]);
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [rpassword, setRPassword] = useState<string>();
   const [email, setEmail] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const apiURL = `${process.env.REACT_APP_BACKEND}/api/register`;
   const router = useRouter();
 
+  const { postAPI, setErrors } = useAppContext();
+
+  useEffect(() => {
+    setErrors([]);
+  }, [usePathname()]);
+
   const register = async (): Promise<void> => {
-    setLoading(true);
-    const response = await fetch(apiURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: username,
-        password: password,
-        cpassword: rpassword,
-        email: email,
-      }),
-    })
-    const result:  ResponseMessage = await response.json();
-    setLoading(false)
-    if(result.msg === Message.Created){
-      return router.push("Login");
-    }
-    setErrors([result.msg])
+    await postAPI("/register", registerSuccessCalback, {
+      name: username,
+      password: password,
+      cpassword: rpassword,
+      email: email,
+    });
   };
   const goToPreload = () => {
     return router.push("/");
   };
 
+  const registerSuccessCalback = (response: any) => {
+    if (response.msg !== Message.Created) return;
+    router.push("Login");
+  };
+
   return (
-    <View style={{gap:16}} className="flex items-center flex-col h-full justify-start bg-bgColor p-4">
+    <View
+      style={{ gap: 16 }}
+      className="flex items-center flex-col h-full justify-start bg-bgColor p-4"
+    >
       <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
         <Image className="w-full h-full mb-[5%]" source={logoLGYM} />
       </Pressable>
@@ -116,9 +117,15 @@ const Register: React.FC = () => {
           />
         </View>
       </View>
-      <CustomButton  text="Register" onPress={register} width="w-full" buttonStyleType={ButtonStyle.success} buttonStyleSize={ButtonSize.xl} />
-      {loading ? <MiniLoading /> : <Text></Text>}
-      <ValidationView errors={errors} />
+      <CustomButton
+        text="Register"
+        onPress={register}
+        width="w-full"
+        buttonStyleType={ButtonStyle.success}
+        buttonStyleSize={ButtonSize.xl}
+      />
+      <MiniLoading />
+      <ValidationView />
     </View>
   );
 };
