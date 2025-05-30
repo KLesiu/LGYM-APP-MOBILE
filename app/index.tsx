@@ -1,44 +1,36 @@
 import {
-  Text,
   Image,
   View,
   ImageBackground,
 } from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
 import backgroundLGYM from "./../img/backgroundLGYMApp500.png";
-import { useState, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "expo-router"; 
-import Loading from "./components/elements/Loading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomButton, { ButtonSize, ButtonStyle } from "./components/elements/CustomButton";
+import { useAppContext } from "./AppContext";
+import Loading from "./components/elements/Loading";
 
 const Preload: React.FC = () => {
   const router = useRouter(); 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const apiURL = `${process.env.REACT_APP_BACKEND}/api/checkToken`;
+  const {getAPI,token} = useAppContext()
 
   useEffect(() => {
     checkUserSession();
   }, []);
 
-  const checkUserSession = async (): Promise<void> => {
-    const token = await AsyncStorage.getItem("token");
-    if (!token) return;
-    const response = await fetch(apiURL, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token} `,
-      },
-    });
-    const result = await response.json();
-    if (!result.isValid) return;
+  const checkUserSession = useCallback(async (): Promise<void> => {
+    await getAPI('/checkToken', setSession);
+  }, [token]); 
+  
+  const setSession = async (result: any): Promise<void> => {
+    if (!result || !result.isValid) return;
     await AsyncStorage.setItem("username", result.user.name);
     await AsyncStorage.setItem("id", result.user._id);
     await AsyncStorage.setItem("email", result.user.email);
     router.push("/Home");
-  };
+  }
 
   const handleLoginPress: VoidFunction = (): void => {
     router.push("/Login"); 
@@ -48,11 +40,8 @@ const Preload: React.FC = () => {
     router.push("/Register"); 
   };
 
-  const offLoading: VoidFunction = (): void => {
-    setIsLoading(false);
-  };
 
-  return (
+  return ( 
     <View className="h-full bg-bgColor">
       <ImageBackground
         resizeMode="cover"
@@ -82,8 +71,7 @@ const Preload: React.FC = () => {
           </View>
         </View>
       </ImageBackground>
-
-      {isLoading ? <Loading offLoading={offLoading} /> : <Text></Text>}
+      <Loading />
     </View>
   );
 };

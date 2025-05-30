@@ -31,7 +31,7 @@ const Layout: React.FC = () => {
   const loadAsyncResources = async () => {
     try {
       await SplashScreen.preventAutoHideAsync();
-      fontsLoaded;
+      if(!fontsLoaded)return;
       await SplashScreen.hideAsync();
     } catch (error) {
       console.error("Błąd ładowania zasobów:", error);

@@ -9,11 +9,9 @@ const Start: React.FC = () => {
   return (
     <BackgroundMainSection>
       <View style={{ gap: 8 }} className="flex h-full w-full flex-col">
-       <LastTrainingStartInfo />
-       <ProgressInfo />
-        <Card customClasses="flex-1">
-          <UsersRanking />
-        </Card>
+        <LastTrainingStartInfo />
+        <ProgressInfo />
+        <UsersRanking />
       </View>
     </BackgroundMainSection>
   );

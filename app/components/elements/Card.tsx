@@ -1,12 +1,14 @@
 import { Pressable, View } from "react-native";
+import ViewLoading from "./ViewLoading";
 
 interface CardProps {
   children: React.ReactNode;
   onPress?: () => void;
   customClasses?: string;
+  isLoading?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ children, onPress, customClasses = "" }) => {
+const Card: React.FC<CardProps> = ({ children, onPress, customClasses = "" ,isLoading}) => {
   const Container = onPress ? Pressable : View;
 
   return (
@@ -15,7 +17,7 @@ const Card: React.FC<CardProps> = ({ children, onPress, customClasses = "" }) =>
       style={{ gap: 20 }}
       {...(onPress && { onPress })}
     >
-      {children}
+      {isLoading ? <ViewLoading /> : children}
     </Container>
   );
 };

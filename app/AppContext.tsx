@@ -1,7 +1,8 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { get, post } from "./services/http";
 import { AxiosError, AxiosResponse } from "axios";
 import { Message } from "../enums/Message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AppContextProps {
   postAPI: (
@@ -9,10 +10,12 @@ interface AppContextProps {
     callback: any,
     data?: Record<string, any>
   ) => Promise<void>;
-  getAPI: (url: string, params?: Record<string, any>) => Promise<void>;
+  getAPI: (url: string,callback:any, params?: Record<string, any>) => Promise<void>;
   errors: string[];
   isLoading: boolean;
   setErrors: (errors: string[]) => void;
+  clearBeforeLogout: () => Promise<void>;
+  token?: string;
 }
 
 const AppContext = createContext<AppContextProps | null>(null);
@@ -30,10 +33,31 @@ interface AppProviderProps {
 }
 const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [canAppStart, setCanAppStart] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const [token,setToken] = useState<string>();
 
-  const getAPI = async (url: string, params?: Record<string, any>) => {
-    const response = await get(url, params);
+  useEffect(()=>{
+    getTokenFromLocalStorage()
+  },[])
+
+  const getTokenFromLocalStorage = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if(token)setToken(token);
+    setCanAppStart(true);
+  }
+
+  const getAPI = async (url: string,callback:any, params?: Record<string, any>) => {
+    try{
+      setIsLoading(true);
+      const response = await get(url,token, params);
+      callback(response);
+    }catch (error) {
+      catchErrors(error);
+    }
+    finally {
+      setIsLoading(false);
+    }
   };
 
   const postAPI = async (
@@ -44,31 +68,45 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       setErrors([]);
-      const response = await post(url, data);
+      const response = await post(url,token, data);
       callback(response);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        if (!error.response) {
-          setErrors([error.message]);
-          return;
-        }
-        const { status, data } = error.response as AxiosResponse;
-        if (status === 500) {
-          setErrors([Message.TryAgain]);
-        } else {
-          setErrors([data.msg]);
-        }
+      catchErrors(error);
       }
-    } finally {
+    finally {
       setIsLoading(false);
     }
   };
 
+  const catchErrors = (error:any)=>{
+    if (error instanceof AxiosError) {
+      if (!error.response) {
+        setErrors([error.message]);
+        return;
+      }
+      const { status, data } = error.response as AxiosResponse;
+      if (status === 500) {
+        setErrors([Message.TryAgain]);
+      } else {
+        setErrors([data.msg]);
+      }
+  }}
+
+  const clearBeforeLogout = async () => {
+    const keys = await AsyncStorage.getAllKeys();
+    keys.forEach(async(ele) => await deleteFromStorage(ele));
+    setToken(undefined);
+  }
+
+  const deleteFromStorage = async (key: string): Promise<void> => {
+    await AsyncStorage.removeItem(key);
+  };
+
   return (
     <AppContext.Provider
-      value={{ postAPI, getAPI, errors, isLoading, setErrors }}
+      value={{ postAPI, getAPI, errors, isLoading, setErrors,clearBeforeLogout,token }}
     >
-      {children}
+      {canAppStart && children}
     </AppContext.Provider>
   );
 };

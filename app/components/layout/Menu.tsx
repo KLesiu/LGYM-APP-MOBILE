@@ -8,8 +8,6 @@ import Start from "../home/start/Start";
 import Exercises from "../home/exercises/Exercises";
 import Gym from "../home/gym/Gym";
 import Charts from "../home/charts/Charts";
-
-
 import HomeIcon from "./../../../img/icons/homeIcon.svg";
 import ProfileIcon from "./../../../img/icons/profileIcon.svg";
 import HistoryIcon from "./../../../img/icons/calendarIcon.svg";
@@ -20,10 +18,6 @@ import GymIcon from "./../../../img/icons/gymIcon.svg";
 import MenuIcon from "./../../../img/icons/menuIcon.svg";
 import ChartIcon from "./../../../img/icons/chartsIcon.svg";
 import { useHomeContext } from "../home/HomeContext";
-
-
-
-
 
 
 const Menu: React.FC = () => {

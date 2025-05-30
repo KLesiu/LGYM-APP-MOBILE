@@ -8,21 +8,27 @@ import { useCallback, useEffect, useState } from "react";
 import { LastTrainingInfo } from "../../../../interfaces/Training";
 import { useHomeContext } from "../HomeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ResponseMessage from "../../../../interfaces/ResponseMessage";
 import Card from "../../elements/Card";
+import { useAppContext } from "../../../AppContext";
 
 const LastTrainingStartInfo: React.FC = () => {
-  const { changeView, apiURL } = useHomeContext();
 
-  const [error, setError] = useState<string>("");
   const [lastTrainingInfo, setLastTrainingInfo] = useState<LastTrainingInfo>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const {getAPI} = useAppContext();
+  const { changeView } = useHomeContext();
+
 
   const getLastTrainingInfo = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/getLastTraining`);
-    const data: ResponseMessage | LastTrainingInfo = await response.json();
-    if ("msg" in data) return setError(data.msg);
-    setLastTrainingInfo(data);
+    try{
+      const id = await AsyncStorage.getItem("id");
+      await getAPI(`/${id}/getLastTraining`,(response:LastTrainingInfo)=>setLastTrainingInfo(response));
+    }
+    finally{
+      setIsLoading(false);
+    }
+  
   };
 
   const navigateTo = useCallback((component: JSX.Element) => {
@@ -33,7 +39,7 @@ const LastTrainingStartInfo: React.FC = () => {
     getLastTrainingInfo();
   },[])
   return (
-    <Card
+    <Card isLoading={isLoading} 
     >
       <View>
         <Text
@@ -42,29 +48,20 @@ const LastTrainingStartInfo: React.FC = () => {
         >
           Last Training:
         </Text>
-        {!error && lastTrainingInfo && Object.keys(lastTrainingInfo).length ? (
-          <View className="flex">
+        <View className="flex">
             <Text
               className="text-white smallPhone:text-[12px] midPhone:text-sm"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              Date: {new Date(lastTrainingInfo.createdAt!).toLocaleString()}
+              Date: {new Date(lastTrainingInfo?.createdAt!).toLocaleString()}
             </Text>
             <Text
               className="text-white smallPhone:text-[12px] midPhone:text-sm"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              Type: {lastTrainingInfo.planDay.name}
+              Type: {lastTrainingInfo?.planDay.name}
             </Text>
           </View>
-        ) : (
-          <Text
-            className="text-white smallPhone:text-[12px] midPhone:text-sm"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            {error}
-          </Text>
-        )}
       </View>
       <CustomButton
         buttonStyleSize={ButtonSize.xl}

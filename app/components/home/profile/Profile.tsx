@@ -17,6 +17,7 @@ import CustomButton, {
 } from "../../elements/CustomButton";
 import TabView from "../../elements/TabView";
 import { useHomeContext } from "../HomeContext";
+import { useAppContext } from "../../../AppContext";
 
 const Profile: React.FC = () => {
   const { apiURL, toggleMenuButton, changeView } = useHomeContext();
@@ -28,13 +29,16 @@ const Profile: React.FC = () => {
   const [rankComponent, setRankComponent] = useState<JSX.Element>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
+  const {clearBeforeLogout} = useAppContext();
+
+  
+
   useEffect(() => {
     init();
   }, []);
 
   const logout = async (): Promise<void> => {
-    const keys = await AsyncStorage.getAllKeys();
-    keys.forEach((ele) => deleteFromStorage(ele));
+    await clearBeforeLogout();
     router.push("/");
   };
 
@@ -79,9 +83,7 @@ const Profile: React.FC = () => {
     setViewLoading(false);
   };
 
-  const deleteFromStorage = async (key: string): Promise<void> => {
-    await AsyncStorage.removeItem(key);
-  };
+
 
   const goBack = useCallback(() => {
     toggleMenuButton(false);
@@ -147,7 +149,7 @@ const Profile: React.FC = () => {
 
         <View className="w-full flex-1">{currentTab}</View>
       </View>
-      {viewLoading ? <ViewLoading /> : <Text></Text>}
+      {/* {viewLoading ? <ViewLoading /> : <Text></Text>} */}
     </BackgroundMainSection>
   );
 };

@@ -3,53 +3,48 @@ import { View, Text, ScrollView } from "react-native";
 import ViewLoading from "../../elements/ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserBaseInfo } from "./../../../../interfaces/User";
+import { useAppContext } from "../../../AppContext";
+import Card from "../../elements/Card";
 
 const UsersRanking: React.FC = () => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
   const [ranking, setRanking] = useState<UserBaseInfo[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [myInfo, setMyInfo] = useState<UserBaseInfo>();
-  const [myPosition, setMyPosition] = useState<number>();
+
+  const { getAPI } = useAppContext();
 
   useEffect(() => {
     getRanking();
   }, []);
 
   const getRanking = async () => {
-    const response = await fetch(`${apiURL}/api/getUsersRanking`);
-    const result = (await response.json()) as UserBaseInfo[];
-    setRanking(result);
-    const username = await AsyncStorage.getItem("username");
-    if (!username) return;
-    const currentMyRanking = result.find((ele: UserBaseInfo, index: number) => {
-      if (ele.name === username) {
-        setMyPosition(index + 1);
-        return true;
-      }
-      return false;
-    });
-    if (!currentMyRanking) return;
-    setMyInfo(currentMyRanking);
+    try {
+      await getAPI("/getUsersRanking", async (response: UserBaseInfo[]) => {
+        setRanking(response);
+        const username = await AsyncStorage.getItem("username");
+        if (!username) return;
+        const currentMyRanking = response.find(
+          (ele: UserBaseInfo) => ele.name === username
+        );
+        if (!currentMyRanking) return;
+        setMyInfo(currentMyRanking);
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <View className="h-full w-full flex flex-col gap-2">
-      <Text
-        className="text-primaryColor smallPhone:text-base midPhone:text-lg"
-        style={{ fontFamily: "OpenSans_700Bold" }}
-      >
-        Ranking
-      </Text>
-      {/* <View className="flex flex-row ">
+    <Card isLoading={isLoading} customClasses="flex-1">
+      <View className="h-full w-full flex flex-col gap-2">
         <Text
-          className={"text-primaryColor"}
-          style={{ fontFamily: "OpenSans_400Regular" }}
+          className="text-primaryColor smallPhone:text-base midPhone:text-lg"
+          style={{ fontFamily: "OpenSans_700Bold" }}
         >
-          {myPosition}. {myInfo ? `${myInfo.name} - ${myInfo.elo}ELO` : ""}
+          Ranking
         </Text>
-      </View> */}
-      <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64  ">
-        {ranking.length ? (
-          ranking.map((ele: UserBaseInfo, index: number) => {
+        <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64  ">
+          {ranking.map((ele: UserBaseInfo, index: number) => {
             let color = "text-white";
             let fontSize = "smallPhone:text-[12px] midPhone:text-sm";
             if (myInfo && ele.name === myInfo.name) {
@@ -74,13 +69,11 @@ const UsersRanking: React.FC = () => {
                 </Text>
               </View>
             );
-          })
-        ) : (
-          <ViewLoading />
-        )}
-        <View className="h-10 w-full"></View>
-      </ScrollView>
-    </View>
+          })}
+          <View className="h-10 w-full"></View>
+        </ScrollView>
+      </View>
+    </Card>
   );
 };
 export default UsersRanking;
