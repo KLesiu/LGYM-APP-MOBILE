@@ -3,7 +3,6 @@ import UsersRanking from "./UsersRanking";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import LastTrainingStartInfo from "./LastTrainingStartInfo";
 import ProgressInfo from "./ProgressInfo";
-import Card from "../../elements/Card";
 
 const Start: React.FC = () => {
   return (

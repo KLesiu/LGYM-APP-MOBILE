@@ -7,62 +7,61 @@ import AddTraining from "../training/Training";
 import { useCallback, useEffect, useState } from "react";
 import { LastTrainingInfo } from "../../../../interfaces/Training";
 import { useHomeContext } from "../HomeContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
 
 const LastTrainingStartInfo: React.FC = () => {
-
   const [lastTrainingInfo, setLastTrainingInfo] = useState<LastTrainingInfo>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const {getAPI} = useAppContext();
-  const { changeView } = useHomeContext();
-
+  const { getAPI } = useAppContext();
+  const { changeView, userId } = useHomeContext();
 
   const getLastTrainingInfo = async () => {
-    try{
-      const id = await AsyncStorage.getItem("id");
-      await getAPI(`/${id}/getLastTraining`,(response:LastTrainingInfo)=>setLastTrainingInfo(response));
-    }
-    finally{
+    try {
+      await getAPI(`/${userId}/getLastTraining`, (response: LastTrainingInfo) =>
+        setLastTrainingInfo(response)
+      );
+    } finally {
       setIsLoading(false);
     }
-  
   };
 
   const navigateTo = useCallback((component: JSX.Element) => {
     changeView(component);
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     getLastTrainingInfo();
-  },[])
+  }, []);
+
   return (
-    <Card isLoading={isLoading} 
-    >
-      <View>
-        <Text
-          className="text-primaryColor smallPhone:text-base midPhone:text-lg"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          Last Training:
-        </Text>
-        <View className="flex">
+    <Card isLoading={isLoading}>
+      {!isLoading  && (
+        <View>
+          <Text
+            className="text-primaryColor smallPhone:text-base midPhone:text-lg text-xl"
+            style={{ fontFamily: "OpenSans_700Bold" }}
+          >
+            Last Training:
+          </Text>
+          <View className="flex">
             <Text
-              className="text-white smallPhone:text-[12px] midPhone:text-sm"
-              style={{ fontFamily: "OpenSans_400Regular" }}
+              className="text-white smallPhone:text-[12px] midPhone:text-sm text-md"
+              style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Date: {new Date(lastTrainingInfo?.createdAt!).toLocaleString()}
+              Date: {lastTrainingInfo && lastTrainingInfo.createdAt ? new Date(lastTrainingInfo.createdAt).toLocaleString() : "N/A"}
             </Text>
             <Text
-              className="text-white smallPhone:text-[12px] midPhone:text-sm"
-              style={{ fontFamily: "OpenSans_400Regular" }}
+              className="text-white smallPhone:text-[12px] midPhone:text-sm text-md"
+              style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Type: {lastTrainingInfo?.planDay.name}
+              Type: {lastTrainingInfo && lastTrainingInfo.planDay.name ? lastTrainingInfo?.planDay.name : "N/A"}
             </Text>
           </View>
-      </View>
+        </View>
+      )}
+
       <CustomButton
         buttonStyleSize={ButtonSize.xl}
         onPress={() => navigateTo(<AddTraining />)}
@@ -73,4 +72,4 @@ const LastTrainingStartInfo: React.FC = () => {
   );
 };
 
-export default LastTrainingStartInfo
+export default LastTrainingStartInfo;

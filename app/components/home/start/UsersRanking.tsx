@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
-import ViewLoading from "../../elements/ViewLoading";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserBaseInfo } from "./../../../../interfaces/User";
 import { useAppContext } from "../../../AppContext";
@@ -38,32 +37,32 @@ const UsersRanking: React.FC = () => {
     <Card isLoading={isLoading} customClasses="flex-1">
       <View className="h-full w-full flex flex-col gap-2">
         <Text
-          className="text-primaryColor smallPhone:text-base midPhone:text-lg"
+          className="text-primaryColor smallPhone:text-base midPhone:text-lg text-xl"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Ranking
         </Text>
-        <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64  ">
+        <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64 h-64 ">
           {ranking.map((ele: UserBaseInfo, index: number) => {
             let color = "text-white";
-            let fontSize = "smallPhone:text-[12px] midPhone:text-sm";
+            let fontSize = "smallPhone:text-[12px] midPhone:text-sm text-md";
             if (myInfo && ele.name === myInfo.name) {
               color = "text-primaryColor";
             }
             if (index === 0) {
-              fontSize = "smallPhone:text-base midPhone:text-lg";
+              fontSize = "smallPhone:text-base text-lg";
             }
             return (
               <View className="flex flex-row " key={index}>
                 <Text
                   className={color + " mr-2 " + fontSize}
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   {index + 1}
                 </Text>
                 <Text
                   className={color + " " + fontSize}
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   {ele.name} - {ele.elo} ELO
                 </Text>

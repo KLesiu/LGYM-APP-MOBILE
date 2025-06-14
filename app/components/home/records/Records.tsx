@@ -12,6 +12,8 @@ import CustomButton, {
 } from "../../elements/CustomButton";
 import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
+import { useAppContext } from "../../../AppContext";
+import { useHomeContext } from "../HomeContext";
 
 interface RecordsProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -29,6 +31,8 @@ const Records: React.FC<RecordsProps> = () => {
     isDeleteRecordConfirmationDialogVisible,
     setIsDeleteRecordConfirmationDialogVisible,
   ] = useState<boolean>(false);
+  const {userId} = useHomeContext();
+  const {getAPI,setErrors} = useAppContext();
 
   useEffect(() => {
     getRecords();
@@ -53,23 +57,22 @@ const Records: React.FC<RecordsProps> = () => {
   );
 
   const getRecords = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/mainRecords/${id}/getLastMainRecords`
-    );
-    const result = await response.json();
-    setRecords(result);
-    setViewLoading(false);
+    try{
+      await getAPI(`/mainRecords/${userId}/getLastMainRecords`,(response:MainRecordsLast[])=>setRecords(response),undefined,false);
+    }finally{
+      setViewLoading(false);
+    }
   };
 
   const deleteRecord = async () => {
     if (!choosenRecord) return;
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/mainRecords/${choosenRecord._id}/deleteMainRecord`
-    );
-    await response.json();
-    await getRecords();
-    deleteDialogVisible(false);
+    setViewLoading(true);
+    try{
+      await getAPI(`/mainRecords/${choosenRecord._id}/deleteMainRecord`,async()=>await getRecords())
+    }finally{
+      deleteDialogVisible(false);
+      setViewLoading(false);
+    }
   };
 
   const deleteDialogVisible = useCallback(
@@ -101,14 +104,14 @@ const Records: React.FC<RecordsProps> = () => {
                 <View
                   style={{ borderRadius: 8 }}
                   key={record._id}
-                  className="w-full bg-[#282828] smallPhone:p-3  midPhone:p-4 "
+                  className="w-full bg-[#282828] smallPhone:p-3  p-4 "
                 >
                   <View className="flex flex-row justify-between">
                     <Text
                       style={{
                         fontFamily: "OpenSans_700Bold",
                       }}
-                      className="smallPhone:text-base midPhone:text-xl font-bold text-primaryColor"
+                      className="smallPhone:text-base text-xl font-bold text-primaryColor"
                     >
                       {record.exerciseDetails.name}
                     </Text>
@@ -130,13 +133,13 @@ const Records: React.FC<RecordsProps> = () => {
 
                   <Text
                     style={{ fontFamily: "OpenSans_400Regular" }}
-                    className="smallPhone:text-sm midPhone:text-base text-white"
+                    className="smallPhone:text-sm text-base text-white"
                   >
                     Weight: {record.weight} {record.unit}
                   </Text>
                   <Text
                     style={{ fontFamily: "OpenSans_400Regular" }}
-                    className="smallPhone:text-sm midPhone:text-base text-white"
+                    className="smallPhone:text-sm text-base text-white"
                   >
                     Date: {new Date(record.date).toLocaleString()}
                   </Text>

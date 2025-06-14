@@ -11,9 +11,12 @@ import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
+import { useAppContext } from "../../../AppContext";
+import MiniLoading from "../../elements/MiniLoading";
+import ViewLoading from "../../elements/ViewLoading";
 
 const Gym: React.FC = () => {
-  const { toggleMenuButton, apiURL ,hideMenu} = useHomeContext();
+  const { toggleMenuButton, apiURL, hideMenu } = useHomeContext();
 
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
@@ -22,6 +25,9 @@ const Gym: React.FC = () => {
     isDeleteGymConfirmationDialogVisible,
     setIsDeleteConfirmationDialogVisible,
   ] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { userId } = useHomeContext();
+  const { getAPI ,postAPI} = useAppContext();
 
   useEffect(() => {
     init();
@@ -32,10 +38,13 @@ const Gym: React.FC = () => {
   };
 
   const getGyms = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/gym/${id}/getGyms`);
-    const result = await response.json();
-    setGyms(result);
+    try {
+      await getAPI(`/gym/${userId}/getGyms`, (response: GymChoiceInfo[]) =>
+        setGyms(response)
+      );
+    } finally {
+      setIsLoading(false)
+    }
   };
 
   const addNewGym = useCallback(() => {
@@ -52,7 +61,7 @@ const Gym: React.FC = () => {
     await getGyms();
     setIsGymFormVisible(false);
     toggleMenuButton(false);
-    hideMenu()
+    hideMenu();
   }, []);
 
   const deleteDialogVisible = useCallback(
@@ -75,15 +84,13 @@ const Gym: React.FC = () => {
 
   const deleteGym = async () => {
     if (!currentChosenGym) return;
-    const response = await fetch(
-      `${apiURL}/api/gym/${currentChosenGym._id}/deleteGym`,
-      {
-        method: "DELETE",
-      }
-    );
-    const result = await response.json();
-    if (result.msg === Message.Deleted) await getGyms();
-    setIsDeleteConfirmationDialogVisible(false);
+    try{
+      await postAPI(`/gym/${currentChosenGym._id}/deleteGym`, async()=>{
+        await getGyms();
+      })
+    }finally{
+      setIsDeleteConfirmationDialogVisible(false);
+    }
   };
 
   return (
@@ -92,7 +99,7 @@ const Gym: React.FC = () => {
         <View className="flex flex-col ">
           <View className="flex w-full  justify-between flex-row  items-center">
             <Text
-              className="smallPhone:text-base midPhone:text-lg text-white  font-bold "
+              className="smallPhone:text-base text-lg text-white  font-bold "
               style={{
                 fontFamily: "OpenSans_700Bold",
               }}
@@ -101,7 +108,7 @@ const Gym: React.FC = () => {
             </Text>
 
             <CustomButton
-            textSize="smallPhone:text-sm midPhone:text-base"
+              textSize="smallPhone:text-sm text-base"
               onPress={addNewGym}
               textWeight={FontWeights.bold}
               buttonStyleType={ButtonStyle.success}
@@ -109,19 +116,23 @@ const Gym: React.FC = () => {
             />
           </View>
         </View>
-        <ScrollView className="w-full">
-          <View style={{ gap: 8 }} className="flex flex-col pb-12">
-            {gyms.map((gym, index) => (
-              <GymPlace
-                key={index}
-                gym={gym}
-                editGym={editGym}
-                deleteGym={() => deleteDialogVisible(true, gym)}
-                isEditable={true}
-              />
-            ))}
-          </View>
-        </ScrollView>
+        {isLoading ? (
+          <ViewLoading />
+        ) : (
+          <ScrollView className="w-full">
+            <View style={{ gap: 8 }} className="flex flex-col pb-12">
+              {gyms.map((gym, index) => (
+                <GymPlace
+                  key={index}
+                  gym={gym}
+                  editGym={editGym}
+                  deleteGym={() => deleteDialogVisible(true, gym)}
+                  isEditable={true}
+                />
+              ))}
+            </View>
+          </ScrollView>
+        )}
       </View>
       {isGymFormVisible ? (
         <GymFormComponent closeForm={closeForm} gym={currentChosenGym} />

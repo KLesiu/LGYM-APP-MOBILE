@@ -13,12 +13,15 @@ import { DropdownItem } from "../../../../interfaces/Dropdown";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import Card from "../../elements/Card";
 import { useHomeContext } from "../HomeContext";
+import { useAppContext } from "../../../AppContext";
 
 const Exercises: React.FC = () => {
-  const { toggleMenuButton, apiURL, hideMenu } = useHomeContext();
+  const { toggleMenuButton, apiURL, hideMenu, userId } = useHomeContext();
   const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
   const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isGlobalExercisesLoading, setIsGlobalExercisesLoading] =
+    useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseForm | null>(
     null
   );
@@ -26,41 +29,51 @@ const Exercises: React.FC = () => {
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
   const [bodyPart, setBodyPart] = useState<BodyParts | null>(null);
   const [isExerciseFormVisible, setIsExerciseFormVisible] = useState(false);
+  const { getAPI } = useAppContext();
 
   useEffect(() => {
     init();
   }, []);
 
   const init = async () => {
-    setIsLoading(true);
     await Promise.all([
+      checkIsAdmin(),
       getAllGlobalExercises(),
       getAllUserExercises(),
-      checkIsAdmin(),
     ]);
-    setIsLoading(false);
   };
 
-  const getAllGlobalExercises = useCallback(async () => {
-    const response = await fetch(
-      `${apiURL}/api/exercise/getAllGlobalExercises`
-    );
-    if (response.ok) setGlobalExercises(await response.json());
-  }, [apiURL]);
+  const getAllGlobalExercises = async () => {
+    try {
+      await getAPI(
+        `/exercise/getAllGlobalExercises`,
+        (response: ExerciseForm[]) => setGlobalExercises(response)
+      );
+    } finally {
+      setIsGlobalExercisesLoading(false);
+    }
+  };
 
-  const getAllUserExercises = useCallback(async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${apiURL}/api/exercise/${id}/getAllUserExercises`
-    );
-    if (response.ok) setUserExercises(await response.json());
-  }, [apiURL]);
+  const getAllUserExercises = async () => {
+    try {
+      await getAPI(
+        `/exercise/${userId}/getAllUserExercises`,
+        (response: ExerciseForm[]) => setUserExercises(response)
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const checkIsAdmin = useCallback(async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/isAdmin`);
-    setIsAdmin(await response.json());
-  }, [apiURL]);
+  const checkIsAdmin = async () => {
+    try {
+      await getAPI(`/${userId}/isAdmin`, (response: boolean) =>
+        setIsAdmin(response)
+      );
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+    }
+  };
 
   const bodyPartsToSelect = useMemo(
     () =>
@@ -113,13 +126,13 @@ const Exercises: React.FC = () => {
         >
           <View className="flex flex-col">
             <Text
-              className="smallPhone:text-[14px] midPhone:text-base text-primaryColor font-bold"
+              className="smallPhone:text-[14px] text-base text-primaryColor font-bold"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               {item.name}
             </Text>
             <Text
-              className="smallPhone:text-[12px] midPhone:text-sm text-white"
+              className="smallPhone:text-[12px] text-sm text-white"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               BodyPart: {item.bodyPart}
@@ -136,7 +149,7 @@ const Exercises: React.FC = () => {
       <View className="flex flex-col p-4" style={{ gap: 32 }}>
         <View className="flex flex-row items-center justify-between">
           <Text
-            className="text-white smallPhone:text-base midPhone:text-lg font-bold"
+            className="text-white smallPhone:text-base text-lg font-bold"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Filter by body part:
@@ -148,61 +161,71 @@ const Exercises: React.FC = () => {
           />
         </View>
 
-        <View>
-          <View className="flex flex-row items-center justify-between">
-            <Text
-              className="smallPhone:text-base midPhone:text-lg text-white font-bold"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              Global exercises:
-            </Text>
-            {isAdmin && (
-              <CustomButton
-                textSize="smallPhone:text-sm midPhone:text-base"
-                onPress={() => openExerciseForm(true)}
-                textWeight={FontWeights.bold}
-                buttonStyleType={ButtonStyle.success}
-                text="Add new exercise"
+        <View className="flex flex-col" style={{ gap: 16 }}>
+          {!isGlobalExercisesLoading ? (
+            <View className="flex flex-col">
+              <View className="flex flex-row items-center justify-between">
+                <Text
+                  className="smallPhone:text-base text-lg text-white font-bold"
+                  style={{ fontFamily: "OpenSans_700Bold" }}
+                >
+                  Global exercises:
+                </Text>
+                {isAdmin && (
+                  <CustomButton
+                    textSize="smallPhone:text-sm text-base"
+                    onPress={() => openExerciseForm(true)}
+                    textWeight={FontWeights.bold}
+                    buttonStyleType={ButtonStyle.success}
+                    text="Add new exercise"
+                  />
+                )}
+              </View>
+              <FlatList
+                data={filteredExercises(globalExercises)}
+                renderItem={renderExerciseItem}
+                keyExtractor={(item) => `${item._id}`}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingVertical: 10 }}
+                ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
               />
-            )}
-          </View>
-          <FlatList
-            data={filteredExercises(globalExercises)}
-            renderItem={renderExerciseItem}
-            keyExtractor={(item) => `${item._id}`}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingVertical: 10 }}
-            ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
-          />
-          <View className="flex flex-row items-center justify-between">
-            <Text
-              className="smallPhone:text-base midPhone:text-lg text-white font-bold"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              User exercises:
-            </Text>
-            <CustomButton
-              textSize="smallPhone:text-sm midPhone:text-base"
-              onPress={() => openExerciseForm()}
-              textWeight={FontWeights.bold}
-              buttonStyleType={ButtonStyle.success}
-              text="Add new exercise"
-            />
-          </View>
-          <FlatList
-            data={filteredExercises(userExercises)}
-            renderItem={renderExerciseItem}
-            keyExtractor={(item) => `${item._id}`}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingVertical: 10 }}
-            ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
-          />
+            </View>
+          ) : (
+            <ViewLoading />
+          )}
+          {!isLoading ? (
+            <View>
+              <View className="flex flex-row items-center justify-between">
+                <Text
+                  className="smallPhone:text-base text-lg text-white font-bold"
+                  style={{ fontFamily: "OpenSans_700Bold" }}
+                >
+                  User exercises:
+                </Text>
+                <CustomButton
+                  textSize="smallPhone:text-sm text-base"
+                  onPress={() => openExerciseForm()}
+                  textWeight={FontWeights.bold}
+                  buttonStyleType={ButtonStyle.success}
+                  text="Add new exercise"
+                />
+              </View>
+              <FlatList
+                data={filteredExercises(userExercises)}
+                renderItem={renderExerciseItem}
+                keyExtractor={(item) => `${item._id}`}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingVertical: 10 }}
+                ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
+              />
+            </View>
+          ) : (
+            <ViewLoading />
+          )}
         </View>
       </View>
-
-      {isLoading && <ViewLoading />}
       {isExerciseFormVisible && (
         <CreateExercise
           closeForm={closeExerciseForm}

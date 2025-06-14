@@ -1,23 +1,14 @@
 import { View, Text } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useState } from "react";
-import { UserProfileInfo } from "./../../../../interfaces/User";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
+import { useMemo } from "react";
 
 interface MainProfileInfoProps {
   logout: VoidFunction;
-  userInfo?: UserProfileInfo;
+  email?: string | null;
 }
 
-const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
-  const [email, setEmail] = useState<string>();
-  useEffect(() => {
-    getDataFromStorage();
-  }, []);
-  const getDataFromStorage = async (): Promise<void> => {
-    const email = await AsyncStorage.getItem("email");
-    setEmail(email as string);
-  };
+const MainProfileInfo: React.FC<MainProfileInfoProps> = ({ email, logout }) => {
+  const emailToDisplay = useMemo(()=>email || "No email provided", [email]);
   return (
     <View className="bg-bgColor flex flex-col flex-1 justify-between  items-center  w-full px-4 py-2">
       <View style={{ gap: 8 }} className="flex flex-col w-full">
@@ -35,14 +26,14 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = (props) => {
             style={{ fontFamily: "OpenSans_300Light" }}
             className="text-gray-200/80 font-light leading-4 text-sm"
           >
-            {email}
+            {emailToDisplay}
           </Text>
         </View>
       </View>
       <CustomButton
         width="w-full"
         text="Logout"
-        onPress={props.logout}
+        onPress={logout}
         buttonStyleType={ButtonStyle.success}
       />
     </View>

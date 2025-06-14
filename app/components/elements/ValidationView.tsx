@@ -1,9 +1,17 @@
 import { View, Text } from "react-native";
 import { useAppContext } from "../../AppContext";
+import { useEffect } from "react";
 interface ValidationViewProps {}
 
 const ValidationView: React.FC<ValidationViewProps> = () => {
-  const { errors } = useAppContext();
+  const { errors,setErrors } = useAppContext();
+
+  useEffect(()=>{
+    return()=>{
+    setErrors([]); 
+    }
+  },[])
+
   return (
     <>
       {errors && errors.length ? (

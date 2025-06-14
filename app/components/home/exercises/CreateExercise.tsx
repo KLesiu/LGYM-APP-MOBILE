@@ -12,6 +12,8 @@ import React from "react";
 import Dialog from "../../elements/Dialog";
 import ExerciseIcon from "./../../../../img/icons/exercisesIcon.svg";
 import ValidationView from "../../elements/ValidationView";
+import { useAppContext } from "../../../AppContext";
+import { useHomeContext } from "../HomeContext";
 interface CreateExerciseProps {
   closeForm: () => void;
   form?: ExerciseForm;
@@ -20,12 +22,12 @@ interface CreateExerciseProps {
 }
 
 const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
-  const API_URL = process.env.REACT_APP_BACKEND;
   const [exerciseName, setExerciseName] = useState<string>("");
   const [bodyPart, setBodyPart] = useState<BodyParts>();
   const [description, setDescription] = useState<string | undefined>("");
-  const [error, setError] = useState<string>();
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
+  const { postAPI, setErrors } = useAppContext();
+  const { userId } = useHomeContext();
 
   useEffect(() => {
     if (props.form) {
@@ -45,70 +47,60 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
 
   const createExercise = async (): Promise<void> => {
     if (!validateForm()) return;
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${API_URL}/api/exercise/${id}/addUserExercise`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    try {
+      await postAPI(
+        `/exercise/${userId}/addUserExercise`,
+        (response: ResponseMessage) => props.closeForm(),
+        {
           name: exerciseName,
           bodyPart: bodyPart,
           description: description,
-        }),
-      }
-    );
-    const result = await response.json();
-    if (result.msg === Message.Created && props.closeForm) props.closeForm();
-    else setError(result.msg);
+        }
+      );
+    } catch (error) {
+      setErrors([Message.TryAgain]);
+    }
   };
 
   const createGlobalExercise = async (): Promise<void> => {
     if (!validateForm()) return;
-    const response = await fetch(`${API_URL}/api/exercise/addExercise`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: exerciseName,
-        bodyPart: bodyPart,
-        description: description,
-      }),
-    });
-    const result = await response.json();
-    if (result.msg === Message.Created && props.closeForm) props.closeForm();
-    else setError(result.msg);
+    try {
+      await postAPI(
+        "/exercise/addExercise",
+        (response: ResponseMessage) => props.closeForm(),
+        {
+          name: exerciseName,
+          bodyPart: bodyPart,
+          description: description,
+        }
+      );
+    } catch (error) {
+      setErrors([Message.TryAgain]);
+    }
   };
 
   const validateForm = useCallback((): boolean => {
     if (!exerciseName || !bodyPart) {
-      setError(Message.FieldRequired);
+      setErrors([Message.FieldRequired]);
       return false;
     }
     return true;
   }, [exerciseName, bodyPart]);
 
+
   const updateExercise = async (): Promise<void> => {
     if (!exerciseName || !bodyPart)
-      return setError("Name and body part are required!");
-    const response = await fetch(`${API_URL}/api/exercise/updateExercise`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+      return setErrors(["Name and body part are required!"]);
+    try {
+      await postAPI("/exercise/updateExercise", () => props.closeForm(), {
         _id: props.form?._id,
         name: exerciseName,
         bodyPart: bodyPart,
         description: description,
-      }),
-    });
-    const result: ResponseMessage = await response.json();
-    if (result.msg === Message.Updated && props.closeForm) props.closeForm();
-    else setError(result.msg);
+      });
+    } catch (error) {
+      setErrors([Message.TryAgain]);
+    }
   };
 
   const handleSubmit = () => {
@@ -132,7 +124,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       <View className="w-full h-full">
         <View className="px-5 py-2">
           <Text
-            className="smallPhone:text-2xl midPhone:text-3xl text-white"
+            className="smallPhone:text-2xl text-3xl text-white"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {props.form ? "Edit Exercise" : "New Exercise"}
@@ -142,7 +134,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View className="flex flex-row items-center" style={{ gap: 8 }}>
             <ExerciseIcon />
             <Text
-              className="smallPhone:text-lg midPhone:text-xl text-white"
+              className="smallPhone:text-lg text-xl text-white"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Set an exercise
@@ -151,7 +143,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white smallPhone:text-sm midPhone:text-base"
+              className="  text-white smallPhone:text-sm text-base"
             >
               Name:
             </Text>
@@ -170,7 +162,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white smallPhone:text-sm midPhone:text-base"
+              className="  text-white smallPhone:text-sm text-base"
             >
               BodyPart:
             </Text>
@@ -194,7 +186,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white smallPhone:text-sm midPhone:text-base"
+              className="  text-white smallPhone:text-sm text-base"
             >
               Description:
             </Text>
@@ -228,7 +220,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             />
           )}
         </View>
-        {error && <ValidationView errors={[error]} />}
+        <ValidationView />
       </View>
     </Dialog>
   );
