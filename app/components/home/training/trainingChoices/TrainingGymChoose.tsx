@@ -6,6 +6,7 @@ import Dialog from "../../../elements/Dialog";
 import { useHomeContext } from "../../HomeContext";
 import NoGymsInfo from "./elements/NoGymsInfo";
 import GymsToChoose from "./elements/GymsToChoose";
+import { useAppContext } from "../../../../AppContext";
 
 interface TrainingGymChooseProps {
   setGym: (gym: GymForm) => void;
@@ -16,24 +17,16 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
   setGym,
   goBack,
 }) => {
-  const { apiURL } = useHomeContext();
+  const { userId } = useHomeContext();
+  const {getAPI,errors} = useAppContext()
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
-  const [errors, setErrors] = useState<string[]>([]);
   useEffect(() => {
-    init();
+    getGyms();
   }, []);
 
-  const init = async () => {
-    await getGyms();
-  };
 
   const getGyms = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/gym/${id}/getGyms`);
-    const result = await response.json();
-    if (!result || !result.length)
-      return setErrors(["You don't have any gyms"]);
-    setGyms(result);
+    await getAPI(`/gym/${userId}/getGyms`, (response: GymChoiceInfo[]) =>setGyms(response))
   };
 
   return (
@@ -49,7 +42,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
           Choose your gym!
         </Text>
         {errors.length ? (
-          <NoGymsInfo errors={errors} goBack={goBack} />
+          <NoGymsInfo  goBack={goBack} />
         ) : (
           <GymsToChoose gyms={gyms} setGym={setGym} />
         )}

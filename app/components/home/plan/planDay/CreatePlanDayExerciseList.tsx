@@ -6,23 +6,22 @@ import {
   ExerciseForPlanDay,
 } from "./../../../../../interfaces/Exercise";
 import { isIntValidator } from "./../../../../../helpers/numberValidator";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import AutoComplete from "../../../elements/Autocomplete";
 import ExerciseList from "./exerciseList/ExerciseList";
 import CreateExercise from "../../exercises/CreateExercise";
-import ViewLoading from "../../../elements/ViewLoading";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { useHomeContext } from "../../HomeContext";
 import useDeviceCategory from "../../../../../helpers/hooks/useDeviceCategory";
 import { DeviceCategory } from "../../../../../enums/DeviceCategory";
+import { useAppContext } from "../../../../AppContext";
 
 const CreatePlanDayExerciseList: React.FC = () => {
-  const { exercisesList, setExercisesList, goBack, goToNext } =
-    usePlanDay();
+  const { exercisesList, setExercisesList, goBack, goToNext } = usePlanDay();
 
-  const {apiURL} = useHomeContext()
+  const { getAPI } = useAppContext();
+  const { apiURL, userId } = useHomeContext();
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
   );
@@ -34,8 +33,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
-  const [viewLoading, setViewLoading] = useState<boolean>(false);
-  const  deviceCategory  = useDeviceCategory();
+  const deviceCategory = useDeviceCategory();
 
   useEffect(() => {
     init();
@@ -62,56 +60,63 @@ const CreatePlanDayExerciseList: React.FC = () => {
     setSelectedExercise(undefined);
 
     setClearQuery(true);
-  },[numberOfSeries, exerciseReps, selectedExercise, exercisesList]); 
+  }, [numberOfSeries, exerciseReps, selectedExercise, exercisesList]);
 
   const clearAutoCompleteQuery = useCallback(() => {
     setClearQuery(false);
-  },[])
+  }, []);
 
-  const returnGap = useMemo(()=>{
+  const returnGap = useMemo(() => {
     switch (deviceCategory) {
       case DeviceCategory.SMALL:
         return 8;
       default:
         return 16;
     }
-  },[deviceCategory])
-  
-  const removeExerciseFromList = useCallback((item: ExerciseForPlanDay) => {
-    const newList = exercisesList.filter(
-      (exercise: ExerciseForPlanDay) => exercise !== item
-    );
-    setExercisesList(newList);
-  },[exercisesList]);
+  }, [deviceCategory]);
+
+  const removeExerciseFromList = useCallback(
+    (item: ExerciseForPlanDay) => {
+      const newList = exercisesList.filter(
+        (exercise: ExerciseForPlanDay) => exercise !== item
+      );
+      setExercisesList(newList);
+    },
+    [exercisesList]
+  );
 
   const getAllExercises = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${apiURL}/api/exercise/${id}/getAllExercises`
+    await getAPI(
+      `/exercise/${userId}/getAllExercises`,
+      (result: ExerciseForm[]) => {
+        const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
+          return { label: exercise.name, value: exercise._id! };
+        });
+        setExercisesToSelect(helpExercisesToSelect);
+      },
+      undefined,
+      false
     );
-    const result = await response.json();
-    const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
-      return { label: exercise.name, value: exercise._id };
-    });
-    setExercisesToSelect(helpExercisesToSelect);
   };
 
-  const toggleExerciseForm = useCallback( async () => {
+  const toggleExerciseForm = useCallback(async () => {
     setIsTrainingPlanDayExerciseFormShow(!isTrainingPlanDayExerciseFormShow);
     await getAllExercises();
-  },[isTrainingPlanDayExerciseFormShow])
+  }, [isTrainingPlanDayExerciseFormShow]);
 
-  const editExerciseFromList = useCallback((item: ExerciseForPlanDay) => {
-    setSelectedExercise(
-      exercisesToSelect.find(
-        (exercise) => exercise.value === item.exercise.value
-      )
-    );
-    setNumberOfSeries(item.series.toString());
-    setExerciseReps(item.reps);
-    removeExerciseFromList(item);
-  },[exercisesToSelect]);
-
+  const editExerciseFromList = useCallback(
+    (item: ExerciseForPlanDay) => {
+      setSelectedExercise(
+        exercisesToSelect.find(
+          (exercise) => exercise.value === item.exercise.value
+        )
+      );
+      setNumberOfSeries(item.series.toString());
+      setExerciseReps(item.reps);
+      removeExerciseFromList(item);
+    },
+    [exercisesToSelect]
+  );
 
   const validator = (input: string): void => {
     if (!input) return setNumberOfSeries(input);
@@ -123,17 +128,17 @@ const CreatePlanDayExerciseList: React.FC = () => {
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="smallPhone:text-xl midPhone:text-3xl text-white"
+          className="smallPhone:text-xl text-3xl text-white"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Create plan list
         </Text>
       </View>
-      <View className="px-5" style={{ gap:returnGap }}>
+      <View className="px-5" style={{ gap: returnGap }}>
         <View className="flex flex-row" style={{ gap: 8 }}>
           <PlanNameIcon />
           <Text
-            className="smallPhone:text-base midPhone:text-xl text-white"
+            className="smallPhone:text-base text-xl text-white"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             New Exercises
@@ -142,7 +147,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
         <View style={{ gap: 4 }} className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="  text-white  smallPhone:text-sm  midPhone:text-base"
+            className="  text-white  smallPhone:text-sm  text-base"
           >
             Exercise name
           </Text>
@@ -158,7 +163,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
           <View style={{ gap: 4 }} className="flex flex-col flex-1">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  smallPhone:text-sm  midPhone:text-base"
+              className="  text-white  smallPhone:text-sm  text-base"
             >
               Series:
             </Text>
@@ -175,7 +180,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
           <View style={{ gap: 4 }} className="flex flex-col flex-1">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white smallPhone:text-sm  midPhone:text-base"
+              className="text-white smallPhone:text-sm  text-base"
             >
               Reps:
             </Text>
@@ -226,7 +231,6 @@ const CreatePlanDayExerciseList: React.FC = () => {
       ) : (
         <></>
       )}
-      {viewLoading ? <ViewLoading /> : <Text></Text>}
     </View>
   );
 };

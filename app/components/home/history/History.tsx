@@ -8,13 +8,16 @@ import ViewLoading from "../../elements/ViewLoading";
 import { TrainingByDateDetails } from "./../../../../interfaces/Training";
 import { Message } from "./../../../../enums/Message";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
+import { useHomeContext } from "../HomeContext";
+import { useAppContext } from "../../../AppContext";
 const History: React.FC = () => {
-  const apiURL = `${process.env.REACT_APP_BACKEND}`;
+  const { userId } = useHomeContext();
+  const { getAPI, postAPI } = useAppContext();
   const calendar = useRef(null);
   const [trainings, setTrainings] = useState<TrainingByDateDetails[]>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [trainingDates, setTrainingDates] = useState<MarkedDates[]>([]);
-  
+
   useEffect(() => {
     init();
   }, []);
@@ -30,35 +33,32 @@ const History: React.FC = () => {
   const getTrainingByDate = async (dateObject: any): Promise<void> => {
     const date: Date = new Date(dateObject._d);
     if (!date) return;
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/getTrainingByDate`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
+    await postAPI(
+      `/${userId}/getTrainingByDate`,
+      (result: TrainingByDateDetails[]) => {
+        if (Array.isArray(result)) {
+          setTrainings(result);
+        } else {
+          setTrainings([]);
+        }
       },
-      body: JSON.stringify({
-        createdAt: date,
-      }),
-    });
-    const result: Message | TrainingByDateDetails[] = await response.json();
-    if (Array.isArray(result)) {
-      setTrainings(result);
-    } else {
-      setTrainings([]);
-    }
+      undefined,
+      false
+    );
   };
   const getTrainingDates = async (): Promise<void> => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/getTrainingDates`);
-    if (response.status === 404) {
-      return setTrainingDates([]);
-    }
-    const data: Date[] = await response.json();
-    const markedDates: MarkedDates[] = data.map((date: Date) => ({
-      date: date,
-      dots: [{ color: "#94e798" }],
-    }));
-    setTrainingDates(markedDates);
+    await getAPI(
+      `/${userId}/getTrainingDates`,
+      (result: Date[]) => {
+        const markedDates: MarkedDates[] = result.map((date: Date) => ({
+          date: date,
+          dots: [{ color: "#94e798" }],
+        }));
+        setTrainingDates(markedDates);
+      },
+      undefined,
+      false
+    );
   };
   return (
     <BackgroundMainSection>

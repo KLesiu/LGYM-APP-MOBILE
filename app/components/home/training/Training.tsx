@@ -10,17 +10,14 @@ import { useAppContext } from "../../../AppContext";
 const Training: React.FC = () => {
   const { userId } = useHomeContext();
   const [isUserHavePlan, setIsUserHavePlan] = useState<boolean>(false);
-  const [viewLoading, setViewLoading] = useState<boolean>(false);
-  const {getAPI} = useAppContext()
+  const {getAPI,isLoading} = useAppContext()
  
   useEffect(() => {
     init();
   }, []);
 
   const init = async () => {
-    setViewLoading(true);
     await checkIsUserHavePlan();
-    setViewLoading(false);
   };
 
   const checkIsUserHavePlan = async () => {
@@ -31,11 +28,10 @@ const Training: React.FC = () => {
     }
 
   };
-
   return (
     <View className="bg-bgColor flex-1 w-full">
       {isUserHavePlan ? <TrainingView /> : <NonTrainingView />}
-      {viewLoading && <ViewLoading />}
+      {isLoading && <ViewLoading/>}
     </View>
   );
 };

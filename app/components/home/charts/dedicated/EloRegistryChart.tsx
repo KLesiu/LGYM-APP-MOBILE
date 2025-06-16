@@ -2,27 +2,31 @@ import { useEffect, useState } from "react";
 import LineChart from "../templates/LineChart";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, Text } from "react-native";
+import { useHomeContext } from "../../HomeContext";
+import { useAppContext } from "../../../../AppContext";
+import { EloRegistryBaseChart } from "../../../../../interfaces/EloRegistry";
 
 const EloRegistryChart: React.FC = () => {
-  const API_URL = process.env.REACT_APP_BACKEND;
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<EloRegistryBaseChart[]>([]);
+  const { userId } = useHomeContext();
+  const { getAPI } = useAppContext();
 
   useEffect(() => {
     getEloRegistry();
   }, []);
 
   const getEloRegistry = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${API_URL}/api/eloRegistry/${id}/getEloRegistryChart`
+    await getAPI(
+      `/eloRegistry/${userId}/getEloRegistryChart`,
+      (result: EloRegistryBaseChart[]) => {
+        setData(result);
+      }
     );
-    const result = await response.json();
-    setData(result);
   };
 
   return data.length ? (
     <View className="h-60 w-full">
-      <LineChart data={data} />
+      <LineChart data={data as never[]} />
     </View>
   ) : (
     <View></View>

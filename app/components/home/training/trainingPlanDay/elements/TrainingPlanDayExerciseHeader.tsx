@@ -10,7 +10,7 @@ const TrainingPlanDayExerciseHeader: React.FC<
   return (
     <View className="flex flex-col px-5">
       <Text
-        className="smallPhone:text-xl midPhone:text-3xl text-white  font-bold "
+        className="smallPhone:text-xl text-3xl text-white  font-bold "
         style={{
           fontFamily: "OpenSans_700Bold",
         }}
@@ -18,7 +18,7 @@ const TrainingPlanDayExerciseHeader: React.FC<
         {currentExercise?.exercise.name}
       </Text>
       <Text
-        className="smallPhone:text-sm midPhone:text-base text-white "
+        className="smallPhone:text-sm text-base text-white "
         style={{
           fontFamily: "OpenSans_400Regular",
         }}

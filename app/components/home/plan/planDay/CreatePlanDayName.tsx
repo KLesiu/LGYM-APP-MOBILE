@@ -2,14 +2,15 @@ import { View, Text, TextInput } from "react-native";
 import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ValidationView from "../../../elements/ValidationView";
-import { useCallback, useMemo, useState } from "react";
+import {  useMemo,} from "react";
 import { Message } from "./../../../../../enums/Message";
 import { usePlanDay } from "./CreatePlanDayContext";
+import { useAppContext } from "../../../../AppContext";
 
 const CreatePlanDayName: React.FC = () => {
   const { planDayName, setPlanDayName, goBack, goToNext } = usePlanDay();
+  const {setErrors} = useAppContext()
 
-  const [errors, setErrors] = useState<string[]>([]);
 
   const goNextSection = () => {
     if (validateForm) {
@@ -27,7 +28,7 @@ const CreatePlanDayName: React.FC = () => {
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="smallPhone:text-xl midPhone:text-3xl text-white"
+          className="smallPhone:text-xl text-3xl text-white"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           New Plan Day
@@ -37,7 +38,7 @@ const CreatePlanDayName: React.FC = () => {
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <PlanNameIcon />
           <Text
-            className="smallPhone:text-base midPhone:text-xl text-white"
+            className="smallPhone:text-base text-xl text-white"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             Set a plan name
@@ -46,7 +47,7 @@ const CreatePlanDayName: React.FC = () => {
         <View style={{ gap: 4 }} className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="  text-white smallPhone:text-sm  midPhone:text-base"
+            className="  text-white smallPhone:text-sm  text-base"
           >
             Name:
           </Text>
@@ -76,7 +77,7 @@ const CreatePlanDayName: React.FC = () => {
           width="flex-1"
         />
       </View>
-      <ValidationView errors={errors} />
+      <ValidationView  />
     </View>
   );
 };

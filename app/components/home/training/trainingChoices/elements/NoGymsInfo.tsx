@@ -7,7 +7,6 @@ import ValidationView from "../../../../elements/ValidationView";
 
 interface NoGymsInfoProps {
     goBack: () => void;
-    errors: string[];
 }
 
 const NoGymsInfo: React.FC<NoGymsInfoProps> = (props) => {
@@ -19,7 +18,7 @@ const NoGymsInfo: React.FC<NoGymsInfoProps> = (props) => {
         buttonStyleType={ButtonStyle.cancel}
         onPress={props.goBack}
       />
-      <ValidationView errors={props.errors} />
+      <ValidationView />
     </View>
   );
 };

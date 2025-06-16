@@ -16,9 +16,11 @@ import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import TrainingPlanItem from "./TrainingPlanItem";
 import PlanDayProvider from "./planDay/CreatePlanDayContext";
 import { useHomeContext } from "../HomeContext";
+import { useAppContext } from "../../../AppContext";
 
 const TrainingPlan: React.FC = () => {
-  const { apiURL, toggleMenuButton,hideMenu } = useHomeContext();
+  const { apiURL, toggleMenuButton, hideMenu, userId } = useHomeContext();
+  const { getAPI } = useAppContext();
   const [planConfig, setPlanConfig] = useState<{
     name: string;
     trainingDays: number;
@@ -46,8 +48,7 @@ const TrainingPlan: React.FC = () => {
 
   const init = async () => {
     setViewLoading(true);
-    const result = await getUserPlanConfig();
-    if (result) await getPlanDaysBaseInfo(result);
+    await getUserPlanConfig();
     setViewLoading(false);
   };
 
@@ -57,23 +58,14 @@ const TrainingPlan: React.FC = () => {
     _id: string;
   }): Promise<void> => {
     if (!planConfig || !planConfig._id) return;
-    const response = await fetch(
-      `${apiURL}/api/planDay/${planConfig._id}/getPlanDaysInfo`
-    );
-    const result = await response.json();
-    setPlanDaysBaseInfo(result);
+    await getAPI(`/planDay/${planConfig._id}/getPlanDaysInfo`, (result: PlanDayBaseInfoVm[])=>{
+      setPlanDaysBaseInfo(result);
+    },undefined,false)
   };
 
   const deletePlanDay = async (): Promise<void> => {
     if (!currentPlanDay) return;
-    const response = await fetch(
-      `${apiURL}/api/planDay/${currentPlanDay._id}/deletePlanDay`
-    );
-    if (!response.ok) return console.error("Failed to delete plan day");
-    const data = await response.json();
-    if (data.msg === Message.Deleted) {
-      init();
-    }
+    await getAPI(`/planDay/${currentPlanDay._id}/deletePlanDay`, ()=>init(),undefined,false)
     deletePlanDayVisible(false);
   };
 
@@ -97,7 +89,7 @@ const TrainingPlan: React.FC = () => {
     setIsPlanDayFormVisible(false);
     toggleMenuButton(false);
     setViewLoading(false);
-    hideMenu()
+    hideMenu();
     await init();
   }, []);
 
@@ -108,14 +100,14 @@ const TrainingPlan: React.FC = () => {
   }, []);
 
   const getUserPlanConfig = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(`${apiURL}/api/${id}/getPlanConfig`);
-    const result = await response.json();
-    if (Object.keys(result)[0] === "msg") setPlanConfig(undefined);
-    else {
-      setPlanConfig(result);
-      return result;
-    }
+    await getAPI(
+      `/${userId}/getPlanConfig`,
+      async(result: { name: string; trainingDays: number; _id: string }) =>
+       {
+        setPlanConfig(result)
+        await getPlanDaysBaseInfo(result);
+       } 
+    ),undefined,false;
   };
 
   const deletePlanDayVisible = useCallback(
@@ -144,7 +136,7 @@ const TrainingPlan: React.FC = () => {
             <View className="p-5" style={{ gap: 16 }}>
               <View>
                 <Text
-                  className="smallPhone:text-sm midPhone:text-base text-primaryColor  font-bold"
+                  className="smallPhone:text-sm text-base text-primaryColor  font-bold"
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
@@ -155,7 +147,7 @@ const TrainingPlan: React.FC = () => {
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
-                  className="smallPhone:text-xl midPhone:text-3xl text-white font-bold"
+                  className="smallPhone:text-xl text-3xl text-white font-bold"
                 >
                   {planConfig.name}
                 </Text>

@@ -6,8 +6,11 @@ import { useEffect, useState } from "react";
 import { UserInfo } from "./../../../../interfaces/User";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
+import { useHomeContext } from "../HomeContext";
 
 const ProgressInfo: React.FC = () => {
+  const { userId } = useHomeContext();
+
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -19,9 +22,8 @@ const ProgressInfo: React.FC = () => {
   }, []);
 
   const getRankInfo = async () => {
-    const id = await AsyncStorage.getItem("id");
     try {
-      await getAPI(`/${id}/getUserInfo`, (response: UserInfo) => {
+      await getAPI(`/${userId}/getUserInfo`, (response: UserInfo) => {
         setUserInfo(response);
         setProgress(
           Math.floor((response.elo / response.nextRank.needElo) * 10000) / 100

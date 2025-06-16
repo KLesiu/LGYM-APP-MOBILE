@@ -9,10 +9,14 @@ import Dialog from "../../../elements/Dialog";
 import CreatePlanDayExerciseList from "./CreatePlanDayExerciseList";
 import ViewLoading from "../../../elements/ViewLoading";
 import CreatePlanDaySummary from "./CreatePlanDaySummary";
-import { PlanDayExercisesFormVm } from "./../../../../../interfaces/PlanDay";
+import {
+  PlanDayExercisesFormVm,
+  PlanDayVm,
+} from "./../../../../../interfaces/PlanDay";
 import { BackHandler } from "react-native";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { useHomeContext } from "../../HomeContext";
+import { useAppContext } from "../../../../AppContext";
 
 interface CreatePlanDayProps {
   planId?: string;
@@ -31,6 +35,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   } = usePlanDay();
 
   const { apiURL } = useHomeContext();
+  const { postAPI, getAPI } = useAppContext();
 
   const currentStepRef = useRef(currentStep);
 
@@ -104,56 +109,38 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     planNameArg: string,
     exercisesArg: ExerciseForPlanDay[]
   ) => {
-    setViewLoading(true);
     const exercises = mapExercisesListToSend(exercisesArg);
-    const response = await fetch(
-      `${apiURL}/api/planDay/${props.planId}/createPlanDay`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: planNameArg,
-          exercises: exercises,
-        }),
-      }
+    await postAPI(
+      `/planDay/${props.planId}/createPlanDay`,
+      () => {
+        closeForm();
+      },
+      { name: planNameArg, exercises: exercises }
     );
-    const result = await response.json();
-    if (result.msg === Message.Created) closeForm();
-
-    setViewLoading(false);
   };
 
   const editPlanDay = async (
     planNameArg: string,
     exercisesArg: ExerciseForPlanDay[]
   ) => {
-    setViewLoading(true);
     const exercises = mapExercisesListToSend(exercisesArg);
-    const response = await fetch(`${apiURL}/api/planDay/updatePlanDay`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        _id: props.planDayId,
-        name: planNameArg,
-        exercises: exercises,
-      }),
+    await postAPI(`/planDay/updatePlanDay`, () => closeForm(), {
+      _id: props.planDayId,
+      name: planNameArg,
+      exercises: exercises,
     });
-    const result = await response.json();
-    if (result.msg === Message.Updated) closeForm();
-    setViewLoading(false);
   };
 
   const getPlanDay = async () => {
-    const response = await fetch(
-      `${apiURL}/api/planDay/${props.planDayId}/getPlanDay`
+    await getAPI(
+      `/planDay/${props.planDayId}/getPlanDay`,
+      (result: PlanDayVm) => {
+        setPlanDayName(result.name);
+        setExercisesList(mapExercisesListFromSend(result.exercises));
+      },
+      undefined,
+      false
     );
-    const result = await response.json();
-    setPlanDayName(result.name);
-    setExercisesList(mapExercisesListFromSend(result.exercises));
   };
 
   const savePlan = async (

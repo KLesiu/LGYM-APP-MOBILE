@@ -4,7 +4,10 @@ import { LastExerciseScores } from "../../../../../interfaces/Exercise";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
-import { TrainingForm, TrainingSessionScores } from "../../../../../interfaces/Training";
+import {
+  TrainingForm,
+  TrainingSessionScores,
+} from "../../../../../interfaces/Training";
 import useInterval from "../../../../../helpers/hooks/useInterval";
 import ViewLoading from "../../../elements/ViewLoading";
 import { GymForm } from "../../../../../interfaces/Gym";
@@ -27,6 +30,8 @@ import { WeightUnits } from "../../../../../enums/Units";
 import { ExerciseScoresTrainingForm } from "../../../../../interfaces/ExercisesScores";
 import { TrainingSummary } from "../../../../../interfaces/Training";
 import { TrainingViewSteps } from "../TrainingView";
+import { useAppContext } from "../../../../AppContext";
+import { ExerciseForm } from "../../../../../interfaces/Exercise";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -39,6 +44,7 @@ interface TrainingPlanDayProps {
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const { apiURL, changeHeaderVisibility, userId } = useHomeContext();
+  const { getAPI, postAPI } = useAppContext();
   const {
     planDay,
     setPlanDay,
@@ -91,45 +97,38 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     await getInformationAboutPlanDay();
   };
 
-    /// Submit training and delete training session from localStorage then show summary.
-    const addTraining = async (
-      exercises: TrainingSessionScores[],
-    ) => {
-      const type = props.dayId;
-      const createdAt = new Date();
-      const training = exercises.map((ele: TrainingSessionScores) => {
-        const exerciseScoresTrainingForm: ExerciseScoresTrainingForm = {
-          exercise: `${ele.exercise._id}`,
-          reps: ele.reps,
-          series: ele.series,
-          weight: ele.weight,
-          unit: WeightUnits.KILOGRAMS,
-        };
-        return exerciseScoresTrainingForm;
-      });
-  
-  
-      const body:TrainingForm = {
-        type: type!,
-        createdAt: createdAt,
-        exercises: training,
-        gym: gym?._id!,
-        lastExercisesScores: lastExerciseScoresWithGym
-      }
-      const response = await fetch(`${apiURL}/api/${userId}/addTraining`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-      const result: TrainingSummary = await response.json();
-      if (result.msg === Message.Created) {
+  /// Submit training and delete training session from localStorage then show summary.
+  const addTraining = async (exercises: TrainingSessionScores[]) => {
+    const type = props.dayId;
+    const createdAt = new Date();
+    const training = exercises.map((ele: TrainingSessionScores) => {
+      const exerciseScoresTrainingForm: ExerciseScoresTrainingForm = {
+        exercise: `${ele.exercise._id}`,
+        reps: ele.reps,
+        series: ele.series,
+        weight: ele.weight,
+        unit: WeightUnits.KILOGRAMS,
+      };
+      return exerciseScoresTrainingForm;
+    });
+
+    const body: TrainingForm = {
+      type: type!,
+      createdAt: createdAt,
+      exercises: training,
+      gym: gym?._id!,
+      lastExercisesScores: lastExerciseScoresWithGym,
+    };
+    await postAPI(
+      `/${userId}/addTraining`,
+      async (result: TrainingSummary) => {
         await props.hideAndDeleteTrainingSession();
         props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
         props.setTrainingSummary(result);
-      }
-    };
+      },
+      body
+    );
+  };
 
   /// Load training session scores from local storage
   const loadTrainingSessionScores = async () => {
@@ -150,14 +149,16 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   /// Get information about plan day from API
   const getInformationAboutPlanDay = async () => {
-    const response = await fetch(
-      `${apiURL}/api/planDay/${props.dayId}/getPlanDay`
+    await getAPI(
+      `/planDay/${props.dayId}/getPlanDay`,
+      async (result: PlanDayVm) => {
+        setPlanDay(result);
+        setCurrentExercise(result.exercises[0]);
+        await sendPlanDayToLocalStorage(result);
+      },
+      undefined,
+      false
     );
-    const result = (await response.json()) as PlanDayVm;
-
-    setPlanDay(result);
-    setCurrentExercise(result.exercises[0]);
-    await sendPlanDayToLocalStorage(result);
   };
 
   /// Save plan day to local storage
@@ -222,9 +223,14 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
 
   const getExercise = async (id: string) => {
-    const response = await fetch(`${apiURL}/api/exercise/${id}/getExercise`);
-    const exercise = await response.json();
-    return exercise;
+    let result: ExerciseForm = {} as ExerciseForm;
+    await getAPI(
+      `/exercise/${id}/getExercise`,
+      (exercise: ExerciseForm) => (result = exercise),
+      undefined,
+      false
+    );
+    return result;
   };
   const getExerciseToAddFromForm = async (
     exerciseId: string,
@@ -302,7 +308,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       : (parsedScores as TrainingSessionScores[]);
   };
 
-  const sendTraining = async(exercises: TrainingSessionScores[]) => {
+  const sendTraining = async (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
     if (!result) return;
     await addTraining(result);

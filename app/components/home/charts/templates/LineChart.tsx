@@ -3,6 +3,7 @@ import { LinearGradient, useFont, vec } from "@shopify/react-native-skia";
 import { useDerivedValue } from "react-native-reanimated";
 import { Area, CartesianChart, Line, useChartPressState } from "victory-native";
 import ToolTip from "../Tooltip";
+import { EloRegistryBaseChart } from "../../../../../interfaces/EloRegistry";
 
 interface LineChartProps {
   data: never[];

@@ -83,7 +83,7 @@ const Profile: React.FC = () => {
             <View className="flex ">{rankComponent}</View>
             <View style={{ gap: 4 }} className="flex flex-col items-center">
               <Text
-                className="text-primaryColor font-bold w-full text-center smallPhone:text-lg midPhone:text-2xl"
+                className="text-primaryColor font-bold w-full text-center smallPhone:text-lg text-2xl"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
                 {userInfo.name}

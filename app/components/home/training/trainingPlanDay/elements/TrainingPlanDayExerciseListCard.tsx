@@ -12,7 +12,6 @@ import CustomButton, {
 
 interface TrainingPlanDayExerciseListCardProps {
   exercise: PlanDayExercisesFormVm;
-  key: number;
   deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
   | {
       exercises: PlanDayExercisesFormVm[];
@@ -26,7 +25,7 @@ interface TrainingPlanDayExerciseListCardProps {
 
 const TrainingPlanDayExerciseListCard: React.FC<
   TrainingPlanDayExerciseListCardProps
-> = ({ key, exercise,deleteExerciseFromPlan }) => {
+> = ({  exercise,deleteExerciseFromPlan }) => {
   const { setCurrentExercise, trainingSessionScores } = useTrainingPlanDay();
   const [isDone, setIsDone] = useState(false);
 
@@ -61,14 +60,13 @@ const TrainingPlanDayExerciseListCard: React.FC<
   return (
     <Pressable
       onPress={() => setCurrentExercise(exercise)}
-      className="bg-secondaryColor flex flex-row items-center justify-between w-full smallPhone:p-1 midPhone:p-2  rounded-lg"
-      key={key}
+      className="bg-secondaryColor flex flex-row items-center justify-between w-full smallPhone:p-1 p-2  rounded-lg"
     >
       <View className="flex flex-row items-center" style={{ gap: 20 }}>
         <Checkbox value={isDone} />
         <View>
           <Text
-            className="smallPhone:text-sm  midPhone:text-base text-white "
+            className="smallPhone:text-sm  text-base text-white "
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
@@ -76,7 +74,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
             {exercise.exercise.name}
           </Text>
           <Text
-            className="smallPhone:text-[12px] midPhone:text-sm text-white "
+            className="smallPhone:text-[12px] text-sm text-white "
             style={{
               fontFamily: "OpenSans_300Light",
             }}

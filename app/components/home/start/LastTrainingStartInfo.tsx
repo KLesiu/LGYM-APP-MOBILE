@@ -9,6 +9,7 @@ import { LastTrainingInfo } from "../../../../interfaces/Training";
 import { useHomeContext } from "../HomeContext";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
+import ViewLoading from "../../elements/ViewLoading";
 
 const LastTrainingStartInfo: React.FC = () => {
   const [lastTrainingInfo, setLastTrainingInfo] = useState<LastTrainingInfo>();
@@ -16,6 +17,10 @@ const LastTrainingStartInfo: React.FC = () => {
 
   const { getAPI } = useAppContext();
   const { changeView, userId } = useHomeContext();
+
+  useEffect(() => {
+    getLastTrainingInfo();
+  }, []);
 
   const getLastTrainingInfo = async () => {
     try {
@@ -31,36 +36,44 @@ const LastTrainingStartInfo: React.FC = () => {
     changeView(component);
   }, []);
 
-  useEffect(() => {
-    getLastTrainingInfo();
-  }, []);
+  if (isLoading) {
+    return (
+      <Card>
+        <ViewLoading />
+      </Card>
+    );
+  }
 
   return (
-    <Card isLoading={isLoading}>
-      {!isLoading  && (
-        <View>
+    <Card>
+      <View>
+        <Text
+          className="text-primaryColor smallPhone:text-base text-xl"
+          style={{ fontFamily: "OpenSans_700Bold" }}
+        >
+          Last Training:
+        </Text>
+        <View className="flex">
           <Text
-            className="text-primaryColor smallPhone:text-base midPhone:text-lg text-xl"
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            className="text-white smallPhone:text-[12px] text-sm text-md"
+            style={{ fontFamily: "OpenSans_300Light" }}
           >
-            Last Training:
+            Date:
+            {lastTrainingInfo && lastTrainingInfo.createdAt
+              ? new Date(lastTrainingInfo.createdAt).toLocaleString()
+              : "N/A"}
           </Text>
-          <View className="flex">
-            <Text
-              className="text-white smallPhone:text-[12px] midPhone:text-sm text-md"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Date: {lastTrainingInfo && lastTrainingInfo.createdAt ? new Date(lastTrainingInfo.createdAt).toLocaleString() : "N/A"}
-            </Text>
-            <Text
-              className="text-white smallPhone:text-[12px] midPhone:text-sm text-md"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Type: {lastTrainingInfo && lastTrainingInfo.planDay.name ? lastTrainingInfo?.planDay.name : "N/A"}
-            </Text>
-          </View>
+          <Text
+            className="text-white smallPhone:text-[12px] text-sm text-md"
+            style={{ fontFamily: "OpenSans_300Light" }}
+          >
+            Type:
+            {lastTrainingInfo && lastTrainingInfo.planDay.name
+              ? lastTrainingInfo?.planDay.name
+              : "N/A"}
+          </Text>
         </View>
-      )}
+      </View>
 
       <CustomButton
         buttonStyleSize={ButtonSize.xl}

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { isIntValidator } from "./../../../../helpers/numberValidator";
 import ResponseMessage from "./../../../../interfaces/ResponseMessage";
 import { Message } from "./../../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import Dialog from "../../elements/Dialog";
+import { useHomeContext } from "../HomeContext";
+import { useAppContext } from "../../../AppContext";
+import ValidationView from "../../elements/ValidationView";
 
 interface CreatePlanConfigProps {
   reloadSection: VoidFunction;
@@ -14,43 +16,27 @@ interface CreatePlanConfigProps {
 }
 
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
+  const { userId } = useHomeContext();
+  const { postAPI,setErrors } = useAppContext();
   const [planName, setPlanName] = useState<string>("");
   const [numberOfDays, setNumberOfDays] = useState<string>("");
-  const [error, setError] = useState<string>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   const sendConfig = async (): Promise<void> => {
-    if (!planName || !numberOfDays) return setError(Message.FieldRequired);
+    if (!planName || !numberOfDays) return setErrors([Message.FieldRequired]);
     setViewLoading(true);
     await submitPlanConfig();
     setViewLoading(false);
   };
 
   const submitPlanConfig = async (): Promise<void> => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${process.env.REACT_APP_BACKEND}/api/${id}/createPlan`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          trainingDays: numberOfDays,
-          name: planName,
-        }),
-      }
+    await postAPI(
+      `/${userId}/createPlan`,
+      (result: ResponseMessage) => {
+        props.reloadSection();
+      },
+      { trainingDays: numberOfDays, name: planName }
     );
-    if (!response.ok) {
-      console.error("Failed to send plan config");
-      return setError(Message.TryAgain);
-    }
-    const data: ResponseMessage = await response.json();
-    if (data.msg === Message.Created) {
-      return props.reloadSection();
-    } else {
-      return setError(data.msg);
-    }
   };
 
   const validator = (input: string): void => {
@@ -123,16 +109,8 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           />
         </View>
       </View>
-      {error ? (
-        <Text
-          style={{ fontFamily: "OpenSans_300Light" }}
-          className="text-red-500 text-lg"
-        >
-          {error}
-        </Text>
-      ) : (
-        ""
-      )}
+      <ValidationView />
+
       {viewLoading ? <ViewLoading /> : <Text></Text>}
     </Dialog>
   );

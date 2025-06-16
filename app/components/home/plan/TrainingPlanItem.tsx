@@ -19,7 +19,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
     <View key={item._id} className="w-full" style={{ gap: 10 }}>
       <Text
         style={{ fontFamily: "OpenSans_400Regular" }}
-        className="smallPhone:text-sm midPhone:text-base text-white"
+        className="smallPhone:text-sm text-base text-white"
       >
         Last training:{" "}
         {item.lastTrainingDate
@@ -32,7 +32,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             style={{
               fontFamily: "OpenSans_700Bold",
             }}
-            className="smallPhone:text-lg midPhone:text-xl font-bold text-white"
+            className="smallPhone:text-lg text-xl font-bold text-white"
           >
             {item.name}
           </Text>
@@ -40,7 +40,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="smallPhone:text-sm midPhone:text-base  text-fifthColor"
+            className="smallPhone:text-sm text-base  text-fifthColor"
           >
             Exercises: {item.totalNumberOfExercises}
           </Text>
@@ -49,7 +49,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
               style={{
                 fontFamily: "OpenSans_400Regular",
               }}
-              className="smallPhone:text-sm midPhone:text-base  text-fifthColor"
+              className="smallPhone:text-sm text-base  text-fifthColor"
             >
               Total series: {item.totalNumberOfSeries}
             </Text>

@@ -6,6 +6,7 @@ import CustomButton, { ButtonSize } from "../../../elements/CustomButton";
 import { useEffect, useState } from "react";
 import { useHomeContext } from "../../HomeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppContext } from "../../../../AppContext";
 interface TrainingDayChooseProps {
   showDaySection: (day: string) => Promise<void>;
 }
@@ -13,7 +14,8 @@ interface TrainingDayChooseProps {
 const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
   showDaySection,
 }) => {
-  const { apiURL } = useHomeContext();
+  const { userId } = useHomeContext();
+  const {getAPI} = useAppContext()
   const [trainingTypes, setTrainingTypes] = useState<PlanDayChoose[]>([]);
 
   useEffect(() => {
@@ -26,12 +28,7 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
 
   const getInformationsAboutPlanDays =
     async (): Promise<void> => {
-      const id = await AsyncStorage.getItem("id");
-      const response = await fetch(
-        `${apiURL}/api/planDay/${id}/getPlanDaysTypes`
-      );
-      const trainingTypes: PlanDayChoose[] = await response.json();
-      setTrainingTypes(trainingTypes);
+      await getAPI(`/planDay/${userId}/getPlanDaysTypes`, (response: PlanDayChoose[])=>setTrainingTypes(response),undefined,false)
     };
   return (
     <Dialog>

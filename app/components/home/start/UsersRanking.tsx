@@ -37,7 +37,7 @@ const UsersRanking: React.FC = () => {
     <Card isLoading={isLoading} customClasses="flex-1">
       <View className="h-full w-full flex flex-col gap-2">
         <Text
-          className="text-primaryColor smallPhone:text-base midPhone:text-lg text-xl"
+          className="text-primaryColor smallPhone:text-base text-lg text-xl"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Ranking
@@ -45,7 +45,7 @@ const UsersRanking: React.FC = () => {
         <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64 h-64 ">
           {ranking.map((ele: UserBaseInfo, index: number) => {
             let color = "text-white";
-            let fontSize = "smallPhone:text-[12px] midPhone:text-sm text-md";
+            let fontSize = "smallPhone:text-[12px] text-sm text-md";
             if (myInfo && ele.name === myInfo.name) {
               color = "text-primaryColor";
             }

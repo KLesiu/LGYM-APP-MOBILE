@@ -9,6 +9,7 @@ import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import { DropdownItem } from "../../../../../interfaces/Dropdown";
 import Dialog from "../../../elements/Dialog";
 import { useHomeContext } from "../../HomeContext";
+import { useAppContext } from "../../../../AppContext";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
@@ -23,7 +24,8 @@ interface TrainingPlanDayExerciseFormProps {
 const TrainingPlanDayExerciseForm: React.FC<
   TrainingPlanDayExerciseFormProps
 > = (props) => {
-  const { apiURL } = useHomeContext();
+  const { apiURL, userId } = useHomeContext();
+  const { postAPI, getAPI } = useAppContext();
 
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
@@ -39,36 +41,27 @@ const TrainingPlanDayExerciseForm: React.FC<
   }, []);
 
   const getExercisesByBodyPart = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${apiURL}/api/exercise/${id}/getExerciseByBodyPart`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          bodyPart: props.bodyPart,
-        }),
-      }
+    await postAPI(
+      `/exercise/${userId}/getExerciseByBodyPart`,
+      (result: ExerciseForm[]) => {
+        const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
+          return { label: exercise.name, value: exercise._id! };
+        });
+        setExercisesToSelect(helpExercisesToSelect);
+      },
+      { bodyPart: props.bodyPart }
     );
-    const result = await response.json();
-    const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
-      return { label: exercise.name, value: exercise._id };
-    });
-    setExercisesToSelect(helpExercisesToSelect);
   };
   const getAllExercises = async () => {
-    const id = await AsyncStorage.getItem("id");
-    const response = await fetch(
-      `${apiURL}/api/exercise/${id}/getAllExercises`
+    await getAPI(
+      `/exercise/${userId}/getAllExercises`,
+      (result: ExerciseForm[]) => {
+        const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
+          return { label: exercise.name, value: exercise._id! };
+        });
+        setExercisesToSelect(helpExercisesToSelect);
+      }
     );
-    if (!response.ok) return;
-    const result = await response.json();
-    const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
-      return { label: exercise.name, value: exercise._id };
-    });
-    setExercisesToSelect(helpExercisesToSelect);
   };
 
   const clearAutoCompleteQuery = () => {
@@ -91,7 +84,7 @@ const TrainingPlanDayExerciseForm: React.FC<
 
   return (
     <Dialog>
-      <View className="w-full h-full flex flex-col py-5"  style={{ gap: 16 }}>
+      <View className="w-full h-full flex flex-col py-5" style={{ gap: 16 }}>
         <View className="px-5 py-2">
           <Text
             className="text-3xl text-white"

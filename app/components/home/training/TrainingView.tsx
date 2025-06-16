@@ -6,14 +6,8 @@ import TrainingSummary from "./TrainingSummary";
 import StartTrainingControl from "./elements/StartTrainingControl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Message } from "../../../../enums/Message";
-import { WeightUnits } from "../../../../enums/Units";
-import { LastExerciseScores } from "../../../../interfaces/Exercise";
-import { ExerciseScoresTrainingForm } from "../../../../interfaces/ExercisesScores";
 import { GymForm } from "../../../../interfaces/Gym";
 import {
-  TrainingForm,
-  TrainingSessionScores,
   TrainingSummary as TrainingSummaryInterface,
 } from "./../../../../interfaces/Training";
 import { useHomeContext } from "../HomeContext";
