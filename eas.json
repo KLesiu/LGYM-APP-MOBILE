@@ -3,17 +3,13 @@
     "preview": {
       "android": {
         "buildType": "app-bundle",
-        "env":{
-
-
-
-        }
-
+        "env": {}
       }
     },
     "preview2": {
       "android": {
-        "gradleCommand": ":app:assembleRelease"
+        "gradleCommand": ":app:assembleRelease",
+        "env": {}
       }
     },
     "preview3": {
@@ -22,4 +18,3 @@
     "production": {}
   }
 }
-
