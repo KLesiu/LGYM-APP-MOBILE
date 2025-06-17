@@ -6,6 +6,9 @@ import {
 import { TrainingSessionScores } from "../../../../../interfaces/Training";
 import { GymForm } from "../../../../../interfaces/Gym";
 import { LastExerciseScoresWithGym } from "../../../../../interfaces/Exercise";
+import { useAppContext } from "../../../../AppContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useInterval from "../../../../../helpers/hooks/useInterval";
 
 interface TrainingPlanDayContextType {
   setPlanDay: (planDay: PlanDayVm) => void;
@@ -24,6 +27,7 @@ interface TrainingPlanDayContextType {
   setLastExerciseScoresWithGym: (
     lastExerciseScoresWithGym: LastExerciseScoresWithGym[]
   ) => void;
+  sendPlanDayToLocalStorage: (planDay: PlanDayVm) => Promise<void>;
 }
 
 const TrainingPlanDayContext = createContext<TrainingPlanDayContextType | null>(
@@ -43,12 +47,15 @@ export const useTrainingPlanDay = () => {
 interface TrainingPlanDayProviderProps {
   children: React.ReactNode;
   gym: GymForm | undefined;
+  dayId: string;
 }
 
 const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   children,
   gym,
+  dayId,
 }) => {
+  const { getAPI } = useAppContext();
   const [planDay, setPlanDay] = useState<PlanDayVm>();
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
@@ -59,11 +66,31 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   const [lastExerciseScoresWithGym, setLastExerciseScoresWithGym] = useState<
     LastExerciseScoresWithGym[]
   >([]);
+  const [intervalDelay, setIntervalDelay] = useState<number | null>(null);
+
   useEffect(() => {
-    if (planDay && planDay.exercises) {
-      const initialScores = planDay.exercises.flatMap((exercise) => {
+    init();
+     return () => {
+      setIntervalDelay(null);
+    };
+  }, []);
+
+  useInterval(() => {
+    if (!intervalDelay) return;
+    saveTrainingSessionScores();
+  }, intervalDelay);
+
+  const planDayName = useMemo(() => planDay?.name ?? "", [planDay?.name]);
+  const exercisesInPlanList = useMemo(() => planDay?.exercises, [planDay]);
+
+  const init = async () => {
+    const response = (await initExercisePlanDay()) as PlanDayVm;
+    const trainingSessionScoresFromStorage =
+      (await loadTrainingSessionScores()) as TrainingSessionScores[];
+    if (response && response.exercises) {
+      const initialScores = response.exercises.flatMap((exercise) => {
         return Array.from({ length: exercise.series }).map((_, seriesIndex) => {
-          const existingScore = trainingSessionScores.find(
+          const existingScore = trainingSessionScoresFromStorage.find(
             (score) =>
               score.exercise._id === exercise.exercise?._id &&
               score.series === seriesIndex + 1
@@ -80,13 +107,76 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
       });
       setTrainingSessionScores(initialScores);
     }
-  }, [planDay]);
-
-  const planDayName = useMemo(() => planDay?.name ?? "", [planDay?.name]);
-  const exercisesInPlanList = useMemo(() => planDay?.exercises, [planDay]);
+    setIntervalDelay(1000);
+  };
 
   const toggleGymFilter = () => {
     setIsGymFilterActive((prev) => !prev);
+  };
+
+  /// Load training session scores from local storage
+  const loadTrainingSessionScores = async () => {
+    const savedScores = await AsyncStorage.getItem("trainingSessionScores");
+    const parsedScores = savedScores ? JSON.parse(savedScores) : [];
+    if (parsedScores && parsedScores.length) {
+      setTrainingSessionScores(parsedScores);
+    }
+    return parsedScores ?? [];
+  };
+
+  /// Get information about plan day from API
+  const getInformationAboutPlanDay = async () => {
+    let planDayFromApi: PlanDayVm | undefined;
+    await getAPI(
+      `/planDay/${dayId}/getPlanDay`,
+      async (result: PlanDayVm) => {
+        planDayFromApi = result;
+        setPlanDay(result);
+        setCurrentExercise(result.exercises[0]);
+        await sendPlanDayToLocalStorage(result);
+      },
+      undefined,
+      false
+    );
+    return planDayFromApi;
+  };
+
+  /// Save training session scores to local storage
+  const saveTrainingSessionScores = async () => {
+    await AsyncStorage.setItem(
+      "trainingSessionScores",
+      JSON.stringify(trainingSessionScores)
+    );
+  };
+
+  /// Save plan day to local storage
+  const sendPlanDayToLocalStorage = async (planDay: PlanDayVm) => {
+    await AsyncStorage.setItem("planDay", JSON.stringify(planDay));
+    await AsyncStorage.setItem("gym", JSON.stringify(gym));
+  };
+
+  /// Get information about plan day from local storage or API
+  const initExercisePlanDay = async () => {
+    const planDayFromStorage = await getPlanDayFromLocalStorage();
+    if (planDayFromStorage && Object.keys(planDayFromStorage).length)
+      return planDayFromStorage;
+    const response = await getInformationAboutPlanDay();
+    return response;
+  };
+
+  /// Get plan day from local storage
+  const getPlanDayFromLocalStorage = async (): Promise<any> => {
+    const planDay = await AsyncStorage.getItem("planDay");
+    if (
+      !planDay ||
+      !JSON.parse(planDay) ||
+      !Object.keys(JSON.parse(planDay)).length
+    )
+      return false;
+    const result = JSON.parse(planDay);
+    setPlanDay(result);
+    setCurrentExercise(result.exercises[0]);
+    return result;
   };
 
   return (
@@ -105,7 +195,8 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
         isGymFilterActive,
         setIsGymFilterActive,
         lastExerciseScoresWithGym,
-        setLastExerciseScoresWithGym
+        setLastExerciseScoresWithGym,
+        sendPlanDayToLocalStorage,
       }}
     >
       {children}

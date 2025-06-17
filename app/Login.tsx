@@ -19,7 +19,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
-  const { postAPI, setErrors } = useAppContext();
+  const { postAPI, setErrors ,isLoading} = useAppContext();
 
   useEffect(() => {
     setErrors([]);
@@ -103,6 +103,7 @@ const Login: React.FC = () => {
       <CustomButton
         width="w-full"
         onPress={login}
+        disabled={isLoading}
         buttonStyleType={ButtonStyle.success}
         text="Login"
         buttonStyleSize={ButtonSize.xl}

@@ -65,6 +65,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       callback(response);
     } catch (error) {
       if (serveErrors) catchErrors(error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -83,6 +84,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       callback(response);
     } catch (error) {
       if (serveErrors) catchErrors(error);
+      throw error;
     } finally {
       setIsLoading(false);
     }

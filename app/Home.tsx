@@ -4,12 +4,13 @@ import Menu from "./components/layout/Menu";
 import Header from "./components//layout/Header";
 import Loading from "./components/elements/Loading";
 import HomeProvider from "./components/home/HomeContext";
+import Start from "./components/home/start/Start";
 const Home: React.FC = () => {
   const [view, setView] = useState<JSX.Element>();
   const [isHeaderShow, setIsHeaderShow] = useState<boolean>(true);
 
-  const changeView = (view: JSX.Element) => {
-    setView(view);
+  const changeView = (view?: JSX.Element) => {
+    setView(view ?? <Start />);
   };
   const changeHeaderVisibility = (isVisible: boolean) => {
     setIsHeaderShow(isVisible);

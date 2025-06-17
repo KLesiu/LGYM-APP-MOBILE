@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { createContext } from "react";
 import { Animated, BackHandler } from "react-native";
-import Start from "./start/Start";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface HomeContextProps {
@@ -29,7 +28,7 @@ export const useHomeContext = () => {
 
 interface HomeProviderProps {
   children: React.ReactNode;
-  viewChange: (view: JSX.Element) => void;
+  viewChange: (view?: JSX.Element) => void;
   changeHeaderVisibility: (isVisible: boolean) => void;
 }
 
@@ -58,7 +57,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,change
 
 
   const handleBackButton = useCallback(()=>{
-    changeView(<Start />);
+    changeView();
     toggleMenuButton(false)
     return true;
   },[])
@@ -95,7 +94,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,change
   );
 
   const changeView = useCallback(
-    (component: React.JSX.Element) => {
+    (component?: React.JSX.Element) => {
       if (isExpanded) toggleMenu(); 
       viewChange(component);
     },

@@ -16,7 +16,7 @@ interface GymFormProps {
 const GymForm: React.FC<GymFormProps> = (props) => {
   const { userId } = useHomeContext();
   const [gymName, setGymName] = useState<string>("");
-  const {postAPI} = useAppContext()
+  const {postAPI,isLoading} = useAppContext()
 
   useEffect(() => {
     if (props.gym) setGymName(props.gym.name);
@@ -91,6 +91,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
           />
           <CustomButton
             onPress={handleSubmit}
+            disabled={isLoading}
             text={props.gym ? "Update" : "Create"}
             buttonStyleType={ButtonStyle.success}
             width="flex-1"

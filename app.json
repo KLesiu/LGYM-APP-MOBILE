@@ -44,7 +44,8 @@
       "url": "https://u.expo.dev/505ff65d-afab-4678-926a-dbeabae8ef7d"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ]
   }
 }

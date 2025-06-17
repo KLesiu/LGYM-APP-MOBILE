@@ -26,17 +26,17 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [bodyPart, setBodyPart] = useState<BodyParts>();
   const [description, setDescription] = useState<string | undefined>("");
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
-  const { postAPI, setErrors } = useAppContext();
+  const { postAPI, setErrors,isLoading } = useAppContext();
   const { userId } = useHomeContext();
 
   useEffect(() => {
     if (props.form) {
-      setExerciseName(props.form.name);
-      setBodyPart(props.form.bodyPart as BodyParts);
-      setDescription(props.form.description);
       if (!props.form.user) {
         setIsBlocked(!props.isAdmin);
       }
+      setExerciseName(props.form.name);
+      setBodyPart(props.form.bodyPart as BodyParts);
+      setDescription(props.form.description);
     }
   }, []);
 
@@ -87,7 +87,6 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     return true;
   }, [exerciseName, bodyPart]);
 
-
   const updateExercise = async (): Promise<void> => {
     if (!exerciseName || !bodyPart)
       return setErrors(["Name and body part are required!"]);
@@ -98,6 +97,19 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         bodyPart: bodyPart,
         description: description,
       });
+    } catch (error) {
+      setErrors([Message.TryAgain]);
+    }
+  };
+
+  const deleteExercise = async (): Promise<void> => {
+    if (!props.form?._id) return;
+    try {
+      await postAPI(
+        `/exercise/${userId}/deleteExercise`,
+        (response: ResponseMessage) => props.closeForm(),
+        { id: props.form._id }
+      );
     } catch (error) {
       setErrors([Message.TryAgain]);
     }
@@ -211,13 +223,27 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             buttonStyleType={ButtonStyle.outlineBlack}
             width="flex-1"
           />
+
           {!isBlocked && (
-            <CustomButton
-              onPress={handleSubmit}
-              text={props.form ? "Update" : "Create"}
-              buttonStyleType={ButtonStyle.success}
-              width="flex-1"
-            />
+            <>
+              {props.form && props.form._id && (
+                <CustomButton
+                  onPress={deleteExercise}
+                  disabled={isLoading}
+                  text="Delete"
+                  buttonStyleType={ButtonStyle.default}
+                  width="flex-1"
+                />
+              )}
+
+              <CustomButton
+                onPress={handleSubmit}
+                disabled={isLoading}
+                text={props.form ? "Update" : "Create"}
+                buttonStyleType={ButtonStyle.success}
+                width="flex-1"
+              />
+            </>
           )}
         </View>
         <ValidationView />

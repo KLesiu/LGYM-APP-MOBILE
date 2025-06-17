@@ -33,18 +33,20 @@ const History: React.FC = () => {
   const getTrainingByDate = async (dateObject: any): Promise<void> => {
     const date: Date = new Date(dateObject._d);
     if (!date) return;
-    await postAPI(
+    try{
+       await postAPI(
       `/${userId}/getTrainingByDate`,
       (result: TrainingByDateDetails[]) => {
-        if (Array.isArray(result)) {
-          setTrainings(result);
-        } else {
-          setTrainings([]);
-        }
+        setTrainings(result);
       },
-      undefined,
+      { createdAt: date },
       false
     );
+    }
+    catch (error) {
+      setTrainings([]);
+    }
+   
   };
   const getTrainingDates = async (): Promise<void> => {
     await getAPI(

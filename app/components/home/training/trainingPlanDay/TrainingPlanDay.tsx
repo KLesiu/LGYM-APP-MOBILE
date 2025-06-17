@@ -1,15 +1,11 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { useEffect, useState } from "react";
-import { LastExerciseScores } from "../../../../../interfaces/Exercise";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
 import {
   TrainingForm,
   TrainingSessionScores,
 } from "../../../../../interfaces/Training";
-import useInterval from "../../../../../helpers/hooks/useInterval";
-import ViewLoading from "../../../elements/ViewLoading";
 import { GymForm } from "../../../../../interfaces/Gym";
 import React from "react";
 import { useHomeContext } from "../../HomeContext";
@@ -25,13 +21,12 @@ import TrainingPlanDayHeaderButtons from "./elements/TrainingPlanDayHeaderButton
 import CreatePlanDay from "../../plan/planDay/CreatePlanDay";
 import PlanDayProvider from "../../plan/planDay/CreatePlanDayContext";
 import { PlanDayVm } from "../../../../../interfaces/PlanDay";
-import { Message } from "../../../../../enums/Message";
 import { WeightUnits } from "../../../../../enums/Units";
 import { ExerciseScoresTrainingForm } from "../../../../../interfaces/ExercisesScores";
 import { TrainingSummary } from "../../../../../interfaces/Training";
-import { TrainingViewSteps } from "../TrainingView";
 import { useAppContext } from "../../../../AppContext";
 import { ExerciseForm } from "../../../../../interfaces/Exercise";
+import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -43,16 +38,15 @@ interface TrainingPlanDayProps {
 }
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
-  const { apiURL, changeHeaderVisibility, userId } = useHomeContext();
+  const {  changeHeaderVisibility, userId } = useHomeContext();
   const { getAPI, postAPI } = useAppContext();
   const {
     planDay,
     setPlanDay,
-    trainingSessionScores,
-    setTrainingSessionScores,
     setCurrentExercise,
     gym,
     lastExerciseScoresWithGym,
+    sendPlanDayToLocalStorage
   } = useTrainingPlanDay();
   const [
     isTrainingPlanDayExerciseFormShow,
@@ -64,38 +58,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     string | undefined
   >();
 
-  const [viewLoading, setViewLoading] = useState<boolean>(false);
-
-  const [intervalDelay, setIntervalDelay] = useState<number | null>(null);
-
-  useInterval(() => {
-    saveTrainingSessionScores();
-  }, intervalDelay);
-
   useEffect(() => {
-    init();
+    changeHeaderVisibility(false);
     return () => {
-      setIntervalDelay(null);
       changeHeaderVisibility(true);
     };
   }, []);
 
-  /// Initialize the component
-  const init = async () => {
-    setViewLoading(true);
-    await initExercisePlanDay();
-    await loadTrainingSessionScores();
-    changeHeaderVisibility(false);
-    setViewLoading(false);
-    setIntervalDelay(1000);
-  };
-
-  /// Get information about plan day from local storage or API
-  const initExercisePlanDay = async () => {
-    const isPlanDayFromStorage = await getPlanDayFromLocalStorage();
-    if (isPlanDayFromStorage) return;
-    await getInformationAboutPlanDay();
-  };
 
   /// Submit training and delete training session from localStorage then show summary.
   const addTraining = async (exercises: TrainingSessionScores[]) => {
@@ -130,57 +99,11 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     );
   };
 
-  /// Load training session scores from local storage
-  const loadTrainingSessionScores = async () => {
-    const savedScores = await AsyncStorage.getItem("trainingSessionScores");
-    const parsedScores = savedScores ? JSON.parse(savedScores) : [];
-    if (parsedScores && parsedScores.length) {
-      setTrainingSessionScores(parsedScores);
-    }
-  };
 
-  /// Save training session scores to local storage
-  const saveTrainingSessionScores = async () => {
-    await AsyncStorage.setItem(
-      "trainingSessionScores",
-      JSON.stringify(trainingSessionScores)
-    );
-  };
 
-  /// Get information about plan day from API
-  const getInformationAboutPlanDay = async () => {
-    await getAPI(
-      `/planDay/${props.dayId}/getPlanDay`,
-      async (result: PlanDayVm) => {
-        setPlanDay(result);
-        setCurrentExercise(result.exercises[0]);
-        await sendPlanDayToLocalStorage(result);
-      },
-      undefined,
-      false
-    );
-  };
+ 
 
-  /// Save plan day to local storage
-  const sendPlanDayToLocalStorage = async (planDay: PlanDayVm) => {
-    await AsyncStorage.setItem("planDay", JSON.stringify(planDay));
-    await AsyncStorage.setItem("gym", JSON.stringify(props.gym));
-  };
 
-  /// Get plan day from local storage
-  const getPlanDayFromLocalStorage = async (): Promise<boolean> => {
-    const planDay = await AsyncStorage.getItem("planDay");
-    if (
-      !planDay ||
-      !JSON.parse(planDay) ||
-      !Object.keys(JSON.parse(planDay)).length
-    )
-      return false;
-    const result = JSON.parse(planDay);
-    setPlanDay(result);
-    setCurrentExercise(result.exercises[0]);
-    return true;
-  };
 
   /// Delete exercise from plan day
   const deleteExerciseFromPlanDay = async (
@@ -372,7 +295,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       ) : (
         <></>
       )}
-      {viewLoading ? <ViewLoading /> : <Text></Text>}
     </View>
   );
 };

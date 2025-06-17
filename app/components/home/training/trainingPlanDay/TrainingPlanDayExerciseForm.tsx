@@ -10,6 +10,8 @@ import { DropdownItem } from "../../../../../interfaces/Dropdown";
 import Dialog from "../../../elements/Dialog";
 import { useHomeContext } from "../../HomeContext";
 import { useAppContext } from "../../../../AppContext";
+import ValidationView from "../../../elements/ValidationView";
+import { Message } from "../../../../../enums/Message";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
@@ -25,7 +27,7 @@ const TrainingPlanDayExerciseForm: React.FC<
   TrainingPlanDayExerciseFormProps
 > = (props) => {
   const { apiURL, userId } = useHomeContext();
-  const { postAPI, getAPI } = useAppContext();
+  const { postAPI, getAPI,isLoading ,setErrors} = useAppContext();
 
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
@@ -74,7 +76,7 @@ const TrainingPlanDayExerciseForm: React.FC<
     if (result) setNumberOfSeries(input);
   };
   const sendNewExercise = () => {
-    if (!selectedExercise || !numberOfSeries || !exerciseReps) return;
+    if (!selectedExercise || !numberOfSeries || !exerciseReps) return setErrors([Message.FieldRequired]);
     props.addExerciseToPlanDay(
       selectedExercise.value,
       parseInt(numberOfSeries),
@@ -163,11 +165,13 @@ const TrainingPlanDayExerciseForm: React.FC<
           />
           <CustomButton
             width="flex-1"
+            disabled={isLoading}
             onPress={sendNewExercise}
             buttonStyleType={ButtonStyle.success}
             text="Add"
           />
         </View>
+        <ValidationView />
       </View>
     </Dialog>
   );

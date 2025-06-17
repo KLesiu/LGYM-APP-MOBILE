@@ -47,8 +47,12 @@ const Exercises: React.FC = () => {
     try {
       await getAPI(
         `/exercise/getAllGlobalExercises`,
-        (response: ExerciseForm[]) => setGlobalExercises(response)
+        (response: ExerciseForm[]) => setGlobalExercises(response),
+        undefined,
+        false
       );
+    }catch(error){
+      setGlobalExercises([]);
     } finally {
       setIsGlobalExercisesLoading(false);
     }
@@ -58,8 +62,14 @@ const Exercises: React.FC = () => {
     try {
       await getAPI(
         `/exercise/${userId}/getAllUserExercises`,
-        (response: ExerciseForm[]) => setUserExercises(response)
+        (response: ExerciseForm[]) => {
+          setUserExercises(response);
+        },
+        undefined,
+        false
       );
+    } catch (error) {
+      setUserExercises([]);
     } finally {
       setIsLoading(false);
     }
@@ -81,11 +91,8 @@ const Exercises: React.FC = () => {
     []
   );
 
-  const filteredExercises = useCallback(
-    (exercises: ExerciseForm[]) =>
-      bodyPart ? exercises.filter((e) => e.bodyPart === bodyPart) : exercises,
-    [bodyPart]
-  );
+  const filteredExercises = (exercises: ExerciseForm[]) =>
+    bodyPart ? exercises.filter((e) => e.bodyPart === bodyPart) : exercises;
 
   const handleSelectBodyPart = useCallback((item: DropdownItem | null) => {
     setBodyPart(item ? (item.value as BodyParts) : null);
@@ -100,13 +107,17 @@ const Exercises: React.FC = () => {
     [toggleMenuButton]
   );
 
-  const closeExerciseForm = useCallback(async () => {
+  const closeExerciseForm = async () => {
+    setIsGlobalExercisesLoading(true);
+    setIsLoading(true);
     await Promise.all([getAllUserExercises(), getAllGlobalExercises()]);
-    setIsExerciseFormVisible(false);
     setSelectedExercise(null);
+    setIsExerciseFormVisible(false);
     toggleMenuButton(false);
     hideMenu();
-  }, [getAllUserExercises, getAllGlobalExercises, toggleMenuButton]);
+    setIsGlobalExercisesLoading(false);
+    setIsLoading(false);
+  };
 
   const openExerciseForm = useCallback(
     (global = false) => {
