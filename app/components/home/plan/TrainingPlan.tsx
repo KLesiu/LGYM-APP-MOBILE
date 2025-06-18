@@ -65,6 +65,7 @@ const TrainingPlan: React.FC = () => {
     );
   };
 
+
   const deletePlanDay = async (): Promise<void> => {
     if (!currentPlanDay) return;
     await getAPI(

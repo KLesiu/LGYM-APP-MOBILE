@@ -135,8 +135,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     await getAPI(
       `/planDay/${props.planDayId}/getPlanDay`,
       (result: PlanDayVm) => {
-        setPlanDayName(result.name);
-        setExercisesList(mapExercisesListFromSend(result.exercises));
+        requestAnimationFrame(() => {
+          setPlanDayName(result.name);
+          setExercisesList(mapExercisesListFromSend(result.exercises));
+        });
       },
       undefined,
       false
