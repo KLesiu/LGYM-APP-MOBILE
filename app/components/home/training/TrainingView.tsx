@@ -7,9 +7,7 @@ import StartTrainingControl from "./elements/StartTrainingControl";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GymForm } from "../../../../interfaces/Gym";
-import {
-  TrainingSummary as TrainingSummaryInterface,
-} from "./../../../../interfaces/Training";
+import { TrainingSummary as TrainingSummaryInterface } from "./../../../../interfaces/Training";
 import { useHomeContext } from "../HomeContext";
 import TrainingPlanDayProvider from "./trainingPlanDay/TrainingPlanDayContext";
 import { TrainingViewSteps } from "../../../../enums/TrainingView";
@@ -17,7 +15,7 @@ import { TrainingViewSteps } from "../../../../enums/TrainingView";
 interface TrainingViewProps {}
 
 const TrainingView: React.FC<TrainingViewProps> = () => {
-  const {  toggleMenuButton } = useHomeContext();
+  const { toggleMenuButton } = useHomeContext();
 
   ///GYM
   const [gym, setGym] = useState<GymForm>();
@@ -44,7 +42,7 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
   const checkIsUserHaveActivePlanDayTraining = async () => {
     const response = JSON.parse(`${await AsyncStorage.getItem("planDay")}`);
     if (response && Object.keys(response).length)
-      setStep(TrainingViewSteps.PLAN_DAY_TO_RESUME);
+      await getCurrentPlanDayTraining();
     else setStep(TrainingViewSteps.None);
   };
 
@@ -87,12 +85,11 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     const result = JSON.parse(response);
 
     const responseGym = await AsyncStorage.getItem("gym");
-    if(!responseGym) return;
+    if (!responseGym) return;
     const resultGym = JSON.parse(responseGym) as GymForm;
     setGym(resultGym);
     showDaySection(result._id);
   };
-  
 
   /// Show TrainingPlanDay and hide day choice popUp
   const showDaySection = async (day: string): Promise<void> => {
@@ -109,8 +106,6 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     setStep(TrainingViewSteps.None);
     resetTrainingView();
   };
-
-
 
   const isAddTrainingActive = useMemo(
     () => step === TrainingViewSteps.PLAN_DAY_TO_RESUME,

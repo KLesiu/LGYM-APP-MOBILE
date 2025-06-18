@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import TrainingPlanDayExerciseListCard from "./TrainingPlanDayExerciseListCard";
-import { ScrollView } from "react-native";
 import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
 
 interface TrainingPlanDayExercisesListProps {
@@ -29,14 +28,7 @@ const TrainingPlanDayExercisesList: React.FC<
       >
         Exercise list
       </Text>
-      <ScrollView
-        className="w-full flex-1"
-        contentContainerStyle={{
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-        }}
-      >
+      <View className="w-full flex-1" style={{ gap: 8 }}>
         {exercisesInPlanList?.map((exercise, index) => (
           <TrainingPlanDayExerciseListCard
             key={index}
@@ -44,7 +36,7 @@ const TrainingPlanDayExercisesList: React.FC<
             deleteExerciseFromPlan={deleteExerciseFromPlan}
           />
         ))}
-      </ScrollView>
+      </View>
     </View>
   );
 };

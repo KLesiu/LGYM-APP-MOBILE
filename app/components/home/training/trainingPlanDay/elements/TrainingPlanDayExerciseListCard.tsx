@@ -13,19 +13,18 @@ import CustomButton, {
 interface TrainingPlanDayExerciseListCardProps {
   exercise: PlanDayExercisesFormVm;
   deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
-  | {
-      exercises: PlanDayExercisesFormVm[];
-      _id: string;
-      name: string;
-    }
-  | undefined
->;
-
+    | {
+        exercises: PlanDayExercisesFormVm[];
+        _id: string;
+        name: string;
+      }
+    | undefined
+  >;
 }
 
 const TrainingPlanDayExerciseListCard: React.FC<
   TrainingPlanDayExerciseListCardProps
-> = ({  exercise,deleteExerciseFromPlan }) => {
+> = ({ exercise, deleteExerciseFromPlan }) => {
   const { setCurrentExercise, trainingSessionScores } = useTrainingPlanDay();
   const [isDone, setIsDone] = useState(false);
 
@@ -62,9 +61,9 @@ const TrainingPlanDayExerciseListCard: React.FC<
       onPress={() => setCurrentExercise(exercise)}
       className="bg-secondaryColor flex flex-row items-center justify-between w-full smallPhone:p-1 p-2  rounded-lg"
     >
-      <View className="flex flex-row items-center" style={{ gap: 20 }}>
+      <View className="flex flex-row items-center flex-1" style={{ gap: 20 }}>
         <Checkbox value={isDone} />
-        <View>
+        <View className="flex flex-col flex-1">
           <Text
             className="smallPhone:text-sm  text-base text-white "
             style={{

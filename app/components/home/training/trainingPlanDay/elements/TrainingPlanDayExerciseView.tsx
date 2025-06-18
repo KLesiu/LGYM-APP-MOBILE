@@ -63,14 +63,7 @@ const TrainingPlanDayExerciseView: React.FC<
           Weight (kg)
         </Text>
       </View>
-      <ScrollView
-        className="w-full flex-1"
-        contentContainerStyle={{
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-        }}
-      >
+      <View className="w-full flex-1">
         <View style={{ gap: 10 }} className="flex flex-col">
           {Array.from({ length: currentExercise!.series }).map((_, index) => {
             const savedScore = trainingSessionScores.find(
@@ -119,7 +112,7 @@ const TrainingPlanDayExerciseView: React.FC<
             );
           })}
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };

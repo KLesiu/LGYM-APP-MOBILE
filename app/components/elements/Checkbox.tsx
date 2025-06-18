@@ -4,11 +4,19 @@ import { Ionicons } from "@expo/vector-icons";
 interface CheckboxProps {
   value: boolean;
   setValue?: (value: boolean) => void;
+  customClasses?: string;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ value, setValue }) => {
+const Checkbox: React.FC<CheckboxProps> = ({
+  value,
+  setValue,
+  customClasses,
+}) => {
   return (
-    <Pressable onPress={() => setValue && setValue(!value)}>
+    <Pressable
+      className={customClasses}
+      onPress={() => setValue && setValue(!value)}
+    >
       <Ionicons
         name={value ? "checkbox" : "square-outline"}
         size={28}

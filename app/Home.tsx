@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { useState } from "react";
 import Menu from "./components/layout/Menu";
 import Header from "./components//layout/Header";
@@ -17,17 +17,19 @@ const Home: React.FC = () => {
   };
 
   return (
-    <View className="bg-bgColor flex flex-col justify-between relative h-full ">
-      <HomeProvider
-        viewChange={changeView}
-        changeHeaderVisibility={changeHeaderVisibility}
-      >
-        {isHeaderShow ? <Header /> : ""}
-        {view}
-        <Menu />
-      </HomeProvider>
-      {!view && <Loading />}
-    </View>
+    <SafeAreaView>
+      <View className="bg-bgColor flex flex-col justify-between relative h-full ">
+        <HomeProvider
+          viewChange={changeView}
+          changeHeaderVisibility={changeHeaderVisibility}
+        >
+          {isHeaderShow && <Header />}
+          {view}
+          <Menu />
+        </HomeProvider>
+        {!view && <Loading />}
+      </View>
+    </SafeAreaView>
   );
 };
 export default Home;

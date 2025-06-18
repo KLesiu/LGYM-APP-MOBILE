@@ -17,25 +17,27 @@ import { AppConfigInfo } from "../interfaces/AppConfigInfo";
 import UpdateDialog from "./components/elements/UpdateDialog";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 
-
 const Preload: React.FC = () => {
   const router = useRouter();
   const [appConfig, setAppConfig] = useState<AppConfigInfo | null>(null);
-  const { getAPI, token, postAPI } = useAppContext();
+  const { getAPI, postAPI, setIsTokenChecked, isTokenChecked } =
+    useAppContext();
 
   useEffect(() => {
-    checkForUpdates().then(() => checkUserSession());
+    checkForUpdates();
   }, []);
 
-  const checkUserSession = useCallback(async (): Promise<void> => {
+  const checkUserSession = async (): Promise<void> => {
+    if (isTokenChecked) return;
     await getAPI("/checkToken", setSession);
-  }, [token]);
+  };
 
   const setSession = async (result: any): Promise<void> => {
     if (!result || !result.isValid) return;
     await AsyncStorage.setItem("username", result.user.name);
     await AsyncStorage.setItem("id", result.user._id);
     await AsyncStorage.setItem("email", result.user.email);
+    setIsTokenChecked(true);
     router.push("/Home");
   };
 
@@ -54,13 +56,19 @@ const Preload: React.FC = () => {
     await postAPI("/appConfig/getAppVersion", checkIsUpdateRequired, body);
   };
 
-  const checkIsUpdateRequired = (appVersionConfig: AppConfigInfo) => {
-    const appVersion = Constants.executionEnvironment ===  ExecutionEnvironment.StoreClient ? Constants.manifest2?.runtimeVersion : Application.nativeBuildVersion;
-    if (!appVersionConfig || !appVersionConfig.minRequiredVersion) {
-      return true;
+  const checkIsUpdateRequired = async (appVersionConfig: AppConfigInfo) => {
+    const appVersion =
+      Constants.executionEnvironment === ExecutionEnvironment.StoreClient
+        ? Constants.manifest2?.runtimeVersion
+        : Application.nativeBuildVersion;
+    if (
+      appVersionConfig.minRequiredVersion &&
+      appVersion === appVersionConfig.minRequiredVersion
+    ) {
+      await checkUserSession();
+    } else {
+      setAppConfig(appVersionConfig);
     }
-    if (appVersion === appVersionConfig.minRequiredVersion) return false;
-    setAppConfig(appVersionConfig);
   };
 
   return (

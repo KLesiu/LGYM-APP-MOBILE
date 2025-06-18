@@ -1,5 +1,7 @@
-import { View, Text } from "react-native";
+import { View, Text, Linking, Alert, Pressable } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
+import React from "react";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface TrainingPlanDayExerciseHeaderProps {}
 
@@ -7,16 +9,38 @@ const TrainingPlanDayExerciseHeader: React.FC<
   TrainingPlanDayExerciseHeaderProps
 > = () => {
   const { currentExercise } = useTrainingPlanDay();
+  const openSearch = async (exerciseName?: string) => {
+    if (!exerciseName) return Alert.alert("Exercise name is required");
+    const query = encodeURIComponent(exerciseName);
+    const url = `https://www.google.com/search?q=${query}`;
+
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert("Can't open browser");
+    }
+  };
   return (
     <View className="flex flex-col px-5">
-      <Text
-        className="smallPhone:text-xl text-3xl text-white  font-bold "
-        style={{
-          fontFamily: "OpenSans_700Bold",
-        }}
-      >
-        {currentExercise?.exercise.name}
-      </Text>
+      <View className="flex flex-row items-center" style={{ gap: 8 }}>
+        <Text
+          className="smallPhone:text-xl text-3xl text-white  font-bold flex-1 "
+          style={{
+            fontFamily: "OpenSans_700Bold",
+          }}
+        >
+          {currentExercise?.exercise.name}
+        </Text>
+        <Pressable
+          className="w-10"
+          onPress={() => openSearch(currentExercise?.exercise.name)}
+          hitSlop={8}
+        >
+          <Ionicons name="search-outline" size={24} color="white" />
+        </Pressable>
+      </View>
+
       <Text
         className="smallPhone:text-sm text-base text-white "
         style={{

@@ -28,6 +28,9 @@ interface TrainingPlanDayContextType {
     lastExerciseScoresWithGym: LastExerciseScoresWithGym[]
   ) => void;
   sendPlanDayToLocalStorage: (planDay: PlanDayVm) => Promise<void>;
+  addNewExerciseToTrainingSessionScores: (
+    exercise: PlanDayExercisesFormVm
+  ) => void;
 }
 
 const TrainingPlanDayContext = createContext<TrainingPlanDayContextType | null>(
@@ -70,7 +73,7 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
 
   useEffect(() => {
     init();
-     return () => {
+    return () => {
       setIntervalDelay(null);
     };
   }, []);
@@ -83,31 +86,54 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   const planDayName = useMemo(() => planDay?.name ?? "", [planDay?.name]);
   const exercisesInPlanList = useMemo(() => planDay?.exercises, [planDay]);
 
+  const createScoresForExercise = (exercise: PlanDayExercisesFormVm) => {
+    return Array(exercise.series)
+      .fill(null)
+      .map((_, i) => ({
+        exercise: exercise.exercise,
+        series: i + 1,
+        reps: 0,
+        weight: 0,
+      }));
+  };
+
   const init = async () => {
     const response = (await initExercisePlanDay()) as PlanDayVm;
-    const trainingSessionScoresFromStorage =
+    const storedScores =
       (await loadTrainingSessionScores()) as TrainingSessionScores[];
-    if (response && response.exercises) {
+
+    if (response?.exercises) {
       const initialScores = response.exercises.flatMap((exercise) => {
-        return Array.from({ length: exercise.series }).map((_, seriesIndex) => {
-          const existingScore = trainingSessionScoresFromStorage.find(
+        return createScoresForExercise(exercise).map((defaultScore) => {
+          const existingScore = storedScores.find(
             (score) =>
-              score.exercise._id === exercise.exercise?._id &&
-              score.series === seriesIndex + 1
+              score.exercise._id === defaultScore.exercise._id &&
+              score.series === defaultScore.series
           );
-          return (
-            existingScore || {
-              exercise: exercise.exercise,
-              series: seriesIndex + 1,
-              reps: 0,
-              weight: 0,
-            }
-          );
+          return existingScore || defaultScore;
         });
       });
+
       setTrainingSessionScores(initialScores);
     }
     setIntervalDelay(1000);
+  };
+
+  const addNewExerciseToTrainingSessionScores = (
+    exercise: PlanDayExercisesFormVm
+  ) => {
+    if (!exercise.series || !exercise.exercise) return;
+
+    const newScores = createScoresForExercise(exercise);
+
+    setTrainingSessionScores((prevScores) => {
+      const filteredScores =
+        prevScores?.filter(
+          (score) => score.exercise._id !== exercise.exercise?._id
+        ) ?? [];
+
+      return [...filteredScores, ...newScores];
+    });
   };
 
   const toggleGymFilter = () => {
@@ -197,6 +223,7 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
         lastExerciseScoresWithGym,
         setLastExerciseScoresWithGym,
         sendPlanDayToLocalStorage,
+        addNewExerciseToTrainingSessionScores,
       }}
     >
       {children}

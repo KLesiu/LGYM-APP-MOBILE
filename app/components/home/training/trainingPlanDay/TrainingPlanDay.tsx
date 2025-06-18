@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useEffect, useState } from "react";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
@@ -38,7 +38,7 @@ interface TrainingPlanDayProps {
 }
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
-  const {  changeHeaderVisibility, userId } = useHomeContext();
+  const { changeHeaderVisibility, userId } = useHomeContext();
   const { getAPI, postAPI } = useAppContext();
   const {
     planDay,
@@ -46,7 +46,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setCurrentExercise,
     gym,
     lastExerciseScoresWithGym,
-    sendPlanDayToLocalStorage
+    sendPlanDayToLocalStorage,
+    addNewExerciseToTrainingSessionScores,
   } = useTrainingPlanDay();
   const [
     isTrainingPlanDayExerciseFormShow,
@@ -64,7 +65,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       changeHeaderVisibility(true);
     };
   }, []);
-
 
   /// Submit training and delete training session from localStorage then show summary.
   const addTraining = async (exercises: TrainingSessionScores[]) => {
@@ -98,12 +98,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       body
     );
   };
-
-
-
- 
-
-
 
   /// Delete exercise from plan day
   const deleteExerciseFromPlanDay = async (
@@ -195,6 +189,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
 
     if (!newPlanDay) return;
+    addNewExerciseToTrainingSessionScores(newExercise);
     setCurrentExercise(newExercise);
     await addExerciseToPlanDay(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
@@ -243,22 +238,22 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   return (
     <View className="absolute w-full h-full text-white bg-bgColor flex flex-col">
-      {planDay && Object.keys(planDay).length ? (
+      {planDay && Object.keys(planDay).length && (
         <View
           style={{ gap: 8 }}
           className=" h-full flex flex-col justify-between pb-4"
         >
-          <View
-            className="flex flex-col items-center flex-1"
-            style={{ gap: 16 }}
+          <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
+
+          <ScrollView
+            className="flex flex-col"
+            contentContainerStyle={{
+              display: "flex",
+              gap: 16,
+            }}
           >
-            <View style={{ gap: 16 }} className="flex flex-col w-full ">
-              <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
-              <TrainingPlanDayExerciseHeader />
-              <TrainingPlanDayHeaderButtons
-                showExerciseForm={showExerciseForm}
-              />
-            </View>
+            <TrainingPlanDayExerciseHeader />
+            <TrainingPlanDayHeaderButtons showExerciseForm={showExerciseForm} />
             <TrainingPlanDayActionsButtons
               getExerciseToAddFromForm={getExerciseToAddFromForm}
               deleteExerciseFromPlan={deleteExerciseFromPlanDay}
@@ -270,30 +265,24 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             <TrainingPlanDayExercisesList
               deleteExerciseFromPlan={deleteExerciseFromPlanDay}
             />
-          </View>
+          </ScrollView>
           <TrainingPlanDayFooterButtons
             sendTraining={sendTraining}
             hideAndDeleteTrainingSession={props.hideAndDeleteTrainingSession}
           />
         </View>
-      ) : (
-        <></>
       )}
-      {isTrainingPlanDayExerciseFormShow ? (
+      {isTrainingPlanDayExerciseFormShow && (
         <TrainingPlanDayExerciseForm
           cancel={hideExerciseForm}
           addExerciseToPlanDay={getExerciseToAddFromForm}
           bodyPart={bodyPart}
         />
-      ) : (
-        <></>
       )}
-      {isPlanShow ? (
+      {isPlanShow && (
         <PlanDayProvider closeForm={togglePlanShow}>
           <CreatePlanDay isPreview={true} planDayId={planDay?._id} />
         </PlanDayProvider>
-      ) : (
-        <></>
       )}
     </View>
   );

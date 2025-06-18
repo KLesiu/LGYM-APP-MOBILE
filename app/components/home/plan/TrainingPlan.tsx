@@ -1,11 +1,9 @@
-import { Text, View, Image, ScrollView, Pressable } from "react-native";
+import { Text, View, ScrollView } from "react-native";
 import { useState, useEffect, useCallback } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "../../elements/ViewLoading";
 import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./planDay/CreatePlanDay";
-import { PlanDayBaseInfoVm, PlanDayVm } from "./../../../../interfaces/PlanDay";
-import { Message } from "./../../../../enums/Message";
+import { PlanDayBaseInfoVm } from "./../../../../interfaces/PlanDay";
 import CustomButton, {
   ButtonSize,
   ButtonStyle,
@@ -19,7 +17,7 @@ import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 
 const TrainingPlan: React.FC = () => {
-  const { apiURL, toggleMenuButton, hideMenu, userId } = useHomeContext();
+  const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const { getAPI } = useAppContext();
   const [planConfig, setPlanConfig] = useState<{
     name: string;
@@ -49,7 +47,6 @@ const TrainingPlan: React.FC = () => {
   const init = async () => {
     setViewLoading(true);
     await getUserPlanConfig();
-    setViewLoading(false);
   };
 
   const getPlanDaysBaseInfo = async (planConfig: {
@@ -58,14 +55,24 @@ const TrainingPlan: React.FC = () => {
     _id: string;
   }): Promise<void> => {
     if (!planConfig || !planConfig._id) return;
-    await getAPI(`/planDay/${planConfig._id}/getPlanDaysInfo`, (result: PlanDayBaseInfoVm[])=>{
-      setPlanDaysBaseInfo(result);
-    },undefined,false)
+    await getAPI(
+      `/planDay/${planConfig._id}/getPlanDaysInfo`,
+      (result: PlanDayBaseInfoVm[]) => {
+        setPlanDaysBaseInfo(result);
+      },
+      undefined,
+      false
+    );
   };
 
   const deletePlanDay = async (): Promise<void> => {
     if (!currentPlanDay) return;
-    await getAPI(`/planDay/${currentPlanDay._id}/deletePlanDay`, ()=>init(),undefined,false)
+    await getAPI(
+      `/planDay/${currentPlanDay._id}/deletePlanDay`,
+      () => init(),
+      undefined,
+      false
+    );
     deletePlanDayVisible(false);
   };
 
@@ -100,14 +107,19 @@ const TrainingPlan: React.FC = () => {
   }, []);
 
   const getUserPlanConfig = async () => {
-    await getAPI(
-      `/${userId}/getPlanConfig`,
-      async(result: { name: string; trainingDays: number; _id: string }) =>
-       {
-        setPlanConfig(result)
-        await getPlanDaysBaseInfo(result);
-       } 
-    ),undefined,false;
+    try {
+      await getAPI(
+        `/${userId}/getPlanConfig`,
+        async (result: { name: string; trainingDays: number; _id: string }) => {
+          setPlanConfig(result);
+          await getPlanDaysBaseInfo(result);
+        },
+        undefined,
+        false
+      );
+    } finally {
+      setViewLoading(false);
+    }
   };
 
   const deletePlanDayVisible = useCallback(

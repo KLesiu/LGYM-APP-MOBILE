@@ -15,6 +15,7 @@ import TabView from "../../elements/TabView";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile: React.FC = () => {
   const { toggleMenuButton, changeView, userId } = useHomeContext();
@@ -23,7 +24,7 @@ const Profile: React.FC = () => {
   const [rankComponent, setRankComponent] = useState<JSX.Element>();
   const [isTabLoading, setIsTabLoading] = useState<boolean>(true);
 
-  const { clearBeforeLogout, getAPI } = useAppContext();
+  const { clearBeforeLogout, getAPI, token } = useAppContext();
 
   const [currentTab, setCurrentTab] = useState<JSX.Element>();
 
@@ -49,7 +50,9 @@ const Profile: React.FC = () => {
         if (response.profileRank) {
           setRankComponent(<ProfileRank rank={response.profileRank} />);
         }
-        setCurrentTab(<MainProfileInfo logout={logout} email={response.email} />);
+        setCurrentTab(
+          <MainProfileInfo logout={logout} email={response.email} />
+        );
       });
     } catch (error) {
       console.error("Error fetching user info:", error);
@@ -71,14 +74,6 @@ const Profile: React.FC = () => {
         <ViewLoading />
       ) : (
         <View className="w-full h-full p-4 relative  flex flex-col flex-1">
-          <CustomButton
-            onPress={goBack}
-            text="Back"
-            buttonStyleType={ButtonStyle.outline}
-            buttonStyleSize={ButtonSize.regular}
-            width="w-20"
-          />
-
           <View style={{ gap: 8 }} className="flex items-center flex-col px-6">
             <View className="flex ">{rankComponent}</View>
             <View style={{ gap: 4 }} className="flex flex-col items-center">
@@ -110,7 +105,12 @@ const Profile: React.FC = () => {
           </View>
           <TabView
             tabs={[
-              { label: "Data", component: <MainProfileInfo logout={logout} email={userInfo.email} /> },
+              {
+                label: "Data",
+                component: (
+                  <MainProfileInfo logout={logout} email={userInfo.email} />
+                ),
+              },
               {
                 label: "Records",
                 component: <Records toggleMenuButton={toggleMenuButton} />,
@@ -118,9 +118,7 @@ const Profile: React.FC = () => {
             ]}
             onTabChange={setActiveComponent}
           />
-          <View className="w-full flex-1">
-            {currentTab}
-          </View>
+          <View className="w-full flex-1">{currentTab}</View>
         </View>
       )}
     </BackgroundMainSection>

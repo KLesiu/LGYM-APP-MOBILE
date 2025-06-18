@@ -10,8 +10,9 @@ import { useAppContext } from "../../../AppContext";
 const Training: React.FC = () => {
   const { userId } = useHomeContext();
   const [isUserHavePlan, setIsUserHavePlan] = useState<boolean>(false);
-  const {getAPI,isLoading} = useAppContext()
- 
+  const { getAPI } = useAppContext();
+  const [viewLoading, setViewLoading] = useState<boolean>(true);
+
   useEffect(() => {
     init();
   }, []);
@@ -21,17 +22,32 @@ const Training: React.FC = () => {
   };
 
   const checkIsUserHavePlan = async () => {
-    try{
-      await getAPI(`/${userId}/checkIsUserHavePlan`, (response:boolean)=>setIsUserHavePlan(response),undefined,false);
-    }catch (error) {
+    try {
+      await getAPI(
+        `/${userId}/checkIsUserHavePlan`,
+        (response: boolean) => {
+          setIsUserHavePlan(response);
+        },
+        undefined,
+        false
+      );
+    } catch (error) {
       console.error("Error checking if user has a plan:", error);
+    } finally {
+      setViewLoading(false);
     }
-
   };
+
+  if (viewLoading)
+    return (
+      <View className="bg-bgColor flex-1 w-full">
+        <ViewLoading />
+      </View>
+    );
+
   return (
     <View className="bg-bgColor flex-1 w-full">
       {isUserHavePlan ? <TrainingView /> : <NonTrainingView />}
-      {isLoading && <ViewLoading/>}
     </View>
   );
 };

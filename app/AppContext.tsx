@@ -22,6 +22,8 @@ interface AppContextProps {
   setErrors: (errors: string[]) => void;
   clearBeforeLogout: () => Promise<void>;
   token?: string;
+  isTokenChecked: boolean;
+  setIsTokenChecked: (value: boolean) => void;
 }
 
 const AppContext = createContext<AppContextProps | null>(null);
@@ -42,6 +44,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [canAppStart, setCanAppStart] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [token, setToken] = useState<string>();
+  const [isTokenChecked, setIsTokenChecked] = useState<boolean>(false);
 
   useEffect(() => {
     getTokenFromLocalStorage();
@@ -107,7 +110,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const clearBeforeLogout = async () => {
     const keys = await AsyncStorage.getAllKeys();
-    keys.forEach(async (ele) => await deleteFromStorage(ele));
+    await Promise.all(keys.map((key) => deleteFromStorage(key)));
     setToken(undefined);
   };
 
@@ -124,6 +127,8 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         isLoading,
         setErrors,
         clearBeforeLogout,
+        setIsTokenChecked,
+        isTokenChecked,
         token,
       }}
     >
