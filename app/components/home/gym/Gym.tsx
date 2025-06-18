@@ -99,7 +99,7 @@ const Gym: React.FC = () => {
         <View className="flex flex-col ">
           <View className="flex w-full  justify-between flex-row  items-center">
             <Text
-              className="smallPhone:text-base text-lg text-white  font-bold "
+              className="text-lg smallPhone:text-base text-white  font-bold "
               style={{
                 fontFamily: "OpenSans_700Bold",
               }}
@@ -108,7 +108,7 @@ const Gym: React.FC = () => {
             </Text>
 
             <CustomButton
-              textSize="smallPhone:text-sm text-base"
+              textSize="text-base smallPhone:text-xs"
               onPress={addNewGym}
               textWeight={FontWeights.bold}
               buttonStyleType={ButtonStyle.success}

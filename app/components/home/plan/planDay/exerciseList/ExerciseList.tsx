@@ -14,18 +14,17 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
       <View className="flex flex-row justify-between">
         <Text
           style={{ fontFamily: "OpenSans_700Bold" }}
-          className="text-white smallPhone:text-sm text-base"
+          className="text-white text-base smallPhone:text-sm"
         >
           Exercises List:
         </Text>
         <Text
           style={{ fontFamily: "OpenSans_400Regular" }}
-          className="text-white smallPhone:text-sm text-base"
+          className="text-white  text-base smallPhone:text-sm"
         >
           {props.exerciseList.length} Total
         </Text>
       </View>
-      <ScrollView className="h-full">
       <View className="flex flex-col " style={{ gap: 10 }}>
           {props.exerciseList.length > 0 ? (
             props.exerciseList.map((item, index) => (
@@ -45,7 +44,6 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
             </Text>
           )}
         </View>
-      </ScrollView>
     </View>
   );
 };

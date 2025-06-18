@@ -52,14 +52,15 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             if (exercise) {
               setSelectedExercise(exercise);
             }
-            setExercisesToSelect(helpExercisesToSelect);
           }
-        }
+          setExercisesToSelect(helpExercisesToSelect);
+        },
+        undefined,
+        false
       );
     } catch (error) {
       console.error("Error fetching exercises:", error);
     }
-    
   };
   const clearAutoCompleteQuery = () => setClearQuery(false);
 
@@ -68,7 +69,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     const result = isIntValidator(input);
     if (result) setWeight(input);
   };
-  
+
   const createNewRecord = async () => {
     if (!weight || !selectedExercise) return setErrors([Message.FieldRequired]);
     const form: MainRecordsForm = {
@@ -90,9 +91,9 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   };
   return (
     <Dialog>
-      <View className="w-full h-full" style={{ gap: 16 }}>
+      <View className="w-full h-full">
         <Text
-          className="text-center smallPhone:text-base  text-xl text-white"
+          className="text-center  text-xl smallPhone:text-base text-white"
           style={{
             fontFamily: "OpenSans_700Bold",
           }}
@@ -100,9 +101,9 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
           {props.exerciseId && selectedExercise ? "Edit record" : "New record"}
         </Text>
         <View className="flex flex-col w-full p-2" style={{ gap: 8 }}>
-          <View className="flex flex-col w-full">
+          <View className="flex flex-col w-full" style={{ gap: 4 }}>
             <Text
-              className="text-white smallPhone:text-sm text-base"
+              className="text-white  text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
               Exercise:
@@ -110,7 +111,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             {props.exerciseId && selectedExercise ? (
               <TextInput
                 style={{ fontFamily: "OpenSans_400Regular" }}
-                className="w-full smallPhone:px-1 smallPhone:py-3 px-2 py-4 bg-secondaryColor rounded-lg  text-white "
+                className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-white "
                 readOnly={true}
                 value={selectedExercise.label}
               />
@@ -123,16 +124,16 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               />
             )}
           </View>
-          <View className="flex flex-col w-full">
+          <View className="flex flex-col w-full" style={{ gap: 4 }}>
             <Text
-              className="text-white smallPhone:text-sm text-base"
+              className="text-white  text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
               Weight:
             </Text>
             <TextInput
               style={{ fontFamily: "OpenSans_400Regular" }}
-              className="w-fullsmallPhone:px-1 smallPhone:py-3 px-2 py-4 bg-secondaryColor rounded-lg  text-white "
+              className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-white "
               onChangeText={validator}
               value={weight}
               keyboardType="numeric"

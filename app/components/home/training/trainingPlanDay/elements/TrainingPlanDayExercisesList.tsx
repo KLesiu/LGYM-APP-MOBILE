@@ -21,7 +21,7 @@ const TrainingPlanDayExercisesList: React.FC<
   return (
     <View className="flex flex-col w-full px-5 flex-1" style={{ gap: 8 }}>
       <Text
-        className="smallPhone:text-[12px] text-sm text-white "
+        className=" text-sm smallPhone:text-xs text-white "
         style={{
           fontFamily: "OpenSans_400Regular",
         }}

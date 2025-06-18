@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
 import ProfileRank from "../../elements/ProfileRank";
 import ProgressBar from "../../elements/ProgressBar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { UserInfo } from "./../../../../interfaces/User";
 import Card from "../../elements/Card";
@@ -40,7 +39,7 @@ const ProgressInfo: React.FC = () => {
         <>
           <View>
             <Text
-              className="text-primaryColor smallPhone:text-base midPhone:text-lg text-xl"
+              className="text-primaryColor  midPhone:text-lg text-xl smallPhone:text-base"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Progress
@@ -48,26 +47,26 @@ const ProgressInfo: React.FC = () => {
             <View className="flex flex-col justify-around">
               <View className="flex flex-col " style={{ gap: 8 }}>
                 <Text
-                  className="text-white smallPhone:text-[12px] midPhone:text-sm text-md"
+                  className="text-white  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   Current Rank: {userInfo.profileRank}
                 </Text>
                 <Text
-                  className="text-white smallPhone:text-[12px] midPhone:text-sm text-md"
+                  className="text-white  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   Elo: {userInfo.elo}
                 </Text>
                 <Text
-                  className="text-white smallPhone:text-[12px] midPhone:text-sm text-md"
+                  className="text-white  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   Next Rank: {userInfo.nextRank.name}
                 </Text>
                 {progress > 0 && <ProgressBar width={progress} />}
                 <Text
-                  className="text-white smallPhone:text-[12px] midPhone:text-sm text-md"
+                  className="text-white  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   Completed: {progress}%

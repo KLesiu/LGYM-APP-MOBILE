@@ -104,14 +104,14 @@ const Records: React.FC<RecordsProps> = () => {
                 <View
                   style={{ borderRadius: 8 }}
                   key={record._id}
-                  className="w-full bg-[#282828] smallPhone:p-3  p-4 "
+                  className="w-full bg-[#282828] p-4 smallPhone:p-3 "
                 >
                   <View className="flex flex-row justify-between">
                     <Text
                       style={{
                         fontFamily: "OpenSans_700Bold",
                       }}
-                      className="smallPhone:text-base text-xl font-bold text-primaryColor"
+                      className="text-xl smallPhone:text-base font-bold text-primaryColor"
                     >
                       {record.exerciseDetails.name}
                     </Text>
@@ -133,13 +133,13 @@ const Records: React.FC<RecordsProps> = () => {
 
                   <Text
                     style={{ fontFamily: "OpenSans_400Regular" }}
-                    className="smallPhone:text-sm text-base text-white"
+                    className="text-base smallPhone:text-sm text-white"
                   >
                     Weight: {record.weight} {record.unit}
                   </Text>
                   <Text
                     style={{ fontFamily: "OpenSans_400Regular" }}
-                    className="smallPhone:text-sm text-base text-white"
+                    className="text-base smallPhone:text-sm text-white"
                   >
                     Date: {new Date(record.date).toLocaleString()}
                   </Text>

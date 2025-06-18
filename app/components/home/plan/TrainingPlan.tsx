@@ -148,7 +148,7 @@ const TrainingPlan: React.FC = () => {
             <View className="p-5" style={{ gap: 16 }}>
               <View>
                 <Text
-                  className="smallPhone:text-sm text-base text-primaryColor  font-bold"
+                  className="text-base smallPhone:text-sm text-primaryColor  font-bold"
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
@@ -159,13 +159,14 @@ const TrainingPlan: React.FC = () => {
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
-                  className="smallPhone:text-xl text-3xl text-white font-bold"
+                  className="text-3xl smallPhone:text-xl text-white font-bold"
                 >
                   {planConfig.name}
                 </Text>
               </View>
               <CustomButton
                 text="Add plan day"
+                textSize="smallPhone:text-sm"
                 onPress={showPlanDayForm}
                 buttonStyleType={ButtonStyle.success}
                 textWeight={FontWeights.bold}

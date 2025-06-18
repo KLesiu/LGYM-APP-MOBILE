@@ -111,7 +111,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
       </View>
       <ValidationView />
 
-      {viewLoading ? <ViewLoading /> : <Text></Text>}
+      {viewLoading && <ViewLoading />}
     </Dialog>
   );
 };

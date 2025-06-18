@@ -89,7 +89,7 @@ const TrainingPlanDayExerciseForm: React.FC<
       <View className="w-full h-full flex flex-col py-5" style={{ gap: 16 }}>
         <View className="px-5 py-2">
           <Text
-            className="text-3xl text-white"
+            className="text-3xl smallPhone:text-xl text-white"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Add exercise to the current training
@@ -101,7 +101,7 @@ const TrainingPlanDayExerciseForm: React.FC<
         >
           <View className="flex flex-col w-full" style={{ gap: 8 }}>
             <Text
-              className="text-gray-200/80 font-light leading-4 text-base"
+              className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
               Exercise:
@@ -110,13 +110,13 @@ const TrainingPlanDayExerciseForm: React.FC<
               data={exercisesToSelect}
               onSelect={(item) => setSelectedExercise(item)}
               value={selectedExercise?.label || ""}
-              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} // Przekazujemy funkcję, jeśli clearQuery jest true
+              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} 
             />
           </View>
 
           <View className="flex flex-col w-full" style={{ gap: 8 }}>
             <Text
-              className="text-gray-200/80 font-light leading-4 text-base"
+              className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
               Series:
@@ -136,7 +136,7 @@ const TrainingPlanDayExerciseForm: React.FC<
 
           <View className="flex flex-col w-full" style={{ gap: 8 }}>
             <Text
-              className="text-gray-200/80 font-light leading-4 text-base"
+              className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
               Reps:

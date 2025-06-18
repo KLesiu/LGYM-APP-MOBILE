@@ -91,7 +91,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
       return (
         <View className="flex flex-row gap-1">
           <Text
-            className="smallPhone:text-[12px] text-sm text-white "
+            className="text-sm smallPhone:text-xs text-white "
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
@@ -99,7 +99,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
             {`Last training scores in`}
           </Text>
           <Text
-            className="smallPhone:text-[12px] text-sm text-primaryColor"
+            className="text-sm smallPhone:text-xs text-primaryColor"
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
@@ -111,7 +111,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
     }
     return (
       <Text
-        className="smallPhone:text-[12px] text-sm text-white "
+        className=" text-sm smallPhone:text-xs text-white "
         style={{
           fontFamily: "OpenSans_400Regular",
         }}
@@ -125,7 +125,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
     <View className="px-5 flex flex-col justify-start w-full ">
       {text}
       <Text
-        className="smallPhone:text-[12px] text-sm text-white "
+        className=" text-sm smallPhone:text-xs text-white "
         style={{
           fontFamily: "OpenSans_400Regular",
         }}

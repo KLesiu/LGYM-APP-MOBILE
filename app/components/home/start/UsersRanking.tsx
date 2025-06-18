@@ -35,22 +35,22 @@ const UsersRanking: React.FC = () => {
 
   return (
     <Card isLoading={isLoading} customClasses="flex-1">
-      <View className="h-full w-full flex flex-col gap-2">
+      <View className="h-full w-full flex flex-col" style={{ gap: 4 }}>
         <Text
-          className="text-primaryColor smallPhone:text-base text-lg text-xl"
+          className="text-primaryColor text-xl smallPhone:text-base"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Ranking
         </Text>
-        <ScrollView className="flex flex-col gap-2 smh:h-52 mdh:h-64 h-64 ">
+        <ScrollView className="flex flex-col gap-2  h-64 smh:h-52 ">
           {ranking.map((ele: UserBaseInfo, index: number) => {
             let color = "text-white";
-            let fontSize = "smallPhone:text-[12px] text-sm text-md";
+            let fontSize = "smallPhone:text-xs";
             if (myInfo && ele.name === myInfo.name) {
               color = "text-primaryColor";
             }
             if (index === 0) {
-              fontSize = "smallPhone:text-base text-lg";
+              fontSize = "text-lg smallPhone:text-base";
             }
             return (
               <View className="flex flex-row " key={index}>

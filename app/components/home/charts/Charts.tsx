@@ -19,9 +19,9 @@ const Charts: React.FC = () => {
           style={{
             fontFamily: "OpenSans_700Bold",
           }}
-          className="text-2xl font-bold text-primaryColor"
+          className="text-2xl smallPhone:text-xl font-bold text-primaryColor"
         >
-          Dashboard
+          Charts
         </Text>
         <TabView
           tabs={[

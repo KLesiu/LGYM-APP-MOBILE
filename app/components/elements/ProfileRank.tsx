@@ -25,7 +25,7 @@ const ProfileRank: React.FC<ProfileRankProps> = (props) => {
 
   return (
     <Image
-      className="smallPhone:h-20 smallPhone:w-20 midPhone:h-24 midPhone:w-24 h-32 w-32 "
+      className=" midPhone:h-24 midPhone:w-24 h-32 w-32 smallPhone:h-20 smallPhone:w-20 "
       source={rankSrc as ImageProps}
     />
   );

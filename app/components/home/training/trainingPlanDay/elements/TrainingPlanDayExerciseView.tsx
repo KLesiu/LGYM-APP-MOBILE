@@ -1,4 +1,4 @@
-import { View, Text, TextInput, ScrollView } from "react-native";
+import { View, Text, TextInput } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { ExerciseForm } from "../../../../../../interfaces/Exercise";
 import { TrainingSessionScores } from "../../../../../../interfaces/Training";
@@ -39,7 +39,7 @@ const TrainingPlanDayExerciseView: React.FC<
     <View className="w-full px-5 flex flex-col flex-1" style={{ gap: 4 }}>
       <View className="flex flex-row justify-between">
         <Text
-          className="smallPhone:text-[12px] text-sm text-white "
+          className=" text-sm smallPhone:text-xs text-white "
           style={{
             fontFamily: "OpenSans_300Light",
           }}
@@ -47,7 +47,7 @@ const TrainingPlanDayExerciseView: React.FC<
           Series
         </Text>
         <Text
-          className="smallPhone:text-[12px] text-sm text-white  w-2/5"
+          className="text-sm smallPhone:text-xs  text-white  w-2/5"
           style={{
             fontFamily: "OpenSans_300Light",
           }}
@@ -55,7 +55,7 @@ const TrainingPlanDayExerciseView: React.FC<
           Reps
         </Text>
         <Text
-          className="smallPhone:text-[12px] text-sm text-white  w-2/5 "
+          className=" text-sm smallPhone:text-xs text-white  w-2/5 "
           style={{
             fontFamily: "OpenSans_300Light",
           }}
@@ -77,7 +77,7 @@ const TrainingPlanDayExerciseView: React.FC<
                 key={index}
                 style={{ gap: 10 }}
               >
-                <View className="bg-secondaryColor smallPhone:px-2 smallPhone:py-1  px-4 py-3 rounded-lg ">
+                <View className="bg-secondaryColor   px-4 py-3 smallPhone:px-3 smallPhone:py-2  rounded-lg ">
                   <Text className="text-white">{index + 1}</Text>
                 </View>
                 <TextInput
@@ -92,7 +92,7 @@ const TrainingPlanDayExerciseView: React.FC<
                   value={savedScore ? `${savedScore.reps}` : ""}
                   keyboardType="numeric"
                   style={{ borderRadius: 8 }}
-                  className="smallPhone:text-[11px] text-sm  bg-secondaryColor w-2/5 smallPhone:px-2 smallPhone:py-1   px-4 py-3  text-white"
+                  className=" text-sm smallPhone:text-[11px]  bg-secondaryColor w-2/5    px-4 py-3 smallPhone:px-3 smallPhone:py-2  text-white"
                 />
                 <TextInput
                   onChangeText={(value) =>
@@ -106,7 +106,7 @@ const TrainingPlanDayExerciseView: React.FC<
                   style={{ borderRadius: 8 }}
                   value={savedScore ? `${savedScore.weight}` : ""}
                   keyboardType="numeric"
-                  className="smallPhone:text-[11px] text-sm   bg-secondaryColor  text-white smallPhone:px-2 smallPhone:py-1   px-4 py-3 w-2/5 "
+                  className=" text-sm  smallPhone:text-xs  bg-secondaryColor  text-white    px-4 py-3 smallPhone:px-3 smallPhone:py-2 w-2/5 "
                 />
               </View>
             );

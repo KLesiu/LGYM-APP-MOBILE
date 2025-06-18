@@ -48,14 +48,14 @@ const LastTrainingStartInfo: React.FC = () => {
     <Card>
       <View>
         <Text
-          className="text-primaryColor smallPhone:text-base text-xl"
+          className="text-primaryColor  text-xl smallPhone:text-base"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Last Training:
         </Text>
         <View className="flex">
           <Text
-            className="text-white smallPhone:text-[12px] text-sm text-md"
+            className="text-white  text-sm smallPhone:text-xs"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Date:
@@ -64,7 +64,7 @@ const LastTrainingStartInfo: React.FC = () => {
               : "N/A"}
           </Text>
           <Text
-            className="text-white smallPhone:text-[12px] text-sm text-md"
+            className="text-white  text-sm smallPhone:text-xs"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Type:

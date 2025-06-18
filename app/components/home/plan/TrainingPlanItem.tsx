@@ -19,12 +19,9 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
     <View key={item._id} className="w-full" style={{ gap: 10 }}>
       <Text
         style={{ fontFamily: "OpenSans_400Regular" }}
-        className="smallPhone:text-sm text-base text-white"
+        className="text-base smallPhone:text-sm text-white"
       >
-        Last training:{" "}
-        {item.lastTrainingDate
-          ? new Date(item.lastTrainingDate).toLocaleDateString()
-          : "No training yet"}
+        {`Last training : ${item.lastTrainingDate ? new Date(item.lastTrainingDate).toLocaleDateString() : "No training yet"}`}
       </Text>
       <Card onPress={() => showPlanDayForm(item, true)}>
         <View className="flex flex-col" style={{ gap: 4 }}>
@@ -32,7 +29,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             style={{
               fontFamily: "OpenSans_700Bold",
             }}
-            className="smallPhone:text-lg text-xl font-bold text-white"
+            className="text-xl smallPhone:text-lg font-bold text-white"
           >
             {item.name}
           </Text>
@@ -40,7 +37,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="smallPhone:text-sm text-base  text-fifthColor"
+            className=" text-base smallPhone:text-sm  text-fifthColor"
           >
             Exercises: {item.totalNumberOfExercises}
           </Text>
@@ -49,21 +46,21 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
               style={{
                 fontFamily: "OpenSans_400Regular",
               }}
-              className="smallPhone:text-sm text-base  text-fifthColor"
+              className=" text-base smallPhone:text-sm  text-fifthColor"
             >
               Total series: {item.totalNumberOfSeries}
             </Text>
           </View>
         </View>
         <View className="flex flex-row" style={{ gap: 8 }}>
-          <View className="flex justify-center items-center w-12 h-12 bg-secondaryColor70 rounded-lg ">
+          <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
             <CustomButton
               buttonStyleSize={ButtonSize.small}
               onPress={() => showPlanDayForm(item, undefined)}
               customSlots={[<EditIcon fill={"white"} />]}
             />
           </View>
-          <View className="flex justify-center items-center w-12 h-12 bg-secondaryColor70 rounded-lg ">
+          <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
             <CustomButton
               buttonStyleSize={ButtonSize.small}
               onPress={() => deletePlanDayVisible(true, item)}

@@ -21,7 +21,7 @@ const TabView: React.FC<TabViewProps> = ({ tabs, onTabChange }) => {
 
   return (
     <View className="w-full">
-      <View className="h-12 flex flex-row pr-6 border-b border-fifthColor">
+      <View className="h-12 smallPhone:h-10 flex flex-row pr-6 border-b border-fifthColor">
         {tabs.map((tab, index) => {
           const isActive = currentTab.label === tab.label;
           return (
@@ -31,7 +31,7 @@ const TabView: React.FC<TabViewProps> = ({ tabs, onTabChange }) => {
               onPress={() => handleTabPress(tab)}
             >
               <Text
-                className={`font-light text-sm text-center ${isActive? 'text-primaryColor'  :' text-fifthColor'}`}
+                className={`font-light text-sm smallPhone:text-xs text-center ${isActive? 'text-primaryColor'  :' text-fifthColor'}`}
               >
                 {tab.label}
               </Text>

@@ -34,14 +34,14 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
   return (
     <Card>
       <View className="flex flex-col">
-        <View className="flex flex-row justify-between w-full">
+        <View className="flex flex-row justify-between items-center w-full">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="smallPhone:text-lg text-xl font-bold text-white"
+            className=" text-xl smallPhone:text-lg font-bold text-white"
           >
             {props.gym.name}
           </Text>
-          {props.isEditable ? (
+          {props.isEditable && (
             <View style={{ gap: 8 }} className="flex flex-row">
               <CustomButton
                 buttonStyleSize={ButtonSize.small}
@@ -60,14 +60,12 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
                 customSlots={[<RemoveIcon />]}
               />
             </View>
-          ) : (
-            <></>
-          )}
+          ) }
         </View>
         <View className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_400Regular" }}
-            className="smallPhone:text-sm text-base text-fifthColor"
+            className=" text-base smallPhone:text-sm text-fifthColor"
           >
             Last training: {`${trainingDate} ${trainingName}`}
           </Text>

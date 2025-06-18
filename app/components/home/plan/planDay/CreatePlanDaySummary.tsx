@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
@@ -24,7 +24,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="smallPhone:text-xl text-3xl text-white"
+          className="text-3xl smallPhone:text-xl  text-white"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Summary
@@ -32,14 +32,17 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
         <View className="flex flex-row" style={{ gap: 8 }}>
           <PlanNameIcon />
           <Text
-            className="smallPhone:text-base text-xl text-white"
+            className="text-xl smallPhone:text-base text-white"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             {planDayName}
           </Text>
         </View>
       </View>
-      <ExerciseList exerciseList={exercisesList} />
+      <ScrollView>
+        <ExerciseList exerciseList={exercisesList} />
+      </ScrollView>
+
       <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}

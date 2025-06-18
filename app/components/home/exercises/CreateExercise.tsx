@@ -136,7 +136,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       <View className="w-full h-full">
         <View className="px-5 py-2">
           <Text
-            className="smallPhone:text-2xl text-3xl text-white"
+            className=" text-3xl smallPhone:text-2xl text-white"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {props.form ? "Edit Exercise" : "New Exercise"}
@@ -146,7 +146,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View className="flex flex-row items-center" style={{ gap: 8 }}>
             <ExerciseIcon />
             <Text
-              className="smallPhone:text-lg text-xl text-white"
+              className=" text-xl smallPhone:text-lg text-white"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Set an exercise
@@ -155,7 +155,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white smallPhone:text-sm text-base"
+              className="  text-white text-base smallPhone:text-sm"
             >
               Name:
             </Text>
@@ -174,7 +174,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white smallPhone:text-sm text-base"
+              className="  text-white text-base smallPhone:text-sm"
             >
               BodyPart:
             </Text>
@@ -182,7 +182,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
               {isBlocked ? (
                 <Text
                   style={{ fontFamily: "OpenSans_300Light" }}
-                  className="text-white text-base"
+                  className="text-white text-base smallPhone:text-sm"
                 >
                   {bodyPart}
                 </Text>
@@ -198,7 +198,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white smallPhone:text-sm text-base"
+              className="  text-white text-base smallPhone:text-sm"
             >
               Description:
             </Text>

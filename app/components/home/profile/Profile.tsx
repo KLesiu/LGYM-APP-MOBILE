@@ -7,15 +7,10 @@ import Records from "../records/Records";
 import MainProfileInfo from "./MainProfileInfo";
 import Start from "../start/Start";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../elements/CustomButton";
 import TabView from "../../elements/TabView";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile: React.FC = () => {
   const { toggleMenuButton, changeView, userId } = useHomeContext();
@@ -76,28 +71,28 @@ const Profile: React.FC = () => {
         <View className="w-full h-full p-4 relative  flex flex-col flex-1">
           <View style={{ gap: 8 }} className="flex items-center flex-col px-6">
             <View className="flex ">{rankComponent}</View>
-            <View style={{ gap: 4 }} className="flex flex-col items-center">
+            <View  className="flex flex-col items-center">
               <Text
-                className="text-primaryColor font-bold w-full text-center smallPhone:text-lg text-2xl"
+                className="text-primaryColor font-bold w-full text-center text-2xl smallPhone:text-lg "
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
                 {userInfo.name}
               </Text>
               <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light leading-4"
+                className="text-gray-200/80 font-light text-sm smallPhone:text-xs"
               >
                 {userInfo.profileRank}
               </Text>
               <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light leading-4"
+                className="text-gray-200/80 font-light text-sm smallPhone:text-xs"
               >
                 {userInfo.elo} Elo
               </Text>
               <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light leading-4"
+                className="text-gray-200/80 font-light text-sm smallPhone:text-xs"
               >
                 Member since: {userInfo.createdAt.toString().slice(0, 10)}
               </Text>

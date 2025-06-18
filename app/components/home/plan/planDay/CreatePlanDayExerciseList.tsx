@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import { DropdownItem } from "./../../../../../interfaces/Dropdown";
 import {
   ExerciseForm,
@@ -126,92 +126,95 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
   return (
     <View className="w-full h-full">
-      <View className="px-5 py-2">
-        <Text
-          className="smallPhone:text-xl text-3xl text-white"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          Create plan list
-        </Text>
-      </View>
-      <View className="px-5" style={{ gap: returnGap }}>
-        <View className="flex flex-row" style={{ gap: 8 }}>
-          <PlanNameIcon />
+      <ScrollView>
+        <View className="px-5 py-2">
           <Text
-            className="smallPhone:text-base text-xl text-white"
-            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="text-3xl smallPhone:text-xl text-white"
+            style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            New Exercises
+            Create plan list
           </Text>
         </View>
-        <View style={{ gap: 4 }} className="flex flex-col">
-          <Text
-            style={{ fontFamily: "OpenSans_300Light" }}
-            className="  text-white  smallPhone:text-sm  text-base"
-          >
-            Exercise name
-          </Text>
-          <AutoComplete
-            data={exercisesToSelect}
-            onSelect={(item) => setSelectedExercise(item)}
-            value={selectedExercise?.label || ""}
-            valueId={selectedExercise?.value || ""}
-            onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
-          />
-        </View>
-        <View className="flex flex-row justify-between" style={{ gap: 20 }}>
-          <View style={{ gap: 4 }} className="flex flex-col flex-1">
+        <View className="px-5" style={{ gap: returnGap }}>
+          <View className="flex flex-row" style={{ gap: 8 }}>
+            <PlanNameIcon />
+            <Text
+              className="text-xl smallPhone:text-base text-white"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              New Exercises
+            </Text>
+          </View>
+          <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  smallPhone:text-sm  text-base"
+              className="  text-white text-base smallPhone:text-sm"
             >
-              Series:
+              Exercise name
             </Text>
-            <TextInput
-              style={{
-                fontFamily: "OpenSans_400Regular",
-              }}
-              className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
-              keyboardType="numeric"
-              value={numberOfSeries}
-              onChangeText={validator}
+            <AutoComplete
+              data={exercisesToSelect}
+              onSelect={(item) => setSelectedExercise(item)}
+              value={selectedExercise?.label || ""}
+              valueId={selectedExercise?.value || ""}
+              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
             />
           </View>
-          <View style={{ gap: 4 }} className="flex flex-col flex-1">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="text-white smallPhone:text-sm  text-base"
-            >
-              Reps:
-            </Text>
-            <TextInput
-              style={{
-                fontFamily: "OpenSans_400Regular",
-              }}
-              className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
-              value={exerciseReps}
-              onChangeText={(text: string) => setExerciseReps(text)}
+          <View className="flex flex-row justify-between" style={{ gap: 20 }}>
+            <View style={{ gap: 4 }} className="flex flex-col flex-1">
+              <Text
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="  text-white text-base smallPhone:text-sm"
+              >
+                Series:
+              </Text>
+              <TextInput
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+                className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
+                keyboardType="numeric"
+                value={numberOfSeries}
+                onChangeText={validator}
+              />
+            </View>
+            <View style={{ gap: 4 }} className="flex flex-col flex-1">
+              <Text
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="text-white text-base smallPhone:text-sm"
+              >
+                Reps:
+              </Text>
+              <TextInput
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+                className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
+                value={exerciseReps}
+                onChangeText={(text: string) => setExerciseReps(text)}
+              />
+            </View>
+          </View>
+          <View className="flex justify-between flex-row w-full">
+            <CustomButton
+              text="New exercise"
+              onPress={toggleExerciseForm}
+              buttonStyleType={ButtonStyle.outline}
+            />
+            <CustomButton
+              text="Add to list"
+              onPress={addToList}
+              buttonStyleType={ButtonStyle.success}
             />
           </View>
         </View>
-        <View className="flex justify-between flex-row w-full">
-          <CustomButton
-            text="New exercise"
-            onPress={toggleExerciseForm}
-            buttonStyleType={ButtonStyle.outline}
-          />
-          <CustomButton
-            text="Add to list"
-            onPress={addToList}
-            buttonStyleType={ButtonStyle.success}
-          />
-        </View>
-      </View>
-      <ExerciseList
-        exerciseList={exercisesList}
-        removeExerciseFromList={removeExerciseFromList}
-        editExerciseFromList={editExerciseFromList}
-      />
+        <ExerciseList
+          exerciseList={exercisesList}
+          removeExerciseFromList={removeExerciseFromList}
+          editExerciseFromList={editExerciseFromList}
+        />
+      </ScrollView>
+
       <View className="px-5 flex flex-row justify-between" style={{ gap: 20 }}>
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}

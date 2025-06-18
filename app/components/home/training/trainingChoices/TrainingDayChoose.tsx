@@ -37,7 +37,7 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
         style={{ gap: 16 }}
       >
         <Text
-          className="text-[28px] text-white"
+          className="text-[28px] smallPhone:text-2xl text-white"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Choose training day!

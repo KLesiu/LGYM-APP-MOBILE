@@ -19,7 +19,7 @@ const ValidationView: React.FC<ValidationViewProps> = () => {
           {errors.map((error, index) => (
             <Text
               key={index}
-              className="text-sm text-red-400"
+              className="text-sm smallPhone:text-[10px] text-red-400"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               {error}

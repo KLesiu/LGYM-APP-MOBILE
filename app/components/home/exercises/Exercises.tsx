@@ -130,20 +130,20 @@ const Exercises: React.FC = () => {
 
   const renderExerciseItem = useCallback(
     ({ item }: { item: ExerciseForm }) => (
-      <View className="h-20">
+      <View className="h-20 smallPhone:h-16 flex justify-center items-center">
         <Card
           onPress={() => handleExerciseDetails(item)}
           customClasses="h-full"
         >
           <View className="flex flex-col">
             <Text
-              className="smallPhone:text-[14px] text-base text-primaryColor font-bold"
+              className=" text-base smallPhone:text-sm text-primaryColor font-bold"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               {item.name}
             </Text>
             <Text
-              className="smallPhone:text-[12px] text-sm text-white"
+              className=" text-sm smallPhone:text-xs text-white"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               BodyPart: {item.bodyPart}
@@ -160,7 +160,7 @@ const Exercises: React.FC = () => {
       <View className="flex flex-col p-4" style={{ gap: 32 }}>
         <View className="flex flex-row items-center justify-between">
           <Text
-            className="text-white smallPhone:text-base text-lg font-bold"
+            className="text-white  text-lg smallPhone:text-base font-bold"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Filter by body part:
@@ -177,14 +177,14 @@ const Exercises: React.FC = () => {
             <View className="flex flex-col">
               <View className="flex flex-row items-center justify-between">
                 <Text
-                  className="smallPhone:text-base text-lg text-white font-bold"
+                  className=" text-lg smallPhone:text-base text-white font-bold"
                   style={{ fontFamily: "OpenSans_700Bold" }}
                 >
                   Global exercises:
                 </Text>
                 {isAdmin && (
                   <CustomButton
-                    textSize="smallPhone:text-sm text-base"
+                    textSize=" text-base smallPhone:text-sm"
                     onPress={() => openExerciseForm(true)}
                     textWeight={FontWeights.bold}
                     buttonStyleType={ButtonStyle.success}
@@ -209,13 +209,13 @@ const Exercises: React.FC = () => {
             <View>
               <View className="flex flex-row items-center justify-between">
                 <Text
-                  className="smallPhone:text-base text-lg text-white font-bold"
+                  className=" text-lg smallPhone:text-base text-white font-bold"
                   style={{ fontFamily: "OpenSans_700Bold" }}
                 >
                   User exercises:
                 </Text>
                 <CustomButton
-                  textSize="smallPhone:text-sm text-base"
+                  textSize=" text-base smallPhone:text-sm"
                   onPress={() => openExerciseForm()}
                   textWeight={FontWeights.bold}
                   buttonStyleType={ButtonStyle.success}

@@ -15,19 +15,19 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
 }) => {
   return (
     <Pressable
-      className="w-full bg-fourthColor flex flex-row smallPhone:p-1 p-2 rounded-lg justify-between items-center"
+      className="w-full bg-fourthColor flex flex-row  p-2 rounded-lg justify-between items-center"
       style={{ gap: 20 }}
       disabled={!editExerciseFromList}
       onPress={() =>
         editExerciseFromList ? editExerciseFromList(exerciseListItem) : null
       }
     >
-      <View className="flex flex-col" style={{ gap: 4 }}>
+      <View className="flex flex-col flex-1" style={{ gap: 4 }}>
         <Text
           style={{
             fontFamily: "OpenSans_400Regular",
           }}
-          className="smallPhone:text-base text-xl  text-white"
+          className="text-xl smallPhone:text-base  text-white"
         >
           {exerciseListItem.exercise.label}
         </Text>
@@ -36,7 +36,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="smallPhone:text-[12px] text-sm  text-fifthColor"
+            className="text-sm smallPhone:text-xs  text-fifthColor"
           >
             Series: {exerciseListItem.series}
           </Text>
@@ -45,22 +45,22 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
               style={{
                 fontFamily: "OpenSans_400Regular",
               }}
-              className="smallPhone:text-[12px] :text-sm  text-fifthColor"
+              className="text-sm smallPhone:text-xs  text-fifthColor"
             >
               Reps: {exerciseListItem.reps}
             </Text>
           </View>
         </View>
       </View>
-      {removeExerciseFromList ? (
-        <View className="flex justify-center items-center smallPhone:w-10 smallPhone:h-10 w-12  h-12 bg-secondaryColor70 rounded-lg ">
+      {removeExerciseFromList && (
+        <View className="flex justify-center items-center  w-12  h-12 smallPhone:w-10 smallPhone:h-10 bg-secondaryColor70 rounded-lg">
           <CustomButton
             buttonStyleSize={ButtonSize.small}
             onPress={() => removeExerciseFromList(exerciseListItem)}
             customSlots={[<IconDelete />]}
           />
         </View>
-      ) : null}
+      )}
     </Pressable>
   );
 };

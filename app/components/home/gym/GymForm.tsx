@@ -47,17 +47,17 @@ const GymForm: React.FC<GymFormProps> = (props) => {
       <View className="w-full h-full">
         <View className="px-5 py-2">
           <Text
-            className="smallPhone:text-2xl text-3xl text-white"
+            className=" text-3xl smallPhone:text-2xl text-white"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {props.gym ? "Edit Gym" : "New Gym"}
           </Text>
         </View>
         <View className="px-5" style={{ gap: 16 }}>
-          <View className="flex flex-row items-center" style={{ gap: 8 }}>
+          <View className="flex flex-row items-center" style={{ gap: 4 }}>
             <GymIcon />
             <Text
-              className="smallPhone:text-lg text-xl text-white"
+              className="text-xl smallPhone:text-lg text-white"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Set a gym
@@ -66,7 +66,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  smallPhone:text-sm text-base"
+              className="  text-white   text-base smallPhone:text-sm"
             >
               Name:
             </Text>

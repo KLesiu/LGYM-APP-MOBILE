@@ -20,7 +20,7 @@ const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
       </Pressable>
       <View className="flex flex-col items-center " style={{ gap: 4 }}>
         <Text
-          className="smallPhone:text-sm text-base text-white  font-bold "
+          className="text-base smallPhone:text-sm text-white  font-bold "
           style={{
             fontFamily: "OpenSans_700Bold",
           }}
@@ -30,7 +30,7 @@ const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
         <View className="flex flex-row items-center" style={{ gap: 4 }}>
           <GymIcon width={14} height={14} />
           <Text
-            className="smallPhone:text-[10px] :text-[12px] text-white"
+            className="text-xs smallPhone:text-[10px] text-white"
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
