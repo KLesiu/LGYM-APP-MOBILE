@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { useEffect, useState } from "react";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
@@ -48,6 +48,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     lastExerciseScoresWithGym,
     sendPlanDayToLocalStorage,
     addNewExerciseToTrainingSessionScores,
+    incrementOrDecrementExerciseInTrainingSessionScores,
+    trainingSessionScores,
+    setTrainingSessionScores,
+    scrollViewRef,
   } = useTrainingPlanDay();
   const [
     isTrainingPlanDayExerciseFormShow,
@@ -73,9 +77,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const training = exercises.map((ele: TrainingSessionScores) => {
       const exerciseScoresTrainingForm: ExerciseScoresTrainingForm = {
         exercise: `${ele.exercise._id}`,
-        reps: ele.reps,
+        reps: parseFloat(ele.reps),
         series: ele.series,
-        weight: ele.weight,
+        weight: parseFloat(ele.weight),
         unit: WeightUnits.KILOGRAMS,
       };
       return exerciseScoresTrainingForm;
@@ -100,10 +104,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
 
   /// Delete exercise from plan day
-  const deleteExerciseFromPlanDay = async (
-    exerciseId: string | undefined,
-    isIncrementDecrement = false
-  ) => {
+  const deleteExerciseFromPlanDay = async (exerciseId: string | undefined) => {
     if (!exerciseId) return;
     const newPlanDayExercises = planDay?.exercises.filter(
       (exercise) => exercise.exercise._id !== exerciseId
@@ -112,7 +113,11 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const newPlanDay = { ...planDay, exercises: newPlanDayExercises };
     await sendPlanDayToLocalStorage(newPlanDay);
     setPlanDay(newPlanDay);
-    if (!isIncrementDecrement) setCurrentExercise(newPlanDay.exercises[0]);
+    setCurrentExercise(newPlanDay.exercises[0]);
+    const newTrainingSessionScores = trainingSessionScores.filter(
+      (exercise) => exercise.exercise._id !== exerciseId
+    );
+    setTrainingSessionScores(newTrainingSessionScores);
     return newPlanDay;
   };
 
@@ -149,6 +154,31 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     );
     return result;
   };
+
+  const incrementOrDecrementExercise = async (
+    exerciseId: string,
+    seriesChange: number
+  ) => {
+    const newPlanDayExercises = planDay?.exercises.map((exercise) => {
+      if (exercise.exercise._id === exerciseId) {
+        const newCurrentExercise = {
+          ...exercise,
+          series: exercise.series + seriesChange,
+        };
+        setCurrentExercise(newCurrentExercise);
+        return newCurrentExercise;
+      }
+      return exercise;
+    });
+    const newPlanDay = { ...planDay, exercises: newPlanDayExercises };
+    await addExerciseToPlanDay(newPlanDay as PlanDayVm);
+
+    incrementOrDecrementExerciseInTrainingSessionScores(
+      exerciseId,
+      seriesChange
+    );
+  };
+
   const getExerciseToAddFromForm = async (
     exerciseId: string,
     series: number,
@@ -170,7 +200,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         (e) => e.exercise._id === idExercise
       );
 
-      const response = await deleteExerciseFromPlanDay(idExercise, true);
+      const response = await deleteExerciseFromPlanDay(idExercise);
       if (!response) return;
 
       newPlanDay = response;
@@ -216,8 +246,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
       return {
         ...score,
-        reps: parsedReps,
-        weight: parsedWeight,
+        reps: parsedReps.toString(),
+        weight: parsedWeight.toString(),
       };
     });
 
@@ -228,7 +258,11 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   const sendTraining = async (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
-    if (!result) return;
+    if (!result)
+      return Alert.alert(
+        "Invalid Scores",
+        "Please make sure every score is a number and not empty."
+      );
     await addTraining(result);
   };
 
@@ -246,6 +280,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
 
           <ScrollView
+            ref={scrollViewRef}
             className="flex flex-col"
             contentContainerStyle={{
               display: "flex",
@@ -256,6 +291,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             <TrainingPlanDayHeaderButtons showExerciseForm={showExerciseForm} />
             <TrainingPlanDayActionsButtons
               getExerciseToAddFromForm={getExerciseToAddFromForm}
+              incrementOrDecrementExercise={incrementOrDecrementExercise}
               deleteExerciseFromPlan={deleteExerciseFromPlanDay}
               showExerciseFormByBodyPart={showExerciseFormByBodyPart}
               togglePlanShow={togglePlanShow}

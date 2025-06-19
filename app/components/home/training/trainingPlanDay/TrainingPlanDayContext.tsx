@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
   PlanDayExercisesFormVm,
   PlanDayVm,
@@ -9,6 +9,7 @@ import { LastExerciseScoresWithGym } from "../../../../../interfaces/Exercise";
 import { useAppContext } from "../../../../AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useInterval from "../../../../../helpers/hooks/useInterval";
+import { ScrollView } from "react-native";
 
 interface TrainingPlanDayContextType {
   setPlanDay: (planDay: PlanDayVm) => void;
@@ -31,6 +32,12 @@ interface TrainingPlanDayContextType {
   addNewExerciseToTrainingSessionScores: (
     exercise: PlanDayExercisesFormVm
   ) => void;
+  incrementOrDecrementExerciseInTrainingSessionScores: (
+   exerciseId: string,
+   series: number,
+  ) => void;
+  scrollViewRef: React.RefObject<ScrollView>;
+  scrollToTop: () => void;
 }
 
 const TrainingPlanDayContext = createContext<TrainingPlanDayContextType | null>(
@@ -70,6 +77,7 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
     LastExerciseScoresWithGym[]
   >([]);
   const [intervalDelay, setIntervalDelay] = useState<number | null>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
     init();
@@ -92,8 +100,8 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
       .map((_, i) => ({
         exercise: exercise.exercise,
         series: i + 1,
-        reps: 0,
-        weight: 0,
+        reps: "",
+        weight: "",
       }));
   };
 
@@ -136,9 +144,41 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
     });
   };
 
+  const incrementOrDecrementExerciseInTrainingSessionScores = (
+    exerciseId:string,
+    seriesChange: number,
+  ) => {
+
+    const currentTrainingSessionScoresWithThisExericse =
+      trainingSessionScores.filter(
+        (score) => score.exercise._id === exerciseId
+      );
+      if(seriesChange < 0){
+        currentTrainingSessionScoresWithThisExericse.pop()
+      }else{
+        currentTrainingSessionScoresWithThisExericse.push({
+          exercise: currentTrainingSessionScoresWithThisExericse[0].exercise,
+          series: currentTrainingSessionScoresWithThisExericse.length +1,
+          reps: '',
+          weight: ''
+        })
+      }
+
+      const newTrainingSessionScores = trainingSessionScores.filter(x=>x.exercise._id !== exerciseId)
+      setTrainingSessionScores([
+        ...newTrainingSessionScores,
+        ...currentTrainingSessionScoresWithThisExericse
+      ]);
+  };
+
   const toggleGymFilter = () => {
     setIsGymFilterActive((prev) => !prev);
   };
+
+  const scrollToTop = () => {
+  scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+};
+
 
   /// Load training session scores from local storage
   const loadTrainingSessionScores = async () => {
@@ -224,6 +264,9 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
         setLastExerciseScoresWithGym,
         sendPlanDayToLocalStorage,
         addNewExerciseToTrainingSessionScores,
+        incrementOrDecrementExerciseInTrainingSessionScores,
+        scrollViewRef,
+        scrollToTop
       }}
     >
       {children}

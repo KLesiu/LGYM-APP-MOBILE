@@ -25,7 +25,7 @@ interface TrainingPlanDayExerciseListCardProps {
 const TrainingPlanDayExerciseListCard: React.FC<
   TrainingPlanDayExerciseListCardProps
 > = ({ exercise, deleteExerciseFromPlan }) => {
-  const { setCurrentExercise, trainingSessionScores } = useTrainingPlanDay();
+  const { setCurrentExercise, trainingSessionScores,scrollToTop } = useTrainingPlanDay();
   const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
@@ -50,15 +50,20 @@ const TrainingPlanDayExerciseListCard: React.FC<
   const checkIsExerciseHaveScore = (
     trainingSessionScore: TrainingSessionScores
   ) => {
-    if (trainingSessionScore.reps || trainingSessionScore.weight) {
+    if (trainingSessionScore.reps && trainingSessionScore.weight) {
       return true;
     }
     return false;
   };
 
+  const changeCurrentExercise = () => {
+    scrollToTop();
+    setCurrentExercise(exercise);
+  }
+
   return (
     <Pressable
-      onPress={() => setCurrentExercise(exercise)}
+      onPress={changeCurrentExercise}
       className="bg-secondaryColor flex flex-row items-center justify-between w-full  p-2 smallPhone:p-1  rounded-lg"
     >
       <View className="flex flex-row items-center flex-1" style={{ gap: 20 }}>

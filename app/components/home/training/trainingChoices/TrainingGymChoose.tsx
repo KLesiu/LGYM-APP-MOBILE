@@ -7,6 +7,7 @@ import { useHomeContext } from "../../HomeContext";
 import NoGymsInfo from "./elements/NoGymsInfo";
 import GymsToChoose from "./elements/GymsToChoose";
 import { useAppContext } from "../../../../AppContext";
+import ViewLoading from "../../../elements/ViewLoading";
 
 interface TrainingGymChooseProps {
   setGym: (gym: GymForm) => void;
@@ -20,6 +21,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
   const { userId } = useHomeContext();
   const {getAPI,errors} = useAppContext()
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
+  const [viewLoading, setViewLoading] = useState<boolean>(true);
   useEffect(() => {
     getGyms();
   }, []);
@@ -27,7 +29,12 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
 
   const getGyms = async () => {
     await getAPI(`/gym/${userId}/getGyms`, (response: GymChoiceInfo[]) =>setGyms(response))
+    setViewLoading(false);
   };
+  
+  if(viewLoading){
+    return <Dialog><ViewLoading/></Dialog>
+  }
 
   return (
     <Dialog>

@@ -16,8 +16,8 @@ interface TrainingForm extends TrainingBase{
 interface TrainingSessionScores{
     exercise: ExerciseForm;
     series: number;
-    reps: number;
-    weight: number;
+    reps: string;
+    weight: string;
 }
 
 interface LastTrainingInfo{

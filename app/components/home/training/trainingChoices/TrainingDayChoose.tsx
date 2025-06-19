@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useHomeContext } from "../../HomeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../../../AppContext";
+import ViewLoading from "../../../elements/ViewLoading";
 interface TrainingDayChooseProps {
   showDaySection: (day: string) => Promise<void>;
 }
@@ -17,6 +18,7 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
   const { userId } = useHomeContext();
   const {getAPI} = useAppContext()
   const [trainingTypes, setTrainingTypes] = useState<PlanDayChoose[]>([]);
+  const [viewLoading, setViewLoading] = useState<boolean>(true);
 
   useEffect(() => {
     init();
@@ -24,12 +26,18 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
 
   const init = async () => {
     await getInformationsAboutPlanDays();
+    setViewLoading(false);
   }
 
   const getInformationsAboutPlanDays =
     async (): Promise<void> => {
       await getAPI(`/planDay/${userId}/getPlanDaysTypes`, (response: PlanDayChoose[])=>setTrainingTypes(response),undefined,false)
     };
+
+  if (viewLoading) {
+    return <Dialog><ViewLoading/></Dialog>
+  }
+  
   return (
     <Dialog>
       <View

@@ -14,7 +14,6 @@ import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
 import { BodyParts } from "../../../../../../enums/BodyParts";
 import useDeviceCategory from "../../../../../../helpers/hooks/useDeviceCategory";
 
-
 enum ActionButtonsEnum {
   PLAN = "PLAN",
   GYM = "GYM",
@@ -31,9 +30,7 @@ interface TrainingPlanDayActionsButtonsProps {
     reps: string,
     isIncrementDecrement?: boolean
   ) => Promise<void>;
-  deleteExerciseFromPlan: (
-    exerciseId: string | undefined
-  ) => Promise<
+  deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
     | {
         exercises: PlanDayExercisesFormVm[];
         _id: string;
@@ -46,6 +43,11 @@ interface TrainingPlanDayActionsButtonsProps {
     exerciseToSwitchId: string
   ) => void;
   togglePlanShow: () => void;
+  incrementOrDecrementExercise: (
+    exerciseId: string,
+    series: number,
+    reps: string,
+  ) => Promise<void>;
 }
 
 const TrainingPlanDayActionsButtons: React.FC<
@@ -55,12 +57,13 @@ const TrainingPlanDayActionsButtons: React.FC<
   deleteExerciseFromPlan,
   showExerciseFormByBodyPart,
   togglePlanShow,
+  incrementOrDecrementExercise,
 }) => {
   const { toggleGymFilter, currentExercise } = useTrainingPlanDay();
 
   const deviceCategory = useDeviceCategory();
 
-  const setIconsSize = useMemo(()=>{
+  const setIconsSize = useMemo(() => {
     let size = 24;
     switch (deviceCategory) {
       case "smallPhone":
@@ -85,11 +88,11 @@ const TrainingPlanDayActionsButtons: React.FC<
         size = 24;
     }
     return size;
-  }, [deviceCategory]) 
+  }, [deviceCategory]);
 
   const [buttons, setButtons] = useState([
     {
-      icon: <PlanIcon width={setIconsSize} height={setIconsSize}/>,
+      icon: <PlanIcon width={setIconsSize} height={setIconsSize} />,
       actionId: ActionButtonsEnum.PLAN,
       isActive: false,
     },
@@ -120,13 +123,9 @@ const TrainingPlanDayActionsButtons: React.FC<
     },
   ]);
 
-
-
   const toggleButtonActive = (id: ActionButtonsEnum) => {
     setButtons((prev) =>
-      prev.map((b) =>
-        b.actionId === id ? { ...b, isActive: !b.isActive } : b
-      )
+      prev.map((b) => (b.actionId === id ? { ...b, isActive: !b.isActive } : b))
     );
   };
 
@@ -148,20 +147,18 @@ const TrainingPlanDayActionsButtons: React.FC<
         break;
       case ActionButtonsEnum.INCREMENT:
         if (currentExercise)
-          await getExerciseToAddFromForm(
+          await incrementOrDecrementExercise(
             currentExercise.exercise._id!,
-            currentExercise.series + 1,
+            1,
             currentExercise.reps,
-            true
           );
         break;
       case ActionButtonsEnum.DECREMENT:
         if (currentExercise)
-          await getExerciseToAddFromForm(
+          await incrementOrDecrementExercise(
             currentExercise.exercise._id!,
-            currentExercise.series - 1,
+            -1,
             currentExercise.reps,
-            true
           );
         break;
       case ActionButtonsEnum.REMOVE:

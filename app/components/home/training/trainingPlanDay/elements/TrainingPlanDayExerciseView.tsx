@@ -2,13 +2,14 @@ import { View, Text, TextInput } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { ExerciseForm } from "../../../../../../interfaces/Exercise";
 import { TrainingSessionScores } from "../../../../../../interfaces/Training";
+import { useEffect, useState } from "react";
 
 interface TrainingPlanDayExerciseViewProps {}
 
 const TrainingPlanDayExerciseView: React.FC<
   TrainingPlanDayExerciseViewProps
 > = () => {
-  const { currentExercise, trainingSessionScores, setTrainingSessionScores } =
+  const { currentExercise, setTrainingSessionScores, trainingSessionScores } =
     useTrainingPlanDay();
 
   const updateExerciseScore = async (
@@ -17,24 +18,30 @@ const TrainingPlanDayExerciseView: React.FC<
     value: string,
     isWeight: boolean
   ) => {
-    const updatedScores = trainingSessionScores.map((score) => {
-      if (score.exercise._id === exercise._id && score.series === series) {
-        if (isWeight) {
-          return {
-            ...score,
-            weight: value,
-          };
-        }
-        return {
-          ...score,
-          reps: value,
-        };
-      }
-      return score;
-    });
+    const scoreIndex = trainingSessionScores.findIndex(
+      (score) => score.exercise._id === exercise._id && score.series === series
+    );
 
-    setTrainingSessionScores(updatedScores as Array<TrainingSessionScores>);
+    const newScore: TrainingSessionScores = {
+      exercise,
+      series,
+      reps: isWeight ? "" : value,
+      weight: isWeight ? value : "",
+    };
+
+    let updatedScores = [...trainingSessionScores];
+
+    if (scoreIndex !== -1) {
+      updatedScores[scoreIndex] = {
+        ...updatedScores[scoreIndex],
+        ...(isWeight ? { weight: value } : { reps: value }),
+      };
+    } else {
+      updatedScores.push(newScore);
+    }
+    setTrainingSessionScores(updatedScores);
   };
+
   return (
     <View className="w-full px-5 flex flex-col flex-1" style={{ gap: 4 }}>
       <View className="flex flex-row justify-between">
@@ -74,23 +81,23 @@ const TrainingPlanDayExerciseView: React.FC<
             return (
               <View
                 className="flex w-full flex-row justify-between"
-                key={index}
+                key={`${currentExercise!.exercise._id}-${index + 1}`}
                 style={{ gap: 10 }}
               >
                 <View className="bg-secondaryColor   px-4 py-3 smallPhone:px-3 smallPhone:py-2  rounded-lg ">
                   <Text className="text-white">{index + 1}</Text>
                 </View>
                 <TextInput
-                  onChangeText={(value) =>
+                  onChangeText={(value) => {
                     updateExerciseScore(
                       currentExercise!.exercise,
                       index + 1,
                       value,
                       false
-                    )
-                  }
-                  value={savedScore ? `${savedScore.reps}` : ""}
-                  keyboardType="numeric"
+                    );
+                  }}
+                  value={savedScore?.reps.toString() ?? ""}
+                  keyboardType="number-pad"
                   style={{ borderRadius: 8 }}
                   className=" text-sm smallPhone:text-[11px]  bg-secondaryColor w-2/5    px-4 py-3 smallPhone:px-3 smallPhone:py-2  text-white"
                 />
@@ -104,8 +111,8 @@ const TrainingPlanDayExerciseView: React.FC<
                     )
                   }
                   style={{ borderRadius: 8 }}
-                  value={savedScore ? `${savedScore.weight}` : ""}
-                  keyboardType="numeric"
+                  value={savedScore?.weight.toString() ?? ""}
+                  keyboardType="number-pad"
                   className=" text-sm  smallPhone:text-xs  bg-secondaryColor  text-white    px-4 py-3 smallPhone:px-3 smallPhone:py-2 w-2/5 "
                 />
               </View>

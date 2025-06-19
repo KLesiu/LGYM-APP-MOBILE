@@ -1,10 +1,12 @@
-import { Text, View } from "react-native";
+import { View, ActivityIndicator, Text } from "react-native";
 import React from "react";
+
 const ViewLoading: React.FC = () => {
   return (
-    <View className="w-full bg-[#28292a] top-0  flex flex-row justify-center items-center z-[5]">
+    <View className="w-full top-0 flex flex-row justify-center items-center z-[5] py-4 space-x-2">
+      <ActivityIndicator size="small" color="#ffffff" />
       <Text
-        className="text-xl text-white"
+        className="text-white text-base"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Loading...
@@ -12,4 +14,5 @@ const ViewLoading: React.FC = () => {
     </View>
   );
 };
+
 export default ViewLoading;

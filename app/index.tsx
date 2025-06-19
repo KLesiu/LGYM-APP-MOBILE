@@ -10,12 +10,13 @@ import CustomButton, {
 } from "./components/elements/CustomButton";
 import { useAppContext } from "./AppContext";
 import Loading from "./components/elements/Loading";
-import * as Application from "expo-application";
 import { Platform } from "react-native";
 import { Platforms } from "../enums/Platforms";
 import { AppConfigInfo } from "../interfaces/AppConfigInfo";
 import UpdateDialog from "./components/elements/UpdateDialog";
 import Constants, { ExecutionEnvironment } from "expo-constants";
+import * as Updates from "expo-updates";
+import * as Application from "expo-application";
 
 const Preload: React.FC = () => {
   const router = useRouter();
@@ -56,11 +57,20 @@ const Preload: React.FC = () => {
     await postAPI("/appConfig/getAppVersion", checkIsUpdateRequired, body);
   };
 
+  const getAppVersion = () => {
+    if (Constants.expoConfig?.version) {
+      return Constants.expoConfig.version;
+    }
+    if (Updates.runtimeVersion) {
+      return Updates.runtimeVersion;
+    }
+
+    return Application.nativeApplicationVersion ?? "4.0.1";
+  };
+
   const checkIsUpdateRequired = async (appVersionConfig: AppConfigInfo) => {
-    const appVersion =
-      Constants.executionEnvironment === ExecutionEnvironment.StoreClient
-        ? Constants.manifest2?.runtimeVersion
-        : Application.nativeBuildVersion;
+    const appVersion = getAppVersion();
+
     if (
       appVersionConfig.minRequiredVersion &&
       appVersion === appVersionConfig.minRequiredVersion
