@@ -90,7 +90,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       createdAt: createdAt,
       exercises: training,
       gym: gym?._id!,
-      lastExercisesScores: lastExerciseScoresWithGym,
     };
     await postAPI(
       `/${userId}/addTraining`,
