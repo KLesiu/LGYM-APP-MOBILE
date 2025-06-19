@@ -113,9 +113,7 @@ const Preload: React.FC = () => {
       </ImageBackground>
       <Loading />
       <Modal visible={!!appConfig} transparent animationType="fade">
-        <View className="flex-1 justify-center items-center bg-black bg-opacity-60">
           {appConfig && <UpdateDialog config={appConfig} />}
-        </View>
       </Modal>
     </View>
   );
