@@ -149,8 +149,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     planNameArg: string,
     exercisesArg: ExerciseForPlanDay[]
   ) => {
+    setViewLoading(true)
     if (props.planDayId) await editPlanDay(planNameArg, exercisesArg);
     else await createPlanDay(planDayName, exercisesArg);
+    setViewLoading(false);
   };
 
   const renderStep = (): JSX.Element => {

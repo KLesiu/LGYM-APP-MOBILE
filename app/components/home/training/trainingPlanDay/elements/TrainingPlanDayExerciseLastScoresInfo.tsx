@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useHomeContext } from "../../../HomeContext";
 import { LastExerciseScoresWithGym } from "../../../../../../interfaces/Exercise";
 import { useAppContext } from "../../../../../AppContext";
+import ViewLoading from "../../../../elements/ViewLoading";
 
 interface TrainingPlanDayExerciseLastScoresInfoProps {}
 
@@ -17,16 +18,18 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
     lastExerciseScoresWithGym,
     setLastExerciseScoresWithGym,
   } = useTrainingPlanDay();
-  const { apiURL, userId } = useHomeContext();
+  const {  userId } = useHomeContext();
   const { postAPI } = useAppContext();
   const [lastExerciseScoresText, setLastExerciseScoresText] =
     useState<string>();
+  const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   useEffect(() => {
     getLastExerciseScores();
   }, [isGymFilterActive, currentExercise]);
 
   const getLastExerciseScores = async () => {
+    setViewLoading(true);
     await postAPI(
       `/exercise/${userId}/getLastExerciseScores`,
       (result: LastExerciseScoresWithGym) => {
@@ -47,6 +50,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
         exerciseName: currentExercise?.exercise.name,
       }
     );
+    setViewLoading(false);
   };
 
   const checkIsExerciseScoresExistsInState = (
@@ -122,7 +126,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
   }, [isGymFilterActive]);
 
   return (
-    <View className="px-5 flex flex-col justify-start w-full ">
+    viewLoading ? <ViewLoading /> :  <View className="px-5 flex flex-col justify-start w-full ">
       {text}
       <Text
         className=" text-sm smallPhone:text-xs text-white "
@@ -133,6 +137,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
         {lastExerciseScoresText}
       </Text>
     </View>
+  
   );
 };
 

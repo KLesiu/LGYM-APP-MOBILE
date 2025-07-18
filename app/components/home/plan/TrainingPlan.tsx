@@ -65,7 +65,6 @@ const TrainingPlan: React.FC = () => {
     );
   };
 
-
   const deletePlanDay = async (): Promise<void> => {
     if (!currentPlanDay) return;
     await getAPI(
@@ -135,7 +134,9 @@ const TrainingPlan: React.FC = () => {
   return (
     <BackgroundMainSection>
       <View className="w-full h-full flex flex-col">
-        {!planConfig ? (
+        {viewLoading ? (
+          <ViewLoading />
+        ) : !planConfig ? (
           <View className="flex flex-row w-full justify-center items-center h-full">
             <CustomButton
               onPress={() => togglePlanConfigPopUp(true)}
@@ -190,21 +191,18 @@ const TrainingPlan: React.FC = () => {
                 </View>
               </ScrollView>
             ) : (
-              <Text></Text>
+              <ViewLoading />
             )}
           </View>
         )}
       </View>
-      {viewLoading ? <ViewLoading /> : <Text></Text>}
-      {showPlanConfig ? (
+      {showPlanConfig && (
         <CreatePlanConfig
           reloadSection={reloadSection}
           hidePlanConfig={() => togglePlanConfigPopUp(false)}
         />
-      ) : (
-        <Text></Text>
       )}
-      {isPlanDayFormVisible && planConfig ? (
+      {isPlanDayFormVisible && planConfig && (
         <PlanDayProvider closeForm={hidePlanDayForm}>
           <CreatePlanDay
             isPreview={isPreviewPlanDay}
@@ -212,8 +210,6 @@ const TrainingPlan: React.FC = () => {
             planDayId={currentPlanDay ? currentPlanDay._id : ""}
           />
         </PlanDayProvider>
-      ) : (
-        <Text></Text>
       )}
       <ConfirmDialog
         visible={isDeletePlanDayConfirmationDialogVisible}

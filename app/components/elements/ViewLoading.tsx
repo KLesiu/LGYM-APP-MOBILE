@@ -1,9 +1,13 @@
 import { View, ActivityIndicator, Text } from "react-native";
 import React from "react";
 
-const ViewLoading: React.FC = () => {
+interface ViewLoadingProps {
+  customClasses?: string;
+}
+
+const ViewLoading: React.FC<ViewLoadingProps> = ({customClasses}) => {
   return (
-    <View className="w-full top-0 flex flex-row justify-center items-center z-[5] py-4 space-x-2">
+    <View className={"w-full top-0 flex flex-row justify-center items-center z-[5] py-4 space-x-2" + ` ${customClasses}`}>
       <ActivityIndicator size="small" color="#ffffff" />
       <Text
         className="text-white text-base"

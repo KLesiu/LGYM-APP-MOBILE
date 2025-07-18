@@ -33,6 +33,7 @@ const History: React.FC = () => {
   const getTrainingByDate = async (dateObject: any): Promise<void> => {
     const date: Date = new Date(dateObject._d);
     if (!date) return;
+    setViewLoading(true);
     try{
        await postAPI(
       `/${userId}/getTrainingByDate`,
@@ -45,7 +46,10 @@ const History: React.FC = () => {
     }
     catch (error) {
       setTrainings([]);
+    }finally{
+      setViewLoading(false);
     }
+    
    
   };
   const getTrainingDates = async (): Promise<void> => {
@@ -112,7 +116,7 @@ const History: React.FC = () => {
           }}
           numDaysInWeek={5}
         />
-        {trainings && trainings.length ? (
+        {viewLoading ? <ViewLoading /> : trainings && trainings.length ? (
           <TrainingSession trainings={trainings} />
         ) : (
           <View className="flex justify-center w-full h-1/2 items-center p-4">
@@ -125,7 +129,6 @@ const History: React.FC = () => {
           </View>
         )}
       </View>
-      {viewLoading ? <ViewLoading /> : <Text></Text>}
     </BackgroundMainSection>
   );
 };

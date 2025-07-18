@@ -51,7 +51,7 @@ const Exercises: React.FC = () => {
         undefined,
         false
       );
-    }catch(error){
+    } catch (error) {
       setGlobalExercises([]);
     } finally {
       setIsGlobalExercisesLoading(false);
@@ -108,13 +108,13 @@ const Exercises: React.FC = () => {
   );
 
   const closeExerciseForm = async () => {
+    setIsExerciseFormVisible(false);
+    toggleMenuButton(false);
+    hideMenu();
     setIsGlobalExercisesLoading(true);
     setIsLoading(true);
     await Promise.all([getAllUserExercises(), getAllGlobalExercises()]);
     setSelectedExercise(null);
-    setIsExerciseFormVisible(false);
-    toggleMenuButton(false);
-    hideMenu();
     setIsGlobalExercisesLoading(false);
     setIsLoading(false);
   };

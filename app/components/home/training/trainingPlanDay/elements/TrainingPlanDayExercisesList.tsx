@@ -26,7 +26,8 @@ const TrainingPlanDayExercisesList: React.FC<
           fontFamily: "OpenSans_400Regular",
         }}
       >
-        Exercise list
+        Exercise list 
+        
       </Text>
       <View className="w-full flex-1" style={{ gap: 8 }}>
         {exercisesInPlanList?.map((exercise, index) => (

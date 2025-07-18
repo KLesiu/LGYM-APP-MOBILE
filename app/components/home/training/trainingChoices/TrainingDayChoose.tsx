@@ -1,6 +1,6 @@
 import { PlanDayChoose } from "../../../../../interfaces/PlanDay";
 import Dialog from "../../../elements/Dialog";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import TrainingDayToChoose from "./elements/TrainingDayToChoose";
 import CustomButton, { ButtonSize } from "../../../elements/CustomButton";
 import { useEffect, useState } from "react";
@@ -16,28 +16,36 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
   showDaySection,
 }) => {
   const { userId } = useHomeContext();
-  const {getAPI} = useAppContext()
+  const { getAPI } = useAppContext();
   const [trainingTypes, setTrainingTypes] = useState<PlanDayChoose[]>([]);
   const [viewLoading, setViewLoading] = useState<boolean>(true);
 
   useEffect(() => {
     init();
-  },[])
+  }, []);
 
   const init = async () => {
     await getInformationsAboutPlanDays();
     setViewLoading(false);
-  }
+  };
 
-  const getInformationsAboutPlanDays =
-    async (): Promise<void> => {
-      await getAPI(`/planDay/${userId}/getPlanDaysTypes`, (response: PlanDayChoose[])=>setTrainingTypes(response),undefined,false)
-    };
+  const getInformationsAboutPlanDays = async (): Promise<void> => {
+    await getAPI(
+      `/planDay/${userId}/getPlanDaysTypes`,
+      (response: PlanDayChoose[]) => setTrainingTypes(response),
+      undefined,
+      false
+    );
+  };
 
   if (viewLoading) {
-    return <Dialog><ViewLoading/></Dialog>
+    return (
+      <Dialog>
+        <ViewLoading />
+      </Dialog>
+    );
   }
-  
+
   return (
     <Dialog>
       <View
@@ -50,17 +58,19 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
         >
           Choose training day!
         </Text>
-        <View className="flex flex-col">
-          {trainingTypes.map((ele: PlanDayChoose, index: number) => (
-            <CustomButton
-              key={index}
-              buttonStyleSize={ButtonSize.none}
-              onPress={() => showDaySection(ele._id)}
-            >
-              <TrainingDayToChoose trainingType={ele} />
-            </CustomButton>
-          ))}
-        </View>
+        <ScrollView className="w-full">
+          <View className="flex flex-col">
+            {trainingTypes.map((ele: PlanDayChoose, index: number) => (
+              <CustomButton
+                key={index}
+                buttonStyleSize={ButtonSize.none}
+                onPress={() => showDaySection(ele._id)}
+              >
+                <TrainingDayToChoose trainingType={ele} />
+              </CustomButton>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     </Dialog>
   );

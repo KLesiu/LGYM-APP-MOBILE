@@ -27,6 +27,7 @@ import { TrainingSummary } from "../../../../../interfaces/Training";
 import { useAppContext } from "../../../../AppContext";
 import { ExerciseForm } from "../../../../../interfaces/Exercise";
 import { TrainingViewSteps } from "../../../../../enums/TrainingView";
+import ViewLoading from "../../../elements/ViewLoading";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -271,7 +272,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   return (
     <View className="absolute w-full h-full text-white bg-bgColor flex flex-col">
-      {planDay && Object.keys(planDay).length && (
+      {planDay && Object.keys(planDay).length ? (
         <View
           style={{ gap: 8 }}
           className=" h-full flex flex-col justify-between pb-4"
@@ -306,6 +307,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             hideAndDeleteTrainingSession={props.hideAndDeleteTrainingSession}
           />
         </View>
+      ) : (
+        <ViewLoading />
       )}
       {isTrainingPlanDayExerciseFormShow && (
         <TrainingPlanDayExerciseForm

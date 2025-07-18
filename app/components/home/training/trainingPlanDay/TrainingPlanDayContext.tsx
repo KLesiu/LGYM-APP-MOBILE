@@ -245,6 +245,9 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
     return result;
   };
 
+
+ 
+
   return (
     <TrainingPlanDayContext.Provider
       value={{
@@ -266,7 +269,8 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
         addNewExerciseToTrainingSessionScores,
         incrementOrDecrementExerciseInTrainingSessionScores,
         scrollViewRef,
-        scrollToTop
+        scrollToTop,
+
       }}
     >
       {children}
