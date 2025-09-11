@@ -15,21 +15,21 @@ import TrainingPlanItem from "./TrainingPlanItem";
 import PlanDayProvider from "./planDay/CreatePlanDayContext";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
+import PlansList from "./PlansList";
+import { PlanForm } from "../../../../interfaces/Plan";
+import ResponseMessage from "../../../../interfaces/ResponseMessage";
 
 const TrainingPlan: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
-  const { getAPI } = useAppContext();
-  const [planConfig, setPlanConfig] = useState<{
-    name: string;
-    trainingDays: number;
-    _id: string;
-  }>();
+  const { getAPI,postAPI } = useAppContext();
+  const [planConfig, setPlanConfig] = useState<PlanForm>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [planDaysBaseInfo, setPlanDaysBaseInfo] = useState<PlanDayBaseInfoVm[]>(
     []
   );
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
+  const [isPlansListVisible, setIsPlansListVisible] = useState<boolean>(false);
   const [isPreviewPlanDay, setIsPreviewPlanDay] = useState<boolean | undefined>(
     false
   );
@@ -49,21 +49,26 @@ const TrainingPlan: React.FC = () => {
     await getUserPlanConfig();
   };
 
-  const getPlanDaysBaseInfo = async (planConfig: {
-    name: string;
-    trainingDays: number;
-    _id: string;
-  }): Promise<void> => {
+  const getPlanDaysBaseInfo = async (planConfig: PlanForm): Promise<void> => {
     if (!planConfig || !planConfig._id) return;
-    await getAPI(
-      `/planDay/${planConfig._id}/getPlanDaysInfo`,
-      (result: PlanDayBaseInfoVm[]) => {
-        setPlanDaysBaseInfo(result);
-      },
-      undefined,
-      false
-    );
+    setViewLoading(true);
+    try {
+      await getAPI(
+        `/planDay/${planConfig._id}/getPlanDaysInfo`,
+        (result: PlanDayBaseInfoVm[]) => {
+          setPlanDaysBaseInfo(result);
+        },
+        undefined,
+        false
+      );
+    } catch (e: unknown) {
+      setPlanDaysBaseInfo([]);
+    } finally {
+      setViewLoading(false);
+    }
   };
+
+
 
   const deletePlanDay = async (): Promise<void> => {
     if (!currentPlanDay) return;
@@ -77,6 +82,9 @@ const TrainingPlan: React.FC = () => {
   };
 
   const togglePlanConfigPopUp = useCallback((value: boolean): void => {
+    if (value) {
+      setIsPlansListVisible(false);
+    }
     toggleMenuButton(value);
     setShowPlanConfig(value);
   }, []);
@@ -90,6 +98,16 @@ const TrainingPlan: React.FC = () => {
     },
     []
   );
+
+  const showPlansList = useCallback((): void => {
+    setIsPlansListVisible(true);
+    toggleMenuButton(true);
+  }, []);
+
+  const hidePlansList = useCallback((): void => {
+    setIsPlansListVisible(false);
+    toggleMenuButton(false);
+  }, []);
 
   const hidePlanDayForm = useCallback(async (): Promise<void> => {
     setViewLoading(true);
@@ -110,7 +128,7 @@ const TrainingPlan: React.FC = () => {
     try {
       await getAPI(
         `/${userId}/getPlanConfig`,
-        async (result: { name: string; trainingDays: number; _id: string }) => {
+        async (result: PlanForm) => {
           setPlanConfig(result);
           await getPlanDaysBaseInfo(result);
         },
@@ -121,6 +139,23 @@ const TrainingPlan: React.FC = () => {
       setViewLoading(false);
     }
   };
+
+  const setNewPlanConfig = async (planConfig: PlanForm) => {
+    hidePlansList();
+    setPlanConfig(planConfig);
+    await changeActivePlan(planConfig);
+  };
+
+  const changeActivePlan = async (planConfig: PlanForm) => {
+    try{
+      await postAPI(`/${userId}/setNewActivePlan`,async(result:ResponseMessage)=>{
+        await getPlanDaysBaseInfo(planConfig);
+      },{_id:planConfig._id});     
+    }
+    catch(e:unknown){
+      console.error(e)
+    }
+  }
 
   const deletePlanDayVisible = useCallback(
     (visible: boolean, planDay?: PlanDayBaseInfoVm) => {
@@ -166,18 +201,30 @@ const TrainingPlan: React.FC = () => {
                   {planConfig.name}
                 </Text>
               </View>
-              <CustomButton
-                text="Add plan day"
-                textSize="smallPhone:text-sm"
-                onPress={showPlanDayForm}
-                buttonStyleType={ButtonStyle.success}
-                textWeight={FontWeights.bold}
-                buttonStyleSize={ButtonSize.regular}
-                width="w-44"
-              />
+
+              <View className="flex flex-row" style={{ gap: 16 }}>
+                <CustomButton
+                  text="Add plan day"
+                  textSize="smallPhone:text-sm"
+                  onPress={showPlanDayForm}
+                  buttonStyleType={ButtonStyle.success}
+                  textWeight={FontWeights.bold}
+                  buttonStyleSize={ButtonSize.regular}
+                  width="w-44"
+                />
+                <CustomButton
+                  text="Plans list"
+                  textSize="smallPhone:text-sm"
+                  onPress={showPlansList}
+                  buttonStyleType={ButtonStyle.success}
+                  textWeight={FontWeights.bold}
+                  buttonStyleSize={ButtonSize.regular}
+                  width="w-44"
+                />
+              </View>
             </View>
 
-            {planDaysBaseInfo && planDaysBaseInfo.length ? (
+            {planDaysBaseInfo  ? (
               <ScrollView className="w-full">
                 <View style={{ gap: 16 }} className="flex flex-col p-5 pb-12">
                   {planDaysBaseInfo.map((planDay) => (
@@ -210,6 +257,13 @@ const TrainingPlan: React.FC = () => {
             planDayId={currentPlanDay ? currentPlanDay._id : ""}
           />
         </PlanDayProvider>
+      )}
+      {isPlansListVisible && (
+        <PlansList
+          togglePlanConfig={togglePlanConfigPopUp}
+          goBack={hidePlansList}
+          setNewPlanConfig={setNewPlanConfig}
+        />
       )}
       <ConfirmDialog
         visible={isDeletePlanDayConfirmationDialogVisible}
