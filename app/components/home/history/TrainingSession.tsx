@@ -2,6 +2,7 @@ import { View, Text, ScrollView, Image } from "react-native";
 import { TrainingByDateDetails } from "./../../../../interfaces/Training";
 import GymIcon from "./../../../../img/icons/gymIcon.svg";
 import Card from "../../elements/Card";
+import React from "react";
 
 interface TrainingSessionProps {
   trainings: TrainingByDateDetails[];

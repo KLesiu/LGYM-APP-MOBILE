@@ -4,6 +4,7 @@ import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { ExerciseForPlanDay } from "../../../../../interfaces/Exercise";
+import React from "react";
 
 interface CreatePlanDaySummaryProps {
   saveCurrentPlan: (

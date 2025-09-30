@@ -5,6 +5,7 @@ import { View, Text } from "react-native";
 import { useHomeContext } from "../../HomeContext";
 import { useAppContext } from "../../../../AppContext";
 import { EloRegistryBaseChart } from "../../../../../interfaces/EloRegistry";
+import React from "react";
 
 const EloRegistryChart: React.FC = () => {
   const [data, setData] = useState<EloRegistryBaseChart[]>([]);

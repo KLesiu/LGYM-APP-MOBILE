@@ -4,6 +4,10 @@
       "android": {
         "buildType": "app-bundle",
         "env": {}
+      },
+      "ios": {
+        "env": {
+        }
       }
     },
     "preview2": {

@@ -12,6 +12,7 @@ import { useHomeContext } from "../../HomeContext";
 import { useAppContext } from "../../../../AppContext";
 import ValidationView from "../../../elements/ValidationView";
 import { Message } from "../../../../../enums/Message";
+import React from "react";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;

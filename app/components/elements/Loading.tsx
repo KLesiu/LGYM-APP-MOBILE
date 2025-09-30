@@ -2,6 +2,7 @@ import logoLGYM from "./../../../assets/logoLGYMNew.png";
 import { Text, Image, View } from "react-native";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../../AppContext";
+import React from "react";
 interface LoadingProps {}
 
 const Loading: React.FC<LoadingProps> = (props) => {
@@ -37,7 +38,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
           </View>
           <Text
             style={{
-              fontFamily: "Caveat_400Regular",
+              fontFamily: "OpenSans_400Regular",
             }}
             className="text-[40px] text-white text-center w-full mt-12"
           >

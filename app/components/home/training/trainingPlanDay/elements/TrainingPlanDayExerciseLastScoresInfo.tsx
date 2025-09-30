@@ -5,6 +5,7 @@ import { useHomeContext } from "../../../HomeContext";
 import { LastExerciseScoresWithGym } from "../../../../../../interfaces/Exercise";
 import { useAppContext } from "../../../../../AppContext";
 import ViewLoading from "../../../../elements/ViewLoading";
+import React from "react";
 
 interface TrainingPlanDayExerciseLastScoresInfoProps {}
 

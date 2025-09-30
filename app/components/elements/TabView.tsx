@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import { Pressable, View, Text } from "react-native";
 
 interface Tab {

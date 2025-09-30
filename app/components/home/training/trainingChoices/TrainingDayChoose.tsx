@@ -8,6 +8,7 @@ import { useHomeContext } from "../../HomeContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../../../AppContext";
 import ViewLoading from "../../../elements/ViewLoading";
+import React from "react";
 interface TrainingDayChooseProps {
   showDaySection: (day: string) => Promise<void>;
 }

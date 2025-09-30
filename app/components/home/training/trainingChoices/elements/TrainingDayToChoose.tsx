@@ -1,3 +1,4 @@
+import React from "react";
 import { PlanDayChoose } from "../../../../../../interfaces/PlanDay";
 import Card from "../../../../elements/Card";
 import { View, Text, Pressable } from "react-native";

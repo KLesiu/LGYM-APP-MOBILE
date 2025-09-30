@@ -8,6 +8,7 @@ import NoGymsInfo from "./elements/NoGymsInfo";
 import GymsToChoose from "./elements/GymsToChoose";
 import { useAppContext } from "../../../../AppContext";
 import ViewLoading from "../../../elements/ViewLoading";
+import React from "react";
 
 interface TrainingGymChooseProps {
   setGym: (gym: GymForm) => void;

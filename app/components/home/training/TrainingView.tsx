@@ -11,6 +11,7 @@ import { TrainingSummary as TrainingSummaryInterface } from "./../../../../inter
 import { useHomeContext } from "../HomeContext";
 import TrainingPlanDayProvider from "./trainingPlanDay/TrainingPlanDayContext";
 import { TrainingViewSteps } from "../../../../enums/TrainingView";
+import React from "react";
 
 interface TrainingViewProps {}
 

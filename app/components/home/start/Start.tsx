@@ -5,6 +5,7 @@ import LastTrainingStartInfo from "./LastTrainingStartInfo";
 import ProgressInfo from "./ProgressInfo";
 import { useHomeContext } from "../HomeContext";
 import ViewLoading from "../../elements/ViewLoading";
+import React from "react";
 
 const Start: React.FC = () => {
   const {userId} = useHomeContext()

@@ -10,6 +10,7 @@ import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ValidationView from "../../elements/ValidationView";
 import PlanNameIcon from "./../../../../img/icons/planIcon.svg";
+import React from "react";
 
 interface CreatePlanConfigProps {
   reloadSection: VoidFunction;

@@ -8,6 +8,7 @@ import AutoComplete from "../../../elements/Autocomplete";
 import { ExerciseScoresChartData } from "./../../../../../interfaces/ExercisesScores";
 import { useHomeContext } from "../../HomeContext";
 import { useAppContext } from "../../../../AppContext";
+import React from "react";
 
 const ExerciseScoresChart: React.FC = () => {
   const { userId } = useHomeContext();

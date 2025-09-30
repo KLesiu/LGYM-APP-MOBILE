@@ -1,15 +1,14 @@
+import React, { useEffect } from "react";
 import { Stack } from "expo-router";
-import { useEffect } from "react";
-import * as SplashScreen from "expo-splash-screen";
 import { NativeWindStyleSheet } from "nativewind";
+import * as SplashScreen from "expo-splash-screen";
 import {
   OpenSans_400Regular,
   OpenSans_700Bold,
   OpenSans_300Light,
   useFonts,
 } from "@expo-google-fonts/open-sans";
-import { Caveat_400Regular } from "@expo-google-fonts/caveat";
-import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 import AppProvider from "./AppContext";
 
 NativeWindStyleSheet.setOutput({ default: "native" });
@@ -21,29 +20,19 @@ const Layout: React.FC = () => {
     OpenSans_400Regular,
     OpenSans_700Bold,
     OpenSans_300Light,
-    Caveat_400Regular,
   });
 
   useEffect(() => {
-    loadAsyncResources();
+    if (fontsLoaded) {
+      SplashScreen.hideAsync(); 
+    }
   }, [fontsLoaded]);
 
-  const loadAsyncResources = async () => {
-    try {
-      await SplashScreen.preventAutoHideAsync();
-      if(!fontsLoaded)return;
-      await SplashScreen.hideAsync();
-    } catch (error) {
-      console.error("Błąd ładowania zasobów:", error);
-    }
-  };
-
   return (
-    <NavigationContainer>
-      <AppProvider>
-        <Stack screenOptions={{ headerShown: false }} />
-      </AppProvider>
-    </NavigationContainer>
+    <AppProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+      <StatusBar style="light" backgroundColor="#000000" />
+    </AppProvider>
   );
 };
 

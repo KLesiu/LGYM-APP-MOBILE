@@ -10,6 +10,7 @@ import { Message } from "./../../../../enums/Message";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
+import React from "react";
 const History: React.FC = () => {
   const { userId } = useHomeContext();
   const { getAPI, postAPI } = useAppContext();

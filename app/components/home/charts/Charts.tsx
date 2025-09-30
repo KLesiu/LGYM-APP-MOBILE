@@ -3,7 +3,8 @@ import { View, Text } from "react-native";
 import EloRegistryChart from "./dedicated/EloRegistryChart";
 import ExerciseScoresChart from "./dedicated/ExerciseScoresChart";
 import TabView from "../../elements/TabView";
-import { useCallback, useState } from "react";
+import { JSX, useCallback, useState } from "react";
+import React from "react";
 const Charts: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<JSX.Element>(
     <EloRegistryChart />

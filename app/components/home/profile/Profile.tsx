@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, JSX } from "react";
 import { UserInfo } from "./../../../../interfaces/User";
 import ProfileRank from "../../elements/ProfileRank";
 import { useRouter } from "expo-router";
@@ -11,6 +11,7 @@ import TabView from "../../elements/TabView";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
+import React from "react";
 
 const Profile: React.FC = () => {
   const { toggleMenuButton, changeView, userId } = useHomeContext();

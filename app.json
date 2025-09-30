@@ -9,21 +9,27 @@
     "newArchEnabled": true,
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/logoLGYMNew.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "androidStatusBar": {
+      "backgroundColor": "#000000",
+      "barStyle": "light-content",
+      "translucent": false
+    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lesiuuu.lgymappmobile"
+      "bundleIdentifier": "com.lesiuuu.lgymappmobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIStatusBarStyle": "UIStatusBarStyleLightContent"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logoLGYMNew.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#000000"
       },
       "buildToolsVersion": "36.0.0",
       "versionCode": 23,
@@ -43,9 +49,6 @@
     "updates": {
       "url": "https://u.expo.dev/505ff65d-afab-4678-926a-dbeabae8ef7d"
     },
-    "plugins": [
-      "expo-router",
-      "expo-font"
-    ]
+    "plugins": ["expo-router", "expo-font"]
   }
 }

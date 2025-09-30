@@ -4,12 +4,13 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import AddTraining from "../training/Training";
-import { useCallback, useEffect, useState } from "react";
+import { JSX, useCallback, useEffect, useState } from "react";
 import { LastTrainingInfo } from "../../../../interfaces/Training";
 import { useHomeContext } from "../HomeContext";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
+import React from "react";
 
 const LastTrainingStartInfo: React.FC = () => {
   const [lastTrainingInfo, setLastTrainingInfo] = useState<LastTrainingInfo>();

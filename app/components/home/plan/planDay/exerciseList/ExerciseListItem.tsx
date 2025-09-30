@@ -2,6 +2,7 @@ import { View, Text, Pressable } from "react-native";
 import { ExerciseForPlanDay } from "./../../../../../../interfaces/Exercise";
 import CustomButton, { ButtonSize } from "./../../../../elements/CustomButton";
 import IconDelete from "./../../../../../../img/icons/deleteIcon.svg";
+import React from "react";
 interface ExerciseListItemProps {
   exerciseListItem: ExerciseForPlanDay;
   removeExerciseFromList?: (item: ExerciseForPlanDay) => void;

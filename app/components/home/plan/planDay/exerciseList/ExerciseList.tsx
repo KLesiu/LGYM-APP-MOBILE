@@ -1,6 +1,7 @@
 import { View, Text, ScrollView } from "react-native";
 import { ExerciseForPlanDay } from "./../../../../../../interfaces/Exercise";
 import ExerciseListItem from "./ExerciseListItem";
+import React from "react";
 
 interface ExerciseListProps {
   exerciseList: ExerciseForPlanDay[];

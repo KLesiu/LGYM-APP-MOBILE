@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { BodyParts } from "./../../../../enums/BodyParts";
 import { Message } from "./../../../../enums/Message";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ResponseMessage from "./../../../../interfaces/ResponseMessage";
 import CustomDropdown from "../../elements/Dropdown";
 import { ExerciseForm } from "./../../../../interfaces/Exercise";

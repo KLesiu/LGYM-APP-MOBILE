@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import TrainingPlanDayExerciseListCard from "./TrainingPlanDayExerciseListCard";
 import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
+import React from "react";
 
 interface TrainingPlanDayExercisesListProps {
   deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<

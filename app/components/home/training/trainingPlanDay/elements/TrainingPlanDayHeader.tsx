@@ -3,6 +3,7 @@ import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import GymIcon from "./../../../../../../img/icons/gymIcon.svg";
 import BackIcon from "./../../../../../../img/icons/backIcon.svg"
 import Header from "../../../../layout/Header";
+import React from "react";
 
 interface TrainingPlanDayHeaderProps {
   hideDaySection: () => void;

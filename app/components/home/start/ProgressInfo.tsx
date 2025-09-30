@@ -6,6 +6,7 @@ import { UserInfo } from "./../../../../interfaces/User";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
 import { useHomeContext } from "../HomeContext";
+import React from "react";
 
 const ProgressInfo: React.FC = () => {
   const { userId } = useHomeContext();

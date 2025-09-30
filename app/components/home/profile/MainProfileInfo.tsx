@@ -1,6 +1,7 @@
 import { View, Text } from "react-native";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { useMemo } from "react";
+import React from "react";
 
 interface MainProfileInfoProps {
   logout: VoidFunction;

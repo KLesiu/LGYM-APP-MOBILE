@@ -3,6 +3,7 @@ import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { ExerciseForm } from "../../../../../../interfaces/Exercise";
 import { TrainingSessionScores } from "../../../../../../interfaces/Training";
 import { useEffect, useState } from "react";
+import React from "react";
 
 interface TrainingPlanDayExerciseViewProps {}
 

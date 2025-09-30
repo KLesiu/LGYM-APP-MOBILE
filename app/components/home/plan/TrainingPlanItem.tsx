@@ -4,6 +4,7 @@ import { PlanDayBaseInfoVm } from "./../../../../interfaces/PlanDay";
 import EditIcon from "./../../../../img/icons/editIcon.svg";
 import DeleteIcon from "./../../../../img/icons/deleteIcon.svg";
 import Card from "../../elements/Card";
+import React from "react";
 
 interface TrainingPlanItemProps {
   item: PlanDayBaseInfoVm;

@@ -10,6 +10,7 @@ import { useAppContext } from "../../../../AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useInterval from "../../../../../helpers/hooks/useInterval";
 import { ScrollView } from "react-native";
+import React from "react";
 
 interface TrainingPlanDayContextType {
   setPlanDay: (planDay: PlanDayVm) => void;
@@ -36,7 +37,7 @@ interface TrainingPlanDayContextType {
    exerciseId: string,
    series: number,
   ) => void;
-  scrollViewRef: React.RefObject<ScrollView>;
+  scrollViewRef: React.RefObject<ScrollView | null>;
   scrollToTop: () => void;
 }
 

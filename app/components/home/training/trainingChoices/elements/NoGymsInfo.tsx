@@ -4,6 +4,7 @@ import CustomButton, {
   ButtonStyle,
 } from "../../../../elements/CustomButton";
 import ValidationView from "../../../../elements/ValidationView";
+import React from "react";
 
 interface NoGymsInfoProps {
     goBack: () => void;

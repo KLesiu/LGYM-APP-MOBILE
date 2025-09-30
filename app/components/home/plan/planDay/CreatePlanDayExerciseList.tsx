@@ -16,6 +16,7 @@ import { useHomeContext } from "../../HomeContext";
 import useDeviceCategory from "../../../../../helpers/hooks/useDeviceCategory";
 import { DeviceCategory } from "../../../../../enums/DeviceCategory";
 import { useAppContext } from "../../../../AppContext";
+import React from "react";
 
 const CreatePlanDayExerciseList: React.FC = () => {
   const { exercisesList, setExercisesList, goBack, goToNext } = usePlanDay();

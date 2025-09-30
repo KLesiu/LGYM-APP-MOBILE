@@ -1,5 +1,6 @@
 import { Pressable, View } from "react-native";
 import ViewLoading from "./ViewLoading";
+import React from "react";
 
 interface CardProps {
   children: React.ReactNode;

@@ -1,6 +1,7 @@
 import { View,Text, Pressable } from "react-native";
 import { PlanForm } from "../../../../interfaces/Plan";
 import Card from "../../elements/Card";
+import React from "react";
 
 interface PlansListItemProps {
   planListItem: PlanForm;

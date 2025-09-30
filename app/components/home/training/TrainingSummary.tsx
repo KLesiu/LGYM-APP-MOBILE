@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import ProfileRank from "../../elements/ProfileRank";
 import ProgressBar from "../../elements/ProgressBar";
 import { TrainingSummary as TrainingSummaryInterface } from "./../../../../interfaces/Training";
+import React from "react";
 
 interface TrainingSummaryProps{
   closePopUp:()=>void,

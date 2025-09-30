@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import { FontWeights } from "../../../enums/FontsProperties";
-import React from "react";
+import React, { JSX } from "react";
 import ViewLoading from "./ViewLoading";
 import MiniLoading from "./MiniLoading";
 import Loading from "./Loading";

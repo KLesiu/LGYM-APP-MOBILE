@@ -1,6 +1,7 @@
 import { View, Text } from "react-native";
 import { useAppContext } from "../../AppContext";
 import { useEffect } from "react";
+import React from "react";
 interface ValidationViewProps {}
 
 const ValidationView: React.FC<ValidationViewProps> = () => {

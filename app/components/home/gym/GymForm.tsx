@@ -7,6 +7,7 @@ import GymIcon from "./../../../../img/icons/gymIcon.svg";
 import ValidationView from "../../elements/ValidationView";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
+import React from "react";
 
 interface GymFormProps {
   closeForm: () => void;

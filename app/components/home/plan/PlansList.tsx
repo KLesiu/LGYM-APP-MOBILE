@@ -8,6 +8,7 @@ import Dialog from "../../elements/Dialog";
 import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import PlansListItem from "./PlansListItem";
+import React from "react";
 
 interface PlansListProps {
   togglePlanConfig: (value: boolean) => void;

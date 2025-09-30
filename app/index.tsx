@@ -17,6 +17,7 @@ import UpdateDialog from "./components/elements/UpdateDialog";
 import Constants, { ExecutionEnvironment } from "expo-constants";
 import * as Updates from "expo-updates";
 import * as Application from "expo-application";
+import React from "react";
 
 const Preload: React.FC = () => {
   const router = useRouter();

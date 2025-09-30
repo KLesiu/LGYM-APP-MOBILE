@@ -13,6 +13,7 @@ import Dialog from "../../elements/Dialog";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ValidationView from "../../elements/ValidationView";
+import React from "react";
 
 interface RecordsPopUpProps {
   offPopUp: () => void;

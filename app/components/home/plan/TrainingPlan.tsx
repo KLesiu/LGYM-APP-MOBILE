@@ -18,6 +18,7 @@ import { useAppContext } from "../../../AppContext";
 import PlansList from "./PlansList";
 import { PlanForm } from "../../../../interfaces/Plan";
 import ResponseMessage from "../../../../interfaces/ResponseMessage";
+import React from "react";
 
 const TrainingPlan: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
@@ -210,7 +211,7 @@ const TrainingPlan: React.FC = () => {
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}
                   buttonStyleSize={ButtonSize.regular}
-                  width="w-44"
+                  customClasses="flex-1"
                 />
                 <CustomButton
                   text="Plans list"
@@ -219,7 +220,8 @@ const TrainingPlan: React.FC = () => {
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}
                   buttonStyleSize={ButtonSize.regular}
-                  width="w-44"
+                                    customClasses="flex-1"
+
                 />
               </View>
             </View>

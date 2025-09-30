@@ -1,6 +1,7 @@
 import { Image, ImageProps } from "react-native";
 import { useEffect, useState } from "react";
 import Ranks from "./../../../helpers/rankStore";
+import React from "react";
 interface ProfileRankProps {
   rank: string;
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { JSX, useCallback, useEffect, useRef, useState } from "react";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -17,6 +17,7 @@ import { BackHandler } from "react-native";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { useHomeContext } from "../../HomeContext";
 import { useAppContext } from "../../../../AppContext";
+import React from "react";
 
 interface CreatePlanDayProps {
   planId?: string;
