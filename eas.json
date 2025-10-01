@@ -3,22 +3,36 @@
     "preview": {
       "android": {
         "buildType": "app-bundle",
-        "env": {}
+        "env": {
+        
+        }
       },
       "ios": {
         "env": {
+         
         }
       }
     },
     "preview2": {
       "android": {
         "gradleCommand": ":app:assembleRelease",
-        "env": {}
+        "env": {
+        
+        }
       }
     },
     "preview3": {
       "developmentClient": true
     },
-    "production": {}
+    "production": {},
+  },
+  "submit":{
+    "production": {
+      "ios": {
+       
+
+      }
+    }
+
   }
 }
