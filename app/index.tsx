@@ -1,7 +1,7 @@
 import { Image, View, ImageBackground, Modal } from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
 import backgroundLGYM from "./../img/backgroundLGYMApp500.png";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import CustomButton, {
@@ -14,7 +14,7 @@ import { Platform } from "react-native";
 import { Platforms } from "../enums/Platforms";
 import { AppConfigInfo } from "../interfaces/AppConfigInfo";
 import UpdateDialog from "./components/elements/UpdateDialog";
-import Constants, { ExecutionEnvironment } from "expo-constants";
+import Constants from "expo-constants";
 import * as Updates from "expo-updates";
 import * as Application from "expo-application";
 import React from "react";

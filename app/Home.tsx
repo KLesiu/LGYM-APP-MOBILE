@@ -1,5 +1,5 @@
-import {  View } from "react-native";
-import React, { JSX } from 'react'
+import { View } from "react-native";
+import React, { JSX } from "react";
 import { useState } from "react";
 import Menu from "./components/layout/Menu";
 import Header from "./components//layout/Header";
@@ -19,19 +19,19 @@ const Home: React.FC = () => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-bgColor flex-1">
       <View className="bg-bgColor flex flex-col justify-between relative h-full ">
         <HomeProvider
           viewChange={changeView}
           changeHeaderVisibility={changeHeaderVisibility}
         >
-          {isHeaderShow && <Header />}
+          {isHeaderShow && <Header viewChange={changeView} />}
           {view}
           <Menu />
         </HomeProvider>
         {!view && <Loading />}
       </View>
-      </SafeAreaView>
+    </SafeAreaView>
   );
 };
 export default Home;

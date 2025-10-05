@@ -47,41 +47,58 @@ const LastTrainingStartInfo: React.FC = () => {
 
   return (
     <Card>
-      <View>
-        <Text
-          className="text-primaryColor  text-xl smallPhone:text-base"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          Last Training:
-        </Text>
-        <View className="flex">
+      <View className="flex flex-row justify-between w-full ">
+        <View className="flex flex-col" style={{ gap: 4 }}>
           <Text
-            className="text-white  text-sm smallPhone:text-xs"
-            style={{ fontFamily: "OpenSans_300Light" }}
+            className="text-primaryColor  text-xl smallPhone:text-base"
+            style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            Date:
-            {lastTrainingInfo && lastTrainingInfo.createdAt
-              ? new Date(lastTrainingInfo.createdAt).toLocaleString()
-              : "N/A"}
+            Last Training:
           </Text>
-          <Text
-            className="text-white  text-sm smallPhone:text-xs"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Type:
-            {lastTrainingInfo && lastTrainingInfo.planDay.name
-              ? lastTrainingInfo?.planDay.name
-              : "N/A"}
-          </Text>
+          <View className="flex flex-col px-1" style={{ gap: 2 }}>
+            <View className="flex flex-row" style={{ gap: 4 }}>
+              <Text
+                className="text-fifthColor text-sm smallPhone:text-xs"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                Date:
+              </Text>
+              <Text
+                className="text-fifthColor text-sm smallPhone:text-xs"
+                style={{ fontFamily: "OpenSans_300Light" }}
+              >
+                {lastTrainingInfo && lastTrainingInfo.createdAt
+                  ? new Date(lastTrainingInfo.createdAt).toLocaleString()
+                  : "N/A"}
+              </Text>
+            </View>
+            <View className="flex flex-row" style={{ gap: 4 }}>
+              <Text
+                className="text-fifthColor text-sm smallPhone:text-xs"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                Type:
+              </Text>
+              <Text
+                className="text-fifthColor text-sm smallPhone:text-xs"
+                style={{ fontFamily: "OpenSans_300Light" }}
+              >
+                {lastTrainingInfo && lastTrainingInfo.planDay.name
+                  ? lastTrainingInfo?.planDay.name
+                  : "N/A"}
+              </Text>
+            </View>
+          </View>
         </View>
-      </View>
 
-      <CustomButton
-        buttonStyleSize={ButtonSize.xl}
-        onPress={() => navigateTo(<AddTraining />)}
-        buttonStyleType={ButtonStyle.success}
-        text="New"
-      />
+        <CustomButton
+          buttonStyleSize={ButtonSize.long}
+          onPress={() => navigateTo(<AddTraining />)}
+          buttonStyleType={ButtonStyle.success}
+          customClasses="self-center"
+          text="New"
+        />
+      </View>
     </Card>
   );
 };

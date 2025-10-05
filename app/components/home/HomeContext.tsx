@@ -13,6 +13,8 @@ interface HomeContextProps {
   changeView: (component: React.JSX.Element) => void;
   apiURL: string;
   userId:string;
+  userRank:string;
+  setUserRank: React.Dispatch<React.SetStateAction<string>>;
   changeHeaderVisibility: (isVisible: boolean) => void;
 }
 
@@ -37,6 +39,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,change
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
   const [userId,setUserId] = useState<string>("");
+  const [userRank,setUserRank] = useState<string>("");
   const animation = useRef(new Animated.Value(0)).current;
 
 
@@ -114,7 +117,8 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,change
         apiURL,
         hideMenu,
         userId,
-        changeHeaderVisibility
+        changeHeaderVisibility,
+        userRank,setUserRank
       }}
     >
       {children}

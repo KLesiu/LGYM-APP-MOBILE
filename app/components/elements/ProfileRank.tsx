@@ -4,6 +4,7 @@ import Ranks from "./../../../helpers/rankStore";
 import React from "react";
 interface ProfileRankProps {
   rank: string;
+  customClasses?: string;
 }
 
 const ProfileRank: React.FC<ProfileRankProps> = (props) => {
@@ -22,11 +23,11 @@ const ProfileRank: React.FC<ProfileRankProps> = (props) => {
   };
   useEffect(() => {
     getRank();
-  }, []);
-
+  }, [props.rank]);
+  if (!rankSrc) return null;
   return (
     <Image
-      className=" midPhone:h-24 midPhone:w-24 h-32 w-32 smallPhone:h-20 smallPhone:w-20 "
+      className={` midPhone:h-24 midPhone:w-24 h-32 w-32 smallPhone:h-20 smallPhone:w-20 ${props.customClasses}`}
       source={rankSrc as ImageProps}
     />
   );

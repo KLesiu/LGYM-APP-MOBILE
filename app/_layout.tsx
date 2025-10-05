@@ -8,7 +8,6 @@ import {
   OpenSans_300Light,
   useFonts,
 } from "@expo-google-fonts/open-sans";
-import { StatusBar } from "expo-status-bar";
 import AppProvider from "./AppContext";
 
 NativeWindStyleSheet.setOutput({ default: "native" });
@@ -23,15 +22,23 @@ const Layout: React.FC = () => {
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync(); 
-    }
+    const hideSplash = async () => {
+      if (fontsLoaded) {
+        try {
+          await SplashScreen.hideAsync();
+        } catch (error) {
+          console.error("Błąd ukrywania splash:", error);
+        }
+      }
+    };
+    hideSplash();
   }, [fontsLoaded]);
+
+  if (!fontsLoaded) return null;
 
   return (
     <AppProvider>
       <Stack screenOptions={{ headerShown: false }} />
-      <StatusBar style="light" backgroundColor="#000000" />
     </AppProvider>
   );
 };

@@ -3,6 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserBaseInfo } from "./../../../../interfaces/User";
 import { useAppContext } from "../../../AppContext";
+import RankingIcon from "./../../../../img/icons/rankingIcon.svg";
 import Card from "../../elements/Card";
 
 const UsersRanking: React.FC = () => {
@@ -36,36 +37,49 @@ const UsersRanking: React.FC = () => {
   return (
     <Card isLoading={isLoading} customClasses="flex-1">
       <View className="h-full w-full flex flex-col" style={{ gap: 4 }}>
-        <Text
-          className="text-primaryColor text-xl smallPhone:text-base"
-          style={{ fontFamily: "OpenSans_700Bold" }}
+        <View
+          className="flex flex-row justify-between items-center"
+          style={{ gap: 2 }}
         >
-          Ranking
-        </Text>
-        <ScrollView className="flex flex-col gap-2  h-64 smh:h-52 ">
+          <Text
+            className="text-primaryColor text-xl smallPhone:text-base"
+            style={{ fontFamily: "OpenSans_700Bold" }}
+          >
+            Ranking
+          </Text>
+          <RankingIcon height={28} width={28} fill={"#20BC2D"} />
+        </View>
+
+        <ScrollView className="flex flex-col  h-64 smh:h-52 ">
           {ranking.map((ele: UserBaseInfo, index: number) => {
             let color = "text-white";
-            let fontSize = "smallPhone:text-xs";
+            let fontSize = "text-sm smallPhone:text-xs";
+            let fontFamilly = "OpenSans_300Light";
+            let bgColor = 'bg-secondaryColor70'
             if (myInfo && ele.name === myInfo.name) {
               color = "text-primaryColor";
             }
             if (index === 0) {
-              fontSize = "text-lg smallPhone:text-base";
+              fontSize = "text-base smallPhone:text-base";
+              fontFamilly = "OpenSans_400Regular";
+            }
+            if(index % 2 === 0){
+              bgColor = "bg-transparent"
             }
             return (
-              <View className="flex flex-row " key={index}>
-                <Text
-                  className={color + " mr-2 " + fontSize}
-                  style={{ fontFamily: "OpenSans_300Light" }}
-                >
-                  {index + 1}
-                </Text>
-                <Text
-                  className={color + " " + fontSize}
-                  style={{ fontFamily: "OpenSans_300Light" }}
-                >
-                  {ele.name} - {ele.elo} ELO
-                </Text>
+              <View className={`flex flex-row p-1 ${bgColor}`} key={index}>
+                  <Text
+                    className={` ${color} mr-2 ${fontSize} `}
+                    style={{ fontFamily: fontFamilly }}
+                  >
+                    {index + 1}
+                  </Text>
+                  <Text
+                    className={color + " " + fontSize}
+                    style={{ fontFamily: fontFamilly }}
+                  >
+                    {ele.name} - {ele.elo} ELO
+                  </Text>
               </View>
             );
           })}

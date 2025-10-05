@@ -34,10 +34,7 @@ const Profile: React.FC = () => {
     await checkMoreUserInfo();
   }, []);
 
-  const logout = async (): Promise<void> => {
-    await clearBeforeLogout();
-    router.push("/");
-  };
+
 
   const checkMoreUserInfo = async (): Promise<void> => {
     try {
@@ -47,7 +44,7 @@ const Profile: React.FC = () => {
           setRankComponent(<ProfileRank rank={response.profileRank} />);
         }
         setCurrentTab(
-          <MainProfileInfo logout={logout} email={response.email} />
+          <MainProfileInfo email={response.email} />
         );
       });
     } catch (error) {
@@ -104,7 +101,7 @@ const Profile: React.FC = () => {
               {
                 label: "Data",
                 component: (
-                  <MainProfileInfo logout={logout} email={userInfo.email} />
+                  <MainProfileInfo email={userInfo.email} />
                 ),
               },
               {

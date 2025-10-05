@@ -2,8 +2,6 @@ import { Pressable, Text, View } from "react-native";
 import { FontWeights } from "../../../enums/FontsProperties";
 import React, { JSX } from "react";
 import ViewLoading from "./ViewLoading";
-import MiniLoading from "./MiniLoading";
-import Loading from "./Loading";
 
 export enum ButtonStyle {
   success = "bg-primaryColor",
@@ -60,11 +58,11 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
     <Pressable
       style={{ borderRadius: 8 }}
       disabled={props.disabled || props.isLoading}
-      className={` ${
-        props.buttonStyleSize ? props.buttonStyleSize : ButtonSize.regular
-      } m-0 ${props.buttonStyleType}  ${props.width} ${
+      className={` ${props.buttonStyleSize ?? ButtonSize.regular} m-0 ${
+        props.buttonStyleType
+      }  ${props.width} ${
         props.customClasses
-      }  flex justify-center items-center ${
+      }  flex justify-center items-center relative ${
         props.disabled || props.isLoading ? "opacity-50" : "opacity-100"
       }`}
       onPress={props.onPress}
@@ -75,9 +73,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
         props.customSlots.map((slot, index) => <View key={index}>{slot}</View>)
       ) : (
         <Text
-          className={`${
-            props.textSize ? props.textSize : "text-base"
-          } text-center ${textColorClass()} w-full`}
+          className={`${props.textSize ?? 'text-base'} text-center leading-none ${textColorClass()} w-full`}
           style={{
             fontFamily: props.textWeight
               ? props.textWeight

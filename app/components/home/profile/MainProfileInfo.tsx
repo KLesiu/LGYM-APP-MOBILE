@@ -1,15 +1,35 @@
 import { View, Text } from "react-native";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { useMemo } from "react";
+import { useState } from "react";
 import React from "react";
+import { useAppContext } from "../../../AppContext";
+import { useRouter } from "expo-router";
+import ConfirmDialog from "../../elements/ConfirmDialog";
 
 interface MainProfileInfoProps {
-  logout: VoidFunction;
-  email?: string | null;
+  email: string;
 }
 
-const MainProfileInfo: React.FC<MainProfileInfoProps> = ({ email, logout }) => {
-  const emailToDisplay = useMemo(()=>email || "No email provided", [email]);
+const MainProfileInfo: React.FC<MainProfileInfoProps> = ({ email }) => {
+  const { clearBeforeLogout, getAPI } = useAppContext();
+  const [
+    isDeleteConfirmationDialogVisible,
+    setIsDeleteConfirmationDialogVisible,
+  ] = useState(false);
+  const router = useRouter();
+
+  const logout = async (): Promise<void> => {
+    await clearBeforeLogout();
+    router.push("/");
+  };
+
+  const deleteAccount = async (): Promise<void> => {
+    await getAPI("/deleteAccount", () => {
+      setIsDeleteConfirmationDialogVisible(false);
+      logout();
+    });
+  };
+
   return (
     <View className="bg-bgColor flex flex-col flex-1 justify-between  items-center  w-full px-4 py-2">
       <View style={{ gap: 4 }} className="flex flex-col w-full">
@@ -27,15 +47,30 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({ email, logout }) => {
             style={{ fontFamily: "OpenSans_300Light" }}
             className="text-gray-200/80 font-light leading-4 text-sm smallPhone:text-xs"
           >
-            {emailToDisplay}
+            {email}
           </Text>
         </View>
       </View>
-      <CustomButton
-        width="w-full"
-        text="Logout"
-        onPress={logout}
-        buttonStyleType={ButtonStyle.success}
+      <View className="flex flex-row w-full" style={{ gap: 8 }}>
+        <CustomButton
+          text="Logout"
+          customClasses="flex-1"
+          onPress={logout}
+          buttonStyleType={ButtonStyle.success}
+        />
+        <CustomButton
+          text="Delete account"
+          onPress={() => setIsDeleteConfirmationDialogVisible(true)}
+          customClasses="flex-1"
+          buttonStyleType={ButtonStyle.cancel}
+        />
+      </View>
+      <ConfirmDialog
+        visible={isDeleteConfirmationDialogVisible}
+        title={`Delete account`}
+        message={`Are you sure you want to delete your account?`}
+        onConfirm={deleteAccount}
+        onCancel={() => setIsDeleteConfirmationDialogVisible(false)}
       />
     </View>
   );

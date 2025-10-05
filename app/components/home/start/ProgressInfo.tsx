@@ -9,7 +9,7 @@ import { useHomeContext } from "../HomeContext";
 import React from "react";
 
 const ProgressInfo: React.FC = () => {
-  const { userId } = useHomeContext();
+  const { userId ,setUserRank} = useHomeContext();
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [progress, setProgress] = useState<number>(0);
@@ -25,6 +25,7 @@ const ProgressInfo: React.FC = () => {
     try {
       await getAPI(`/${userId}/getUserInfo`, (response: UserInfo) => {
         setUserInfo(response);
+        setUserRank(response.profileRank!)
         setProgress(
           Math.floor((response.elo / response.nextRank.needElo) * 10000) / 100
         );
@@ -38,39 +39,72 @@ const ProgressInfo: React.FC = () => {
     <Card isLoading={isLoading} customClasses="items-center">
       {!isLoading && userInfo && (
         <>
-          <View>
+          <View className="flex flex-col" style={{ gap: 4 }}>
             <Text
               className="text-primaryColor  midPhone:text-lg text-xl smallPhone:text-base"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Progress
             </Text>
-            <View className="flex flex-col justify-around">
-              <View className="flex flex-col " style={{ gap: 8 }}>
+            <View className="flex flex-col px-1" style={{ gap: 2 }}>
+              <View className="flex flex-row" style={{ gap: 4 }}>
                 <Text
-                  className="text-white  midPhone:text-sm text-md smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_300Light" }}
+                  className="text-fifthColor text-sm smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
                 >
-                  Current Rank: {userInfo.profileRank}
+                  Current Rank:
                 </Text>
                 <Text
-                  className="text-white  midPhone:text-sm text-md smallPhone:text-xs"
+                  className="text-fifthColor  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  Elo: {userInfo.elo}
+                  {userInfo.profileRank}
+                </Text>
+              </View>
+              <View className="flex flex-row" style={{ gap: 4 }}>
+                <Text
+                  className="text-fifthColor text-sm smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  ELO:
                 </Text>
                 <Text
-                  className="text-white  midPhone:text-sm text-md smallPhone:text-xs"
+                  className="text-fifthColor  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  Next Rank: {userInfo.nextRank.name}
+                  {userInfo.elo}
                 </Text>
+              </View>
+              <View className="flex flex-row" style={{ gap: 4 }}>
+                <Text
+                  className="text-fifthColor text-sm smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  Next Rank:
+                </Text>
+                <Text
+                  className="text-[#FC2C44]  midPhone:text-sm text-md smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  {userInfo.nextRank.name}
+                </Text>
+              </View>
+
+              <View className="mt-2 mb-2">
                 {progress > 0 && <ProgressBar width={progress} />}
+              </View>
+              <View className="flex flex-row" style={{ gap: 4 }}>
                 <Text
-                  className="text-white  midPhone:text-sm text-md smallPhone:text-xs"
+                  className="text-fifthColor text-sm smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  Completed:
+                </Text>
+                <Text
+                  className="text-fifthColor  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  Completed: {progress}%
+                  {progress}%
                 </Text>
               </View>
             </View>

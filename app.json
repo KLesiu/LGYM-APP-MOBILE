@@ -7,16 +7,11 @@
     "orientation": "portrait",
     "icon": "./assets/logoLGYMNew.png",
     "newArchEnabled": true,
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "light",
     "splash": {
-      "resizeMode": "cover",
-      "backgroundColor": "#000000",
-      "image": "./assets/logoLGYMNew.png"
-    },
-    "androidStatusBar": {
-      "backgroundColor": "#000000",
-      "barStyle": "light-content",
-      "translucent": false
+      "resizeMode": "contain",
+      "backgroundColor": "#0A0A0A",
+      "image": "./assets/LgymSplash.jpg"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -30,7 +25,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/logoLGYMNew.png",
-        "backgroundColor": "#000000"
+        "backgroundColor": "#0A0A0A"
       },
       "buildToolsVersion": "36.0.0",
       "versionCode": 24,
