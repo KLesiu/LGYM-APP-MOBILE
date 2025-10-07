@@ -11,7 +11,7 @@ const NonTrainingView: React.FC = () => {
           fontFamily: "OpenSans_400Regular",
         }}
       >
-        You cant add training, because you dont have plan!
+        You cant add training, because you dont have plan or plan days!
       </Text>
     </View>
   );

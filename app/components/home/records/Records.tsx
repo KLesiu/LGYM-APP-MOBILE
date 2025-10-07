@@ -15,6 +15,7 @@ import { useAppContext } from "../../../AppContext";
 import { useHomeContext } from "../HomeContext";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import RecordsItem from "./RecordsItem";
+import { FontWeights } from "../../../../enums/FontsProperties";
 
 interface RecordsProps {}
 
@@ -113,6 +114,7 @@ const Records: React.FC<RecordsProps> = () => {
                 }}
                 textSize="text-sm"
                 buttonStyleType={ButtonStyle.success}
+                textWeight={FontWeights.bold}
                 buttonStyleSize={ButtonSize.long}
               />
             </View>

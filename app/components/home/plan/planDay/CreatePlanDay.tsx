@@ -35,7 +35,6 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     closeForm,
   } = usePlanDay();
 
-  const { apiURL } = useHomeContext();
   const { postAPI, getAPI } = useAppContext();
 
   const currentStepRef = useRef(currentStep);

@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import { FontWeights } from "../../../enums/FontsProperties";
-import React, { JSX } from "react";
+import React, { JSX, useMemo } from "react";
 import ViewLoading from "./ViewLoading";
 
 export enum ButtonStyle {
@@ -54,6 +54,20 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
     }
   };
 
+
+  const fontWeight = useMemo(()=>{
+    switch (props.textWeight) {
+      case FontWeights.bold:
+        return "bold";
+      case FontWeights.regular:
+        return "normal";
+      case FontWeights.light:
+        return "light";
+      default:
+        return "normal";
+    }
+  },[props.textWeight])
+
   return (
     <Pressable
       style={{ borderRadius: 8 }}
@@ -78,6 +92,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
             fontFamily: props.textWeight
               ? props.textWeight
               : FontWeights.regular,
+            fontWeight:fontWeight
           }}
         >
           {props.text}

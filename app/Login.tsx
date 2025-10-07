@@ -20,7 +20,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
-  const { postAPI, setErrors ,isLoading,setUserInfo} = useAppContext();
+  const { postAPI, setErrors ,isLoading,setUserInfo,setToken} = useAppContext();
 
   useEffect(() => {
     setErrors([]);
@@ -39,6 +39,7 @@ const Login: React.FC = () => {
     await AsyncStorage.setItem("id", response.req._id);
     await AsyncStorage.setItem("email", response.req.email);
     setUserInfo(response.req);
+    setToken(response.token)
     router.push("/Home");
   };
 

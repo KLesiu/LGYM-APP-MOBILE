@@ -49,7 +49,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
         >
           Choose your gym!
         </Text>
-        {errors.length ? (
+        {errors.length || !gyms.length ? (
           <NoGymsInfo  goBack={goBack} />
         ) : (
           <GymsToChoose gyms={gyms} setGym={setGym} />

@@ -9,6 +9,7 @@ import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import PlansListItem from "./PlansListItem";
 import React from "react";
+import { FontWeights } from "../../../../enums/FontsProperties";
 
 interface PlansListProps {
   togglePlanConfig: (value: boolean) => void;
@@ -75,19 +76,21 @@ const PlansList: React.FC<PlansListProps> = ({
             <CustomButton
               buttonStyleType={ButtonStyle.outlineBlack}
               onPress={goBack}
+              textWeight={FontWeights.bold}
               text="Back"
               width="flex-1"
             />
             <CustomButton
               buttonStyleType={ButtonStyle.success}
               onPress={() => togglePlanConfig(true)}
+              textWeight={FontWeights.bold}
               text="Create new plan"
               width="flex-1"
             />
           </View>
         </View>
+        {viewLoading && <ViewLoading />}
       </Dialog>
-      {viewLoading ? <ViewLoading /> : <></>}
     </>
   );
 };

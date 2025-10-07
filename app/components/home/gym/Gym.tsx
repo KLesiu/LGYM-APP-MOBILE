@@ -109,6 +109,7 @@ const Gym: React.FC = () => {
                 onPress={addNewGym}
                 buttonStyleType={ButtonStyle.success}
                 buttonStyleSize={ButtonSize.long}
+                textWeight={FontWeights.bold}
                 text="Add gym"
               />
             </View>

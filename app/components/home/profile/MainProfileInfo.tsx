@@ -5,6 +5,7 @@ import React from "react";
 import { useAppContext } from "../../../AppContext";
 import { useRouter } from "expo-router";
 import ConfirmDialog from "../../elements/ConfirmDialog";
+import { FontWeights } from "../../../../enums/FontsProperties";
 
 interface MainProfileInfoProps {
   email: string;
@@ -56,12 +57,14 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({ email }) => {
           text="Logout"
           customClasses="flex-1"
           onPress={logout}
+          textWeight={FontWeights.bold}
           buttonStyleType={ButtonStyle.success}
         />
         <CustomButton
           text="Delete account"
           onPress={() => setIsDeleteConfirmationDialogVisible(true)}
           customClasses="flex-1"
+          textWeight={FontWeights.bold}
           buttonStyleType={ButtonStyle.cancel}
         />
       </View>

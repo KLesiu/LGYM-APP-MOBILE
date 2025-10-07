@@ -11,6 +11,7 @@ import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
 import React from "react";
+import { FontWeights } from "../../../../enums/FontsProperties";
 
 const LastTrainingStartInfo: React.FC = () => {
   const [lastTrainingInfo, setLastTrainingInfo] = useState<LastTrainingInfo>();
@@ -97,6 +98,7 @@ const LastTrainingStartInfo: React.FC = () => {
           buttonStyleSize={ButtonSize.long}
           onPress={() => navigateTo(<AddTraining />)}
           buttonStyleType={ButtonStyle.success}
+          textWeight={FontWeights.bold}
           customClasses="self-center"
           text="New"
         />

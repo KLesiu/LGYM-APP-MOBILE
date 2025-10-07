@@ -26,6 +26,7 @@ interface AppContextProps {
   token?: string;
   isTokenChecked: boolean;
   setIsTokenChecked: (value: boolean) => void;
+  setToken: (token?: string) => void;
   userInfo: UserInfo | null;
   setUserInfo: (userInfo: UserInfo | null) => void;
     getRankColor?: "#CACACA" | "#A733DD" | "#FC2C44" | "#E8CC79";
@@ -71,11 +72,12 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   ) => {
     try {
       setIsLoading(true);
+      console.log(token)
       const response = await get(url, token, params);
       callback(response);
     } catch (error) {
       if (serveErrors) catchErrors(error);
-      // throw error;
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -160,7 +162,8 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         token,
         userInfo,
         setUserInfo,
-        getRankColor
+        getRankColor,
+        setToken
       }}
     >
       {canAppStart && children}

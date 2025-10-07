@@ -22,7 +22,7 @@ import React from "react";
 
 const TrainingPlan: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
-  const { getAPI,postAPI } = useAppContext();
+  const { getAPI, postAPI } = useAppContext();
   const [planConfig, setPlanConfig] = useState<PlanForm>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
   const [planDaysBaseInfo, setPlanDaysBaseInfo] = useState<PlanDayBaseInfoVm[]>(
@@ -68,8 +68,6 @@ const TrainingPlan: React.FC = () => {
       setViewLoading(false);
     }
   };
-
-
 
   const deletePlanDay = async (): Promise<void> => {
     if (!currentPlanDay) return;
@@ -148,15 +146,19 @@ const TrainingPlan: React.FC = () => {
   };
 
   const changeActivePlan = async (planConfig: PlanForm) => {
-    try{
-      await postAPI(`/${userId}/setNewActivePlan`,async(result:ResponseMessage)=>{
-        await getPlanDaysBaseInfo(planConfig);
-      },{_id:planConfig._id});     
+    try {
+      await postAPI(
+        `/${userId}/setNewActivePlan`,
+        async (result: ResponseMessage) => {
+          await getPlanDaysBaseInfo(planConfig);
+        },
+        { _id: planConfig._id }
+      );
+    } catch (e: unknown) {
+      setPlanDaysBaseInfo([]);
+      console.error(e);
     }
-    catch(e:unknown){
-      console.error(e)
-    }
-  }
+  };
 
   const deletePlanDayVisible = useCallback(
     (visible: boolean, planDay?: PlanDayBaseInfoVm) => {
@@ -177,7 +179,6 @@ const TrainingPlan: React.FC = () => {
             <CustomButton
               onPress={() => togglePlanConfigPopUp(true)}
               text="Create plan"
-              textWeight={FontWeights.bold}
               buttonStyleType={ButtonStyle.success}
             />
           </View>
@@ -210,7 +211,7 @@ const TrainingPlan: React.FC = () => {
                   onPress={showPlanDayForm}
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}
-                  buttonStyleSize={ButtonSize.regular}
+                  buttonStyleSize={ButtonSize.long}
                   customClasses="flex-1"
                 />
                 <CustomButton
@@ -219,14 +220,13 @@ const TrainingPlan: React.FC = () => {
                   onPress={showPlansList}
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}
-                  buttonStyleSize={ButtonSize.regular}
-                                    customClasses="flex-1"
-
+                  buttonStyleSize={ButtonSize.long}
+                  customClasses="flex-1"
                 />
               </View>
             </View>
 
-            {planDaysBaseInfo  ? (
+            {planDaysBaseInfo ? (
               <ScrollView className="w-full">
                 <View style={{ gap: 16 }} className="flex flex-col p-5 pb-12">
                   {planDaysBaseInfo.map((planDay) => (
