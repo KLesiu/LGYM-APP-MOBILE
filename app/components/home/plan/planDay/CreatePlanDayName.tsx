@@ -29,7 +29,7 @@ const CreatePlanDayName: React.FC = () => {
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="text-3xl smallPhone:text-xl text-white"
+          className="text-3xl smallPhone:text-xl text-textColor"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           New Plan Day
@@ -39,7 +39,7 @@ const CreatePlanDayName: React.FC = () => {
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <PlanNameIcon />
           <Text
-            className="text-xl smallPhone:text-base text-white"
+            className="text-xl smallPhone:text-base text-textColor"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             Set a plan name
@@ -48,7 +48,7 @@ const CreatePlanDayName: React.FC = () => {
         <View style={{ gap: 4 }} className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="  text-white  text-base smallPhone:text-sm"
+            className="  text-textColor  text-base smallPhone:text-sm"
           >
             Name:
           </Text>
@@ -58,7 +58,7 @@ const CreatePlanDayName: React.FC = () => {
               backgroundColor: "rgb(30, 30, 30)",
               borderRadius: 8,
             }}
-            className=" w-full  px-2 py-4 text-white  "
+            className=" w-full  px-2 py-4 text-textColor  "
             onChangeText={(text: string) => setPlanDayName(text)}
             value={planDayName}
           />

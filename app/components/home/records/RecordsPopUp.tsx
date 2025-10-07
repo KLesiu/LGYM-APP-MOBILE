@@ -14,6 +14,7 @@ import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ValidationView from "../../elements/ValidationView";
 import React from "react";
+import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
 
 interface RecordsPopUpProps {
   offPopUp: () => void;
@@ -25,7 +26,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     []
   );
   const [weight, setWeight] = useState<string>();
-  const [clearQuery, setClearQuery] = useState<boolean>(false); // Nowy stan do czyszczenia query
+  const [clearQuery, setClearQuery] = useState<boolean>(false);
   const { userId } = useHomeContext();
   const { getAPI, setErrors, postAPI } = useAppContext();
 
@@ -93,26 +94,37 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   return (
     <Dialog>
       <View className="w-full h-full">
-        <Text
-          className="text-center  text-xl smallPhone:text-base text-white"
-          style={{
-            fontFamily: "OpenSans_700Bold",
-          }}
-        >
-          {props.exerciseId && selectedExercise ? "Edit record" : "New record"}
-        </Text>
-        <View className="flex flex-col w-full p-2" style={{ gap: 8 }}>
-          <View className="flex flex-col w-full" style={{ gap: 4 }}>
+        <View className="px-5 py-2">
+          <Text
+            className=" text-3xl smallPhone:text-2xl text-textColor"
+            style={{ fontFamily: "OpenSans_700Bold" }}
+          >
+            {props.exerciseId && selectedExercise
+              ? "Edit record"
+              : "New record"}
+          </Text>
+        </View>
+        <View className="px-5" style={{ gap: 16 }}>
+          <View className="flex flex-row items-center" style={{ gap: 8 }}>
+            <RecordIcon />
             <Text
-              className="text-white  text-base smallPhone:text-sm"
+              className=" text-xl smallPhone:text-lg text-textColor"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              Set a record
+            </Text>
+          </View>
+          <View style={{ gap: 4 }} className="flex flex-col">
+            <Text
               style={{ fontFamily: "OpenSans_300Light" }}
+              className="  text-textColor text-base smallPhone:text-sm"
             >
               Exercise:
             </Text>
             {props.exerciseId && selectedExercise ? (
               <TextInput
                 style={{ fontFamily: "OpenSans_400Regular" }}
-                className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-white "
+                className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-textColor "
                 readOnly={true}
                 value={selectedExercise.label}
               />
@@ -127,24 +139,21 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
           </View>
           <View className="flex flex-col w-full" style={{ gap: 4 }}>
             <Text
-              className="text-white  text-base smallPhone:text-sm"
+              className="text-textColor  text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
               Weight:
             </Text>
             <TextInput
               style={{ fontFamily: "OpenSans_400Regular" }}
-              className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-white "
+              className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-textColor "
               onChangeText={validator}
               value={weight}
               keyboardType="numeric"
             />
           </View>
         </View>
-        <View
-          className="w-full flex flex-row justify-between"
-          style={{ gap: 16 }}
-        >
+        <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
           <CustomButton
             text="Cancel"
             onPress={props.offPopUp}
@@ -158,6 +167,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             width="flex-1"
           />
         </View>
+
         <ValidationView />
       </View>
     </Dialog>

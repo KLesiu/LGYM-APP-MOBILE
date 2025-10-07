@@ -20,7 +20,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
     <View key={item._id} className="w-full" style={{ gap: 10 }}>
       <Text
         style={{ fontFamily: "OpenSans_400Regular" }}
-        className="text-base smallPhone:text-sm text-white"
+        className="text-base smallPhone:text-sm text-textColor"
       >
         {`Last training : ${item.lastTrainingDate ? new Date(item.lastTrainingDate).toLocaleDateString() : "No training yet"}`}
       </Text>
@@ -30,7 +30,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             style={{
               fontFamily: "OpenSans_700Bold",
             }}
-            className="text-xl smallPhone:text-lg font-bold text-white"
+            className="text-xl smallPhone:text-lg font-bold text-textColor"
           >
             {item.name}
           </Text>

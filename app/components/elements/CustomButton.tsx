@@ -42,13 +42,13 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       case ButtonStyle.success:
         return "text-black";
       case ButtonStyle.cancel:
-        return "text-white";
+        return "text-textColor";
       case ButtonStyle.outline:
-        return "text-white";
+        return "text-textColor";
       case ButtonStyle.grey:
-        return "text-white";
+        return "text-textColor";
       case ButtonStyle.outlineBlack:
-        return "text-white";
+        return "text-textColor";
       default:
         return "text-black";
     }

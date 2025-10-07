@@ -38,7 +38,7 @@ const Layout: React.FC = () => {
 
   return (
     <AppProvider>
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack screenOptions={{ headerShown: false ,gestureEnabled:false,headerBackButtonMenuEnabled:false}} />
     </AppProvider>
   );
 };

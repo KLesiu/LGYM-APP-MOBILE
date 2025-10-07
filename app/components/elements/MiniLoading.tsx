@@ -7,7 +7,7 @@ const MiniLoading: React.FC = () => {
   return isLoading ? (
     <View className="w-full flex flex-row items-center justify-center mt-5">
       <Text
-        className="text-xl text-white"
+        className="text-xl text-textColor"
         style={{ fontFamily: "Teko_700Bold" }}
       >
         Loading...

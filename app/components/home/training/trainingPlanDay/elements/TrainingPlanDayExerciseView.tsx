@@ -47,7 +47,7 @@ const TrainingPlanDayExerciseView: React.FC<
     <View className="w-full px-5 flex flex-col flex-1" style={{ gap: 4 }}>
       <View className="flex flex-row justify-between">
         <Text
-          className=" text-sm smallPhone:text-xs text-white "
+          className=" text-sm smallPhone:text-xs text-textColor "
           style={{
             fontFamily: "OpenSans_300Light",
           }}
@@ -55,7 +55,7 @@ const TrainingPlanDayExerciseView: React.FC<
           Series
         </Text>
         <Text
-          className="text-sm smallPhone:text-xs  text-white  w-2/5"
+          className="text-sm smallPhone:text-xs  text-textColor  w-2/5"
           style={{
             fontFamily: "OpenSans_300Light",
           }}
@@ -63,7 +63,7 @@ const TrainingPlanDayExerciseView: React.FC<
           Reps
         </Text>
         <Text
-          className=" text-sm smallPhone:text-xs text-white  w-2/5 "
+          className=" text-sm smallPhone:text-xs text-textColor  w-2/5 "
           style={{
             fontFamily: "OpenSans_300Light",
           }}
@@ -86,35 +86,37 @@ const TrainingPlanDayExerciseView: React.FC<
                 style={{ gap: 10 }}
               >
                 <View className="bg-secondaryColor   px-4 py-3 smallPhone:px-3 smallPhone:py-2  rounded-lg ">
-                  <Text className="text-white">{index + 1}</Text>
+                  <Text className="text-textColor">{index + 1}</Text>
                 </View>
                 <TextInput
                   onChangeText={(value) => {
+                    const normalized = value.replace(",", ".");
                     updateExerciseScore(
                       currentExercise!.exercise,
                       index + 1,
-                      value,
+                      normalized,
                       false
                     );
                   }}
                   value={savedScore?.reps.toString() ?? ""}
-                  keyboardType="number-pad"
+                  keyboardType="decimal-pad"
                   style={{ borderRadius: 8 }}
-                  className=" text-sm smallPhone:text-[11px]  bg-secondaryColor w-2/5    px-4 py-3 smallPhone:px-3 smallPhone:py-2  text-white"
+                  className=" text-sm smallPhone:text-[11px]  bg-secondaryColor w-2/5    px-4 py-3 smallPhone:px-3 smallPhone:py-2  text-textColor"
                 />
                 <TextInput
-                  onChangeText={(value) =>
+                  onChangeText={(value) => {
+                    const normalized = value.replace(",", ".");
                     updateExerciseScore(
                       currentExercise!.exercise,
                       index + 1,
-                      value,
+                      normalized,
                       true
-                    )
-                  }
+                    );
+                  }}
                   style={{ borderRadius: 8 }}
                   value={savedScore?.weight.toString() ?? ""}
-                  keyboardType="number-pad"
-                  className=" text-sm  smallPhone:text-xs  bg-secondaryColor  text-white    px-4 py-3 smallPhone:px-3 smallPhone:py-2 w-2/5 "
+                  keyboardType="decimal-pad"
+                  className=" text-sm  smallPhone:text-xs  bg-secondaryColor  text-textColor    px-4 py-3 smallPhone:px-3 smallPhone:py-2 w-2/5 "
                 />
               </View>
             );

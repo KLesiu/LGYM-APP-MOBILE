@@ -25,7 +25,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
     <View className="w-full h-full">
       <View className="px-5 py-2">
         <Text
-          className="text-3xl smallPhone:text-xl  text-white"
+          className="text-3xl smallPhone:text-xl  text-textColor"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Summary
@@ -33,7 +33,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
         <View className="flex flex-row" style={{ gap: 8 }}>
           <PlanNameIcon />
           <Text
-            className="text-xl smallPhone:text-base text-white"
+            className="text-xl smallPhone:text-base text-textColor"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             {planDayName}

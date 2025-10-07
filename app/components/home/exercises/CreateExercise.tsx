@@ -135,7 +135,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       <View className="w-full h-full">
         <View className="px-5 py-2">
           <Text
-            className=" text-3xl smallPhone:text-2xl text-white"
+            className=" text-3xl smallPhone:text-2xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {props.form ? "Edit Exercise" : "New Exercise"}
@@ -145,7 +145,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View className="flex flex-row items-center" style={{ gap: 8 }}>
             <ExerciseIcon />
             <Text
-              className=" text-xl smallPhone:text-lg text-white"
+              className=" text-xl smallPhone:text-lg text-textColor"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Set an exercise
@@ -154,7 +154,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white text-base smallPhone:text-sm"
+              className="  text-textColor text-base smallPhone:text-sm"
             >
               Name:
             </Text>
@@ -164,7 +164,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
                 backgroundColor: "rgb(30, 30, 30)",
                 borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white  "
+              className=" w-full  px-2 py-4 text-textColor  "
               onChangeText={(text: string) => setExerciseName(text)}
               value={exerciseName}
               readOnly={isBlocked}
@@ -173,7 +173,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white text-base smallPhone:text-sm"
+              className="  text-textColor text-base smallPhone:text-sm"
             >
               BodyPart:
             </Text>
@@ -181,7 +181,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
               {isBlocked ? (
                 <Text
                   style={{ fontFamily: "OpenSans_300Light" }}
-                  className="text-white text-base smallPhone:text-sm"
+                  className="text-textColor text-base smallPhone:text-sm"
                 >
                   {bodyPart}
                 </Text>
@@ -197,7 +197,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white text-base smallPhone:text-sm"
+              className="  text-textColor text-base smallPhone:text-sm"
             >
               Description:
             </Text>
@@ -207,7 +207,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
                 borderRadius: 8,
                 backgroundColor: "rgb(30, 30, 30)",
               }}
-              className="w-full px-2 py-4  text-white "
+              className="w-full px-2 py-4  text-textColor "
               multiline
               onChangeText={(text: string) => setDescription(text)}
               value={description}

@@ -30,7 +30,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = (
           </Text>
           <Text
             style={{ fontFamily: "OpenSans_400Regular" }}
-            className="text-lg text-white"
+            className="text-lg text-textColor"
           >
             {props.message}
           </Text>

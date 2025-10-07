@@ -71,7 +71,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
         <Checkbox value={isDone} />
         <View className="flex flex-col flex-1">
           <Text
-            className="text-base smallPhone:text-sm text-white "
+            className="text-base smallPhone:text-sm text-textColor "
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
@@ -79,7 +79,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
             {exercise.exercise.name}
           </Text>
           <Text
-            className="text-sm smallPhone:text-xs text-white "
+            className="text-sm smallPhone:text-xs text-textColor "
             style={{
               fontFamily: "OpenSans_300Light",
             }}

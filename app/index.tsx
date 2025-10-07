@@ -18,11 +18,13 @@ import Constants from "expo-constants";
 import * as Updates from "expo-updates";
 import * as Application from "expo-application";
 import React from "react";
+import { UserInfo } from "../interfaces/User";
+import ResponseMessage from "../interfaces/ResponseMessage";
 
 const Preload: React.FC = () => {
   const router = useRouter();
   const [appConfig, setAppConfig] = useState<AppConfigInfo | null>(null);
-  const { getAPI, postAPI, setIsTokenChecked, isTokenChecked } =
+  const { getAPI, postAPI, setIsTokenChecked, isTokenChecked,setUserInfo } =
     useAppContext();
 
   useEffect(() => {
@@ -34,12 +36,14 @@ const Preload: React.FC = () => {
     await getAPI("/checkToken", setSession);
   };
 
-  const setSession = async (result: any): Promise<void> => {
-    if (!result || !result.isValid) return;
-    await AsyncStorage.setItem("username", result.user.name);
-    await AsyncStorage.setItem("id", result.user._id);
-    await AsyncStorage.setItem("email", result.user.email);
+  const setSession = async (result: ResponseMessage | UserInfo): Promise<void> => {
+    if (!result || (result as ResponseMessage).msg) return;
+    const user = result as UserInfo;
+    await AsyncStorage.setItem("username", user.name);
+    await AsyncStorage.setItem("id", user._id);
+    await AsyncStorage.setItem("email", user.email);
     setIsTokenChecked(true);
+    setUserInfo(user);
     router.push("/Home");
   };
 
@@ -66,7 +70,7 @@ const Preload: React.FC = () => {
       return Updates.runtimeVersion;
     }
 
-    return Application.nativeApplicationVersion ?? "4.0.1";
+    return Application.nativeApplicationVersion;
   };
 
   const checkIsUpdateRequired = async (appVersionConfig: AppConfigInfo) => {

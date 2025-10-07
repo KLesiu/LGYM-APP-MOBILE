@@ -14,14 +14,14 @@ const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
 }) => {
   const { gym, planDayName } = useTrainingPlanDay();
   return (
-    <Header customClasses="justify-between">
+    <View className="flex flex-row items-center w-full justify-between h-16 px-5 relative">
       <Pressable onPress={hideDaySection}  style={{ borderRadius: 10000 }}
-        className="flex items-center justify-center w-8 h-8  bg-secondaryColor ">
+        className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor ">
         <BackIcon />
       </Pressable>
-      <View className="flex flex-col items-center " style={{ gap: 4 }}>
+      <View className="flex flex-col items-center w-full" style={{ gap: 4 }}>
         <Text
-          className="text-base smallPhone:text-sm text-white  font-bold "
+          className="text-base smallPhone:text-sm text-textColor  font-bold "
           style={{
             fontFamily: "OpenSans_700Bold",
           }}
@@ -31,7 +31,7 @@ const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
         <View className="flex flex-row items-center" style={{ gap: 4 }}>
           <GymIcon width={14} height={14} />
           <Text
-            className="text-xs smallPhone:text-[10px] text-white"
+            className="text-xs smallPhone:text-[10px] text-textColor"
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
@@ -41,7 +41,7 @@ const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
         </View>
       </View>
     
-    </Header>
+    </View>
   );
 };
 export default TrainingPlanDayHeader;

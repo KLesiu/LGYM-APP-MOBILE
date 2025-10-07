@@ -16,7 +16,7 @@ const TrainingDayToChoose: React.FC<TrainingDayToChooseProps> = ({
         <View className="flex flex-row justify-between w-full">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className="text-xl smallPhone:text-base font-bold text-white"
+            className="text-base font-bold text-textColor"
           >
             {trainingType.name}
           </Text>

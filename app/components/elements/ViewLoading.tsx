@@ -10,7 +10,7 @@ const ViewLoading: React.FC<ViewLoadingProps> = ({customClasses}) => {
     <View className={"w-full top-0 flex flex-row justify-center items-center z-[5] py-4 space-x-2" + ` ${customClasses}`}>
       <ActivityIndicator size="small" color="#ffffff" />
       <Text
-        className="text-white text-base"
+        className="text-textColor text-base"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         Loading...

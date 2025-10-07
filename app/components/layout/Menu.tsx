@@ -7,7 +7,6 @@ import Profile from "../home/profile/Profile";
 import Start from "../home/start/Start";
 import Exercises from "../home/exercises/Exercises";
 import Gym from "../home/gym/Gym";
-import Charts from "../home/charts/Charts";
 import HomeIcon from "./../../../img/icons/homeIcon.svg";
 import ProfileIcon from "./../../../img/icons/profileIcon.svg";
 import HistoryIcon from "./../../../img/icons/calendarIcon.svg";
@@ -15,10 +14,11 @@ import AddTrainingIcon from "./../../../img/icons/plusCircleIcon.svg";
 import ExerciseIcon from "./../../../img/icons/exercisesIcon.svg";
 import PlanIcon from "./../../../img/icons/planIcon.svg";
 import GymIcon from "./../../../img/icons/gymIcon.svg";
+import RecordIcon  from "./../../../img/icons/recordsIcon.svg"
 import MenuIcon from "./../../../img/icons/menuIcon.svg";
-import ChartIcon from "./../../../img/icons/chartsIcon.svg";
 import { useHomeContext } from "../home/HomeContext";
 import { Dimensions } from 'react-native';
+import Records from "../home/records/Records";
 
 
 const Menu: React.FC = () => {
@@ -47,8 +47,8 @@ const Menu: React.FC = () => {
     { icon: <AddTrainingIcon />, label: "Training", component: <AddTraining/> },
     { icon: <PlanIcon />, label: "Plan", component: <TrainingPlan /> },
     { icon: <HistoryIcon />, label: "History", component: <History /> },
-    { icon: <ChartIcon />, label: "Charts", component: <Charts/> },
-    { icon: <ProfileIcon />, label: "Profile", component: <Profile/> },
+    { icon: <RecordIcon />, label: "Records", component: <Records /> },
+    { icon: <ProfileIcon />, label: "Profile", component: <Profile changeView={changeView}/> },
   ];
 
   const returnProperties = useMemo(()=>{

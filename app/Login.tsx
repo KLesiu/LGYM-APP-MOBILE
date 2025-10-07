@@ -12,6 +12,7 @@ import CustomButton, {
 import ValidationView from "./components/elements/ValidationView";
 import { useRouter, usePathname } from "expo-router";
 import { useAppContext } from "./AppContext";
+import { UserInfo } from "../interfaces/User";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -19,7 +20,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
-  const { postAPI, setErrors ,isLoading} = useAppContext();
+  const { postAPI, setErrors ,isLoading,setUserInfo} = useAppContext();
 
   useEffect(() => {
     setErrors([]);
@@ -32,11 +33,12 @@ const Login: React.FC = () => {
     });
   };
 
-  const loginSuccessCallback = async (response: any) => {
+  const loginSuccessCallback = async (response:{ token: string; req: UserInfo }) => {
     await AsyncStorage.setItem("token", response.token);
     await AsyncStorage.setItem("username", response.req.name);
     await AsyncStorage.setItem("id", response.req._id);
     await AsyncStorage.setItem("email", response.req.email);
+    setUserInfo(response.req);
     router.push("/Home");
   };
 
@@ -58,7 +60,7 @@ const Login: React.FC = () => {
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base"
+            className="text-textColor text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Username
@@ -68,13 +70,13 @@ const Login: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-white "
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-textColor "
             autoComplete="given-name"
           />
         </View>
         <View className="flex flex-col w-full relative" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base"
+            className="text-textColor text-base"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Password
@@ -84,7 +86,7 @@ const Login: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="w-full px-2 py-4 bg-secondaryColor rounded-lg text-white  "
+            className="w-full px-2 py-4 bg-secondaryColor rounded-lg text-textColor  "
             secureTextEntry={secureTextEntry}
           />
           <Pressable

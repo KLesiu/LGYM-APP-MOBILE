@@ -1,7 +1,14 @@
-import React, { JSX, useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  JSX,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { createContext } from "react";
 import { Animated, BackHandler } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppContext } from "../../AppContext";
 
 interface HomeContextProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -10,17 +17,14 @@ interface HomeContextProps {
   isMenuButtonVisible: boolean;
   toggleMenu: () => void;
   hideMenu: () => void;
-  changeView: (component: React.JSX.Element) => void;
-  apiURL: string;
-  userId:string;
-  userRank:string;
-  setUserRank: React.Dispatch<React.SetStateAction<string>>;
+  changeView: (component?: JSX.Element) => void;
+  userId: string;
   changeHeaderVisibility: (isVisible: boolean) => void;
 }
 
 const HomeContext = createContext<HomeContextProps | null>(null);
 
-export const useHomeContext = () => {
+export const useHomeContext = (): HomeContextProps => {
   const context = useContext(HomeContext);
   if (!context) {
     throw new Error("useHomeContext must be used within HomeProvider");
@@ -34,12 +38,15 @@ interface HomeProviderProps {
   changeHeaderVisibility: (isVisible: boolean) => void;
 }
 
-const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,changeHeaderVisibility }) => {
-  const apiURL = process.env.REACT_APP_BACKEND || "";
+const HomeProvider: React.FC<HomeProviderProps> = ({
+  children,
+  viewChange,
+  changeHeaderVisibility,
+}) => {
+  const {userInfo} = useAppContext()
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
-  const [userId,setUserId] = useState<string>("");
-  const [userRank,setUserRank] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
   const animation = useRef(new Animated.Value(0)).current;
 
 
@@ -53,25 +60,17 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,change
     };
   }, []);
 
-  useEffect(() => { 
-    getUserId();
-  },[])
-
-
-
-  const handleBackButton = useCallback(()=>{
-    changeView();
-    toggleMenuButton(false)
-    return true;
-  },[])
-
-  const getUserId = useCallback(async () => {
-    const id = await AsyncStorage.getItem("id");
-    if(id){
-      setUserId(id);
+  useEffect(()=>{
+    if(userInfo){
+      setUserId(userInfo._id)
     }
-  },[])
+  },[userInfo])
 
+  const handleBackButton = useCallback(() => {
+    changeView();
+    toggleMenuButton(false);
+    return true;
+  }, []);
 
   const toggleMenu = useCallback(() => {
     setIsExpanded((prev) => {
@@ -85,26 +84,21 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,change
     });
   }, [animation]);
 
-  const hideMenu = useCallback(() => {
+  const hideMenu =() => {
     setIsExpanded(false);
-  },[])
+  };
 
-  const toggleMenuButton = useCallback(
-    (hide:boolean) => {
-      setIsMenuButtonVisible(!hide);
-    },
-    [isExpanded, toggleMenu]
-  );
+  const toggleMenuButton = useCallback((hide: boolean) => {
+    setIsMenuButtonVisible(!hide);
+  }, []);
 
   const changeView = useCallback(
     (component?: React.JSX.Element) => {
-      if (isExpanded) toggleMenu(); 
+      if (isExpanded) toggleMenu();
       viewChange(component);
     },
     [isExpanded, toggleMenu, viewChange]
   );
-
-
   return (
     <HomeContext.Provider
       value={{
@@ -114,11 +108,9 @@ const HomeProvider: React.FC<HomeProviderProps> = ({ children, viewChange,change
         toggleMenuButton,
         isMenuButtonVisible,
         changeView,
-        apiURL,
         hideMenu,
         userId,
         changeHeaderVisibility,
-        userRank,setUserRank
       }}
     >
       {children}

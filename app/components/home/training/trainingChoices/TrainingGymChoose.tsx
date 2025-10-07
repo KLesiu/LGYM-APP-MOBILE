@@ -41,10 +41,10 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
     <Dialog>
       <View
         className="flex flex-col items-start w-full h-full p-4"
-        style={{ gap: 16 }}
+        style={{ gap: 8 }}
       >
         <Text
-          className="text-[28px] smallPhone:text-2xl text-white"
+          className="text-lg text-textColor"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Choose your gym!

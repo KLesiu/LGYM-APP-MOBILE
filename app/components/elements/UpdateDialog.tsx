@@ -22,14 +22,14 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
       </View>
       <View className="flex flex-col items-center justify-center">
         <Text
-          className="text-white text-xl"
+          className="text-textColor text-xl"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           Update Required
         </Text>
 
         <Text
-          className="text-white text-base text-center"
+          className="text-textColor text-base text-center"
           style={{ fontFamily: "OpenSans_300Light" }}
         >
           A new version ({config.latestVersion}) is available and required to
@@ -40,13 +40,13 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
       {config.releaseNotes && (
         <View className="flex flex-col border border-white p-4 rounded-lg ">
           <Text
-            className="text-white text-base text-center"
+            className="text-textColor text-base text-center"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             What's new:
           </Text>
           <Text
-            className="text-white text-sm text-center"
+            className="text-textColor text-sm text-center"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             {config.releaseNotes}

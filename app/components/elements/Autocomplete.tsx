@@ -81,7 +81,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
           backgroundColor: "rgb(30, 30, 30)",
           borderRadius: 8,
         }}
-        className=" w-full  px-2 py-4 text-white  "
+        className=" w-full  px-2 py-4 text-textColor  "
         value={query}
         onChangeText={(text) => {
           setQuery(text);

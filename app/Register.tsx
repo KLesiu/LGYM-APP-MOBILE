@@ -56,7 +56,7 @@ const Register: React.FC = () => {
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base smallPhone:text-sm"
+            className="text-textColor text-base smallPhone:text-sm"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Username
@@ -66,12 +66,12 @@ const Register: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-white "
+            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-textColor "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base smallPhone:text-sm"
+            className="text-textColor text-base smallPhone:text-sm"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Email
@@ -81,12 +81,12 @@ const Register: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-white "
+            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-textColor "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base smallPhone:text-sm"
+            className="text-textColor text-base smallPhone:text-sm"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Password
@@ -97,12 +97,12 @@ const Register: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-white "
+            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor "
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <Text
-            className="text-white text-base smallPhone:text-sm"
+            className="text-textColor text-base smallPhone:text-sm"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
             Repeat password
@@ -113,7 +113,7 @@ const Register: React.FC = () => {
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-white "
+            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-textColor "
           />
         </View>
       </View>

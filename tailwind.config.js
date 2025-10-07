@@ -12,6 +12,7 @@ module.exports = {
         thirdColor: "#121212",
         fourthColor: "rgba(24, 24, 24, 0.25)",
         fifthColor: "#787878",
+        textColor: "#e8e6e6",
       },
       screens: {
         smh: { raw: "(min-height: 600px)" },

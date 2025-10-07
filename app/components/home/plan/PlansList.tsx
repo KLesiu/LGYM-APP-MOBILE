@@ -50,7 +50,7 @@ const PlansList: React.FC<PlansListProps> = ({
         <View className="w-full h-full">
           <View className="px-5 py-2">
             <Text
-              className="text-3xl smallPhone:text-xl text-white"
+              className="text-3xl smallPhone:text-xl text-textColor"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Your Plans

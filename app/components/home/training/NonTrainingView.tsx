@@ -6,7 +6,7 @@ const NonTrainingView: React.FC = () => {
   return (
     <View className="w-full h-full flex flex-row justify-center text-center text-2xl items-center p-4">
       <Text
-        className="text-white text-xl text-center"
+        className="text-textColor text-xl text-center"
         style={{
           fontFamily: "OpenSans_400Regular",
         }}

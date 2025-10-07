@@ -2,38 +2,28 @@ import { View, Text } from "react-native";
 import ProfileRank from "../../elements/ProfileRank";
 import ProgressBar from "../../elements/ProgressBar";
 import { useEffect, useState } from "react";
-import { UserInfo } from "./../../../../interfaces/User";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
-import { useHomeContext } from "../HomeContext";
 import React from "react";
 
 const ProgressInfo: React.FC = () => {
-  const { userId ,setUserRank} = useHomeContext();
+  const {userInfo,getRankColor} = useAppContext()
 
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { getAPI } = useAppContext();
 
   useEffect(() => {
-    getRankInfo();
-  }, []);
-
-  const getRankInfo = async () => {
-    try {
-      await getAPI(`/${userId}/getUserInfo`, (response: UserInfo) => {
-        setUserInfo(response);
-        setUserRank(response.profileRank!)
-        setProgress(
-          Math.floor((response.elo / response.nextRank.needElo) * 10000) / 100
-        );
-      });
-    } finally {
+    setIsLoading(true);
+    if(userInfo){
+      setProgress(
+        Math.floor((userInfo.elo / userInfo.nextRank.needElo) * 10000) / 100
+      );
       setIsLoading(false);
     }
-  };
+  }, [userInfo]);
+
+  if(!getRankColor) return null;
 
   return (
     <Card isLoading={isLoading} customClasses="items-center">
@@ -41,7 +31,7 @@ const ProgressInfo: React.FC = () => {
         <>
           <View className="flex flex-col" style={{ gap: 4 }}>
             <Text
-              className="text-primaryColor  midPhone:text-lg text-xl smallPhone:text-base"
+            className="text-primaryColor  text-lg smallPhone:text-base"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
               Progress
@@ -49,27 +39,27 @@ const ProgressInfo: React.FC = () => {
             <View className="flex flex-col px-1" style={{ gap: 2 }}>
               <View className="flex flex-row" style={{ gap: 4 }}>
                 <Text
-                  className="text-fifthColor text-sm smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  className="text-textColor text-sm smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   Current Rank:
                 </Text>
                 <Text
-                  className="text-fifthColor  midPhone:text-sm text-md smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_300Light" }}
+                  className={` midPhone:text-sm text-md smallPhone:text-xs`}
+                  style={{ fontFamily: "OpenSans_400Regular" ,color:getRankColor}}
                 >
                   {userInfo.profileRank}
                 </Text>
               </View>
               <View className="flex flex-row" style={{ gap: 4 }}>
                 <Text
-                  className="text-fifthColor text-sm smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  className="text-textColor text-sm smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   ELO:
                 </Text>
                 <Text
-                  className="text-fifthColor  midPhone:text-sm text-md smallPhone:text-xs"
+                  className="text-textColor  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   {userInfo.elo}
@@ -77,14 +67,14 @@ const ProgressInfo: React.FC = () => {
               </View>
               <View className="flex flex-row" style={{ gap: 4 }}>
                 <Text
-                  className="text-fifthColor text-sm smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  className="text-textColor text-sm smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   Next Rank:
                 </Text>
                 <Text
-                  className="text-[#FC2C44]  midPhone:text-sm text-md smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  className={`text-textColor  midPhone:text-sm text-md smallPhone:text-xs`}
+                  style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   {userInfo.nextRank.name}
                 </Text>
@@ -95,13 +85,13 @@ const ProgressInfo: React.FC = () => {
               </View>
               <View className="flex flex-row" style={{ gap: 4 }}>
                 <Text
-                  className="text-fifthColor text-sm smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  className="text-textColor text-sm smallPhone:text-xs"
+                  style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   Completed:
                 </Text>
                 <Text
-                  className="text-fifthColor  midPhone:text-sm text-md smallPhone:text-xs"
+                  className="text-textColor  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
                   {progress}%

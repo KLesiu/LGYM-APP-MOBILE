@@ -16,7 +16,7 @@ const PlansListItem: React.FC<PlansListItemProps> = ({ planListItem,setNewPlanCo
         <View className="flex flex-col">
           <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
-            className=" text-xl smallPhone:text-lg font-bold text-white"
+            className=" text-xl smallPhone:text-lg font-bold text-textColor"
           >
             {planListItem.name}
           </Text>

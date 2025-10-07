@@ -1,75 +1,56 @@
-import { Text, View } from "react-native";
-import { useState, useEffect, useCallback, JSX } from "react";
-import { UserInfo } from "./../../../../interfaces/User";
+import { Pressable, Text, View } from "react-native";
+import { useState, useEffect, JSX } from "react";
 import ProfileRank from "../../elements/ProfileRank";
-import { useRouter } from "expo-router";
-import Records from "../records/Records";
 import MainProfileInfo from "./MainProfileInfo";
-import Start from "../start/Start";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import TabView from "../../elements/TabView";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
 import React from "react";
+import BackIcon from "./../../../../img/icons/backIcon.svg"
+import Start from "../start/Start";
 
-const Profile: React.FC = () => {
-  const { toggleMenuButton, changeView, userId } = useHomeContext();
-  const router = useRouter();
-  const [userInfo, setUserInfo] = useState<UserInfo>();
-  const [rankComponent, setRankComponent] = useState<JSX.Element>();
-  const [isTabLoading, setIsTabLoading] = useState<boolean>(true);
+interface ProfileProps{
+  changeView:(component?: React.JSX.Element | undefined) => void
+}
 
-  const { clearBeforeLogout, getAPI, token } = useAppContext();
+const Profile: React.FC<ProfileProps> = ({ changeView }) => {
+  const { toggleMenuButton,hideMenu } = useHomeContext();
 
-  const [currentTab, setCurrentTab] = useState<JSX.Element>();
+  const { userInfo } = useAppContext();
+
 
   useEffect(() => {
-    init();
-    setIsTabLoading(false);
-  }, []);
-
-  const init = useCallback(async (): Promise<void> => {
+    if (!userInfo) return;
     toggleMenuButton(true);
-    await checkMoreUserInfo();
-  }, []);
+  }, [userInfo]);
 
 
-
-  const checkMoreUserInfo = async (): Promise<void> => {
-    try {
-      await getAPI(`/${userId}/getUserInfo`, (response: UserInfo) => {
-        setUserInfo(response);
-        if (response.profileRank) {
-          setRankComponent(<ProfileRank rank={response.profileRank} />);
-        }
-        setCurrentTab(
-          <MainProfileInfo email={response.email} />
-        );
-      });
-    } catch (error) {
-      console.error("Error fetching user info:", error);
-    }
-  };
-
-  const goBack = useCallback(() => {
-    toggleMenuButton(false);
-    changeView(<Start />);
-  }, []);
-
-  const setActiveComponent = (component: JSX.Element) => {
-    setCurrentTab(component);
-  };
+  const goBack = ()=>{
+    changeView(<Start/>)
+    hideMenu()
+    toggleMenuButton(false)
+  }
 
   return (
     <BackgroundMainSection>
-      {isTabLoading || !userInfo ? (
+      { !userInfo || !changeView ? (
         <ViewLoading />
       ) : (
-        <View className="w-full h-full p-4 relative  flex flex-col flex-1">
+        <View className="w-full h-full p-4 relative  flex flex-col flex-1 ">
+          <Pressable
+            onPress={goBack}
+            style={{ borderRadius: 10000 }}
+            className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor "
+          >
+            <BackIcon />
+          </Pressable>
           <View style={{ gap: 8 }} className="flex items-center flex-col px-6">
-            <View className="flex ">{rankComponent}</View>
-            <View  className="flex flex-col items-center">
+            <View className="flex ">
+              <ProfileRank rank={userInfo.profileRank} />
+            </View>
+            <View className="flex flex-col items-center">
               <Text
                 className="text-primaryColor font-bold w-full text-center text-2xl smallPhone:text-lg "
                 style={{ fontFamily: "OpenSans_700Bold" }}
@@ -96,22 +77,7 @@ const Profile: React.FC = () => {
               </Text>
             </View>
           </View>
-          <TabView
-            tabs={[
-              {
-                label: "Data",
-                component: (
-                  <MainProfileInfo email={userInfo.email} />
-                ),
-              },
-              {
-                label: "Records",
-                component: <Records toggleMenuButton={toggleMenuButton} />,
-              },
-            ]}
-            onTabChange={setActiveComponent}
-          />
-          <View className="w-full flex-1">{currentTab}</View>
+          <MainProfileInfo email={userInfo.email} />
         </View>
       )}
     </BackgroundMainSection>

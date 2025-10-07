@@ -90,7 +90,7 @@ const TrainingPlanDayExerciseForm: React.FC<
       <View className="w-full h-full flex flex-col py-5" style={{ gap: 16 }}>
         <View className="px-5 py-2">
           <Text
-            className="text-3xl smallPhone:text-xl text-white"
+            className="text-3xl smallPhone:text-xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Add exercise to the current training
@@ -128,7 +128,7 @@ const TrainingPlanDayExerciseForm: React.FC<
                 backgroundColor: "rgb(30, 30, 30)",
                 borderRadius: 8,
               }}
-              className="w-full px-2 py-4  text-white "
+              className="w-full px-2 py-4  text-textColor "
               value={numberOfSeries}
               keyboardType="numeric"
               onChangeText={validator}
@@ -148,7 +148,7 @@ const TrainingPlanDayExerciseForm: React.FC<
                 backgroundColor: "rgb(30, 30, 30)",
                 borderRadius: 8,
               }}
-              className="w-full px-2 py-4  text-white "
+              className="w-full px-2 py-4  text-textColor "
               value={exerciseReps}
               onChangeText={(text: string) => setExerciseReps(text)}
             />

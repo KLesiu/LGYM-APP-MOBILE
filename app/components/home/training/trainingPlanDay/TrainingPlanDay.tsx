@@ -271,7 +271,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   };
 
   return (
-    <View className="absolute w-full h-full text-white bg-bgColor flex flex-col">
+    <View className="absolute w-full h-full text-textColor bg-bgColor flex flex-col">
       {planDay && Object.keys(planDay).length ? (
         <View
           style={{ gap: 8 }}

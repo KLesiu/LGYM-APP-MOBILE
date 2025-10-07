@@ -30,7 +30,7 @@ const TrainingPlanDayFooterButtons: React.FC<
 
   return (
     <View
-      className="w-full flex flex-row justify-between px-5"
+      className="w-full flex flex-row items-center justify-between px-5"
       style={{ gap: 8 }}
     >
       <CustomButton
@@ -41,7 +41,7 @@ const TrainingPlanDayFooterButtons: React.FC<
         text="Delete"
         customClasses="flex-1"
       ></CustomButton>
-      <SwitchComp onValueChange={toggleSwitch} value={isEnabled} />
+      <SwitchComp onValueChange={toggleSwitch} value={isEnabled} className="mt-auto mb-auto" />
       <CustomButton
         onPress={() => triggerSendTraining(trainingSessionScores)}
         disabled={!isEnabled}

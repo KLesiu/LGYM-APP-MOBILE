@@ -45,7 +45,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
       <View className="w-full h-full">
         <View className="px-5 py-2">
           <Text
-            className="text-3xl smallPhone:text-xl text-white"
+            className="text-3xl smallPhone:text-xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Plan Config
@@ -55,7 +55,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white  text-base smallPhone:text-sm"
+              className="  text-textColor  text-base smallPhone:text-sm"
             >
               Plan name:
             </Text>
@@ -65,7 +65,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
                 backgroundColor: "rgb(30, 30, 30)",
                 borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white  "
+              className=" w-full  px-2 py-4 text-textColor  "
               onChangeText={(text: string) => setPlanName(text)}
               value={planName}
             />

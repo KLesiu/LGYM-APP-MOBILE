@@ -18,6 +18,7 @@ const LastTrainingStartInfo: React.FC = () => {
 
   const { getAPI } = useAppContext();
   const { changeView, userId } = useHomeContext();
+  const {getRankColor} = useAppContext()
 
   useEffect(() => {
     getLastTrainingInfo();
@@ -50,7 +51,7 @@ const LastTrainingStartInfo: React.FC = () => {
       <View className="flex flex-row justify-between w-full ">
         <View className="flex flex-col" style={{ gap: 4 }}>
           <Text
-            className="text-primaryColor  text-xl smallPhone:text-base"
+            className="text-primaryColor  text-lg smallPhone:text-base"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Last Training:
@@ -58,13 +59,13 @@ const LastTrainingStartInfo: React.FC = () => {
           <View className="flex flex-col px-1" style={{ gap: 2 }}>
             <View className="flex flex-row" style={{ gap: 4 }}>
               <Text
-                className="text-fifthColor text-sm smallPhone:text-xs"
-                style={{ fontFamily: "OpenSans_400Regular" }}
+                className="text-textColor text-sm smallPhone:text-xs"
+                style={{ fontFamily: "OpenSans_300Light" }}
               >
                 Date:
               </Text>
               <Text
-                className="text-fifthColor text-sm smallPhone:text-xs"
+                className="text-textColor text-sm smallPhone:text-xs"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
                 {lastTrainingInfo && lastTrainingInfo.createdAt
@@ -74,19 +75,20 @@ const LastTrainingStartInfo: React.FC = () => {
             </View>
             <View className="flex flex-row" style={{ gap: 4 }}>
               <Text
-                className="text-fifthColor text-sm smallPhone:text-xs"
-                style={{ fontFamily: "OpenSans_400Regular" }}
+                className="text-textColor text-sm smallPhone:text-xs"
+                style={{ fontFamily: "OpenSans_300Light" }}
               >
                 Type:
               </Text>
-              <Text
-                className="text-fifthColor text-sm smallPhone:text-xs"
-                style={{ fontFamily: "OpenSans_300Light" }}
+              {getRankColor &&   <Text
+                className={`text-sm smallPhone:text-xs`}
+                style={{ fontFamily: "OpenSans_400Regular" ,color:getRankColor}}
               >
                 {lastTrainingInfo && lastTrainingInfo.planDay.name
                   ? lastTrainingInfo?.planDay.name
                   : "N/A"}
-              </Text>
+              </Text>}
+            
             </View>
           </View>
         </View>

@@ -11,7 +11,7 @@ const UsersRanking: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [myInfo, setMyInfo] = useState<UserBaseInfo>();
 
-  const { getAPI } = useAppContext();
+  const { getAPI,getRankColor } = useAppContext();
 
   useEffect(() => {
     getRanking();
@@ -42,7 +42,7 @@ const UsersRanking: React.FC = () => {
           style={{ gap: 2 }}
         >
           <Text
-            className="text-primaryColor text-xl smallPhone:text-base"
+            className="text-primaryColor  text-lg smallPhone:text-base"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Ranking
@@ -50,14 +50,14 @@ const UsersRanking: React.FC = () => {
           <RankingIcon height={28} width={28} fill={"#20BC2D"} />
         </View>
 
-        <ScrollView className="flex flex-col  h-64 smh:h-52 ">
+        {getRankColor && <ScrollView className="flex flex-col  h-64 smh:h-52 ">
           {ranking.map((ele: UserBaseInfo, index: number) => {
-            let color = "text-white";
+            let color = "#e8e6e6";
             let fontSize = "text-sm smallPhone:text-xs";
             let fontFamilly = "OpenSans_300Light";
             let bgColor = 'bg-secondaryColor70'
             if (myInfo && ele.name === myInfo.name) {
-              color = "text-primaryColor";
+              color = '#20bc2d';
             }
             if (index === 0) {
               fontSize = "text-base smallPhone:text-base";
@@ -69,14 +69,14 @@ const UsersRanking: React.FC = () => {
             return (
               <View className={`flex flex-row p-1 ${bgColor}`} key={index}>
                   <Text
-                    className={` ${color} mr-2 ${fontSize} `}
-                    style={{ fontFamily: fontFamilly }}
+                    className={`mr-2 ${fontSize}`}
+                    style={{ fontFamily: fontFamilly ,color:color}}
                   >
                     {index + 1}
                   </Text>
                   <Text
-                    className={color + " " + fontSize}
-                    style={{ fontFamily: fontFamilly }}
+                    className={`text-textColor ${fontSize}`}
+                    style={{ fontFamily: fontFamilly,color:color }}
                   >
                     {ele.name} - {ele.elo} ELO
                   </Text>
@@ -84,7 +84,7 @@ const UsersRanking: React.FC = () => {
             );
           })}
           <View className="h-10 w-full"></View>
-        </ScrollView>
+        </ScrollView>}
       </View>
     </Card>
   );

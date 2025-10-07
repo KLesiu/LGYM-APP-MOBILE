@@ -27,7 +27,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
               <View className="flex flex-row items-center">
                 <GymIcon />
                 <Text
-                  className="text-[11px] text-white"
+                  className="text-[11px] text-textColor"
                   style={{
                     fontFamily: "OpenSans_400Regular",
                   }}
@@ -50,7 +50,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                         style={{
                           fontFamily: "OpenSans_700Bold",
                         }}
-                        className="text-base font-bold text-white  border-b-[1px] border-b-white"
+                        className="text-base font-bold text-textColor  border-b-[1px] border-b-white"
                       >
                         {exercise.exerciseDetails.name}:{" "}
                         {exercise.exerciseDetails.bodyPart}
@@ -64,13 +64,13 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                             >
                               <Text
                                 style={{ fontFamily: "OpenSans_400Regular" }}
-                                className="text-white"
+                                className="text-textColor"
                               >
                                 Series: {score.series}
                               </Text>
                               <Text
                                 style={{ fontFamily: "OpenSans_400Regular" }}
-                                className="text-white"
+                                className="text-textColor"
                               >
                                 {score.reps} x {score.weight} {score.unit}
                               </Text>

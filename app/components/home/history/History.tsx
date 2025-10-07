@@ -123,7 +123,7 @@ const History: React.FC = () => {
           <View className="flex justify-center w-full h-1/2 items-center p-4">
             <Text
               style={{ fontFamily: "OpenSans_700Bold" }}
-              className="text-white text-xl text-center"
+              className="text-textColor text-xl text-center"
             >
               You dont have training session this day!
             </Text>

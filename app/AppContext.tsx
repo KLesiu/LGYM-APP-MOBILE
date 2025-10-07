@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { get, post } from "./services/http";
 import { AxiosError, AxiosResponse } from "axios";
 import { Message } from "../enums/Message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UserInfo } from "../interfaces/User";
 
 interface AppContextProps {
   postAPI: (
@@ -25,6 +26,10 @@ interface AppContextProps {
   token?: string;
   isTokenChecked: boolean;
   setIsTokenChecked: (value: boolean) => void;
+  userInfo: UserInfo | null;
+  setUserInfo: (userInfo: UserInfo | null) => void;
+    getRankColor?: "#CACACA" | "#A733DD" | "#FC2C44" | "#E8CC79";
+
 }
 
 const AppContext = createContext<AppContextProps | null>(null);
@@ -45,6 +50,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [canAppStart, setCanAppStart] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [token, setToken] = useState<string>();
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [isTokenChecked, setIsTokenChecked] = useState<boolean>(false);
 
   useEffect(() => {
@@ -69,7 +75,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       callback(response);
     } catch (error) {
       if (serveErrors) catchErrors(error);
-      throw error;
+      // throw error;
     } finally {
       setIsLoading(false);
     }
@@ -112,12 +118,33 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const clearBeforeLogout = async () => {
     const keys = await AsyncStorage.getAllKeys();
     await Promise.all(keys.map((key) => deleteFromStorage(key)));
+    setUserInfo(null)
     setToken(undefined);
   };
 
   const deleteFromStorage = async (key: string): Promise<void> => {
     await AsyncStorage.removeItem(key);
   };
+
+  const getRankColor = useMemo(()=>{
+    switch(userInfo?.profileRank){
+      case 'Junior 1':
+      case 'Junior 2':
+      case 'Junior 3':
+        return '#CACACA';
+      case 'Mid 1':
+      case 'Mid 2':
+      case 'Mid 3':
+        return '#A733DD';
+      case 'Pro 1':
+      case 'Pro 2':
+      case 'Pro 3':
+        return '#FC2C44';
+      case 'Champ':
+        return '#E8CC79';
+;
+    }
+  },[ userInfo?.profileRank])
 
   return (
     <AppContext.Provider
@@ -131,6 +158,9 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         setIsTokenChecked,
         isTokenChecked,
         token,
+        userInfo,
+        setUserInfo,
+        getRankColor
       }}
     >
       {canAppStart && children}

@@ -25,7 +25,7 @@ const Home: React.FC = () => {
           viewChange={changeView}
           changeHeaderVisibility={changeHeaderVisibility}
         >
-          {isHeaderShow && <Header viewChange={changeView} />}
+          <Header viewChange={changeView} isHeaderShow={isHeaderShow} />
           {view}
           <Menu />
         </HomeProvider>

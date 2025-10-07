@@ -2,10 +2,11 @@ import { View, Text, FlatList } from "react-native";
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { ExerciseForm } from "../../../../interfaces/Exercise";
 import ViewLoading from "../../elements/ViewLoading";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import CreateExercise from "./CreateExercise";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { FontWeights } from "../../../../enums/FontsProperties";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "../../elements/CustomButton";
 import React from "react";
 import CustomDropdown from "../../elements/Dropdown";
 import { BodyParts } from "../../../../enums/BodyParts";
@@ -16,7 +17,8 @@ import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 
 const Exercises: React.FC = () => {
-  const { toggleMenuButton, apiURL, hideMenu, userId } = useHomeContext();
+  const { toggleMenuButton,  hideMenu, userId } =
+    useHomeContext();
   const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
   const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
   const [isGlobalExercisesLoading, setIsGlobalExercisesLoading] =
@@ -29,7 +31,7 @@ const Exercises: React.FC = () => {
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
   const [bodyPart, setBodyPart] = useState<BodyParts | null>(null);
   const [isExerciseFormVisible, setIsExerciseFormVisible] = useState(false);
-  const { getAPI } = useAppContext();
+  const { getAPI,getRankColor } = useAppContext();
 
   useEffect(() => {
     init();
@@ -129,21 +131,25 @@ const Exercises: React.FC = () => {
   );
 
   const renderExerciseItem = useCallback(
-    ({ item }: { item: ExerciseForm }) => (
+    ({ item }: { item: ExerciseForm }, isUserExercises = false) => {
+      const textColor = isUserExercises ? getRankColor : '#20bc2d'
+      return(
       <View className="h-20 smallPhone:h-16 flex justify-center items-center">
         <Card
           onPress={() => handleExerciseDetails(item)}
-          customClasses="h-full"
+          customClasses="h-full bg-secondaryColor "
         >
           <View className="flex flex-col">
             <Text
-              className=" text-base smallPhone:text-sm text-primaryColor font-bold"
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              className={`text-sm ${
+                isUserExercises ? `text-[${getRankColor}]` : "text-primaryColor"
+              } font-bold`}
+              style={{ fontFamily: "OpenSans_700Bold",color:textColor }}
             >
               {item.name}
             </Text>
             <Text
-              className=" text-sm smallPhone:text-xs text-white"
+              className=" text-sm font-normal  text-textColor"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               BodyPart: {item.bodyPart}
@@ -151,16 +157,16 @@ const Exercises: React.FC = () => {
           </View>
         </Card>
       </View>
-    ),
+    )},
     [handleExerciseDetails]
   );
 
   return (
     <BackgroundMainSection>
-      <View className="flex flex-col p-4" style={{ gap: 32 }}>
-        <View className="flex flex-row items-center justify-between">
+      <View className="flex flex-col h-full w-full" style={{ gap: 8 }}>
+        <Card customClasses="flex flex-row items-center">
           <Text
-            className="text-white  text-lg smallPhone:text-base font-bold"
+            className="text-primaryColor  text-base"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             Filter by body part:
@@ -170,25 +176,23 @@ const Exercises: React.FC = () => {
             data={bodyPartsToSelect}
             onSelect={handleSelectBodyPart}
           />
-        </View>
-
-        <View className="flex flex-col" style={{ gap: 16 }}>
+        </Card>
+        <Card>
           {!isGlobalExercisesLoading ? (
-            <View className="flex flex-col">
+            <View className="flex flex-col" style={{ gap: 8 }}>
               <View className="flex flex-row items-center justify-between">
                 <Text
-                  className=" text-lg smallPhone:text-base text-white font-bold"
+                  className="text-primaryColor  text-base smallPhone:text-base"
                   style={{ fontFamily: "OpenSans_700Bold" }}
                 >
                   Global exercises:
                 </Text>
                 {isAdmin && (
                   <CustomButton
-                    textSize=" text-base smallPhone:text-sm"
                     onPress={() => openExerciseForm(true)}
-                    textWeight={FontWeights.bold}
-                    buttonStyleType={ButtonStyle.success}
-                    text="Add new exercise"
+                  buttonStyleType={ButtonStyle.outlineBlack}
+                    buttonStyleSize={ButtonSize.long}
+                    text="New"
                   />
                 )}
               </View>
@@ -196,46 +200,48 @@ const Exercises: React.FC = () => {
                 data={filteredExercises(globalExercises)}
                 renderItem={renderExerciseItem}
                 keyExtractor={(item) => `${item._id}`}
-                horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingVertical: 10 }}
+                horizontal
                 ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
               />
             </View>
           ) : (
             <ViewLoading />
           )}
-          {!isLoading ? (
-            <View>
-              <View className="flex flex-row items-center justify-between">
+        </Card>
+
+        <Card>
+          {!isLoading && getRankColor ? (
+            <View className="flex flex-col" style={{ gap: 8 }}>
+              <View className="flex flex-row items-center w-full justify-between">
                 <Text
-                  className=" text-lg smallPhone:text-base text-white font-bold"
-                  style={{ fontFamily: "OpenSans_700Bold" }}
+                  className={`text-base smallPhone:text-base `}
+                  style={{ fontFamily: "OpenSans_700Bold",color:getRankColor }}
                 >
                   User exercises:
                 </Text>
                 <CustomButton
-                  textSize=" text-base smallPhone:text-sm"
                   onPress={() => openExerciseForm()}
-                  textWeight={FontWeights.bold}
-                  buttonStyleType={ButtonStyle.success}
-                  text="Add new exercise"
+                  buttonStyleType={ButtonStyle.outlineBlack}
+                  buttonStyleSize={ButtonSize.long}
+                  text="New"
                 />
               </View>
               <FlatList
                 data={filteredExercises(userExercises)}
-                renderItem={renderExerciseItem}
+                renderItem={(items: { item: ExerciseForm }) =>
+                  renderExerciseItem(items, true)
+                }
                 keyExtractor={(item) => `${item._id}`}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingVertical: 10 }}
                 ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
               />
             </View>
           ) : (
             <ViewLoading />
           )}
-        </View>
+        </Card>
       </View>
       {isExerciseFormVisible && (
         <CreateExercise

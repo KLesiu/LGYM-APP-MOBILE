@@ -40,7 +40,7 @@ const Loading: React.FC<LoadingProps> = (props) => {
             style={{
               fontFamily: "OpenSans_400Regular",
             }}
-            className="text-[40px] text-white text-center w-full mt-12"
+            className="text-[40px] text-textColor text-center w-full mt-12"
           >
             Loading...
           </Text>

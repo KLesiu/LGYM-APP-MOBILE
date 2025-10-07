@@ -197,7 +197,7 @@ const TrainingPlan: React.FC = () => {
                   style={{
                     fontFamily: "OpenSans_700Bold",
                   }}
-                  className="text-3xl smallPhone:text-xl text-white font-bold"
+                  className="text-3xl smallPhone:text-xl text-textColor font-bold"
                 >
                   {planConfig.name}
                 </Text>

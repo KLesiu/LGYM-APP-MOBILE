@@ -48,7 +48,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
       <View className="w-full h-full">
         <View className="px-5 py-2">
           <Text
-            className=" text-3xl smallPhone:text-2xl text-white"
+            className=" text-3xl smallPhone:text-2xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {props.gym ? "Edit Gym" : "New Gym"}
@@ -58,7 +58,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
           <View className="flex flex-row items-center" style={{ gap: 4 }}>
             <GymIcon />
             <Text
-              className="text-xl smallPhone:text-lg text-white"
+              className="text-xl smallPhone:text-lg text-textColor"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
               Set a gym
@@ -67,7 +67,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-white   text-base smallPhone:text-sm"
+              className="  text-textColor   text-base smallPhone:text-sm"
             >
               Name:
             </Text>
@@ -77,7 +77,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
                 backgroundColor: "rgb(30, 30, 30)",
                 borderRadius: 8,
               }}
-              className=" w-full  px-2 py-4 text-white  "
+              className=" w-full  px-2 py-4 text-textColor  "
               onChangeText={(text) => setGymName(text)}
               value={gymName}
             />

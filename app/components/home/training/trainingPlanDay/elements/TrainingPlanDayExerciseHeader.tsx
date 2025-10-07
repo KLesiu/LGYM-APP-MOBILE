@@ -25,7 +25,7 @@ const TrainingPlanDayExerciseHeader: React.FC<
     <View className="flex flex-col px-5">
       <View className="flex flex-row items-center" style={{ gap: 8 }}>
         <Text
-          className="text-3xl smallPhone:text-xl text-white  font-bold flex-1 "
+          className="text-3xl smallPhone:text-xl text-textColor  font-bold flex-1 "
           style={{
             fontFamily: "OpenSans_700Bold",
           }}
@@ -42,7 +42,7 @@ const TrainingPlanDayExerciseHeader: React.FC<
       </View>
 
       <Text
-        className=" text-base smallPhone:text-sm text-white "
+        className=" text-base smallPhone:text-sm text-textColor "
         style={{
           fontFamily: "OpenSans_400Regular",
         }}
