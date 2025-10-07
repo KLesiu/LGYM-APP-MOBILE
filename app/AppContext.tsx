@@ -72,7 +72,6 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   ) => {
     try {
       setIsLoading(true);
-      console.log(token)
       const response = await get(url, token, params);
       callback(response);
     } catch (error) {

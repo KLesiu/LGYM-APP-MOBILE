@@ -36,14 +36,6 @@ const Loading: React.FC<LoadingProps> = (props) => {
               className="bg-primaryColor  h-full z-[7]"
             ></View>
           </View>
-          <Text
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-            className="text-[40px] text-textColor text-center w-full mt-12"
-          >
-            Loading...
-          </Text>
         </View>
       </View>
     )

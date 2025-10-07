@@ -3,15 +3,14 @@
     "name": "LGYM-APP",
     "slug": "lgym-app-mobile",
     "scheme": "lgymappmobile",
-    "version": "4.0.5",
+    "version": "4.0.6",
     "orientation": "portrait",
     "icon": "./assets/logoLGYMNew.png",
     "newArchEnabled": true,
-    "userInterfaceStyle": "light",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#0A0A0A",
-      "image": "./assets/LgymSplash.jpg"
+      "image": "./assets/logoLGYMNew.png"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -28,7 +27,7 @@
         "backgroundColor": "#0A0A0A"
       },
       "buildToolsVersion": "36.0.0",
-      "versionCode": 24,
+      "versionCode": 25,
       "package": "com.lesiuuu.lgymappmobile"
     },
     "web": {
