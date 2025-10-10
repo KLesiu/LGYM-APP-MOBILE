@@ -55,12 +55,16 @@ const Register: React.FC = () => {
         style={{ gap: 8 }}
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
-          <Text
-            className="text-textColor text-base smallPhone:text-sm"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Username
-          </Text>
+          <View className="flex flex-row gap-1">
+            <Text
+              className="text-textColor text-base smallPhone:text-sm"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Username
+            </Text>
+            <Text className="text-redColor">*</Text>
+          </View>
+
           <TextInput
             onChangeText={(text) => setUsername(text)}
             style={{
@@ -70,12 +74,16 @@ const Register: React.FC = () => {
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
-          <Text
-            className="text-textColor text-base smallPhone:text-sm"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Email
-          </Text>
+          <View className="flex flex-row gap-1">
+            <Text
+              className="text-textColor text-base smallPhone:text-sm"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Email
+            </Text>
+            <Text className="text-redColor">*</Text>
+          </View>
+
           <TextInput
             onChangeText={(text) => setEmail(text)}
             style={{
@@ -85,12 +93,16 @@ const Register: React.FC = () => {
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
-          <Text
-            className="text-textColor text-base smallPhone:text-sm"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Password
-          </Text>
+          <View className="flex flex-row gap-1">
+            <Text
+              className="text-textColor text-base smallPhone:text-sm"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Password
+            </Text>
+            <Text className="text-redColor">*</Text>
+          </View>
+
           <TextInput
             secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
@@ -101,12 +113,16 @@ const Register: React.FC = () => {
           />
         </View>
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
-          <Text
-            className="text-textColor text-base smallPhone:text-sm"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Repeat password
-          </Text>
+          <View className="flex flex-row gap-1">
+            <Text
+              className="text-textColor text-base smallPhone:text-sm"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Repeat password
+            </Text>
+            <Text className="text-redColor">*</Text>
+          </View>
+
           <TextInput
             secureTextEntry={true}
             onChangeText={(text) => setRPassword(text)}

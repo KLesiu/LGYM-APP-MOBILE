@@ -22,7 +22,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
   const { exercisesList, setExercisesList, goBack, goToNext } = usePlanDay();
 
   const { getAPI } = useAppContext();
-  const { apiURL, userId } = useHomeContext();
+  const { userId } = useHomeContext();
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
   );
@@ -147,12 +147,15 @@ const CreatePlanDayExerciseList: React.FC = () => {
             </Text>
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-textColor text-base smallPhone:text-sm"
-            >
-              Exercise name
-            </Text>
+            <View className="flex flex-row gap-1">
+              <Text
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="  text-textColor text-base smallPhone:text-sm"
+              >
+                Exercise name
+              </Text>
+              <Text className="text-redColor">*</Text>
+            </View>
             <AutoComplete
               data={exercisesToSelect}
               onSelect={(item) => setSelectedExercise(item)}
@@ -163,12 +166,16 @@ const CreatePlanDayExerciseList: React.FC = () => {
           </View>
           <View className="flex flex-row justify-between" style={{ gap: 20 }}>
             <View style={{ gap: 4 }} className="flex flex-col flex-1">
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="  text-textColor text-base smallPhone:text-sm"
-              >
-                Series:
-              </Text>
+              <View className="flex flex-row gap-1">
+                <Text
+                  style={{ fontFamily: "OpenSans_300Light" }}
+                  className="  text-textColor text-base smallPhone:text-sm"
+                >
+                  Series:
+                </Text>
+                <Text className="text-redColor">*</Text>
+              </View>
+
               <TextInput
                 style={{
                   fontFamily: "OpenSans_400Regular",
@@ -180,12 +187,16 @@ const CreatePlanDayExerciseList: React.FC = () => {
               />
             </View>
             <View style={{ gap: 4 }} className="flex flex-col flex-1">
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-textColor text-base smallPhone:text-sm"
-              >
-                Reps:
-              </Text>
+              <View className="flex flex-row gap-1">
+                <Text
+                  style={{ fontFamily: "OpenSans_300Light" }}
+                  className="text-textColor text-base smallPhone:text-sm"
+                >
+                  Reps:
+                </Text>
+                <Text className="text-redColor">*</Text>
+              </View>
+
               <TextInput
                 style={{
                   fontFamily: "OpenSans_400Regular",

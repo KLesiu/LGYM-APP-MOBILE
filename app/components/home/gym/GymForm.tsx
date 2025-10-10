@@ -17,23 +17,28 @@ interface GymFormProps {
 const GymForm: React.FC<GymFormProps> = (props) => {
   const { userId } = useHomeContext();
   const [gymName, setGymName] = useState<string>("");
-  const {postAPI,isLoading} = useAppContext()
+  const { postAPI, isLoading } = useAppContext();
 
   useEffect(() => {
     if (props.gym) setGymName(props.gym.name);
   }, []);
 
   const updateGym = async () => {
-    try{
-      await postAPI("/gym/editGym",()=>props.closeForm(),{ name: gymName, _id: props.gym?._id })
-    }catch (error) {
+    try {
+      await postAPI("/gym/editGym", () => props.closeForm(), {
+        name: gymName,
+        _id: props.gym?._id,
+      });
+    } catch (error) {
       console.error("Error updating gym:", error);
     }
   };
   const createGym = async () => {
-    try{
-      await postAPI(`/gym/${userId}/addGym`,()=>props.closeForm(),{ name: gymName })
-    }catch (error) {
+    try {
+      await postAPI(`/gym/${userId}/addGym`, () => props.closeForm(), {
+        name: gymName,
+      });
+    } catch (error) {
       console.error("Error creating gym:", error);
     }
   };
@@ -65,12 +70,16 @@ const GymForm: React.FC<GymFormProps> = (props) => {
             </Text>
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-textColor   text-base smallPhone:text-sm"
-            >
-              Name:
-            </Text>
+            <View className="flex flex-row gap-1">
+              <Text
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="  text-textColor   text-base smallPhone:text-sm"
+              >
+                Name:
+              </Text>
+              <Text className="text-redColor">*</Text>
+            </View>
+
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",

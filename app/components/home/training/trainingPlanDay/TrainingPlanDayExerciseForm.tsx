@@ -27,8 +27,8 @@ interface TrainingPlanDayExerciseFormProps {
 const TrainingPlanDayExerciseForm: React.FC<
   TrainingPlanDayExerciseFormProps
 > = (props) => {
-  const { apiURL, userId } = useHomeContext();
-  const { postAPI, getAPI,isLoading ,setErrors} = useAppContext();
+  const { userId } = useHomeContext();
+  const { postAPI, getAPI, isLoading, setErrors } = useAppContext();
 
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
@@ -77,7 +77,8 @@ const TrainingPlanDayExerciseForm: React.FC<
     if (result) setNumberOfSeries(input);
   };
   const sendNewExercise = () => {
-    if (!selectedExercise || !numberOfSeries || !exerciseReps) return setErrors([Message.FieldRequired]);
+    if (!selectedExercise || !numberOfSeries || !exerciseReps)
+      return setErrors([Message.FieldRequired]);
     props.addExerciseToPlanDay(
       selectedExercise.value,
       parseInt(numberOfSeries),
@@ -101,27 +102,35 @@ const TrainingPlanDayExerciseForm: React.FC<
           className="flex items-center flex-col justify-around w-full px-5"
         >
           <View className="flex flex-col w-full" style={{ gap: 8 }}>
-            <Text
-              className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Exercise:
-            </Text>
+            <View className="flex flex-row gap-1">
+              <Text
+                className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
+                style={{ fontFamily: "OpenSans_300Light" }}
+              >
+                Exercise:
+              </Text>
+              <Text className="text-redColor">*</Text>
+            </View>
+
             <AutoComplete
               data={exercisesToSelect}
               onSelect={(item) => setSelectedExercise(item)}
               value={selectedExercise?.label || ""}
-              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined} 
+              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
             />
           </View>
 
           <View className="flex flex-col w-full" style={{ gap: 8 }}>
-            <Text
-              className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Series:
-            </Text>
+            <View className="flex flex-row gap-1">
+              <Text
+                className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
+                style={{ fontFamily: "OpenSans_300Light" }}
+              >
+                Series:
+              </Text>
+              <Text className="text-redColor">*</Text>
+            </View>
+
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
@@ -136,12 +145,16 @@ const TrainingPlanDayExerciseForm: React.FC<
           </View>
 
           <View className="flex flex-col w-full" style={{ gap: 8 }}>
-            <Text
-              className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              Reps:
-            </Text>
+            <View className="flex flex-row gap-1">
+              <Text
+                className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
+                style={{ fontFamily: "OpenSans_300Light" }}
+              >
+                Reps:
+              </Text>
+              <Text className="text-redColor">*</Text>
+            </View>
+
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",

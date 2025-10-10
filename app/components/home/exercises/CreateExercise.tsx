@@ -25,7 +25,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [bodyPart, setBodyPart] = useState<BodyParts>();
   const [description, setDescription] = useState<string | undefined>("");
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
-  const { postAPI, setErrors,isLoading } = useAppContext();
+  const { postAPI, setErrors, isLoading } = useAppContext();
   const { userId } = useHomeContext();
 
   useEffect(() => {
@@ -152,12 +152,16 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             </Text>
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-textColor text-base smallPhone:text-sm"
-            >
-              Name:
-            </Text>
+            <View className="flex flex-row gap-1">
+              <Text
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="  text-textColor text-base smallPhone:text-sm"
+              >
+                Name:
+              </Text>
+              <Text className="text-redColor">*</Text>
+            </View>
+
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
@@ -171,12 +175,16 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             />
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-textColor text-base smallPhone:text-sm"
-            >
-              BodyPart:
-            </Text>
+            <View className="flex flex-row gap-1">
+              <Text
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="  text-textColor text-base smallPhone:text-sm"
+              >
+                BodyPart:
+              </Text>
+              <Text className="text-redColor">*</Text>
+            </View>
+
             <View>
               {isBlocked ? (
                 <Text

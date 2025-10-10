@@ -2,7 +2,7 @@ import { View, Text, TextInput } from "react-native";
 import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ValidationView from "../../../elements/ValidationView";
-import {  useMemo,} from "react";
+import { useMemo } from "react";
 import { Message } from "./../../../../../enums/Message";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { useAppContext } from "../../../../AppContext";
@@ -10,8 +10,7 @@ import React from "react";
 
 const CreatePlanDayName: React.FC = () => {
   const { planDayName, setPlanDayName, goBack, goToNext } = usePlanDay();
-  const {setErrors} = useAppContext()
-
+  const { setErrors } = useAppContext();
 
   const goNextSection = () => {
     if (validateForm) {
@@ -23,8 +22,8 @@ const CreatePlanDayName: React.FC = () => {
   const validateForm = useMemo(() => {
     if (!planDayName.length) return false;
     return true;
-  },[planDayName])
-   
+  }, [planDayName]);
+
   return (
     <View className="w-full h-full">
       <View className="px-5 py-2">
@@ -46,12 +45,16 @@ const CreatePlanDayName: React.FC = () => {
           </Text>
         </View>
         <View style={{ gap: 4 }} className="flex flex-col">
-          <Text
-            style={{ fontFamily: "OpenSans_300Light" }}
-            className="  text-textColor  text-base smallPhone:text-sm"
-          >
-            Name:
-          </Text>
+          <View className="flex flex-row gap-1">
+            <Text
+              style={{ fontFamily: "OpenSans_300Light" }}
+              className="  text-textColor  text-base smallPhone:text-sm"
+            >
+              Name:
+            </Text>
+            <Text className="text-redColor">*</Text>
+          </View>
+
           <TextInput
             style={{
               fontFamily: "OpenSans_400Regular",
@@ -78,7 +81,7 @@ const CreatePlanDayName: React.FC = () => {
           width="flex-1"
         />
       </View>
-      <ValidationView  />
+      <ValidationView />
     </View>
   );
 };

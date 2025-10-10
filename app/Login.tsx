@@ -20,7 +20,8 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
-  const { postAPI, setErrors ,isLoading,setUserInfo,setToken} = useAppContext();
+  const { postAPI, setErrors, isLoading, setUserInfo, setToken } =
+    useAppContext();
 
   useEffect(() => {
     setErrors([]);
@@ -33,13 +34,16 @@ const Login: React.FC = () => {
     });
   };
 
-  const loginSuccessCallback = async (response:{ token: string; req: UserInfo }) => {
+  const loginSuccessCallback = async (response: {
+    token: string;
+    req: UserInfo;
+  }) => {
     await AsyncStorage.setItem("token", response.token);
     await AsyncStorage.setItem("username", response.req.name);
     await AsyncStorage.setItem("id", response.req._id);
     await AsyncStorage.setItem("email", response.req.email);
     setUserInfo(response.req);
-    setToken(response.token)
+    setToken(response.token);
     router.push("/Home");
   };
 
@@ -60,12 +64,16 @@ const Login: React.FC = () => {
         style={{ gap: 8 }}
       >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
-          <Text
-            className="text-textColor text-base"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Username
-          </Text>
+          <View className="flex flex-row gap-1">
+            <Text
+              className="text-textColor  text-base"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Username
+            </Text>
+            <Text className="text-redColor">*</Text>
+          </View>
+
           <TextInput
             onChangeText={(text: string) => setUsername(text)}
             style={{
@@ -76,12 +84,15 @@ const Login: React.FC = () => {
           />
         </View>
         <View className="flex flex-col w-full relative" style={{ gap: 8 }}>
-          <Text
-            className="text-textColor text-base"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            Password
-          </Text>
+          <View className="flex flex-row gap-1">
+            <Text
+              className="text-textColor text-base"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              Password
+            </Text>
+            <Text className="text-redColor">*</Text>
+          </View>
           <TextInput
             onChangeText={(text: string) => setPassword(text)}
             style={{

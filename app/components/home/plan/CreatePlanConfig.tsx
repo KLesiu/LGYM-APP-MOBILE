@@ -24,7 +24,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   const sendConfig = async (): Promise<void> => {
-    if (!planName ) return setErrors([Message.FieldRequired]);
+    if (!planName) return setErrors([Message.FieldRequired]);
     setViewLoading(true);
     await submitPlanConfig();
     setViewLoading(false);
@@ -51,14 +51,17 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             Plan Config
           </Text>
         </View>
-        <View className="px-5" >
+        <View className="px-5">
           <View style={{ gap: 4 }} className="flex flex-col">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-textColor  text-base smallPhone:text-sm"
-            >
-              Plan name:
-            </Text>
+            <View className="flex flex-row gap-1">
+              <Text
+                style={{ fontFamily: "OpenSans_300Light" }}
+                className="  text-textColor  text-base smallPhone:text-sm"
+              >
+                Plan name:
+              </Text>
+              <Text className="text-redColor">*</Text>
+            </View>
             <TextInput
               style={{
                 fontFamily: "OpenSans_400Regular",
