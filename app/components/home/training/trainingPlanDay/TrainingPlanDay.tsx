@@ -28,6 +28,7 @@ import { useAppContext } from "../../../../AppContext";
 import { ExerciseForm } from "../../../../../interfaces/Exercise";
 import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
+import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -288,7 +289,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             }}
           >
             <TrainingPlanDayExerciseHeader />
-            <TrainingPlanDayHeaderButtons showExerciseForm={showExerciseForm} />
+            <View className="flex flex-row px-5" style={{gap: 8}}>
+              <TrainingPlanDayHeaderButtons
+                showExerciseForm={showExerciseForm}
+              />
+              <TrainingPlanDayTimer />
+            </View>
+
             <TrainingPlanDayActionsButtons
               getExerciseToAddFromForm={getExerciseToAddFromForm}
               incrementOrDecrementExercise={incrementOrDecrementExercise}

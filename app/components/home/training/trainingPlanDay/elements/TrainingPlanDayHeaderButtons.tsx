@@ -13,7 +13,7 @@ const TrainingPlanDayHeaderButtons: React.FC<
   TrainingPlanDayHeaderButtonsProps
 > = ({showExerciseForm}) => {
   return (
-    <View className="flex flex-row justify-between px-5">
+    <View className="flex flex-row justify-between">
       <CustomButton
         onPress={showExerciseForm}
         buttonStyleType={ButtonStyle.success}
