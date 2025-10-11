@@ -10,20 +10,23 @@ import CustomButton, {
 import ValidationView from "./components/elements/ValidationView";
 import { useAppContext } from "./AppContext";
 import { Message } from "../enums/Message";
+import Checkbox from "./components/elements/Checkbox";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [rpassword, setRPassword] = useState<string>();
   const [email, setEmail] = useState<string>();
+  const [isVisibleInRanking, setIsVisibleInRanking] = useState<boolean>(true);
 
   const router = useRouter();
-
   const { postAPI, setErrors } = useAppContext();
 
   useEffect(() => {
     setErrors([]);
   }, [usePathname()]);
+
+
 
   const register = async (): Promise<void> => {
     await postAPI("/register", registerSuccessCalback, {
@@ -31,8 +34,10 @@ const Register: React.FC = () => {
       password: password,
       cpassword: rpassword,
       email: email,
+      isVisibleInRanking: isVisibleInRanking,
     });
   };
+
   const goToPreload = () => {
     return router.push("/");
   };
@@ -64,15 +69,13 @@ const Register: React.FC = () => {
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
-
           <TextInput
             onChangeText={(text) => setUsername(text)}
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-textColor "
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
           />
         </View>
+
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <View className="flex flex-row gap-1">
             <Text
@@ -83,15 +86,13 @@ const Register: React.FC = () => {
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
-
           <TextInput
             onChangeText={(text) => setEmail(text)}
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-textColor "
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
           />
         </View>
+
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <View className="flex flex-row gap-1">
             <Text
@@ -102,16 +103,14 @@ const Register: React.FC = () => {
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
-
           <TextInput
             secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor "
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
           />
         </View>
+
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <View className="flex flex-row gap-1">
             <Text
@@ -122,17 +121,29 @@ const Register: React.FC = () => {
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
-
           <TextInput
             secureTextEntry={true}
             onChangeText={(text) => setRPassword(text)}
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg  text-textColor "
+            style={{ fontFamily: "OpenSans_400Regular" }}
+            className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
           />
         </View>
       </View>
+
+      <View className="flex flex-row w-full items-center" style={{ gap: 12 }}>
+        <Checkbox
+          value={isVisibleInRanking}
+          setValue={setIsVisibleInRanking}
+         
+        />
+        <Text
+          className="text-textColor text-sm smallPhone:text-xs"
+          style={{ fontFamily: "OpenSans_300Light" }}
+        >
+          Be visible in global rankings
+        </Text>
+      </View>
+
       <CustomButton
         text="Register"
         onPress={register}
@@ -145,4 +156,5 @@ const Register: React.FC = () => {
     </View>
   );
 };
+
 export default Register;

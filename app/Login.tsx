@@ -42,7 +42,7 @@ const Login: React.FC = () => {
     await AsyncStorage.setItem("username", response.req.name);
     await AsyncStorage.setItem("id", response.req._id);
     await AsyncStorage.setItem("email", response.req.email);
-    setUserInfo(response.req);
+    console.log(response.req)
     setToken(response.token);
     router.push("/Home");
   };

@@ -77,7 +77,7 @@ const Profile: React.FC<ProfileProps> = ({ changeView }) => {
               </Text>
             </View>
           </View>
-          <MainProfileInfo email={userInfo.email} />
+          <MainProfileInfo email={userInfo.email} isVisibleInRanking={userInfo.isVisibleInRanking} />
         </View>
       )}
     </BackgroundMainSection>

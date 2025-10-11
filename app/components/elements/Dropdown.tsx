@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     backgroundColor: "white",
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: "center",
   },
   overlay: {
@@ -84,18 +84,19 @@ const styles = StyleSheet.create({
   dropdown: {
     width: 200,
     backgroundColor: "#20BC2D",
-    borderRadius: 5,
+    borderRadius: 8,
     elevation: 5,
   },
   item: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
+    padding: 16,
+    borderTopColor: "#ccc",
+    borderTopWidth: 1,
   },
   clearItem: {
     backgroundColor: "#f8d7da",
     alignItems: "center",
-  },
+    borderTopLeftRadius: 8,
+    borderTopRightRadius:8},
 });
 
 export default CustomDropdown;

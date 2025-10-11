@@ -30,6 +30,7 @@ interface AppContextProps {
   userInfo: UserInfo | null;
   setUserInfo: (userInfo: UserInfo | null) => void;
     getRankColor?: "#CACACA" | "#A733DD" | "#FC2C44" | "#E8CC79";
+    changeIsVisibleInRanking: (newValue: boolean) => void;
 
 }
 
@@ -127,6 +128,13 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     await AsyncStorage.removeItem(key);
   };
 
+  const changeIsVisibleInRanking = (newValue: boolean): void => {
+    setUserInfo((prevUserInfo:UserInfo | null) => {
+      if (!prevUserInfo) return prevUserInfo;
+      return { ...prevUserInfo, isVisibleInRanking: newValue };
+    });
+  }
+
   const getRankColor = useMemo(()=>{
     switch(userInfo?.profileRank){
       case 'Junior 1':
@@ -162,7 +170,8 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         userInfo,
         setUserInfo,
         getRankColor,
-        setToken
+        setToken,
+        changeIsVisibleInRanking
       }}
     >
       {canAppStart && children}
