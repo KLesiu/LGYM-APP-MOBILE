@@ -93,10 +93,10 @@ const Preload: React.FC = () => {
         className="h-full w-full"
         source={backgroundLGYM}
       >
-        <View className="bg-[#000000ec] h-full w-full">
+        <View className="bg-[#000000bd] h-full w-full">
           <View
             style={{ gap: 16 }}
-            className="flex-1 items-center flex bg-[#1b1b1bde] justify-center h-full p-4"
+            className="flex-1 items-center flex bg-[#1b1b1bbd] justify-center h-full p-4"
           >
             <Image source={logoLGYM} className="w-[70%] h-2/5" />
             <CustomButton
@@ -110,6 +110,7 @@ const Preload: React.FC = () => {
               text="SIGN UP"
               onPress={handleRegisterPress}
               buttonStyleType={ButtonStyle.outline}
+              customClasses="bg-[#1b1b1bbd] "
               width="w-full"
               buttonStyleSize={ButtonSize.xl}
             />
