@@ -47,7 +47,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setPlanDay,
     setCurrentExercise,
     gym,
-    lastExerciseScoresWithGym,
     sendPlanDayToLocalStorage,
     addNewExerciseToTrainingSessionScores,
     incrementOrDecrementExerciseInTrainingSessionScores,
