@@ -24,7 +24,8 @@ interface LoginUser {
 }
 interface RegisterUser extends LoginUser{
     email:string,
-    cpassword:string
+    cpassword:string,
+    isVisibleInRanking:boolean
 }
 interface UserElo{
     elo: number
