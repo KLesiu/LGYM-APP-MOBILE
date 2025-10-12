@@ -42,8 +42,8 @@ const Login: React.FC = () => {
     await AsyncStorage.setItem("username", response.req.name);
     await AsyncStorage.setItem("id", response.req._id);
     await AsyncStorage.setItem("email", response.req.email);
-    console.log(response.req)
     setToken(response.token);
+    setUserInfo(response.req);
     router.push("/Home");
   };
 

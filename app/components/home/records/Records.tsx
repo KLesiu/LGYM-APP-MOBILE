@@ -1,7 +1,6 @@
 import { Text, View, ScrollView, Pressable, Image } from "react-native";
 import { useCallback, useEffect, useState } from "react";
 import RecordsPopUp from "./RecordsPopUp";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import ViewLoading from "../../elements/ViewLoading";
 import { MainRecordsLast } from "./../../../../interfaces/MainRecords";
 
@@ -32,7 +31,7 @@ const Records: React.FC<RecordsProps> = () => {
     setIsDeleteRecordConfirmationDialogVisible,
   ] = useState<boolean>(false);
   const { userId } = useHomeContext();
-  const { getAPI, setErrors } = useAppContext();
+  const { getAPI } = useAppContext();
 
   useEffect(() => {
     getRecords();
