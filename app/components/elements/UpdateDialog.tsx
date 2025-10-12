@@ -18,7 +18,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
   return (
     <View className="flex-1  items-center justify-center  bg-bgColor rounded-lg shadow-lg px-4 py-4" style={{ gap: 32 }}>
       <View className="w-72 h-72 flex items-center justify-center">
-        <Image source={logoLGYM} className="scale-75" />
+        <Image source={logoLGYM} className="w-full h-full" />
       </View>
       <View className="flex flex-col items-center justify-center">
         <Text
