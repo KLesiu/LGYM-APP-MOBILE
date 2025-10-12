@@ -1,6 +1,6 @@
 {
   "name": "lgym-app-mobile",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "main": "expo-router/entry",
   "scripts": {
     "start": "npx expo start --tunnel",
@@ -10,6 +10,7 @@
     "build:android": "eas build -p android --profile preview",
     "build:androidDev": "eas build -p android --profile preview2",
     "build:ios": "eas build -p ios --profile preview",
+    "submit:ios": "eas submit -p ios --latest",
     "clean-setup": "rimraf ./enums && rimraf ./interfaces",
     "copy-setup": "npm run clean-setup && xcopy ..\\apiv2\\src\\enums .\\enums /E /I /Y && xcopy ..\\apiv2\\src\\interfaces .\\interfaces /E /I /Y"
   },
