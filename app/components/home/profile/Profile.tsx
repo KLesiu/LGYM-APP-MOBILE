@@ -50,7 +50,7 @@ const Profile: React.FC<ProfileProps> = ({ changeView }) => {
             <View className="flex ">
               <ProfileRank rank={userInfo.profileRank} />
             </View>
-            <View className="flex flex-col items-center">
+            <View className="flex flex-col items-center w-full">
               <Text
                 className="text-primaryColor font-bold w-full text-center text-2xl smallPhone:text-lg "
                 style={{ fontFamily: "OpenSans_700Bold" }}
@@ -59,19 +59,19 @@ const Profile: React.FC<ProfileProps> = ({ changeView }) => {
               </Text>
               <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light text-sm smallPhone:text-xs"
+                className="text-textColor w-full text-center  text-sm smallPhone:text-xs"
               >
                 {userInfo.profileRank}
               </Text>
               <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light text-sm smallPhone:text-xs"
+                className="text-textColor w-full text-center text-sm smallPhone:text-xs"
               >
                 {userInfo.elo} Elo
               </Text>
               <Text
                 style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-gray-200/80 font-light text-sm smallPhone:text-xs"
+                className="text-textColor w-full text-center  text-sm smallPhone:text-xs"
               >
                 Member since: {userInfo.createdAt.toString().slice(0, 10)}
               </Text>

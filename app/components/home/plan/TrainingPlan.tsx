@@ -207,7 +207,6 @@ const TrainingPlan: React.FC = () => {
               <View className="flex flex-row" style={{ gap: 16 }}>
                 <CustomButton
                   text="Add plan day"
-                  textSize="smallPhone:text-sm"
                   onPress={showPlanDayForm}
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}
@@ -216,7 +215,6 @@ const TrainingPlan: React.FC = () => {
                 />
                 <CustomButton
                   text="Plans list"
-                  textSize="smallPhone:text-sm"
                   onPress={showPlansList}
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}

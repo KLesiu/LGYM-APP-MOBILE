@@ -77,8 +77,8 @@ const Preload: React.FC = () => {
     const appVersion = getAppVersion();
 
     if (
-      appVersionConfig.minRequiredVersion &&
-      appVersion === appVersionConfig.minRequiredVersion
+      appVersionConfig.minRequiredVersion && appVersion &&
+      appVersion >= appVersionConfig.minRequiredVersion
     ) {
       await checkUserSession();
     } else {

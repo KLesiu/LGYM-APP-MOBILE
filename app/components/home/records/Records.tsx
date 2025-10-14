@@ -111,7 +111,6 @@ const Records: React.FC<RecordsProps> = () => {
                   setExercise(undefined);
                   showPopUp();
                 }}
-                textSize="text-sm"
                 buttonStyleType={ButtonStyle.success}
                 textWeight={FontWeights.bold}
                 buttonStyleSize={ButtonSize.long}

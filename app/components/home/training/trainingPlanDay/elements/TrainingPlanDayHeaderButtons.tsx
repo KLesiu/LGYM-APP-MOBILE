@@ -17,7 +17,6 @@ const TrainingPlanDayHeaderButtons: React.FC<
       <CustomButton
         onPress={showExerciseForm}
         buttonStyleType={ButtonStyle.success}
-        textSize="smallPhone:text-sm text-base"
         text="Add Exercise"
       />
     </View>

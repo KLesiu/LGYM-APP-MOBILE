@@ -24,7 +24,6 @@ export enum ButtonSize {
 interface ButtonProps {
   onPress: () => void;
   text?: string;
-  textSize?: string;
   textWeight?: FontWeights;
   buttonStyleType?: ButtonStyle;
   buttonStyleSize?: ButtonSize;
@@ -87,7 +86,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
         props.customSlots.map((slot, index) => <View key={index}>{slot}</View>)
       ) : (
         <Text
-          className={`${props.textSize ?? 'text-base'} text-center leading-none ${textColorClass()} w-full`}
+          className={` text-center ${textColorClass()} w-full`}
           style={{
             fontFamily: props.textWeight
               ? props.textWeight
