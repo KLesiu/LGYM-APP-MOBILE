@@ -6,7 +6,9 @@ import CustomButton, { ButtonStyle } from "../../../../elements/CustomButton";
 const TrainingPlanDayTimer: React.FC = () => {
   const [timerCount, setTimerCount] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const startTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
     return () => {
@@ -23,10 +25,18 @@ const TrainingPlanDayTimer: React.FC = () => {
       }
       setTimerCount(0);
       setIsRunning(false);
+      startTimeRef.current = null;
     } else {
+      
+      startTimeRef.current = Date.now();
+      setTimerCount(0); 
+      
       intervalRef.current = setInterval(() => {
-        setTimerCount((prevCount) => prevCount + 1);
-      }, 1000);
+        if (!startTimeRef.current) return;
+        
+        const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
+        setTimerCount(elapsed);
+      }, 1000); 
       setIsRunning(true);
     }
   };
