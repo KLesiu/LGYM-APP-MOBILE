@@ -14,6 +14,7 @@ module.exports = {
         fifthColor: "#787878",
         textColor: "#e8e6e6",
         redColor: "#E53935",
+        cardColor: "#141414"
       },
       screens: {
         smh: { raw: "(min-height: 600px)" },
