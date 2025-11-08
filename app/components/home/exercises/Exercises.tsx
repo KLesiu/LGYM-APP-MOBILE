@@ -1,6 +1,9 @@
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { ExerciseForm } from "../../../../interfaces/Exercise";
+import {
+  ExerciseForm,
+  ExerciseForPlanDay,
+} from "../../../../interfaces/Exercise";
 import CreateExercise from "./CreateExercise";
 import CustomButton, {
   ButtonSize,
@@ -14,8 +17,21 @@ import { useAppContext } from "../../../AppContext";
 import BodyPartsList from "./BodyPartsList";
 import ExercisesList from "./ExercisesList";
 import ExerciseDetails from "./ExerciseDetails";
+import BackIcon from "./../../../../img/icons/backIcon.svg"
 
-const Exercises: React.FC = () => {
+interface ExercisesProps {
+  isCreatePlanDayMode?: boolean;
+  addExerciseToList: (exercise: ExerciseForm) => void;
+  exercisesList?: ExerciseForPlanDay[];
+  goBackToPlanDay?: () => void;
+}
+
+const Exercises: React.FC<ExercisesProps> = ({
+  isCreatePlanDayMode,
+  addExerciseToList,
+  exercisesList,
+  goBackToPlanDay
+}) => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [selectedBodyPart, setSelectedBodyPart] = useState<BodyParts | null>(
@@ -143,6 +159,9 @@ const Exercises: React.FC = () => {
             selectExercise={selectExercise}
             userExercises={filteredUserExercisesByBodyPart}
             globalExercises={filteredGlobalExercisesByBodyPart}
+            isCreatePlanDayMode={isCreatePlanDayMode}
+            exercisesList={exercisesList}
+            addExerciseToList={addExerciseToList}
           />
         );
       case 2:
@@ -162,6 +181,16 @@ const Exercises: React.FC = () => {
           className="flex flex-row px-4 py-2 items-center justify-between "
           style={{ gap: 8 }}
         >
+          {" "}
+          {isCreatePlanDayMode && (
+            <Pressable
+              style={{ borderRadius: 10000 }}
+              onPress={goBackToPlanDay}
+              className="flex items-center justify-center w-8 h-8  bg-secondaryColor "
+            >
+              <BackIcon />
+            </Pressable>
+          )}
           <Text
             className="text-xl text-primaryColor"
             style={{ fontFamily: "OpenSans_700Bold" }}

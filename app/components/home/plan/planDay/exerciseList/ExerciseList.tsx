@@ -11,7 +11,7 @@ interface ExerciseListProps {
 
 const ExerciseList: React.FC<ExerciseListProps> = (props) => {
   return (
-    <View className="flex flex-col flex-1 p-5" style={{ gap: 8 }}>
+    <View className="flex flex-col flex-1 " style={{ gap: 8 }}>
       <View className="flex flex-row justify-between">
         <Text
           style={{ fontFamily: "OpenSans_700Bold" }}

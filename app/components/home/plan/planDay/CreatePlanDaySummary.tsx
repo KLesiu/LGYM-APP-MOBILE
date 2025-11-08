@@ -40,7 +40,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
           </Text>
         </View>
       </View>
-      <ScrollView>
+      <ScrollView className="px-5">
         <ExerciseList exerciseList={exercisesList} />
       </ScrollView>
 

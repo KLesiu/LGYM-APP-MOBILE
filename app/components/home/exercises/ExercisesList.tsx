@@ -4,7 +4,10 @@ import { BodyParts } from "../../../../enums/BodyParts";
 import BackIcon from "./../../../../img/icons/backIcon.svg";
 import SearchBox from "../../elements/SearchBox";
 import TypeOfExercises from "../../../../enums/TypeOfExercises";
-import { ExerciseForm } from "../../../../interfaces/Exercise";
+import {
+  ExerciseForm,
+  ExerciseForPlanDay,
+} from "../../../../interfaces/Exercise";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ExercisesListElement from "./ExercisesListElement";
 
@@ -14,6 +17,9 @@ interface ExercisesListProps {
   userExercises: ExerciseForm[];
   globalExercises: ExerciseForm[];
   selectExercise: (exercise: ExerciseForm, isEditing: boolean) => void;
+  isCreatePlanDayMode?: boolean;
+  addExerciseToList?: (exercise: ExerciseForm) => void;
+  exercisesList?: ExerciseForPlanDay[];
 }
 
 const ExercisesList: React.FC<ExercisesListProps> = ({
@@ -22,6 +28,9 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
   userExercises,
   globalExercises,
   selectExercise,
+  isCreatePlanDayMode,
+  addExerciseToList,
+  exercisesList,
 }) => {
   const [currentTypeOfExercises, setCurrentTypeOfExercises] =
     useState<TypeOfExercises>(TypeOfExercises.GLOBAL);
@@ -97,7 +106,10 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
                 isGlobal={true}
                 key={exercise._id}
                 exercise={exercise}
+                isCreatePlanDayMode={isCreatePlanDayMode}
                 onPress={() => selectExercise(exercise, false)}
+                addExerciseToList={addExerciseToList}
+                exercisesList={exercisesList}
                 editExercise={() => selectExercise(exercise, true)}
               />
             ))
@@ -105,7 +117,10 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
               <ExercisesListElement
                 key={exercise._id}
                 exercise={exercise}
+                isCreatePlanDayMode={isCreatePlanDayMode}
                 onPress={() => selectExercise(exercise, false)}
+                addExerciseToList={addExerciseToList}
+                exercisesList={exercisesList}
                 editExercise={() => selectExercise(exercise, true)}
               />
             ))}
