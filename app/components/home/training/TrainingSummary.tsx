@@ -85,7 +85,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
                   className="text-textColor text-sm smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
-                  Next Rank:{" "}
+                  Next Rank:
                   {props.trainingSummary.nextRank
                     ? props.trainingSummary.nextRank.name
                     : "You are on the highest rank"}

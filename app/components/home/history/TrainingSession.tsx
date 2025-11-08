@@ -52,7 +52,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                         }}
                         className="text-base font-bold text-textColor  border-b-[1px] border-b-white"
                       >
-                        {exercise.exerciseDetails.name}:{" "}
+                        {exercise.exerciseDetails.name}:
                         {exercise.exerciseDetails.bodyPart}
                       </Text>
                       <View style={{ gap: 8 }} className="flex flex-col ">
