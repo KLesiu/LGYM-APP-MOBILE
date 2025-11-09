@@ -17,6 +17,7 @@ import CustomButton, {
 import { useHomeContext } from "../HomeContext";
 import { PossibleRecordForExercise } from "../../../../interfaces/MainRecords";
 import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
+import RecordsPopUp from "../records/RecordsPopUp";
 
 interface ExerciseDetailsProps {
   exercise: ExerciseForm;
@@ -33,6 +34,8 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
   const [exerciseRecord, setExerciseRecord] =
     useState<PossibleRecordForExercise>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isRecordDialogShown, setIsRecordDialogShown] =
+    useState<boolean>(false);
   const { postAPI } = useAppContext();
   const { toggleMenuButton } = useHomeContext();
 
@@ -63,6 +66,19 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
       { exerciseId: exercise._id }
     );
   };
+
+  const toggleRecordDialog = async () => {
+    setIsRecordDialogShown(!isRecordDialogShown);
+    if (isRecordDialogShown) {
+      await getPossibleOrExerciseRecord();
+    }
+  };
+
+  if (isRecordDialogShown) {
+    return (
+      <RecordsPopUp offPopUp={toggleRecordDialog} exerciseId={exercise._id} />
+    );
+  }
 
   return (
     <View className="flex flex-col px-2 pt-4 flex-1 " style={{ gap: 16 }}>
@@ -141,16 +157,16 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
           </View>
         </ScrollView>
         <View className="flex flex-row" style={{ gap: 8 }}>
-          <CustomButton
+          {/* <CustomButton
             onPress={() => {}}
             buttonStyleSize={ButtonSize.regular}
             buttonStyleType={ButtonStyle.grey}
             text="Add to training day"
             customClasses="flex-1"
-          ></CustomButton>
+          ></CustomButton> */}
 
           <CustomButton
-            onPress={() => {}}
+            onPress={toggleRecordDialog}
             buttonStyleSize={ButtonSize.regular}
             buttonStyleType={ButtonStyle.success}
             text="Add record"

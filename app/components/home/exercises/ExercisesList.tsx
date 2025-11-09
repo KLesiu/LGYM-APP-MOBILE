@@ -59,7 +59,7 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
   }, [userExercises, searchText]);
 
   return (
-    <View className="flex flex-col p-4 flex-1" style={{ gap: 16 }}>
+    <View className="flex flex-col p-4 flex-1 w-full" style={{ gap: 16 }}>
       <View className="flex flex-row items-center justify-between">
         <Pressable
           style={{ borderRadius: 10000 }}

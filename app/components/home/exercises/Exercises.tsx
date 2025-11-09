@@ -17,7 +17,7 @@ import { useAppContext } from "../../../AppContext";
 import BodyPartsList from "./BodyPartsList";
 import ExercisesList from "./ExercisesList";
 import ExerciseDetails from "./ExerciseDetails";
-import BackIcon from "./../../../../img/icons/backIcon.svg"
+import BackIcon from "./../../../../img/icons/backIcon.svg";
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -30,7 +30,7 @@ const Exercises: React.FC<ExercisesProps> = ({
   isCreatePlanDayMode,
   addExerciseToList,
   exercisesList,
-  goBackToPlanDay
+  goBackToPlanDay,
 }) => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -112,7 +112,7 @@ const Exercises: React.FC<ExercisesProps> = ({
 
   const closeExerciseForm = async () => {
     setIsExerciseFormVisible(false);
-    toggleMenuButton(false);
+    if (!isCreatePlanDayMode) toggleMenuButton(false);
     hideMenu();
     await Promise.all([getAllUserExercises(), getAllGlobalExercises()]);
     setSelectedExercise(null);
@@ -144,6 +144,11 @@ const Exercises: React.FC<ExercisesProps> = ({
   const goBack = () => {
     const newStep = currentStep - 1;
     if (newStep < 0) return;
+    if(newStep === 1){
+      setSelectedExercise(null);
+    }else if(newStep === 0 && !isCreatePlanDayMode){
+      toggleMenuButton(false);
+    }
     setCurrentStep(newStep);
   };
 
@@ -181,7 +186,6 @@ const Exercises: React.FC<ExercisesProps> = ({
           className="flex flex-row px-4 py-2 items-center justify-between "
           style={{ gap: 8 }}
         >
-          {" "}
           {isCreatePlanDayMode && (
             <Pressable
               style={{ borderRadius: 10000 }}

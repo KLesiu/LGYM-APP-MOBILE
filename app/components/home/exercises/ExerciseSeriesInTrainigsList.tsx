@@ -20,13 +20,13 @@ const ExerciseSeriesInTrainigsList: React.FC<
       </Text>
       <View className="flex flex-col" style={{ gap: 16 }}>
         {listOfExerciseSeriesInTrainigs &&
-          listOfExerciseSeriesInTrainigs.length &&
+          listOfExerciseSeriesInTrainigs.length ?
           listOfExerciseSeriesInTrainigs.map((x) => (
             <ExerciseSeriesInTrainingElement
               key={x._id}
               exerciseSeriesInTraining={x}
             />
-          ))}
+          )) : <Text className="text-textColor text-xs" style={{fontFamily: "OpenSans_300Light", }}>No history available</Text>}
       </View>
     </View>
   );

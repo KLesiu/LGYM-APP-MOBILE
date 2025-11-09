@@ -1,20 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput, ScrollView } from "react-native";
-import { DropdownItem } from "./../../../../../interfaces/Dropdown";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
 } from "./../../../../../interfaces/Exercise";
-import { isIntValidator } from "./../../../../../helpers/numberValidator";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
-import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
-import AutoComplete from "../../../elements/Autocomplete";
 import ExerciseList from "./exerciseList/ExerciseList";
-import CreateExercise from "../../exercises/CreateExercise";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { useHomeContext } from "../../HomeContext";
-import useDeviceCategory from "../../../../../helpers/hooks/useDeviceCategory";
-import { DeviceCategory } from "../../../../../enums/DeviceCategory";
 import { useAppContext } from "../../../../AppContext";
 import React from "react";
 import Dialog from "../../../elements/Dialog";
@@ -42,8 +35,10 @@ const CreatePlanDayExerciseList: React.FC = () => {
       series: 1,
       reps: "Max",
     };
-    if(exercisesList.some(x=>x.exercise.value === exercise._id)){
-      const newExercisesList = exercisesList.filter(x=>x.exercise.value !== exercise._id);
+    if (exercisesList.some((x) => x.exercise.value === exercise._id)) {
+      const newExercisesList = exercisesList.filter(
+        (x) => x.exercise.value !== exercise._id
+      );
       setExercisesList(newExercisesList);
       return;
     }
@@ -54,6 +49,40 @@ const CreatePlanDayExerciseList: React.FC = () => {
     const newExercisesList = exercisesList.map((item) =>
       item.exercise.value === exercise.exercise.value ? exercise : item
     );
+    setExercisesList(newExercisesList);
+  };
+
+  const removeExerciseFromList = (exercise: ExerciseForPlanDay) => {
+    const newExercisesList = exercisesList.filter(
+      (item) => item.exercise.value !== exercise.exercise.value
+    );
+    setExercisesList(newExercisesList);
+  };
+
+  const moveExerciseInList = (
+    exercise: ExerciseForPlanDay,
+    direction: "up" | "down"
+  ) => {
+    const currentIndex = exercisesList.findIndex(
+      (item) => item.exercise.value === exercise.exercise.value
+    );
+
+    const targetIndex =
+      direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+    if (
+      currentIndex === -1 ||
+      targetIndex < 0 ||
+      targetIndex >= exercisesList.length
+    ) {
+      return;
+    }
+
+    const newExercisesList = [...exercisesList];
+    [newExercisesList[currentIndex], newExercisesList[targetIndex]] = [
+      newExercisesList[targetIndex],
+      newExercisesList[currentIndex],
+    ];
     setExercisesList(newExercisesList);
   };
 
@@ -76,7 +105,12 @@ const CreatePlanDayExerciseList: React.FC = () => {
               buttonStyleType={ButtonStyle.success}
             />
           </View>
-          <ExerciseList exerciseList={exercisesList} editExerciseFromList={editExerciseFromList} />
+          <ExerciseList
+            exerciseList={exercisesList}
+            editExerciseFromList={editExerciseFromList}
+            removeExerciseFromList={removeExerciseFromList}
+            moveExercise={moveExerciseInList}
+          />
         </View>
       </ScrollView>
 

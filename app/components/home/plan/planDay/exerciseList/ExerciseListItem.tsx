@@ -1,23 +1,39 @@
 import { View, Text, TextInput } from "react-native";
 import { ExerciseForPlanDay } from "./../../../../../../interfaces/Exercise";
-import CustomButton, { ButtonSize } from "./../../../../elements/CustomButton";
-import IconDelete from "./../../../../../../img/icons/deleteIcon.svg";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "./../../../../elements/CustomButton";
 import React, { useEffect, useState } from "react";
 import { isIntValidator } from "../../../../../../helpers/numberValidator";
+import RemoveIcon from "./../../../../../../img/icons/deleteIcon.svg";
+import Ionicons from "react-native-vector-icons/Ionicons";
 interface ExerciseListItemProps {
   exerciseListItem: ExerciseForPlanDay;
   removeExerciseFromList?: (item: ExerciseForPlanDay) => void;
   editExerciseFromList?: (item: ExerciseForPlanDay) => void;
+  exerciseListItemPosition?: number;
+  moveExerciseUp?: (item: ExerciseForPlanDay) => void;
+  moveExerciseDown?: (item: ExerciseForPlanDay) => void;
 }
 
 const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
   exerciseListItem,
   removeExerciseFromList,
   editExerciseFromList,
+  exerciseListItemPosition,
+  moveExerciseUp,
+  moveExerciseDown,
 }) => {
   const [seriesNumber, setSeriesNumber] = useState<string>(
     exerciseListItem.series.toString()
   );
+
+  useEffect(() => {
+    if (exerciseListItem.series.toString() !== seriesNumber) {
+      setSeriesNumber(exerciseListItem.series.toString());
+    }
+  }, [exerciseListItem]);
 
   useEffect(() => {
     if (isIntValidator(seriesNumber)) {
@@ -58,14 +74,48 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
       style={{ gap: 20 }}
     >
       <View className="flex flex-col flex-1" style={{ gap: 4 }}>
-        <Text
-          style={{
-            fontFamily: "OpenSans_400Regular",
-          }}
-          className="text-base  text-textColor"
-        >
-          {exerciseListItem.exercise.label}
-        </Text>
+        <View className="flex flex-row justify-between ">
+          <Text
+            style={{
+              fontFamily: "OpenSans_400Regular",
+            }}
+            className="text-base  text-textColor"
+          >
+            {exerciseListItem.exercise.label}
+          </Text>
+          <View className="flex flex-row" style={{ gap: 8 }}>
+            {moveExerciseUp && exerciseListItemPosition && (
+              <CustomButton
+                onPress={() => moveExerciseUp(exerciseListItem)}
+                buttonStyleSize={ButtonSize.none}
+                buttonStyleType={ButtonStyle.none}
+                customSlots={[
+                  <Ionicons name="chevron-up" size={22} color={"white"} />,
+                ]}
+              />
+            )}
+
+            {moveExerciseDown && (
+              <CustomButton
+                onPress={() => moveExerciseDown(exerciseListItem)}
+                buttonStyleSize={ButtonSize.none}
+                buttonStyleType={ButtonStyle.none}
+                customSlots={[
+                  <Ionicons name="chevron-down" size={22} color={"white"} />,
+                ]}
+              />
+            )}
+            {removeExerciseFromList && (
+              <CustomButton
+                onPress={() => removeExerciseFromList(exerciseListItem)}
+                buttonStyleSize={ButtonSize.none}
+                buttonStyleType={ButtonStyle.none}
+                customSlots={[<RemoveIcon width={20} height={20} />]}
+              />
+            )}
+          </View>
+        </View>
+
         {editExerciseFromList ? (
           <View className="flex flex-row justify-between" style={{ gap: 16 }}>
             <View style={{ gap: 4 }} className="flex flex-col flex-1">
@@ -133,15 +183,6 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
           </View>
         )}
       </View>
-      {removeExerciseFromList && (
-        <View className="flex justify-center items-center  w-12  h-12 smallPhone:w-10 smallPhone:h-10 bg-secondaryColor70 rounded-lg">
-          <CustomButton
-            buttonStyleSize={ButtonSize.small}
-            onPress={() => removeExerciseFromList(exerciseListItem)}
-            customSlots={[<IconDelete />]}
-          />
-        </View>
-      )}
     </View>
   );
 };
