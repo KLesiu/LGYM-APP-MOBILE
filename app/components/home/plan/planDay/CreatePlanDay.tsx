@@ -1,9 +1,7 @@
 import { JSX, useCallback, useEffect, useRef, useState } from "react";
 import {
-  ExerciseForm,
   ExerciseForPlanDay,
 } from "./../../../../../interfaces/Exercise";
-import { Message } from "./../../../../../enums/Message";
 import CreatePlanDayName from "./CreatePlanDayName";
 import Dialog from "../../../elements/Dialog";
 import CreatePlanDayExerciseList from "./CreatePlanDayExerciseList";
@@ -15,7 +13,6 @@ import {
 } from "./../../../../../interfaces/PlanDay";
 import { BackHandler } from "react-native";
 import { usePlanDay } from "./CreatePlanDayContext";
-import { useHomeContext } from "../../HomeContext";
 import { useAppContext } from "../../../../AppContext";
 import React from "react";
 
@@ -168,6 +165,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           <CreatePlanDaySummary
             isPreview={props.isPreview}
             saveCurrentPlan={savePlan}
+            isLoading={viewLoading}
           />
         );
       default:

@@ -21,7 +21,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
       <Ionicons
         name={value ? "checkbox" : "square-outline"}
         size={28}
-        color={value ? "#20BC2D" : "#1E1E1E"}
+        color={value ? "#20BC2D" : "#787878"}
       />
     </Pressable>
   );

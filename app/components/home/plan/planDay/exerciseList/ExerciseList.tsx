@@ -7,7 +7,7 @@ interface ExerciseListProps {
   exerciseList: ExerciseForPlanDay[];
   removeExerciseFromList?: (item: ExerciseForPlanDay) => void;
   editExerciseFromList?: (item: ExerciseForPlanDay) => void;
-  moveExercise:(exercise:ExerciseForPlanDay, direction: 'up' | 'down')=>void;
+  moveExercise?:(exercise:ExerciseForPlanDay, direction: 'up' | 'down')=>void;
 }
 
 const ExerciseList: React.FC<ExerciseListProps> = (props) => {
@@ -32,7 +32,7 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
           {props.exerciseList.length} Total
         </Text>
       </View>
-      <View className="flex flex-col " style={{ gap: 10 }}>
+      <View className="flex flex-col w-full " style={{ gap: 16 }}>
           {props.exerciseList.length > 0 ? (
             props.exerciseList.map((item, index) => (
               <ExerciseListItem
@@ -41,8 +41,8 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
                 exerciseListItemPosition={findExercisePosition(item)}
                 removeExerciseFromList={props.removeExerciseFromList} 
                 editExerciseFromList={props.editExerciseFromList}
-                moveExerciseUp={props.moveExercise ? () => props.moveExercise(item, 'up') : undefined}
-                moveExerciseDown={props.moveExercise ? () => props.moveExercise(item, 'down') : undefined}
+                moveExerciseUp={props.moveExercise ? () => props.moveExercise!(item, 'up') : undefined}
+                moveExerciseDown={props.moveExercise ? () => props.moveExercise!(item, 'down') : undefined}
               />
             ))
           ) : (

@@ -27,7 +27,7 @@ interface ButtonProps {
   textWeight?: FontWeights;
   buttonStyleType?: ButtonStyle;
   buttonStyleSize?: ButtonSize;
-  customSlots?: JSX.Element[];
+  customSlots?: (JSX.Element | string | number)[];
   width?: string;
   children?: React.ReactNode;
   disabled?: boolean;
@@ -45,14 +45,12 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       case ButtonStyle.outline:
         return "text-textColor";
       case ButtonStyle.grey:
-        return "text-textColor";
       case ButtonStyle.outlineBlack:
         return "text-textColor";
       default:
         return "text-black";
     }
   };
-
 
   const fontWeight = useMemo(()=>{
     switch (props.textWeight) {
@@ -66,6 +64,14 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
         return "normal";
     }
   },[props.textWeight])
+
+  const renderNode = (node: React.ReactNode, key?: React.Key) => {
+    if (typeof node === 'string' || typeof node === 'number') {
+      return <Text key={key}>{node}</Text>;
+    }
+    return node;
+  };
+
 
   return (
     <Pressable
@@ -83,7 +89,11 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       {props.isLoading ? (
         <ViewLoading customClasses="py-0" />
       ) : props.customSlots ? (
-        props.customSlots.map((slot, index) => <View key={index}>{slot}</View>)
+        props.customSlots.map((slot, index) => (
+          <View key={index}>
+            {renderNode(slot)}
+          </View>
+        ))
       ) : (
         <Text
           className={` text-center ${textColorClass()} `}
@@ -95,7 +105,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
           {props.text}
         </Text>
       )}
-      {props.children}
+      {React.Children.map(props.children, (child, index) => renderNode(child, index))}
     </Pressable>
   );
 };

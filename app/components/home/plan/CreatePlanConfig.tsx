@@ -83,6 +83,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           />
           <CustomButton
             text="Next"
+            isLoading={viewLoading}
             onPress={sendConfig}
             buttonStyleType={ButtonStyle.success}
             width="flex-1"

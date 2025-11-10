@@ -29,9 +29,8 @@ interface AppContextProps {
   setToken: (token?: string) => void;
   userInfo: UserInfo | null;
   setUserInfo: (userInfo: UserInfo | null) => void;
-    getRankColor?: "#CACACA" | "#A733DD" | "#FC2C44" | "#E8CC79";
-    changeIsVisibleInRanking: (newValue: boolean) => void;
-
+  getRankColor?: "#CACACA" | "#A733DD" | "#FC2C44" | "#E8CC79";
+  changeIsVisibleInRanking: (newValue: boolean) => void;
 }
 
 const AppContext = createContext<AppContextProps | null>(null);
@@ -72,6 +71,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     serveErrors = true
   ) => {
     try {
+      setErrors([]);
       setIsLoading(true);
       const response = await get(url, token, params);
       callback(response);
@@ -120,7 +120,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const clearBeforeLogout = async () => {
     const keys = await AsyncStorage.getAllKeys();
     await Promise.all(keys.map((key) => deleteFromStorage(key)));
-    setUserInfo(null)
+    setUserInfo(null);
     setToken(undefined);
   };
 
@@ -129,31 +129,30 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   };
 
   const changeIsVisibleInRanking = (newValue: boolean): void => {
-    setUserInfo((prevUserInfo:UserInfo | null) => {
+    setUserInfo((prevUserInfo: UserInfo | null) => {
       if (!prevUserInfo) return prevUserInfo;
       return { ...prevUserInfo, isVisibleInRanking: newValue };
     });
-  }
+  };
 
-  const getRankColor = useMemo(()=>{
-    switch(userInfo?.profileRank){
-      case 'Junior 1':
-      case 'Junior 2':
-      case 'Junior 3':
-        return '#CACACA';
-      case 'Mid 1':
-      case 'Mid 2':
-      case 'Mid 3':
-        return '#A733DD';
-      case 'Pro 1':
-      case 'Pro 2':
-      case 'Pro 3':
-        return '#FC2C44';
-      case 'Champ':
-        return '#E8CC79';
-;
+  const getRankColor = useMemo(() => {
+    switch (userInfo?.profileRank) {
+      case "Junior 1":
+      case "Junior 2":
+      case "Junior 3":
+        return "#CACACA";
+      case "Mid 1":
+      case "Mid 2":
+      case "Mid 3":
+        return "#A733DD";
+      case "Pro 1":
+      case "Pro 2":
+      case "Pro 3":
+        return "#FC2C44";
+      case "Champ":
+        return "#E8CC79";
     }
-  },[ userInfo?.profileRank])
+  }, [userInfo?.profileRank]);
 
   return (
     <AppContext.Provider
@@ -171,7 +170,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         setUserInfo,
         getRankColor,
         setToken,
-        changeIsVisibleInRanking
+        changeIsVisibleInRanking,
       }}
     >
       {canAppStart && children}

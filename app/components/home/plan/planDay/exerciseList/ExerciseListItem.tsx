@@ -71,7 +71,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
   return (
     <View
       className="w-full bg-fourthColor flex flex-row  p-2 rounded-lg justify-between items-center"
-      style={{ gap: 20 }}
+      style={{ gap: 16 }}
     >
       <View className="flex flex-col flex-1" style={{ gap: 4 }}>
         <View className="flex flex-row justify-between ">
@@ -84,13 +84,13 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
             {exerciseListItem.exercise.label}
           </Text>
           <View className="flex flex-row" style={{ gap: 8 }}>
-            {moveExerciseUp && exerciseListItemPosition && (
+            {(moveExerciseUp && exerciseListItemPosition !== undefined) && (
               <CustomButton
                 onPress={() => moveExerciseUp(exerciseListItem)}
                 buttonStyleSize={ButtonSize.none}
                 buttonStyleType={ButtonStyle.none}
                 customSlots={[
-                  <Ionicons name="chevron-up" size={22} color={"white"} />,
+                  <Ionicons name="chevron-up" size={22} color={"white"} />
                 ]}
               />
             )}
@@ -101,7 +101,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                 buttonStyleSize={ButtonSize.none}
                 buttonStyleType={ButtonStyle.none}
                 customSlots={[
-                  <Ionicons name="chevron-down" size={22} color={"white"} />,
+                  <Ionicons name="chevron-down" size={22} color={"white"} />
                 ]}
               />
             )}

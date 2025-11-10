@@ -12,6 +12,7 @@ interface CreatePlanDaySummaryProps {
     exercisesArg: ExerciseForPlanDay[]
   ) => Promise<void>;
   isPreview?: boolean;
+  isLoading: boolean;
 }
 
 const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
@@ -57,6 +58,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
             buttonStyleType={ButtonStyle.success}
             onPress={savePlan}
             text="Save"
+            isLoading={props.isLoading}
             width="flex-1"
           />
         )}
