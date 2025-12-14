@@ -8,6 +8,8 @@ import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "../../elements/CustomButton";
+import PlanIcon from "./../../../../img/icons/planIcon.svg"
+import ShareIcon from "./../../../../img/icons/shareIcon.svg"
 import { FontWeights } from "./../../../../enums/FontsProperties";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
@@ -17,6 +19,7 @@ import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import PlansList from "./PlansList";
 import { PlanForm } from "../../../../interfaces/Plan";
+import DeleteIcon from "./../../../../img/icons/deleteIcon.svg";
 import ResponseMessage from "../../../../interfaces/ResponseMessage";
 import React from "react";
 
@@ -206,21 +209,34 @@ const TrainingPlan: React.FC = () => {
 
               <View className="flex flex-row" style={{ gap: 16 }}>
                 <CustomButton
-                  text="Add plan day"
+                  text="Add training day"
                   onPress={showPlanDayForm}
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}
                   buttonStyleSize={ButtonSize.long}
                   customClasses="flex-1"
                 />
-                <CustomButton
-                  text="Plans list"
-                  onPress={showPlansList}
-                  buttonStyleType={ButtonStyle.success}
-                  textWeight={FontWeights.bold}
-                  buttonStyleSize={ButtonSize.long}
-                  customClasses="flex-1"
-                />
+                  <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                  <CustomButton
+                    onPress={showPlansList}
+                    buttonStyleSize={ButtonSize.small}
+                    customSlots={[<PlanIcon />]}
+                  />
+                </View>
+                <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                  <CustomButton
+                    onPress={showPlansList}
+                    buttonStyleSize={ButtonSize.small}
+                    customSlots={[<DeleteIcon />]}
+                  />
+                </View>
+                 <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                  <CustomButton
+                    onPress={showPlansList}
+                    buttonStyleSize={ButtonSize.small}
+                    customSlots={[<ShareIcon />]}
+                  />
+                </View>
               </View>
             </View>
 
