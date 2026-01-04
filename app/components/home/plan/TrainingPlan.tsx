@@ -8,8 +8,8 @@ import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "../../elements/CustomButton";
-import PlanIcon from "./../../../../img/icons/planIcon.svg"
-import ShareIcon from "./../../../../img/icons/shareIcon.svg"
+import PlanIcon from "./../../../../img/icons/planIcon.svg";
+import ShareIcon from "./../../../../img/icons/shareIcon.svg";
 import { FontWeights } from "./../../../../enums/FontsProperties";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
@@ -22,6 +22,8 @@ import { PlanForm } from "../../../../interfaces/Plan";
 import DeleteIcon from "./../../../../img/icons/deleteIcon.svg";
 import ResponseMessage from "../../../../interfaces/ResponseMessage";
 import React from "react";
+import PlanShareDialog from "./PlanShareDialog";
+import PlanCopyDialog from "./PlanCopyDialog";
 
 const TrainingPlan: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
@@ -43,6 +45,14 @@ const TrainingPlan: React.FC = () => {
     isDeletePlanDayConfirmationDialogVisible,
     setIsDeletePlanDayConfirmationDialogVisible,
   ] = useState<boolean>(false);
+  const [isShareCodeDialogShowed, setIsShareCodeDialogShowed] =
+    useState<boolean>(false);
+  const [isCopyPlanDialogShowed, setIsCopyPlanDialogShowed] =
+    useState<boolean>(false);
+  const [
+    isDeletePlanConfirmationDialogVisible,
+    setIsDeletePlanConfirmationDialogVisible,
+  ] = useState<boolean>(false);
 
   useEffect(() => {
     init();
@@ -54,7 +64,6 @@ const TrainingPlan: React.FC = () => {
   };
 
   const getPlanDaysBaseInfo = async (planConfig: PlanForm): Promise<void> => {
-    if (!planConfig || !planConfig._id) return;
     setViewLoading(true);
     try {
       await getAPI(
@@ -111,6 +120,16 @@ const TrainingPlan: React.FC = () => {
     toggleMenuButton(false);
   }, []);
 
+  const showShareCodeDialog = useCallback((): void => {
+    setIsShareCodeDialogShowed(true);
+    toggleMenuButton(true);
+  }, []);
+
+  const hideShareCodeDialog = useCallback((): void => {
+    setIsShareCodeDialogShowed(false);
+    toggleMenuButton(false);
+  }, []);
+
   const hidePlanDayForm = useCallback(async (): Promise<void> => {
     setViewLoading(true);
     setIsPlanDayFormVisible(false);
@@ -142,10 +161,35 @@ const TrainingPlan: React.FC = () => {
     }
   };
 
+  const copyPlan = async (code: string) => {
+    try {
+      await postAPI(
+        "/copyPlan",
+        async (result: ResponseMessage) => {
+          await init();
+        },
+        { shareCode: code }
+      );
+    } finally {
+      hideCopyPlanDialog();
+      hidePlansList();
+    }
+  };
+
+  const showCopyPlanDialog = () => {
+    setIsCopyPlanDialogShowed(true);
+    toggleMenuButton(true);
+  };
+
+  const hideCopyPlanDialog = () => {
+    setIsCopyPlanDialogShowed(false);
+    toggleMenuButton(false);
+  };
+
   const setNewPlanConfig = async (planConfig: PlanForm) => {
-    hidePlansList();
-    setPlanConfig(planConfig);
     await changeActivePlan(planConfig);
+    setPlanConfig(planConfig);
+    hidePlansList();
   };
 
   const changeActivePlan = async (planConfig: PlanForm) => {
@@ -171,6 +215,20 @@ const TrainingPlan: React.FC = () => {
     },
     []
   );
+
+  const deletePlan = async () => {
+    try {
+      await postAPI(
+        "/deletePlan",
+        async (result: ResponseMessage) => {
+          await init();
+        },
+        { planId: planConfig?._id }
+      );
+    } finally {
+      setIsDeletePlanConfirmationDialogVisible(false);
+    }
+  };
 
   return (
     <BackgroundMainSection>
@@ -216,7 +274,7 @@ const TrainingPlan: React.FC = () => {
                   buttonStyleSize={ButtonSize.long}
                   customClasses="flex-1"
                 />
-                  <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
                   <CustomButton
                     onPress={showPlansList}
                     buttonStyleSize={ButtonSize.small}
@@ -225,14 +283,14 @@ const TrainingPlan: React.FC = () => {
                 </View>
                 <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
                   <CustomButton
-                    onPress={showPlansList}
+                    onPress={()=> setIsDeletePlanConfirmationDialogVisible(true)}
                     buttonStyleSize={ButtonSize.small}
                     customSlots={[<DeleteIcon />]}
                   />
                 </View>
-                 <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
                   <CustomButton
-                    onPress={showPlansList}
+                    onPress={showShareCodeDialog}
                     buttonStyleSize={ButtonSize.small}
                     customSlots={[<ShareIcon />]}
                   />
@@ -277,8 +335,23 @@ const TrainingPlan: React.FC = () => {
       {isPlansListVisible && (
         <PlansList
           togglePlanConfig={togglePlanConfigPopUp}
+          showCopyPlanDialog={showCopyPlanDialog}
           goBack={hidePlansList}
           setNewPlanConfig={setNewPlanConfig}
+        />
+      )}
+      {isShareCodeDialogShowed && planConfig && (
+        <PlanShareDialog
+          visible={isShareCodeDialogShowed}
+          onCancel={hideShareCodeDialog}
+          plan={planConfig}
+        />
+      )}
+      {isCopyPlanDialogShowed && (
+        <PlanCopyDialog
+          visible={isCopyPlanDialogShowed}
+          onCancel={() => setIsCopyPlanDialogShowed(false)}
+          copyPlan={copyPlan}
         />
       )}
       <ConfirmDialog
@@ -287,6 +360,13 @@ const TrainingPlan: React.FC = () => {
         message={`Are you sure you want to delete?`}
         onConfirm={deletePlanDay}
         onCancel={() => deletePlanDayVisible(false)}
+      />
+      <ConfirmDialog
+        visible={isDeletePlanConfirmationDialogVisible}
+        title={`Delete: ${planConfig ? planConfig.name : ""}`}
+        message={`Are you sure you want to delete?`}
+        onConfirm={deletePlan}
+        onCancel={() => setIsDeletePlanConfirmationDialogVisible(false)}
       />
     </BackgroundMainSection>
   );

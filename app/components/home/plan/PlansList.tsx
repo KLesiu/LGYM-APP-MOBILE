@@ -15,12 +15,14 @@ interface PlansListProps {
   togglePlanConfig: (value: boolean) => void;
   goBack: () => void;
   setNewPlanConfig: (planConfig: PlanForm) => Promise<void>;
+  showCopyPlanDialog: () => void;
 }
 
 const PlansList: React.FC<PlansListProps> = ({
   togglePlanConfig,
   goBack,
   setNewPlanConfig,
+  showCopyPlanDialog
 }) => {
   const { getAPI } = useAppContext();
   const [plansList, setPlansList] = useState<PlanForm[]>([]);
@@ -30,7 +32,7 @@ const PlansList: React.FC<PlansListProps> = ({
 
   useEffect(() => {
     getPlansList();
-  });
+  }, []);
 
   const getPlansList = async (): Promise<void> => {
     setViewLoading(true);
@@ -81,10 +83,17 @@ const PlansList: React.FC<PlansListProps> = ({
               width="flex-1"
             />
             <CustomButton
+              buttonStyleType={ButtonStyle.default}
+              onPress={showCopyPlanDialog}
+              textWeight={FontWeights.bold}
+              text="Copy plan"
+              width="flex-1"
+            />
+            <CustomButton
               buttonStyleType={ButtonStyle.success}
               onPress={() => togglePlanConfig(true)}
               textWeight={FontWeights.bold}
-              text="Create new plan"
+              text="Create new"
               width="flex-1"
             />
           </View>

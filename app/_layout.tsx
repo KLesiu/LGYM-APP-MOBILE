@@ -9,6 +9,7 @@ import {
   useFonts,
 } from "@expo-google-fonts/open-sans";
 import AppProvider from "./AppContext";
+import Toast from "react-native-toast-message";
 
 NativeWindStyleSheet.setOutput({ default: "native" });
 
@@ -39,6 +40,7 @@ const Layout: React.FC = () => {
   return (
     <AppProvider>
       <Stack screenOptions={{ headerShown: false ,gestureEnabled:false,headerBackButtonMenuEnabled:false}} />
+      <Toast />
     </AppProvider>
   );
 };
