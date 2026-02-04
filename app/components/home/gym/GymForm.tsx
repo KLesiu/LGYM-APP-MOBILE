@@ -6,8 +6,9 @@ import Dialog from "../../elements/Dialog";
 import GymIcon from "./../../../../img/icons/gymIcon.svg";
 import ValidationView from "../../elements/ValidationView";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
 import React from "react";
+import { usePostApiGymIdAddGym, usePostApiGymEditGym } from "../../../api/generated/gym/gym";
+import type { CreateOrUpdateGymDto } from "../../../api/generated/model";
 
 interface GymFormProps {
   closeForm: () => void;
@@ -17,7 +18,11 @@ interface GymFormProps {
 const GymForm: React.FC<GymFormProps> = (props) => {
   const { userId } = useHomeContext();
   const [gymName, setGymName] = useState<string>("");
-  const { postAPI, isLoading } = useAppContext();
+
+  const addGymMutation = usePostApiGymIdAddGym();
+  const editGymMutation = usePostApiGymEditGym();
+
+  const isLoading = addGymMutation.isPending || editGymMutation.isPending;
 
   useEffect(() => {
     if (props.gym) setGymName(props.gym.name);
@@ -25,19 +30,29 @@ const GymForm: React.FC<GymFormProps> = (props) => {
 
   const updateGym = async () => {
     try {
-      await postAPI("/gym/editGym", () => props.closeForm(), {
+      const payload: CreateOrUpdateGymDto = {
         name: gymName,
         _id: props.gym?._id,
+      };
+      await editGymMutation.mutateAsync({
+        data: payload,
       });
+      props.closeForm();
     } catch (error) {
       console.error("Error updating gym:", error);
     }
   };
+
   const createGym = async () => {
     try {
-      await postAPI(`/gym/${userId}/addGym`, () => props.closeForm(), {
+      const payload: CreateOrUpdateGymDto = {
         name: gymName,
+      };
+      await addGymMutation.mutateAsync({
+        id: userId,
+        data: payload,
       });
+      props.closeForm();
     } catch (error) {
       console.error("Error creating gym:", error);
     }
