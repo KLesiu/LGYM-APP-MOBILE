@@ -4,10 +4,12 @@ import ProgressBar from "../../elements/ProgressBar";
 import { useEffect, useState } from "react";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
+import { useAuthStore } from "../../../stores/useAuthStore";
 import React from "react";
 
 const ProgressInfo: React.FC = () => {
-  const {userInfo,getRankColor} = useAppContext()
+  const { getRankColor } = useAppContext();
+  const { user } = useAuthStore();
 
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -15,19 +17,19 @@ const ProgressInfo: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    if(userInfo){
+    if(user){
       setProgress(
-        Math.floor((userInfo.elo / userInfo.nextRank.needElo) * 10000) / 100
+        Math.floor((user.elo / user.nextRank.needElo) * 10000) / 100
       );
       setIsLoading(false);
     }
-  }, [userInfo]);
+  }, [user]);
 
   if(!getRankColor) return null;
 
   return (
     <Card isLoading={isLoading} customClasses="items-center">
-      {!isLoading && userInfo && (
+      {!isLoading && user && (
         <>
           <View className="flex flex-col" style={{ gap: 4 }}>
             <Text
@@ -48,7 +50,7 @@ const ProgressInfo: React.FC = () => {
                   className={` midPhone:text-sm text-md smallPhone:text-xs`}
                   style={{ fontFamily: "OpenSans_400Regular" ,color:getRankColor}}
                 >
-                  {userInfo.profileRank}
+                  {user.profileRank}
                 </Text>
               </View>
               <View className="flex flex-row" style={{ gap: 4 }}>
@@ -62,7 +64,7 @@ const ProgressInfo: React.FC = () => {
                   className="text-textColor  midPhone:text-sm text-md smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  {userInfo.elo}
+                  {user.elo}
                 </Text>
               </View>
               <View className="flex flex-row" style={{ gap: 4 }}>
@@ -76,7 +78,7 @@ const ProgressInfo: React.FC = () => {
                   className={`text-textColor  midPhone:text-sm text-md smallPhone:text-xs`}
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  {userInfo.nextRank.name}
+                  {user.nextRank.name}
                 </Text>
               </View>
 
@@ -99,7 +101,7 @@ const ProgressInfo: React.FC = () => {
               </View>
             </View>
           </View>
-          <ProfileRank rank={userInfo?.profileRank!} />
+          <ProfileRank rank={user?.profileRank!} />
         </>
       )}
     </Card>
