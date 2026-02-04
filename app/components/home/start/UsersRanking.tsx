@@ -2,39 +2,35 @@ import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserBaseInfo } from "./../../../../interfaces/User";
-import { useAppContext } from "../../../AppContext";
 import Card from "../../elements/Card";
+import { useGetApiGetUsersRanking } from "../../../api/generated/user/user";
+import type { UserBaseInfoDto } from "../../../api/generated/model";
 
 import * as Animatable from 'react-native-animatable';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const UsersRanking: React.FC = () => {
-  const [ranking, setRanking] = useState<UserBaseInfo[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [myInfo, setMyInfo] = useState<UserBaseInfo>();
+  const [ranking, setRanking] = useState<UserBaseInfoDto[]>([]);
+  const [myInfo, setMyInfo] = useState<UserBaseInfoDto>();
 
-  const { getAPI } = useAppContext();
+  const { data, isLoading } = useGetApiGetUsersRanking();
 
   useEffect(() => {
     getRanking();
-  }, []);
+  }, [data]);
 
   const getRanking = async () => {
-    try {
-      await getAPI("/getUsersRanking", async (response: UserBaseInfo[]) => {
-        setRanking(response);
-        const username = await AsyncStorage.getItem("username");
-        if (!username) return;
-        const currentMyRanking = response.find(
-          (ele: UserBaseInfo) => ele.name === username
-        );
-        if (!currentMyRanking) return;
-        setMyInfo(currentMyRanking);
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    if (!data?.data) return;
+    
+    setRanking(data.data);
+    const username = await AsyncStorage.getItem("username");
+    if (!username) return;
+    const currentMyRanking = data.data.find(
+      (ele: UserBaseInfoDto) => ele.name === username
+    );
+    if (!currentMyRanking) return;
+    setMyInfo(currentMyRanking);
   };
 
   const getRankStyle = (index: number, userName: string) => {
@@ -81,11 +77,11 @@ const UsersRanking: React.FC = () => {
           <Text style={{ fontSize: 24, color: "#88ddff" }}>❄️</Text>
         </View>
 
-        {/* --- Lista rankingu --- */}
-        <ScrollView className="flex flex-col h-64 smh:h-52">
-          {ranking.map((ele: UserBaseInfo, index: number) => {
-            const bgColor = index % 2 !== 0 ? "bg-black/20" : "bg-transparent";
-            const { color, fontFamily, textPrefix } = getRankStyle(index, ele.name);
+         {/* --- Lista rankingu --- */}
+         <ScrollView className="flex flex-col h-64 smh:h-52">
+           {ranking.map((ele: UserBaseInfoDto, index: number) => {
+             const bgColor = index % 2 !== 0 ? "bg-black/20" : "bg-transparent";
+             const { color, fontFamily, textPrefix } = getRankStyle(index, ele.name);
 
             const content = (
               <View
