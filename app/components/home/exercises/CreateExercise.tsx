@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { BodyParts } from "./../../../../enums/BodyParts";
 import { Message } from "./../../../../enums/Message";
-import ResponseMessage from "./../../../../interfaces/ResponseMessage";
 import CustomDropdown from "../../elements/Dropdown";
 import { ExerciseForm } from "./../../../../interfaces/Exercise";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
@@ -13,6 +12,14 @@ import ExerciseIcon from "./../../../../img/icons/exercisesIcon.svg";
 import ValidationView from "../../elements/ValidationView";
 import { useAppContext } from "../../../AppContext";
 import { useHomeContext } from "../HomeContext";
+import {
+  usePostApiExerciseIdAddUserExercise,
+  usePostApiExerciseAddExercise,
+  usePostApiExerciseUpdateExercise,
+  usePostApiExerciseIdDeleteExercise,
+} from "../../../api/generated/exercise/exercise";
+import type { ExerciseFormDto } from "../../../api/generated/model";
+
 interface CreateExerciseProps {
   closeForm: () => void;
   form?: ExerciseForm;
@@ -25,8 +32,18 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [bodyPart, setBodyPart] = useState<BodyParts>();
   const [description, setDescription] = useState<string | undefined>("");
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
-  const { postAPI, setErrors, isLoading } = useAppContext();
+  const { setErrors } = useAppContext();
   const { userId } = useHomeContext();
+
+  const createUserExerciseMutation = usePostApiExerciseIdAddUserExercise();
+  const createGlobalExerciseMutation = usePostApiExerciseAddExercise();
+  const updateExerciseMutation = usePostApiExerciseUpdateExercise();
+  const deleteExerciseMutation = usePostApiExerciseIdDeleteExercise();
+
+  const isLoading = createUserExerciseMutation.isPending ||
+    createGlobalExerciseMutation.isPending ||
+    updateExerciseMutation.isPending ||
+    deleteExerciseMutation.isPending;
 
   useEffect(() => {
     if (props.form) {
@@ -47,15 +64,16 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const createExercise = async (): Promise<void> => {
     if (!validateForm()) return;
     try {
-      await postAPI(
-        `/exercise/${userId}/addUserExercise`,
-        (response: ResponseMessage) => props.closeForm(),
-        {
-          name: exerciseName,
-          bodyPart: bodyPart,
-          description: description,
-        }
-      );
+      const payload: ExerciseFormDto = {
+        name: exerciseName,
+        bodyPart: bodyPart,
+        description: description,
+      };
+      await createUserExerciseMutation.mutateAsync({
+        id: userId,
+        data: payload,
+      });
+      props.closeForm();
     } catch (error) {
       setErrors([Message.TryAgain]);
     }
@@ -64,15 +82,15 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const createGlobalExercise = async (): Promise<void> => {
     if (!validateForm()) return;
     try {
-      await postAPI(
-        "/exercise/addExercise",
-        (response: ResponseMessage) => props.closeForm(),
-        {
-          name: exerciseName,
-          bodyPart: bodyPart,
-          description: description,
-        }
-      );
+      const payload: ExerciseFormDto = {
+        name: exerciseName,
+        bodyPart: bodyPart,
+        description: description,
+      };
+      await createGlobalExerciseMutation.mutateAsync({
+        data: payload,
+      });
+      props.closeForm();
     } catch (error) {
       setErrors([Message.TryAgain]);
     }
@@ -84,18 +102,22 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       return false;
     }
     return true;
-  }, [exerciseName, bodyPart]);
+  }, [exerciseName, bodyPart, setErrors]);
 
   const updateExercise = async (): Promise<void> => {
     if (!exerciseName || !bodyPart)
       return setErrors(["Name and body part are required!"]);
     try {
-      await postAPI("/exercise/updateExercise", () => props.closeForm(), {
+      const payload: ExerciseFormDto = {
         _id: props.form?._id,
         name: exerciseName,
         bodyPart: bodyPart,
         description: description,
+      };
+      await updateExerciseMutation.mutateAsync({
+        data: payload,
       });
+      props.closeForm();
     } catch (error) {
       setErrors([Message.TryAgain]);
     }
@@ -104,11 +126,13 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const deleteExercise = async (): Promise<void> => {
     if (!props.form?._id) return;
     try {
-      await postAPI(
-        `/exercise/${userId}/deleteExercise`,
-        (response: ResponseMessage) => props.closeForm(),
-        { id: props.form._id }
-      );
+      await deleteExerciseMutation.mutateAsync({
+        id: userId,
+        data: {
+          id: props.form._id,
+        },
+      });
+      props.closeForm();
     } catch (error) {
       setErrors([Message.TryAgain]);
     }
