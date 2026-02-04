@@ -4,8 +4,8 @@ import ProgressBar from "../../elements/ProgressBar";
 import { useEffect, useState } from "react";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
-import { useAuthStore } from "../../../stores/useAuthStore";
 import React from "react";
+import { useAuthStore } from "../../../../stores/useAuthStore";
 
 const ProgressInfo: React.FC = () => {
   const { getRankColor } = useAppContext();

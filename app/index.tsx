@@ -18,32 +18,43 @@ import Constants from "expo-constants";
 import * as Updates from "expo-updates";
 import * as Application from "expo-application";
 import React from "react";
-import { UserInfo } from "../interfaces/User";
+import { usePostApiAppConfigGetAppVersion, postApiAppConfigGetAppVersionResponse } from "../api/generated/app-config/app-config";
+import { useGetApiCheckToken, getApiCheckTokenResponse } from "../api/generated/user/user";
 import ResponseMessage from "../interfaces/ResponseMessage";
 
 const Preload: React.FC = () => {
   const router = useRouter();
   const [appConfig, setAppConfig] = useState<AppConfigInfo | null>(null);
-  const { getAPI, postAPI, setIsTokenChecked, isTokenChecked,setUserInfo } =
+  const { setIsTokenChecked, isTokenChecked, setUserInfo } =
     useAppContext();
+  const { mutate: checkVersion } = usePostApiAppConfigGetAppVersion();
+  const { data: checkTokenData, refetch: refetchCheckToken } = useGetApiCheckToken({
+    query: { enabled: false },
+  });
 
   useEffect(() => {
     checkForUpdates();
   }, []);
 
+  useEffect(() => {
+    if (checkTokenData?.data) {
+      const response = checkTokenData as getApiCheckTokenResponse;
+      const userInfo = response.data;
+      setSession(userInfo);
+    }
+  }, [checkTokenData]);
+
   const checkUserSession = async (): Promise<void> => {
     if (isTokenChecked) return;
-    await getAPI("/checkToken", setSession);
+    refetchCheckToken();
   };
 
-  const setSession = async (result: ResponseMessage | UserInfo): Promise<void> => {
-    if (!result || (result as ResponseMessage).msg) return;
-    const user = result as UserInfo;
-    await AsyncStorage.setItem("username", user.name);
-    await AsyncStorage.setItem("id", user._id);
-    await AsyncStorage.setItem("email", user.email);
+  const setSession = async (userInfo: any): Promise<void> => {
+    await AsyncStorage.setItem("username", userInfo.name);
+    await AsyncStorage.setItem("id", userInfo._id);
+    await AsyncStorage.setItem("email", userInfo.email);
     setIsTokenChecked(true);
-    setUserInfo(user);
+    setUserInfo(userInfo);
     router.push("/Home");
   };
 
@@ -58,8 +69,20 @@ const Preload: React.FC = () => {
   const checkForUpdates = async (): Promise<void> => {
     const platform =
       Platform.OS === "android" ? Platforms.ANDROID : Platforms.IOS;
-    const body = { platform: platform };
-    await postAPI("/appConfig/getAppVersion", checkIsUpdateRequired, body);
+    checkVersion(
+      {
+        data: { platform: platform },
+      },
+      {
+        onSuccess: (response: postApiAppConfigGetAppVersionResponse) => {
+          const appVersionConfig = response.data as AppConfigInfo;
+          checkIsUpdateRequired(appVersionConfig);
+        },
+        onError: (error: any) => {
+          console.error("Error checking app version:", error);
+        },
+      }
+    );
   };
 
   const getAppVersion = () => {

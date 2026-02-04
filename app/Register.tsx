@@ -9,8 +9,8 @@ import CustomButton, {
 } from "./components/elements/CustomButton";
 import ValidationView from "./components/elements/ValidationView";
 import { useAppContext } from "./AppContext";
-import { Message } from "../enums/Message";
 import Checkbox from "./components/elements/Checkbox";
+import { usePostApiRegister, postApiRegisterResponse } from "../api/generated/user/user";
 
 const Register: React.FC = () => {
   const [username, setUsername] = useState<string>();
@@ -20,31 +20,39 @@ const Register: React.FC = () => {
   const [isVisibleInRanking, setIsVisibleInRanking] = useState<boolean>(true);
 
   const router = useRouter();
-  const { postAPI, setErrors } = useAppContext();
+  const { setErrors: setAppErrors } = useAppContext();
+  const { mutate, isPending } = usePostApiRegister();
 
   useEffect(() => {
-    setErrors([]);
+    setAppErrors([]);
   }, [usePathname()]);
 
-
-
   const register = async (): Promise<void> => {
-    await postAPI("/register", registerSuccessCalback, {
-      name: username,
-      password: password,
-      cpassword: rpassword,
-      email: email,
-      isVisibleInRanking: isVisibleInRanking,
-    });
+    mutate(
+      {
+        data: {
+          name: username,
+          password: password,
+          cpassword: rpassword,
+          email: email,
+          isVisibleInRanking: isVisibleInRanking,
+        },
+      },
+      {
+        onSuccess: (response: postApiRegisterResponse) => {
+          router.push("Login");
+        },
+        onError: (error: any) => {
+          console.error("Registration error:", error);
+          const errorMessage = error?.message || "Registration failed";
+          setAppErrors([errorMessage]);
+        },
+      }
+    );
   };
 
   const goToPreload = () => {
     return router.push("/");
-  };
-
-  const registerSuccessCalback = (response: any) => {
-    if (response.msg !== Message.Created) return;
-    router.push("Login");
   };
 
   return (
@@ -150,6 +158,7 @@ const Register: React.FC = () => {
         width="w-full"
         buttonStyleType={ButtonStyle.success}
         buttonStyleSize={ButtonSize.xl}
+        disabled={isPending}
       />
       <MiniLoading />
       <ValidationView />

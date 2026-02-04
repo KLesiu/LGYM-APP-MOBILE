@@ -10,13 +10,14 @@ import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
 import ViewLoading from "../../elements/ViewLoading";
-import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../api/generated/gym/gym";
+import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../../api/generated/gym/gym";
+import type { GymChoiceInfoDto } from "../../../../api/generated/model";
 
 const Gym: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
 
-  const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
-  const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
+  const [gyms, setGyms] = useState<GymChoiceInfoDto[]>([]);
+  const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
   const [
     isDeleteGymConfirmationDialogVisible,
@@ -24,8 +25,8 @@ const Gym: React.FC = () => {
   ] = useState<boolean>(false);
 
   const { data: gymsResponse, isLoading, refetch } = useGetApiGymIdGetGyms(
-    { id: userId },
-    { enabled: false }
+    userId,
+    { query: { enabled: false } }
   );
   const deleteGymMutation = usePostApiGymIdDeleteGym();
 
@@ -40,7 +41,7 @@ const Gym: React.FC = () => {
   const fetchGyms = async () => {
     try {
       const result = await refetch();
-      if (result.data?.data) {
+      if (result.data?.data && Array.isArray(result.data.data)) {
         setGyms(result.data.data);
       }
     } catch (error) {
@@ -67,7 +68,7 @@ const Gym: React.FC = () => {
   }, []);
 
   const deleteDialogVisible = useCallback(
-    (visible: boolean, gym?: GymChoiceInfo) => {
+    (visible: boolean, gym?: GymChoiceInfoDto) => {
       if (visible) setCurrentChosenGym(gym);
       else setCurrentChosenGym(undefined);
       setIsDeleteConfirmationDialogVisible(visible);
@@ -85,7 +86,7 @@ const Gym: React.FC = () => {
   );
 
   const deleteGym = async () => {
-    if (!currentChosenGym) return;
+    if (!currentChosenGym?._id) return;
     try {
       await deleteGymMutation.mutateAsync({
         id: currentChosenGym._id,

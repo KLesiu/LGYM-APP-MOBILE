@@ -5,9 +5,10 @@ import EditIcon from "./../../../../img/icons/editIcon.svg";
 import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
 import React, { useMemo } from "react";
 import Card from "../../elements/Card";
+import type { GymChoiceInfoDto } from "../../../../api/generated/model";
 
 interface GymPlaceProps {
-  gym: GymChoiceInfo;
+  gym: GymChoiceInfoDto;
   isEditable: boolean;
   editGym?: (id: string) => void;
   deleteGym?: (id: string) => void;

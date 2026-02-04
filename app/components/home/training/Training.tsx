@@ -5,7 +5,7 @@ import React from "react";
 import { useHomeContext } from "../HomeContext";
 import NonTrainingView from "./NonTrainingView";
 import TrainingView from "./TrainingView";
-import { useGetApiIdCheckIsUserHavePlan } from "../../../api/generated/plan/plan";
+import { useGetApiIdCheckIsUserHavePlan } from "../../../../api/generated/plan/plan";
 
 const Training: React.FC = () => {
   const { userId } = useHomeContext();
@@ -13,8 +13,8 @@ const Training: React.FC = () => {
   const [viewLoading, setViewLoading] = useState<boolean>(true);
 
   const { data: planCheckResponse, isLoading, refetch } = useGetApiIdCheckIsUserHavePlan(
-    { id: userId },
-    { enabled: false }
+    userId,
+    { query: { enabled: false } }
   );
 
   useEffect(() => {

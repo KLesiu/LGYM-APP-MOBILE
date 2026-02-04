@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { createContext } from "react";
 import { Animated, BackHandler } from "react-native";
-import { useAppContext } from "../../AppContext";
+import { useAuthStore } from "../../../stores/useAuthStore";
 
 interface HomeContextProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -43,7 +43,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
   viewChange,
   changeHeaderVisibility,
 }) => {
-  const {userInfo} = useAppContext()
+  const { user } = useAuthStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
   const [userId, setUserId] = useState<string>("");
@@ -60,11 +60,11 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
     };
   }, []);
 
-  useEffect(()=>{
-    if(userInfo){
-      setUserId(userInfo._id)
+  useEffect(() => {
+    if (user && user._id) {
+      setUserId(user._id);
     }
-  },[userInfo])
+  }, [user]);
 
   const handleBackButton = useCallback(() => {
     changeView();

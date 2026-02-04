@@ -10,10 +10,13 @@ import {
 } from "@expo-google-fonts/open-sans";
 import AppProvider from "./AppContext";
 import Toast from "react-native-toast-message";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 NativeWindStyleSheet.setOutput({ default: "native" });
 
 SplashScreen.preventAutoHideAsync();
+
+const queryClient = new QueryClient();
 
 const Layout: React.FC = () => {
   const [fontsLoaded] = useFonts({
@@ -38,10 +41,12 @@ const Layout: React.FC = () => {
   if (!fontsLoaded) return null;
 
   return (
-    <AppProvider>
-      <Stack screenOptions={{ headerShown: false ,gestureEnabled:false,headerBackButtonMenuEnabled:false}} />
-      <Toast />
-    </AppProvider>
+    <QueryClientProvider client={queryClient}>
+      <AppProvider>
+        <Stack screenOptions={{ headerShown: false ,gestureEnabled:false,headerBackButtonMenuEnabled:false}} />
+        <Toast />
+      </AppProvider>
+    </QueryClientProvider>
   );
 };
 

@@ -12,39 +12,77 @@ import CustomButton, {
 import ValidationView from "./components/elements/ValidationView";
 import { useRouter, usePathname } from "expo-router";
 import { useAppContext } from "./AppContext";
-import { UserInfo } from "../interfaces/User";
+import { usePostApiLogin, postApiLoginResponse } from "../api/generated/user/user";
+import { useAuthStore } from "../stores/useAuthStore";
 
 const Login: React.FC = () => {
   const router = useRouter();
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const { postAPI, setErrors, isLoading, setUserInfo, setToken } =
-    useAppContext();
+  const { setErrors: setAppErrors } = useAppContext();
+  const { mutate, isPending } = usePostApiLogin();
+  const { setToken, setUser } = useAuthStore();
 
   useEffect(() => {
     setErrors([]);
   }, [usePathname()]);
 
   const login = async (): Promise<void> => {
-    await postAPI("/login", loginSuccessCallback, {
-      name: username,
-      password: password,
-    });
-  };
+    if (!username || !password) {
+      setErrors(["Username and password are required"]);
+      return;
+    }
 
-  const loginSuccessCallback = async (response: {
-    token: string;
-    req: UserInfo;
-  }) => {
-    await AsyncStorage.setItem("token", response.token);
-    await AsyncStorage.setItem("username", response.req.name);
-    await AsyncStorage.setItem("id", response.req._id);
-    await AsyncStorage.setItem("email", response.req.email);
-    setToken(response.token);
-    setUserInfo(response.req);
-    router.push("/Home");
+    mutate(
+      {
+        data: {
+          name: username,
+          password: password,
+        },
+      },
+      {
+        onSuccess: async (response: postApiLoginResponse) => {
+          try {
+            const loginResponse = response.data;
+
+            if (!loginResponse.token) {
+              setErrors(["Invalid response: missing token"]);
+              return;
+            }
+
+            if (!loginResponse.req) {
+              setErrors(["Invalid response: missing user info"]);
+              return;
+            }
+
+            const userInfo = loginResponse.req;
+
+            await AsyncStorage.setItem("token", loginResponse.token);
+            await AsyncStorage.setItem("username", userInfo.name || "");
+            await AsyncStorage.setItem("id", userInfo._id || "");
+            if (userInfo.email) {
+              await AsyncStorage.setItem("email", userInfo.email);
+            }
+
+            setToken(loginResponse.token);
+            setUser(userInfo);
+            router.push("/Home");
+          } catch (error) {
+            console.error("Error storing credentials:", error);
+            setErrors(["Failed to store credentials"]);
+          }
+        },
+        onError: (error: any) => {
+          console.error("Login error:", error);
+          const errorMessage = error?.message || "Login failed";
+          setErrors([errorMessage]);
+          setAppErrors([errorMessage]);
+        },
+      }
+    );
   };
 
   const goToPreload = () => {
@@ -117,7 +155,7 @@ const Login: React.FC = () => {
       <CustomButton
         width="w-full"
         onPress={login}
-        disabled={isLoading}
+        disabled={isPending}
         buttonStyleType={ButtonStyle.success}
         text="Login"
         buttonStyleSize={ButtonSize.xl}

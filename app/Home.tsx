@@ -7,6 +7,7 @@ import Loading from "./components/elements/Loading";
 import HomeProvider from "./components/home/HomeContext";
 import Start from "./components/home/start/Start";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 const Home: React.FC = () => {
   const [view, setView] = useState<JSX.Element>();
   const [isHeaderShow, setIsHeaderShow] = useState<boolean>(true);

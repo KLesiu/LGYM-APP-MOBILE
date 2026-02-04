@@ -7,12 +7,12 @@ import GymIcon from "./../../../../img/icons/gymIcon.svg";
 import ValidationView from "../../elements/ValidationView";
 import { useHomeContext } from "../HomeContext";
 import React from "react";
-import { usePostApiGymIdAddGym, usePostApiGymEditGym } from "../../../api/generated/gym/gym";
-import type { CreateOrUpdateGymDto } from "../../../api/generated/model";
+import { usePostApiGymIdAddGym, usePostApiGymEditGym } from "../../../../api/generated/gym/gym";
+import type { CreateOrUpdateGymDto, GymFormDto } from "../../../../api/generated/model";
 
 interface GymFormProps {
   closeForm: () => void;
-  gym?: GymFormVm;
+  gym?: GymFormDto;
 }
 
 const GymForm: React.FC<GymFormProps> = (props) => {

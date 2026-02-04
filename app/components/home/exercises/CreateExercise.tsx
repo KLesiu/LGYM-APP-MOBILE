@@ -12,13 +12,9 @@ import ExerciseIcon from "./../../../../img/icons/exercisesIcon.svg";
 import ValidationView from "../../elements/ValidationView";
 import { useAppContext } from "../../../AppContext";
 import { useHomeContext } from "../HomeContext";
-import {
-  usePostApiExerciseIdAddUserExercise,
-  usePostApiExerciseAddExercise,
-  usePostApiExerciseUpdateExercise,
-  usePostApiExerciseIdDeleteExercise,
-} from "../../../api/generated/exercise/exercise";
-import type { ExerciseFormDto } from "../../../api/generated/model";
+import { usePostApiExerciseIdAddUserExercise, usePostApiExerciseAddExercise, usePostApiExerciseUpdateExercise, usePostApiExerciseIdDeleteExercise } from "../../../../api/generated/exercise/exercise";
+import { ExerciseFormDto } from "../../../../api/generated/model";
+
 
 interface CreateExerciseProps {
   closeForm: () => void;

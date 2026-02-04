@@ -3,12 +3,13 @@ import { View, Text, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserBaseInfo } from "./../../../../interfaces/User";
 import Card from "../../elements/Card";
-import { useGetApiGetUsersRanking } from "../../../api/generated/user/user";
-import type { UserBaseInfoDto } from "../../../api/generated/model";
+
 
 import * as Animatable from 'react-native-animatable';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
+import { UserBaseInfoDto } from "../../../../api/generated/model";
+import { useGetApiGetUsersRanking } from "../../../../api/generated/user/user";
 
 const UsersRanking: React.FC = () => {
   const [ranking, setRanking] = useState<UserBaseInfoDto[]>([]);
@@ -81,7 +82,7 @@ const UsersRanking: React.FC = () => {
          <ScrollView className="flex flex-col h-64 smh:h-52">
            {ranking.map((ele: UserBaseInfoDto, index: number) => {
              const bgColor = index % 2 !== 0 ? "bg-black/20" : "bg-transparent";
-             const { color, fontFamily, textPrefix } = getRankStyle(index, ele.name);
+             const { color, fontFamily, textPrefix } = getRankStyle(index, ele.name!);
 
             const content = (
               <View

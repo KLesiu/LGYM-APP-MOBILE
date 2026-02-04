@@ -4,36 +4,24 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import AddTraining from "../training/Training";
-import { JSX, useCallback, useEffect, useState } from "react";
-import { LastTrainingInfo } from "../../../../interfaces/Training";
+import { JSX, useCallback } from "react";
 import { useHomeContext } from "../HomeContext";
 import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
 import React from "react";
 import { FontWeights } from "../../../../enums/FontsProperties";
+import { useGetApiIdGetLastTraining } from "../../../../api/generated/training/training";
 
 const LastTrainingStartInfo: React.FC = () => {
-  const [lastTrainingInfo, setLastTrainingInfo] = useState<LastTrainingInfo>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const { getAPI } = useAppContext();
+  const { getRankColor } = useAppContext();
   const { changeView, userId } = useHomeContext();
-  const {getRankColor} = useAppContext()
+  const { data: lastTrainingResponse, isLoading } = useGetApiIdGetLastTraining(userId, {
+    query: { enabled: !!userId },
+  });
 
-  useEffect(() => {
-    getLastTrainingInfo();
-  }, []);
-
-  const getLastTrainingInfo = async () => {
-    try {
-      await getAPI(`/${userId}/getLastTraining`, (response: LastTrainingInfo) =>
-        setLastTrainingInfo(response)
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const lastTrainingInfo = lastTrainingResponse?.data;
+  const isValidTraining = lastTrainingInfo && "createdAt" in lastTrainingInfo;
 
   const navigateTo = useCallback((component: JSX.Element) => {
     changeView(component);
@@ -58,7 +46,7 @@ const LastTrainingStartInfo: React.FC = () => {
             Last Training:
           </Text>
           <View className="flex flex-col px-1" style={{ gap: 2 }}>
-            <View className="flex flex-row" style={{ gap: 4 }}>
+           <View className="flex flex-row" style={{ gap: 4 }}>
               <Text
                 className="text-textColor text-sm smallPhone:text-xs"
                 style={{ fontFamily: "OpenSans_300Light" }}
@@ -69,8 +57,8 @@ const LastTrainingStartInfo: React.FC = () => {
                 className="text-textColor text-sm smallPhone:text-xs"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                {lastTrainingInfo && lastTrainingInfo.createdAt
-                  ? new Date(lastTrainingInfo.createdAt).toLocaleString()
+                {isValidTraining && lastTrainingInfo
+                  ? new Date((lastTrainingInfo as any).createdAt).toLocaleString()
                   : "N/A"}
               </Text>
             </View>
@@ -85,8 +73,8 @@ const LastTrainingStartInfo: React.FC = () => {
                 className={`text-sm smallPhone:text-xs`}
                 style={{ fontFamily: "OpenSans_400Regular" ,color:getRankColor}}
               >
-                {lastTrainingInfo && lastTrainingInfo.planDay.name
-                  ? lastTrainingInfo?.planDay.name
+                {isValidTraining && lastTrainingInfo && (lastTrainingInfo as any).planDay
+                  ? (lastTrainingInfo as any).planDay.name
                   : "N/A"}
               </Text>}
             
