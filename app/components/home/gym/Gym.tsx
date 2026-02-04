@@ -9,12 +9,11 @@ import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
-import Card from "../../elements/Card";
+import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../api/generated/gym/gym";
 
 const Gym: React.FC = () => {
-  const { toggleMenuButton, hideMenu } = useHomeContext();
+  const { toggleMenuButton, hideMenu, userId } = useHomeContext();
 
   const [gyms, setGyms] = useState<GymChoiceInfo[]>([]);
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfo>();
@@ -23,25 +22,30 @@ const Gym: React.FC = () => {
     isDeleteGymConfirmationDialogVisible,
     setIsDeleteConfirmationDialogVisible,
   ] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { userId } = useHomeContext();
-  const { getAPI, postAPI } = useAppContext();
+
+  const { data: gymsResponse, isLoading, refetch } = useGetApiGymIdGetGyms(
+    { id: userId },
+    { enabled: false }
+  );
+  const deleteGymMutation = usePostApiGymIdDeleteGym();
 
   useEffect(() => {
     init();
   }, []);
 
   const init = async () => {
-    await getGyms();
+    await fetchGyms();
   };
 
-  const getGyms = async () => {
+  const fetchGyms = async () => {
     try {
-      await getAPI(`/gym/${userId}/getGyms`, (response: GymChoiceInfo[]) =>
-        setGyms(response)
-      );
-    } finally {
-      setIsLoading(false);
+      const result = await refetch();
+      if (result.data?.data) {
+        setGyms(result.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching gyms:", error);
+      setGyms([]);
     }
   };
 
@@ -56,7 +60,7 @@ const Gym: React.FC = () => {
   }, []);
 
   const closeForm = useCallback(async () => {
-    await getGyms();
+    await fetchGyms();
     setIsGymFormVisible(false);
     toggleMenuButton(false);
     hideMenu();
@@ -83,9 +87,10 @@ const Gym: React.FC = () => {
   const deleteGym = async () => {
     if (!currentChosenGym) return;
     try {
-      await postAPI(`/gym/${currentChosenGym._id}/deleteGym`, async () => {
-        await getGyms();
+      await deleteGymMutation.mutateAsync({
+        id: currentChosenGym._id,
       });
+      await fetchGyms();
     } finally {
       setIsDeleteConfirmationDialogVisible(false);
     }
@@ -94,43 +99,43 @@ const Gym: React.FC = () => {
   return (
     <BackgroundMainSection>
       <View className="flex flex-col p-4" style={{ gap: 16 }}>
-          <View className="flex flex-col ">
-            <View className="flex w-full  justify-between flex-row  items-center">
-              <Text
-                className="text-base  text-textColor  font-bold "
-                style={{
-                  fontFamily: "OpenSans_700Bold",
-                }}
-              >
-                Your gyms:
-              </Text>
+        <View className="flex flex-col ">
+          <View className="flex w-full  justify-between flex-row  items-center">
+            <Text
+              className="text-base  text-textColor  font-bold "
+              style={{
+                fontFamily: "OpenSans_700Bold",
+              }}
+            >
+              Your gyms:
+            </Text>
 
-              <CustomButton
-                onPress={addNewGym}
-                buttonStyleType={ButtonStyle.success}
-                buttonStyleSize={ButtonSize.long}
-                textWeight={FontWeights.bold}
-                text="Add gym"
-              />
-            </View>
+            <CustomButton
+              onPress={addNewGym}
+              buttonStyleType={ButtonStyle.success}
+              buttonStyleSize={ButtonSize.long}
+              textWeight={FontWeights.bold}
+              text="Add gym"
+            />
           </View>
+        </View>
 
         {isLoading ? (
           <ViewLoading />
         ) : (
-            <ScrollView className="w-full">
-              <View style={{ gap: 8 }} className="flex flex-col pb-12">
-                {gyms.map((gym, index) => (
-                  <GymPlace
-                    key={index}
-                    gym={gym}
-                    editGym={editGym}
-                    deleteGym={() => deleteDialogVisible(true, gym)}
-                    isEditable={true}
-                  />
-                ))}
-              </View>
-            </ScrollView>
+          <ScrollView className="w-full">
+            <View style={{ gap: 8 }} className="flex flex-col pb-12">
+              {gyms.map((gym, index) => (
+                <GymPlace
+                  key={index}
+                  gym={gym}
+                  editGym={editGym}
+                  deleteGym={() => deleteDialogVisible(true, gym)}
+                  isEditable={true}
+                />
+              ))}
+            </View>
+          </ScrollView>
         )}
       </View>
       {isGymFormVisible ? (
