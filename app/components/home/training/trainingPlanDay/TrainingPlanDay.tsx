@@ -24,11 +24,15 @@ import { PlanDayVm } from "../../../../../interfaces/PlanDay";
 import { WeightUnits } from "../../../../../enums/Units";
 import { ExerciseScoresTrainingForm } from "../../../../../interfaces/ExercisesScores";
 import { TrainingSummary } from "../../../../../interfaces/Training";
-import { useAppContext } from "../../../../AppContext";
 import { ExerciseForm } from "../../../../../interfaces/Exercise";
 import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
 import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";
+import {
+  usePostApiIdAddTraining,
+} from "../../../../../api/generated/training/training";
+import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -41,7 +45,8 @@ interface TrainingPlanDayProps {
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const { changeHeaderVisibility, userId } = useHomeContext();
-  const { getAPI, postAPI } = useAppContext();
+  const queryClient = useQueryClient();
+  
   const {
     planDay,
     setPlanDay,
@@ -54,6 +59,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setTrainingSessionScores,
     scrollViewRef,
   } = useTrainingPlanDay();
+
   const [
     isTrainingPlanDayExerciseFormShow,
     setIsTrainingPlanDayExerciseFormShow,
@@ -63,6 +69,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const [exerciseWhichBeingSwitched, setExerciseWhichBeingSwitched] = useState<
     string | undefined
   >();
+
+  const { mutateAsync: addTrainingMutation, isPending: isAddingTraining } = usePostApiIdAddTraining();
 
   useEffect(() => {
     changeHeaderVisibility(false);
@@ -92,15 +100,36 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       exercises: training,
       gym: gym?._id!,
     };
-    await postAPI(
-      `/${userId}/addTraining`,
-      async (result: TrainingSummary) => {
-        await props.hideAndDeleteTrainingSession();
-        props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
-        props.setTrainingSummary(result);
-      },
-      body
-    );
+
+    try {
+        const result = await addTrainingMutation({ id: userId, data: body as any });
+        if (result && result.data) {
+             console.log("Training result:", JSON.stringify(result.data, null, 2));
+             await props.hideAndDeleteTrainingSession();
+             props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
+             // Map DTO to interface - extract string from profileRank if it's an enum
+             const trainingSummaryData = result.data as any;
+             const mappedSummary: TrainingSummary = {
+               ...trainingSummaryData,
+               profileRank: {
+                 name: typeof trainingSummaryData.profileRank === 'string' 
+                   ? trainingSummaryData.profileRank 
+                   : trainingSummaryData.profileRank?.name || 'Unknown',
+                 needElo: trainingSummaryData.profileRank?.needElo || 0
+               },
+               nextRank: trainingSummaryData.nextRank ? {
+                 name: typeof trainingSummaryData.nextRank === 'string' 
+                   ? trainingSummaryData.nextRank 
+                   : trainingSummaryData.nextRank?.name || 'Unknown',
+                 needElo: trainingSummaryData.nextRank?.needElo || 0
+               } : null
+             };
+             props.setTrainingSummary(mappedSummary);
+        }
+    } catch (e) {
+        console.error(e);
+        Alert.alert("Error", "Failed to add training");
+    }
   };
 
   /// Delete exercise from plan day
@@ -144,15 +173,11 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setIsTrainingPlanDayExerciseFormShow(false);
   };
 
-  const getExercise = async (id: string) => {
-    let result: ExerciseForm = {} as ExerciseForm;
-    await getAPI(
-      `/exercise/${id}/getExercise`,
-      (exercise: ExerciseForm) => (result = exercise),
-      undefined,
-      false
+  const getExercise = async (id: string): Promise<ExerciseForm> => {
+    const exercise = await queryClient.fetchQuery(
+        getGetApiExerciseIdGetExerciseQueryOptions(id)
     );
-    return result;
+    return exercise.data as unknown as ExerciseForm;
   };
 
   const incrementOrDecrementExercise = async (

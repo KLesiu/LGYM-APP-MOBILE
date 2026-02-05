@@ -85,10 +85,10 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
                   className="text-textColor text-sm smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
-                  Next Rank:
-                  {props.trainingSummary.nextRank
-                    ? props.trainingSummary.nextRank.name
-                    : "You are on the highest rank"}
+                   Next Rank:
+                   {props.trainingSummary.nextRank
+                     ? (typeof props.trainingSummary.nextRank.name === 'string' ? props.trainingSummary.nextRank.name : (props.trainingSummary.nextRank.name as any)?.name || 'Unknown')
+                     : "You are on the highest rank"}
                 </Text>
               </View>
               {props.trainingSummary.nextRank &&
@@ -104,7 +104,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
               </Text>
             </View>
           </View>
-          <ProfileRank rank={props.trainingSummary.profileRank.name} />
+          <ProfileRank rank={typeof props.trainingSummary.profileRank === 'string' ? props.trainingSummary.profileRank : (props.trainingSummary.profileRank as any)?.name} />
         </View>
         {props.trainingSummary.comparison.map((exercise) => (
           <View key={exercise.exerciseId} className="bg-secondaryColor w-full rounded-lg p-4">
