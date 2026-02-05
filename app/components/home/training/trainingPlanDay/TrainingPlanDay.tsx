@@ -107,10 +107,27 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
              console.log("Training result:", JSON.stringify(result.data, null, 2));
              await props.hideAndDeleteTrainingSession();
              props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
-             // Map DTO to interface - extract string from profileRank if it's an enum
+             // Map DTO to interface - extract string values from enums
              const trainingSummaryData = result.data as any;
+             const mapUnitValue = (unit: any): string => {
+               return typeof unit === 'string' ? unit : (unit?.name || 'Unknown');
+             };
              const mappedSummary: TrainingSummary = {
                ...trainingSummaryData,
+               comparison: trainingSummaryData.comparison?.map((comp: any) => ({
+                 ...comp,
+                 seriesComparisons: comp.seriesComparisons?.map((series: any) => ({
+                   ...series,
+                   currentResult: series.currentResult ? {
+                     ...series.currentResult,
+                     unit: mapUnitValue(series.currentResult.unit)
+                   } : series.currentResult,
+                   previousResult: series.previousResult ? {
+                     ...series.previousResult,
+                     unit: mapUnitValue(series.previousResult.unit)
+                   } : series.previousResult
+                 }))
+               })) || [],
                profileRank: {
                  name: typeof trainingSummaryData.profileRank === 'string' 
                    ? trainingSummaryData.profileRank 

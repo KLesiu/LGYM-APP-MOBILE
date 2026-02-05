@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Pressable } from "react-native";
 import AutoComplete from "../../../elements/Autocomplete";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { isIntValidator } from "../../../../../helpers/numberValidator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "../../../../../interfaces/Exercise";
@@ -13,6 +13,10 @@ import { useAppContext } from "../../../../AppContext";
 import ValidationView from "../../../elements/ValidationView";
 import { Message } from "../../../../../enums/Message";
 import React from "react";
+import {
+  useGetApiExerciseIdGetAllExercises,
+  usePostApiExerciseIdGetExerciseByBodyPart,
+} from "../../../../../api/generated/exercise/exercise";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
@@ -28,44 +32,51 @@ const TrainingPlanDayExerciseForm: React.FC<
   TrainingPlanDayExerciseFormProps
 > = (props) => {
   const { userId } = useHomeContext();
-  const { postAPI, getAPI, isLoading, setErrors } = useAppContext();
+  const { setErrors } = useAppContext();
 
-  const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
-    []
-  );
   const [numberOfSeries, setNumberOfSeries] = useState<string>("");
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (props.bodyPart) getExercisesByBodyPart();
-    else getAllExercises();
-  }, []);
+  const { data: allExercisesData, isLoading: isLoadingAll } =
+    useGetApiExerciseIdGetAllExercises(userId, {
+      query: { enabled: !props.bodyPart },
+    });
 
-  const getExercisesByBodyPart = async () => {
-    await postAPI(
-      `/exercise/${userId}/getExerciseByBodyPart`,
-      (result: ExerciseForm[]) => {
-        const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
-          return { label: exercise.name, value: exercise._id! };
-        });
-        setExercisesToSelect(helpExercisesToSelect);
-      },
-      { bodyPart: props.bodyPart }
-    );
-  };
-  const getAllExercises = async () => {
-    await getAPI(
-      `/exercise/${userId}/getAllExercises`,
-      (result: ExerciseForm[]) => {
-        const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
-          return { label: exercise.name, value: exercise._id! };
-        });
-        setExercisesToSelect(helpExercisesToSelect);
+  const {
+    mutate: getExercisesByBodyPart,
+    data: exercisesByBodyPartData,
+    isPending: isLoadingBodyPart,
+  } = usePostApiExerciseIdGetExerciseByBodyPart();
+
+  useEffect(() => {
+    if (props.bodyPart) {
+      getExercisesByBodyPart({
+        id: userId,
+        data: { bodyPart: props.bodyPart },
+      });
+    }
+  }, [props.bodyPart]);
+
+  const exercisesToSelect = useMemo(() => {
+    let data: ExerciseForm[] = [];
+    if (props.bodyPart) {
+      if (exercisesByBodyPartData?.data) {
+        data = exercisesByBodyPartData.data as unknown as ExerciseForm[];
       }
-    );
-  };
+    } else {
+      if (allExercisesData?.data) {
+        data = allExercisesData.data as unknown as ExerciseForm[];
+      }
+    }
+    return data.map((exercise: ExerciseForm) => ({
+      label: exercise.name,
+      value: exercise._id!,
+    }));
+  }, [exercisesByBodyPartData, allExercisesData, props.bodyPart]);
+
+  const isLoading = isLoadingAll || isLoadingBodyPart;
 
   const clearAutoCompleteQuery = () => {
     // Po wyczyszczeniu query resetujemy stan, aby zapobiec ponownemu wywołaniu

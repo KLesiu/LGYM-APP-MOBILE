@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,10 +10,11 @@ import CustomButton, {
   ButtonStyle,
 } from "./components/elements/CustomButton";
 import ValidationView from "./components/elements/ValidationView";
-import { useRouter, usePathname } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { useAppContext } from "./AppContext";
 import { usePostApiLogin, postApiLoginResponse } from "../api/generated/user/user";
 import { useAuthStore } from "../stores/useAuthStore";
+import { getErrorMessage } from "../utils/errorHandler";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -22,13 +23,16 @@ const Login: React.FC = () => {
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const { setErrors: setAppErrors } = useAppContext();
+  const { setErrors: setAppErrors, setUserInfo } = useAppContext();
   const { mutate, isPending } = usePostApiLogin();
   const { setToken, setUser } = useAuthStore();
 
-  useEffect(() => {
-    setErrors([]);
-  }, [usePathname()]);
+  useFocusEffect(
+    useCallback(() => {
+      setErrors([]);
+      setAppErrors([]);
+    }, [])
+  );
 
   const login = async (): Promise<void> => {
     if (!username || !password) {
@@ -44,16 +48,16 @@ const Login: React.FC = () => {
         },
       },
       {
-        onSuccess: async (response: postApiLoginResponse) => {
+          onSuccess: async (response: postApiLoginResponse) => {
           try {
             const loginResponse = response.data;
 
-            if (!loginResponse.token) {
+            if (!("token" in loginResponse) || !loginResponse.token) {
               setErrors(["Invalid response: missing token"]);
               return;
             }
 
-            if (!loginResponse.req) {
+            if (!("req" in loginResponse) || !loginResponse.req) {
               setErrors(["Invalid response: missing user info"]);
               return;
             }
@@ -68,7 +72,8 @@ const Login: React.FC = () => {
             }
 
             setToken(loginResponse.token);
-            setUser(userInfo);
+            setUser(userInfo as any);
+            setUserInfo(userInfo as any);
             router.push("/Home");
           } catch (error) {
             console.error("Error storing credentials:", error);
@@ -77,7 +82,7 @@ const Login: React.FC = () => {
         },
         onError: (error: any) => {
           console.error("Login error:", error);
-          const errorMessage = error?.message || "Login failed";
+          const errorMessage = getErrorMessage(error, "Login failed");
           setErrors([errorMessage]);
           setAppErrors([errorMessage]);
         },
@@ -161,7 +166,7 @@ const Login: React.FC = () => {
         buttonStyleSize={ButtonSize.xl}
       />
       <MiniLoading />
-      <ValidationView />
+      <ValidationView errors={errors} />
     </View>
   );
 };

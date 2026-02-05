@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from "react-native";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -13,11 +13,16 @@ import React from "react";
 import { BodyParts } from "../../../../enums/BodyParts";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
 import BodyPartsList from "./BodyPartsList";
 import ExercisesList from "./ExercisesList";
 import ExerciseDetails from "./ExerciseDetails";
 import BackIcon from "./../../../../img/icons/backIcon.svg";
+import {
+  useGetApiExerciseGetAllGlobalExercises,
+  useGetApiExerciseIdGetAllUserExercises,
+} from "../../../../api/generated/exercise/exercise";
+import { useGetApiIdIsAdmin } from "../../../../api/generated/user/user";
+import { ExerciseResponseDto } from "../../../../api/generated/model";
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -37,56 +42,47 @@ const Exercises: React.FC<ExercisesProps> = ({
   const [selectedBodyPart, setSelectedBodyPart] = useState<BodyParts | null>(
     null
   );
-  const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
-  const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
 
   const [selectedExercise, setSelectedExercise] = useState<ExerciseForm | null>(
     null
   );
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
   const [isExerciseFormVisible, setIsExerciseFormVisible] = useState(false);
-  const { getAPI } = useAppContext();
 
-  useEffect(() => {
-    init();
-  }, []);
+  const {
+    data: globalExercisesData,
+    refetch: refetchGlobal,
+  } = useGetApiExerciseGetAllGlobalExercises();
 
-  const init = async () => {
-    await Promise.all([
-      checkIsAdmin(),
-      getAllGlobalExercises(),
-      getAllUserExercises(),
-    ]);
-  };
+  const {
+    data: userExercisesData,
+    refetch: refetchUser,
+  } = useGetApiExerciseIdGetAllUserExercises(userId, {
+    query: { enabled: !!userId },
+  });
 
-  const getAllGlobalExercises = async () => {
-    try {
-      await getAPI(
-        `/exercise/getAllGlobalExercises`,
-        (response: ExerciseForm[]) => setGlobalExercises(response),
-        undefined,
-        false
-      );
-    } catch (error) {
-      setGlobalExercises([]);
-    }
-  };
+  const { data: isAdminData } = useGetApiIdIsAdmin(userId, {
+    query: { enabled: !!userId },
+  });
 
-  const getAllUserExercises = async () => {
-    try {
-      await getAPI(
-        `/exercise/${userId}/getAllUserExercises`,
-        (response: ExerciseForm[]) => {
-          setUserExercises(response);
-        },
-        undefined,
-        false
-      );
-    } catch (error) {
-      setUserExercises([]);
-    }
-  };
+  const globalExercises = useMemo(() => {
+    const data = globalExercisesData?.data as unknown as ExerciseResponseDto[];
+    if (!data) return [];
+    return data.map((exercise) => ({
+      ...exercise,
+      bodyPart: exercise.bodyPart?.name as BodyParts,
+    })) as ExerciseForm[];
+  }, [globalExercisesData]);
+
+  const userExercises = useMemo(() => {
+    const data = userExercisesData?.data as unknown as ExerciseResponseDto[];
+    if (!data) return [];
+    return data.map((exercise) => ({
+      ...exercise,
+      bodyPart: exercise.bodyPart?.name as BodyParts,
+    })) as ExerciseForm[];
+  }, [userExercisesData]);
+  const isAdmin = !!isAdminData?.data;
 
   const filteredGlobalExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart
@@ -100,21 +96,11 @@ const Exercises: React.FC<ExercisesProps> = ({
       : [];
   }, [userExercises, selectedBodyPart]);
 
-  const checkIsAdmin = async () => {
-    try {
-      await getAPI(`/${userId}/isAdmin`, (response: boolean) =>
-        setIsAdmin(response)
-      );
-    } catch (error) {
-      console.error("Error checking admin status:", error);
-    }
-  };
-
   const closeExerciseForm = async () => {
     setIsExerciseFormVisible(false);
     if (!isCreatePlanDayMode) toggleMenuButton(false);
     hideMenu();
-    await Promise.all([getAllUserExercises(), getAllGlobalExercises()]);
+    await Promise.all([refetchUser(), refetchGlobal()]);
     setSelectedExercise(null);
   };
 
@@ -144,9 +130,9 @@ const Exercises: React.FC<ExercisesProps> = ({
   const goBack = () => {
     const newStep = currentStep - 1;
     if (newStep < 0) return;
-    if(newStep === 1){
+    if (newStep === 1) {
       setSelectedExercise(null);
-    }else if(newStep === 0 && !isCreatePlanDayMode){
+    } else if (newStep === 0 && !isCreatePlanDayMode) {
       toggleMenuButton(false);
     }
     setCurrentStep(newStep);

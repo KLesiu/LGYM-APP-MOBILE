@@ -6,18 +6,18 @@ import CustomButton, {
 import ValidationView from "../../../../elements/ValidationView";
 import React from "react";
 
-interface NoGymsInfoProps {
+interface NoTrainingDaysInfoProps {
     goBack: () => void;
 }
 
-const NoGymsInfo: React.FC<NoGymsInfoProps> = (props) => {
+const NoTrainingDaysInfo: React.FC<NoTrainingDaysInfoProps> = (props) => {
   return (
     <View className="w-full flex flex-col" style={{gap: 16}}>
       <Text
         className="text-textColor text-base text-center"
         style={{ fontFamily: "OpenSans_400Regular" }}
       >
-        There is no gyms available!
+        There is no training days available!
       </Text>
       <CustomButton
         text="Back"
@@ -30,4 +30,4 @@ const NoGymsInfo: React.FC<NoGymsInfoProps> = (props) => {
   );
 };
 
-export default NoGymsInfo;
+export default NoTrainingDaysInfo;

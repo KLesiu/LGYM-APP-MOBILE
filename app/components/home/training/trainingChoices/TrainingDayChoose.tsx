@@ -1,45 +1,40 @@
-import { PlanDayChoose } from "../../../../../interfaces/PlanDay";
+import { PlanDayChooseDto } from "../../../../../api/generated/model";
 import Dialog from "../../../elements/Dialog";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import TrainingDayToChoose from "./elements/TrainingDayToChoose";
 import CustomButton, { ButtonSize } from "../../../elements/CustomButton";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useHomeContext } from "../../HomeContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useAppContext } from "../../../../AppContext";
 import ViewLoading from "../../../elements/ViewLoading";
 import React from "react";
+import { useGetApiPlanDayIdGetPlanDaysTypes } from "../../../../../api/generated/plan-day/plan-day";
+import NoTrainingDaysInfo from "./elements/NoTrainingDaysInfo";
+import { useAppContext } from "../../../../AppContext";
+
 interface TrainingDayChooseProps {
   showDaySection: (day: string) => Promise<void>;
+  goBack: () => void;
 }
 
 const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
   showDaySection,
+  goBack,
 }) => {
   const { userId } = useHomeContext();
-  const { getAPI } = useAppContext();
-  const [trainingTypes, setTrainingTypes] = useState<PlanDayChoose[]>([]);
-  const [viewLoading, setViewLoading] = useState<boolean>(true);
+  const { errors } = useAppContext();
 
-  useEffect(() => {
-    init();
-  }, []);
+  const { data, isLoading } = useGetApiPlanDayIdGetPlanDaysTypes(userId, {
+    query: { enabled: !!userId },
+  });
 
-  const init = async () => {
-    await getInformationsAboutPlanDays();
-    setViewLoading(false);
-  };
+  const trainingTypes = useMemo(() => {
+    if (data?.data) {
+      return data.data as unknown as PlanDayChooseDto[];
+    }
+    return [];
+  }, [data]);
 
-  const getInformationsAboutPlanDays = async (): Promise<void> => {
-    await getAPI(
-      `/planDay/${userId}/getPlanDaysTypes`,
-      (response: PlanDayChoose[]) => setTrainingTypes(response),
-      undefined,
-      false
-    );
-  };
-
-  if (viewLoading) {
+  if (isLoading) {
     return (
       <Dialog>
         <ViewLoading />
@@ -59,19 +54,23 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
         >
           Choose training day!
         </Text>
-        <ScrollView className="w-full">
-          <View className="flex flex-col">
-            {trainingTypes.map((ele: PlanDayChoose, index: number) => (
-              <CustomButton
-                key={index}
-                buttonStyleSize={ButtonSize.none}
-                onPress={() => showDaySection(ele._id)}
-              >
-                <TrainingDayToChoose trainingType={ele} />
-              </CustomButton>
-            ))}
-          </View>
-        </ScrollView>
+        {errors.length || !trainingTypes.length ? (
+          <NoTrainingDaysInfo goBack={goBack} />
+        ) : (
+          <ScrollView className="w-full">
+            <View className="flex flex-col">
+              {trainingTypes.map((ele: PlanDayChooseDto, index: number) => (
+                <CustomButton
+                  key={index}
+                  buttonStyleSize={ButtonSize.none}
+                  onPress={() => ele._id && showDaySection(ele._id)}
+                >
+                  <TrainingDayToChoose trainingType={ele as any} />
+                </CustomButton>
+              ))}
+            </View>
+          </ScrollView>
+        )}
       </View>
     </Dialog>
   );

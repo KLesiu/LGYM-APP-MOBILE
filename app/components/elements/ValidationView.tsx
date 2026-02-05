@@ -2,22 +2,26 @@ import { View, Text } from "react-native";
 import { useAppContext } from "../../AppContext";
 import { useEffect } from "react";
 import React from "react";
-interface ValidationViewProps {}
+interface ValidationViewProps {
+  errors?: string[];
+}
 
-const ValidationView: React.FC<ValidationViewProps> = () => {
-  const { errors,setErrors } = useAppContext();
+const ValidationView: React.FC<ValidationViewProps> = ({ errors: propErrors }) => {
+  const { errors: contextErrors, setErrors } = useAppContext();
 
-  useEffect(()=>{
-    return()=>{
-    setErrors([]); 
-    }
-  },[])
+  const errorsToDisplay = propErrors && propErrors.length > 0 ? propErrors : contextErrors;
+
+  useEffect(() => {
+    return () => {
+      setErrors([]);
+    };
+  }, []);
 
   return (
     <>
-      {errors && errors.length ? (
+      {errorsToDisplay && errorsToDisplay.length ? (
         <View className="flex flex-col items-center" style={{ gap: 4 }}>
-          {errors.map((error, index) => (
+          {errorsToDisplay.map((error, index) => (
             <Text
               key={index}
               className="text-sm smallPhone:text-[10px] text-redColor"

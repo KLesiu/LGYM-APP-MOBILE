@@ -2,8 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
 import { FontWeights } from "./../../../../enums/FontsProperties";
 import GymPlace from "./GymPlace";
-import { GymChoiceInfo } from "./../../../../interfaces/Gym";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import GymFormComponent from "./GymForm";
 import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
@@ -16,7 +15,6 @@ import type { GymChoiceInfoDto } from "../../../../api/generated/model";
 const Gym: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
 
-  const [gyms, setGyms] = useState<GymChoiceInfoDto[]>([]);
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
   const [
@@ -26,29 +24,14 @@ const Gym: React.FC = () => {
 
   const { data: gymsResponse, isLoading, refetch } = useGetApiGymIdGetGyms(
     userId,
-    { query: { enabled: false } }
+    { query: { enabled: !!userId } }
   );
+  
+  const gyms = useMemo(() => {
+    return (gymsResponse?.data as unknown as GymChoiceInfoDto[]) || [];
+  }, [gymsResponse]);
+
   const deleteGymMutation = usePostApiGymIdDeleteGym();
-
-  useEffect(() => {
-    init();
-  }, []);
-
-  const init = async () => {
-    await fetchGyms();
-  };
-
-  const fetchGyms = async () => {
-    try {
-      const result = await refetch();
-      if (result.data?.data && Array.isArray(result.data.data)) {
-        setGyms(result.data.data);
-      }
-    } catch (error) {
-      console.error("Error fetching gyms:", error);
-      setGyms([]);
-    }
-  };
 
   const addNewGym = useCallback(() => {
     setCurrentChosenGym(undefined);
@@ -58,14 +41,14 @@ const Gym: React.FC = () => {
   const openForm = useCallback(() => {
     toggleMenuButton(true);
     setIsGymFormVisible(true);
-  }, []);
+  }, [toggleMenuButton]);
 
   const closeForm = useCallback(async () => {
-    await fetchGyms();
+    await refetch();
     setIsGymFormVisible(false);
     toggleMenuButton(false);
     hideMenu();
-  }, []);
+  }, [refetch, toggleMenuButton, hideMenu]);
 
   const deleteDialogVisible = useCallback(
     (visible: boolean, gym?: GymChoiceInfoDto) => {
@@ -82,7 +65,7 @@ const Gym: React.FC = () => {
       setCurrentChosenGym(currentGym);
       openForm();
     },
-    [gyms]
+    [gyms, openForm]
   );
 
   const deleteGym = async () => {
@@ -91,7 +74,7 @@ const Gym: React.FC = () => {
       await deleteGymMutation.mutateAsync({
         id: currentChosenGym._id,
       });
-      await fetchGyms();
+      await refetch();
     } finally {
       setIsDeleteConfirmationDialogVisible(false);
     }

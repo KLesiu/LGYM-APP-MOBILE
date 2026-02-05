@@ -47,13 +47,20 @@ export type postApiRegisterResponse200 = {
   data: ResponseMessageDto
   status: 200
 }
+
+export type postApiRegisterResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
     
 export type postApiRegisterResponseSuccess = (postApiRegisterResponse200) & {
   headers: Headers;
 };
-;
+export type postApiRegisterResponseError = (postApiRegisterResponse404) & {
+  headers: Headers;
+};
 
-export type postApiRegisterResponse = (postApiRegisterResponseSuccess)
+export type postApiRegisterResponse = (postApiRegisterResponseSuccess | postApiRegisterResponseError)
 
 export const getPostApiRegisterUrl = () => {
 
@@ -78,7 +85,7 @@ export const postApiRegister = async (registerUserRequest: RegisterUserRequest, 
 
 
 
-export const getPostApiRegisterMutationOptions = <TError = unknown,
+export const getPostApiRegisterMutationOptions = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRegister>>, TError,{data: RegisterUserRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiRegister>>, TError,{data: RegisterUserRequest}, TContext> => {
 
@@ -107,9 +114,9 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type PostApiRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof postApiRegister>>>
     export type PostApiRegisterMutationBody = RegisterUserRequest
-    export type PostApiRegisterMutationError = unknown
+    export type PostApiRegisterMutationError = ResponseMessageDto
 
-    export const usePostApiRegister = <TError = unknown,
+    export const usePostApiRegister = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRegister>>, TError,{data: RegisterUserRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiRegister>>,
@@ -123,13 +130,20 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   data: LoginResponseDto
   status: 200
 }
+
+export type postApiLoginResponse401 = {
+  data: ResponseMessageDto
+  status: 401
+}
     
 export type postApiLoginResponseSuccess = (postApiLoginResponse200) & {
   headers: Headers;
 };
-;
+export type postApiLoginResponseError = (postApiLoginResponse401) & {
+  headers: Headers;
+};
 
-export type postApiLoginResponse = (postApiLoginResponseSuccess)
+export type postApiLoginResponse = (postApiLoginResponseSuccess | postApiLoginResponseError)
 
 export const getPostApiLoginUrl = () => {
 
@@ -154,7 +168,7 @@ export const postApiLogin = async (loginRequest: LoginRequest, options?: Request
 
 
 
-export const getPostApiLoginMutationOptions = <TError = unknown,
+export const getPostApiLoginMutationOptions = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiLogin>>, TError,{data: LoginRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiLogin>>, TError,{data: LoginRequest}, TContext> => {
 
@@ -183,9 +197,9 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type PostApiLoginMutationResult = NonNullable<Awaited<ReturnType<typeof postApiLogin>>>
     export type PostApiLoginMutationBody = LoginRequest
-    export type PostApiLoginMutationError = unknown
+    export type PostApiLoginMutationError = ResponseMessageDto
 
-    export const usePostApiLogin = <TError = unknown,
+    export const usePostApiLogin = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiLogin>>, TError,{data: LoginRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiLogin>>,
@@ -199,13 +213,20 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   data: boolean
   status: 200
 }
+
+export type getApiIdIsAdminResponse404 = {
+  data: boolean
+  status: 404
+}
     
 export type getApiIdIsAdminResponseSuccess = (getApiIdIsAdminResponse200) & {
   headers: Headers;
 };
-;
+export type getApiIdIsAdminResponseError = (getApiIdIsAdminResponse404) & {
+  headers: Headers;
+};
 
-export type getApiIdIsAdminResponse = (getApiIdIsAdminResponseSuccess)
+export type getApiIdIsAdminResponse = (getApiIdIsAdminResponseSuccess | getApiIdIsAdminResponseError)
 
 export const getGetApiIdIsAdminUrl = (id: string,) => {
 
@@ -237,7 +258,7 @@ export const getGetApiIdIsAdminQueryKey = (id: string,) => {
     }
 
     
-export const getGetApiIdIsAdminQueryOptions = <TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetApiIdIsAdminQueryOptions = <TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = boolean>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -256,10 +277,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetApiIdIsAdminQueryResult = NonNullable<Awaited<ReturnType<typeof getApiIdIsAdmin>>>
-export type GetApiIdIsAdminQueryError = unknown
+export type GetApiIdIsAdminQueryError = boolean
 
 
-export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
+export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = boolean>(
  id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiIdIsAdmin>>,
@@ -269,7 +290,7 @@ export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsA
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
+export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = boolean>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiIdIsAdmin>>,
@@ -279,12 +300,12 @@ export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsA
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
+export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = boolean>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
+export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = boolean>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -303,13 +324,20 @@ export type getApiCheckTokenResponse200 = {
   data: UserInfoDto
   status: 200
 }
+
+export type getApiCheckTokenResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
     
 export type getApiCheckTokenResponseSuccess = (getApiCheckTokenResponse200) & {
   headers: Headers;
 };
-;
+export type getApiCheckTokenResponseError = (getApiCheckTokenResponse404) & {
+  headers: Headers;
+};
 
-export type getApiCheckTokenResponse = (getApiCheckTokenResponseSuccess)
+export type getApiCheckTokenResponse = (getApiCheckTokenResponseSuccess | getApiCheckTokenResponseError)
 
 export const getGetApiCheckTokenUrl = () => {
 
@@ -341,7 +369,7 @@ export const getGetApiCheckTokenQueryKey = () => {
     }
 
     
-export const getGetApiCheckTokenQueryOptions = <TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCheckToken>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetApiCheckTokenQueryOptions = <TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = ResponseMessageDto>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCheckToken>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -360,10 +388,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetApiCheckTokenQueryResult = NonNullable<Awaited<ReturnType<typeof getApiCheckToken>>>
-export type GetApiCheckTokenQueryError = unknown
+export type GetApiCheckTokenQueryError = ResponseMessageDto
 
 
-export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = unknown>(
+export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = ResponseMessageDto>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCheckToken>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiCheckToken>>,
@@ -373,7 +401,7 @@ export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiChec
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = unknown>(
+export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCheckToken>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiCheckToken>>,
@@ -383,12 +411,12 @@ export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiChec
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = unknown>(
+export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCheckToken>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = unknown>(
+export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiCheckToken>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiCheckToken>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -407,13 +435,20 @@ export type getApiGetUsersRankingResponse200 = {
   data: UserBaseInfoDto[]
   status: 200
 }
+
+export type getApiGetUsersRankingResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
     
 export type getApiGetUsersRankingResponseSuccess = (getApiGetUsersRankingResponse200) & {
   headers: Headers;
 };
-;
+export type getApiGetUsersRankingResponseError = (getApiGetUsersRankingResponse404) & {
+  headers: Headers;
+};
 
-export type getApiGetUsersRankingResponse = (getApiGetUsersRankingResponseSuccess)
+export type getApiGetUsersRankingResponse = (getApiGetUsersRankingResponseSuccess | getApiGetUsersRankingResponseError)
 
 export const getGetApiGetUsersRankingUrl = () => {
 
@@ -445,7 +480,7 @@ export const getGetApiGetUsersRankingQueryKey = () => {
     }
 
     
-export const getGetApiGetUsersRankingQueryOptions = <TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetApiGetUsersRankingQueryOptions = <TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = ResponseMessageDto>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -464,10 +499,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetApiGetUsersRankingQueryResult = NonNullable<Awaited<ReturnType<typeof getApiGetUsersRanking>>>
-export type GetApiGetUsersRankingQueryError = unknown
+export type GetApiGetUsersRankingQueryError = ResponseMessageDto
 
 
-export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = unknown>(
+export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = ResponseMessageDto>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiGetUsersRanking>>,
@@ -477,7 +512,7 @@ export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getAp
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = unknown>(
+export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiGetUsersRanking>>,
@@ -487,12 +522,12 @@ export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getAp
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = unknown>(
+export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = unknown>(
+export function useGetApiGetUsersRanking<TData = Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiGetUsersRanking>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -511,13 +546,20 @@ export type getApiUserInfoIdGetUserEloPointsResponse200 = {
   data: UserEloDto
   status: 200
 }
+
+export type getApiUserInfoIdGetUserEloPointsResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
     
 export type getApiUserInfoIdGetUserEloPointsResponseSuccess = (getApiUserInfoIdGetUserEloPointsResponse200) & {
   headers: Headers;
 };
-;
+export type getApiUserInfoIdGetUserEloPointsResponseError = (getApiUserInfoIdGetUserEloPointsResponse404) & {
+  headers: Headers;
+};
 
-export type getApiUserInfoIdGetUserEloPointsResponse = (getApiUserInfoIdGetUserEloPointsResponseSuccess)
+export type getApiUserInfoIdGetUserEloPointsResponse = (getApiUserInfoIdGetUserEloPointsResponseSuccess | getApiUserInfoIdGetUserEloPointsResponseError)
 
 export const getGetApiUserInfoIdGetUserEloPointsUrl = (id: string,) => {
 
@@ -549,7 +591,7 @@ export const getGetApiUserInfoIdGetUserEloPointsQueryKey = (id: string,) => {
     }
 
     
-export const getGetApiUserInfoIdGetUserEloPointsQueryOptions = <TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetApiUserInfoIdGetUserEloPointsQueryOptions = <TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = ResponseMessageDto>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -568,10 +610,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetApiUserInfoIdGetUserEloPointsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>>
-export type GetApiUserInfoIdGetUserEloPointsQueryError = unknown
+export type GetApiUserInfoIdGetUserEloPointsQueryError = ResponseMessageDto
 
 
-export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = unknown>(
+export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = ResponseMessageDto>(
  id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>,
@@ -581,7 +623,7 @@ export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<t
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = unknown>(
+export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = ResponseMessageDto>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>,
@@ -591,12 +633,12 @@ export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<t
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = unknown>(
+export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = ResponseMessageDto>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = unknown>(
+export function useGetApiUserInfoIdGetUserEloPoints<TData = Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError = ResponseMessageDto>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiUserInfoIdGetUserEloPoints>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -615,13 +657,20 @@ export type getApiDeleteAccountResponse200 = {
   data: ResponseMessageDto
   status: 200
 }
+
+export type getApiDeleteAccountResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
     
 export type getApiDeleteAccountResponseSuccess = (getApiDeleteAccountResponse200) & {
   headers: Headers;
 };
-;
+export type getApiDeleteAccountResponseError = (getApiDeleteAccountResponse404) & {
+  headers: Headers;
+};
 
-export type getApiDeleteAccountResponse = (getApiDeleteAccountResponseSuccess)
+export type getApiDeleteAccountResponse = (getApiDeleteAccountResponseSuccess | getApiDeleteAccountResponseError)
 
 export const getGetApiDeleteAccountUrl = () => {
 
@@ -653,7 +702,7 @@ export const getGetApiDeleteAccountQueryKey = () => {
     }
 
     
-export const getGetApiDeleteAccountQueryOptions = <TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDeleteAccount>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetApiDeleteAccountQueryOptions = <TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = ResponseMessageDto>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDeleteAccount>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -672,10 +721,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetApiDeleteAccountQueryResult = NonNullable<Awaited<ReturnType<typeof getApiDeleteAccount>>>
-export type GetApiDeleteAccountQueryError = unknown
+export type GetApiDeleteAccountQueryError = ResponseMessageDto
 
 
-export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = unknown>(
+export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = ResponseMessageDto>(
   options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDeleteAccount>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiDeleteAccount>>,
@@ -685,7 +734,7 @@ export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiD
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = unknown>(
+export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDeleteAccount>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiDeleteAccount>>,
@@ -695,12 +744,12 @@ export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiD
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = unknown>(
+export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDeleteAccount>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = unknown>(
+export function useGetApiDeleteAccount<TData = Awaited<ReturnType<typeof getApiDeleteAccount>>, TError = ResponseMessageDto>(
   options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDeleteAccount>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -719,13 +768,20 @@ export type postApiChangeVisibilityInRankingResponse200 = {
   data: ResponseMessageDto
   status: 200
 }
+
+export type postApiChangeVisibilityInRankingResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
     
 export type postApiChangeVisibilityInRankingResponseSuccess = (postApiChangeVisibilityInRankingResponse200) & {
   headers: Headers;
 };
-;
+export type postApiChangeVisibilityInRankingResponseError = (postApiChangeVisibilityInRankingResponse400) & {
+  headers: Headers;
+};
 
-export type postApiChangeVisibilityInRankingResponse = (postApiChangeVisibilityInRankingResponseSuccess)
+export type postApiChangeVisibilityInRankingResponse = (postApiChangeVisibilityInRankingResponseSuccess | postApiChangeVisibilityInRankingResponseError)
 
 export const getPostApiChangeVisibilityInRankingUrl = () => {
 
@@ -750,7 +806,7 @@ export const postApiChangeVisibilityInRanking = async (postApiChangeVisibilityIn
 
 
 
-export const getPostApiChangeVisibilityInRankingMutationOptions = <TError = unknown,
+export const getPostApiChangeVisibilityInRankingMutationOptions = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree}, TContext> => {
 
@@ -779,9 +835,9 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
     export type PostApiChangeVisibilityInRankingMutationResult = NonNullable<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>>
     export type PostApiChangeVisibilityInRankingMutationBody = PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree
-    export type PostApiChangeVisibilityInRankingMutationError = unknown
+    export type PostApiChangeVisibilityInRankingMutationError = ResponseMessageDto
 
-    export const usePostApiChangeVisibilityInRanking = <TError = unknown,
+    export const usePostApiChangeVisibilityInRanking = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>,

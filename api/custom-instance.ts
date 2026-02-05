@@ -40,6 +40,13 @@ export const customInstance = <T>(
 
 AXIOS_INSTANCE.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
+  
+  // Check for custom header to skip auth
+  if (config.headers['X-Skip-Auth']) {
+    delete config.headers['X-Skip-Auth'];
+    return config;
+  }
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

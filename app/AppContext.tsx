@@ -5,6 +5,9 @@ import { AxiosError, AxiosResponse } from "axios";
 import { Message } from "../enums/Message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserInfo } from "../interfaces/User";
+import { useAuthStore } from "../stores/useAuthStore";
+import { getApiCheckToken } from "../api/generated/user/user";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AppContextProps {
   postAPI: (
@@ -53,6 +56,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string>();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [isTokenChecked, setIsTokenChecked] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     getTokenFromLocalStorage();
@@ -60,7 +64,21 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const getTokenFromLocalStorage = async () => {
     const token = await AsyncStorage.getItem("token");
-    if (token) setToken(token);
+    if (token) {
+        setToken(token);
+        useAuthStore.getState().setToken(token);
+        
+        try {
+            const response = await getApiCheckToken();
+            if(response && response.data && "name" in response.data) {
+                const userData = response.data as unknown as UserInfo;
+                setUserInfo(userData);
+                useAuthStore.getState().setUser(userData);
+            }
+        } catch (error) {
+            console.error("Failed to fetch user info on startup", error);
+        }
+    }
     setCanAppStart(true);
   };
 
@@ -122,6 +140,9 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     await Promise.all(keys.map((key) => deleteFromStorage(key)));
     setUserInfo(null);
     setToken(undefined);
+    setIsTokenChecked(false);
+    useAuthStore.getState().logout();
+    queryClient.removeQueries();
   };
 
   const deleteFromStorage = async (key: string): Promise<void> => {

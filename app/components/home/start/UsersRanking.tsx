@@ -1,56 +1,105 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserBaseInfo } from "./../../../../interfaces/User";
+import { View, Text, FlatList, ListRenderItem } from "react-native";
 import Card from "../../elements/Card";
-
-
 import * as Animatable from 'react-native-animatable';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserBaseInfoDto } from "../../../../api/generated/model";
 import { useGetApiGetUsersRanking } from "../../../../api/generated/user/user";
+import { useAuthStore } from "../../../../stores/useAuthStore";
+import colors from "../../../../constants/colors";
+
+const RANK_COLORS = {
+  gold: colors.rankGold || "#FFD700",
+  cyanLight: colors.rankCyanLight || "#e0f7fa",
+  cyan: colors.rankCyan || "#88ddff",
+  cyanDark: colors.rankCyanDark || "#20c2d7",
+};
 
 const UsersRanking: React.FC = () => {
   const [ranking, setRanking] = useState<UserBaseInfoDto[]>([]);
-  const [myInfo, setMyInfo] = useState<UserBaseInfoDto>();
-
+  const { user } = useAuthStore();
   const { data, isLoading } = useGetApiGetUsersRanking();
 
   useEffect(() => {
-    getRanking();
+    if (data?.data && Array.isArray(data.data)) {
+      setRanking(data.data);
+    }
   }, [data]);
 
-  const getRanking = async () => {
-    if (!data?.data) return;
-    
-    setRanking(data.data);
-    const username = await AsyncStorage.getItem("username");
-    if (!username) return;
-    const currentMyRanking = data.data.find(
-      (ele: UserBaseInfoDto) => ele.name === username
-    );
-    if (!currentMyRanking) return;
-    setMyInfo(currentMyRanking);
-  };
-
   const getRankStyle = (index: number, userName: string) => {
-    let color = "#e0f7fa";
+    let color = RANK_COLORS.cyanLight;
     let fontFamily = "OpenSans_400Regular";
     let textPrefix = "";
 
     if (index === 0) {
-      color = "#FFD700";
+      color = RANK_COLORS.gold;
       fontFamily = "OpenSans_700Bold";
       textPrefix = "🏆 ";
     }
 
-    if (myInfo && userName === myInfo.name) {
-      color = "#20c2d7";
+    if (user && userName === user.name) {
+      color = RANK_COLORS.cyanDark;
       fontFamily = "OpenSans_700Bold";
     }
 
     return { color, fontFamily, textPrefix };
+  };
+
+  const renderItem: ListRenderItem<UserBaseInfoDto> = ({ item: ele, index }) => {
+    const userName = ele.name || "Unknown";
+    const userElo = ele.elo ?? 0;
+    const bgColor = index % 2 !== 0 ? "bg-black/20" : "bg-transparent";
+    const { color, fontFamily, textPrefix } = getRankStyle(index, userName);
+
+    const content = (
+      <View className={`flex flex-row py-1 rounded-md items-center ${bgColor}`}>
+        <Text
+          className="mr-2 text-sm smallPhone:text-xs w-8 text-center"
+          style={{ fontFamily: fontFamily, color: color }}
+        >
+          {index + 1}.
+        </Text>
+        <Text
+          className="text-sm smallPhone:text-xs flex-1"
+          style={{ fontFamily: fontFamily, color: color }}
+        >
+          {textPrefix}
+          {userName} - {userElo} ELO
+        </Text>
+      </View>
+    );
+
+    if (index === 0) {
+      return (
+        <Animatable.View
+          animation="fadeIn"
+          delay={index * 30}
+          duration={300}
+          useNativeDriver
+        >
+          <Animatable.View
+            animation="pulse"
+            easing="ease-in-out"
+            iterationCount="infinite"
+            duration={2000}
+          >
+            {content}
+          </Animatable.View>
+        </Animatable.View>
+      );
+    }
+
+    return (
+      <Animatable.View
+        animation="fadeIn"
+        delay={index * 30}
+        duration={300}
+        useNativeDriver
+      >
+        {content}
+      </Animatable.View>
+    );
   };
 
   return (
@@ -66,7 +115,7 @@ const UsersRanking: React.FC = () => {
             }
           >
             <LinearGradient
-              colors={['#e0f7fa', '#88ddff']}
+              colors={[RANK_COLORS.cyanLight, RANK_COLORS.cyan]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
@@ -75,70 +124,19 @@ const UsersRanking: React.FC = () => {
               </Text>
             </LinearGradient>
           </MaskedView>
-          <Text style={{ fontSize: 24, color: "#88ddff" }}>❄️</Text>
+          <Text style={{ fontSize: 24, color: RANK_COLORS.cyan }}>❄️</Text>
         </View>
 
-         {/* --- Lista rankingu --- */}
-         <ScrollView className="flex flex-col h-64 smh:h-52">
-           {ranking.map((ele: UserBaseInfoDto, index: number) => {
-             const bgColor = index % 2 !== 0 ? "bg-black/20" : "bg-transparent";
-             const { color, fontFamily, textPrefix } = getRankStyle(index, ele.name!);
-
-            const content = (
-              <View
-                className={`flex flex-row py-1 rounded-md items-center ${bgColor}`}
-              >
-                <Text
-                  className="mr-2 text-sm smallPhone:text-xs w-8 text-center"
-                  style={{ fontFamily: fontFamily, color: color }}
-                >
-                  {index + 1}.
-                </Text>
-                <Text
-                  className="text-sm smallPhone:text-xs flex-1"
-                  style={{ fontFamily: fontFamily, color: color }}
-                >
-                  {textPrefix}
-                  {ele.name} - {ele.elo} ELO
-                </Text>
-              </View>
-            );
-
-            if (index === 0) {
-              return (
-                <Animatable.View
-                  key={index}
-                  animation="fadeIn"
-                  delay={index * 30}
-                  duration={300} 
-                  useNativeDriver 
-                >
-                  <Animatable.View
-                    animation="pulse"
-                    easing="ease-in-out"
-                    iterationCount="infinite"
-                    duration={2000}
-                  >
-                    {content}
-                  </Animatable.View>
-                </Animatable.View>
-              );
-            }
-
-            return (
-              <Animatable.View
-                key={index}
-                animation="fadeIn"
-                delay={index * 30}
-                duration={300}
-                useNativeDriver
-              >
-                {content}
-              </Animatable.View>
-            );
-          })}
-          <View className="h-10 w-full" />
-        </ScrollView>
+        {/* --- Lista rankingu --- */}
+        <View className="flex-1 h-64 smh:h-52">
+          <FlatList
+            data={ranking}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => item.name || index.toString()}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={<View className="h-10 w-full" />}
+          />
+        </View>
       </View>
     </Card>
   );

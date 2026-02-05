@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, TextInput, Image, Pressable } from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
-import { usePathname, useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import MiniLoading from "./components/elements/MiniLoading";
 import CustomButton, {
   ButtonSize,
@@ -11,23 +11,55 @@ import ValidationView from "./components/elements/ValidationView";
 import { useAppContext } from "./AppContext";
 import Checkbox from "./components/elements/Checkbox";
 import { usePostApiRegister, postApiRegisterResponse } from "../api/generated/user/user";
+import { getErrorMessage } from "../utils/errorHandler";
 
 const Register: React.FC = () => {
-  const [username, setUsername] = useState<string>();
-  const [password, setPassword] = useState<string>();
-  const [rpassword, setRPassword] = useState<string>();
-  const [email, setEmail] = useState<string>();
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [rpassword, setRPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [isVisibleInRanking, setIsVisibleInRanking] = useState<boolean>(true);
+  const [errors, setErrors] = useState<string[]>([]);
 
   const router = useRouter();
   const { setErrors: setAppErrors } = useAppContext();
   const { mutate, isPending } = usePostApiRegister();
 
-  useEffect(() => {
-    setAppErrors([]);
-  }, [usePathname()]);
+  useFocusEffect(
+    useCallback(() => {
+      setAppErrors([]);
+      setErrors([]);
+    }, [])
+  );
+
+  const validate = (): boolean => {
+    const newErrors: string[] = [];
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!username.trim()) newErrors.push("Username is required");
+    if (!email.trim()) {
+      newErrors.push("Email is required");
+    } else if (!emailRegex.test(email)) {
+      newErrors.push("Invalid email format");
+    }
+
+    if (!password) {
+      newErrors.push("Password is required");
+    } else if (password.length < 6) {
+      newErrors.push("Password must be at least 6 characters");
+    }
+
+    if (password !== rpassword) {
+      newErrors.push("Passwords do not match");
+    }
+
+    setErrors(newErrors);
+    return newErrors.length === 0;
+  };
 
   const register = async (): Promise<void> => {
+    if (!validate()) return;
+
     mutate(
       {
         data: {
@@ -44,8 +76,8 @@ const Register: React.FC = () => {
         },
         onError: (error: any) => {
           console.error("Registration error:", error);
-          const errorMessage = error?.message || "Registration failed";
-          setAppErrors([errorMessage]);
+          const errorMessage = getErrorMessage(error, "Registration failed");
+          setErrors([errorMessage]);
         },
       }
     );
@@ -79,6 +111,7 @@ const Register: React.FC = () => {
           </View>
           <TextInput
             onChangeText={(text) => setUsername(text)}
+            value={username}
             style={{ fontFamily: "OpenSans_400Regular" }}
             className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
           />
@@ -96,8 +129,11 @@ const Register: React.FC = () => {
           </View>
           <TextInput
             onChangeText={(text) => setEmail(text)}
+            value={email}
             style={{ fontFamily: "OpenSans_400Regular" }}
             className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
+            autoCapitalize="none"
+            keyboardType="email-address"
           />
         </View>
 
@@ -114,6 +150,7 @@ const Register: React.FC = () => {
           <TextInput
             secureTextEntry={true}
             onChangeText={(text) => setPassword(text)}
+            value={password}
             style={{ fontFamily: "OpenSans_400Regular" }}
             className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
           />
@@ -132,6 +169,7 @@ const Register: React.FC = () => {
           <TextInput
             secureTextEntry={true}
             onChangeText={(text) => setRPassword(text)}
+            value={rpassword}
             style={{ fontFamily: "OpenSans_400Regular" }}
             className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
           />
@@ -161,7 +199,7 @@ const Register: React.FC = () => {
         disabled={isPending}
       />
       <MiniLoading />
-      <ValidationView />
+      <ValidationView errors={errors} />
     </View>
   );
 };

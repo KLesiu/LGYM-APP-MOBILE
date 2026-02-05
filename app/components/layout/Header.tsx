@@ -5,6 +5,7 @@ import LGYMLogo from "./../../../assets/logoLGYMNew.png";
 import React from "react";
 import ProfileRank from "../elements/ProfileRank";
 import { useAppContext } from "../../AppContext";
+import { useAuthStore } from "../../../stores/useAuthStore";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -19,14 +20,21 @@ const Header: React.FC<HeaderProps> = ({
   isHeaderShow,
 }) => {
   const { userInfo, getRankColor } = useAppContext();
+  const { user } = useAuthStore();
   const [name, setName] = useState<string>("");
+
   const getName = async () => {
-    setName((await AsyncStorage.getItem("username")) as string);
+    const storedName = await AsyncStorage.getItem("username");
+    if (storedName) {
+      setName(storedName);
+    }
   };
+
   useEffect(() => {
     getName();
   }, []);
 
+  const displayName = user?.name || userInfo?.name || name;
   const userRank = useMemo(() => userInfo?.profileRank, [userInfo]);
 
   return (
@@ -55,24 +63,26 @@ const Header: React.FC<HeaderProps> = ({
       </View>
 
       {children}
-      <View className="flex flex-row items-center" style={{ gap: 4 }}>
+      <View className="flex flex-row items-center" style={{ gap: 8 }}>
         {userRank && <ProfileRank rank={userRank} customClasses="h-6 w-6" />}
 
-        <View className="flex flex-col">
-          <Text
-            className="text-textColor text-[10px]"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            Welcome,
-          </Text>
-          {getRankColor && (
+        <View className="flex flex-row items-center gap-2">
+            <View className="flex flex-col">
             <Text
-              className={`text-xs font-bold`}
-              style={{ fontFamily: "OpenSans_700Bold", color: getRankColor }}
+                className="text-textColor text-[10px]"
+                style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              {name}
+                Welcome,
             </Text>
-          )}
+            {getRankColor && (
+                <Text
+                className={`text-xs font-bold`}
+                style={{ fontFamily: "OpenSans_700Bold", color: getRankColor }}
+                >
+                {displayName}
+                </Text>
+            )}
+            </View>
         </View>
       </View>
     </View>

@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { View, Text, TextInput, ScrollView } from "react-native";
+import { useState } from "react";
+import { View, Text, ScrollView } from "react-native";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -7,8 +7,6 @@ import {
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";
-import { useHomeContext } from "../../HomeContext";
-import { useAppContext } from "../../../../AppContext";
 import React from "react";
 import Dialog from "../../../elements/Dialog";
 import Exercises from "../../exercises/Exercises";
@@ -18,9 +16,6 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
   const [isAddExercisesListVisible, setIsAddExercisesListVisible] =
     useState<boolean>(false);
-
-  const { getAPI } = useAppContext();
-  const { userId } = useHomeContext();
 
   const toggleAddExercisesList = () => {
     setIsAddExercisesListVisible(!isAddExercisesListVisible);

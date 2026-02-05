@@ -9,5 +9,10 @@ module.exports = {
   fifthColor: "#787878",
   textColor: "#e8e6e6",
   redColor: "#E53935",
-  cardColor: "#141414"
+  cardColor: "#141414",
+  rankGold: "#FFD700",
+  rankCyanLight: "#e0f7fa",
+  rankCyan: "#88ddff",
+  rankCyanDark: "#20c2d7",
+  transparent: "transparent"
 };

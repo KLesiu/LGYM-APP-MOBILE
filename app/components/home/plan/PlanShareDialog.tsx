@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { PlanForm } from "../../../../interfaces/Plan";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { useAppContext } from "../../../AppContext";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from "../../../../helpers/toastConfig";
+import { usePatchApiIdShare } from "../../../../api/generated/plan/plan";
+import { ShareCodeResponseDto } from "../../../../api/generated/model";
 
 interface PlanShareDialogProps {
   visible: boolean;
@@ -20,10 +21,11 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
   onCancel,
   plan,
 }) => {
-  const { postAPI } = useAppContext();
   const [currentShareCode, setCurrentShareCode] = useState<string | null>(
     plan.shareCode ?? null
   );
+
+  const { mutate: generateShareCode, isPending } = usePatchApiIdShare();
 
   const copyToClipboard = async () => { 
     if (!currentShareCode) {
@@ -44,13 +46,27 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
     });
   };
 
-  const generateShareCode = async () => {
-    await postAPI(
-      "/generateShareCode",
-      (result: string) => {
-        setCurrentShareCode(result);
-      },
-      { planId: plan._id }
+  const handleGenerateShareCode = () => {
+    if(!plan._id) return;
+    
+    generateShareCode(
+        { id: plan._id },
+        {
+            onSuccess: (response) => {
+                const data = response.data as ShareCodeResponseDto;
+                if(data && data.shareCode) {
+                    setCurrentShareCode(data.shareCode);
+                }
+            },
+            onError: (error) => {
+                console.error("Failed to generate share code", error);
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: 'Failed to generate share code'
+                });
+            }
+        }
     );
   };
 
@@ -96,8 +112,9 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
             <CustomButton
               text="Generate new code"
               buttonStyleType={ButtonStyle.success}
-              onPress={generateShareCode}
+              onPress={handleGenerateShareCode}
               width="flex-1"
+              isLoading={isPending}
             />
           </View>
         </View>

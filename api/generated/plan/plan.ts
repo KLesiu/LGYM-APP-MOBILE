@@ -343,12 +343,12 @@ export type getApiIdCheckIsUserHavePlanResponse200 = {
 }
 
 export type getApiIdCheckIsUserHavePlanResponse403 = {
-  data: boolean
+  data: ResponseMessageDto
   status: 403
 }
 
 export type getApiIdCheckIsUserHavePlanResponse404 = {
-  data: boolean
+  data: ResponseMessageDto
   status: 404
 }
     
@@ -391,7 +391,7 @@ export const getGetApiIdCheckIsUserHavePlanQueryKey = (id: string,) => {
     }
 
     
-export const getGetApiIdCheckIsUserHavePlanQueryOptions = <TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetApiIdCheckIsUserHavePlanQueryOptions = <TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -410,10 +410,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetApiIdCheckIsUserHavePlanQueryResult = NonNullable<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>>
-export type GetApiIdCheckIsUserHavePlanQueryError = boolean
+export type GetApiIdCheckIsUserHavePlanQueryError = ResponseMessageDto
 
 
-export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(
+export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(
  id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>,
@@ -423,7 +423,7 @@ export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(
+export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>,
@@ -433,12 +433,12 @@ export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(
+export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(
+export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {

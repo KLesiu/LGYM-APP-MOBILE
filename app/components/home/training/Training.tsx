@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ViewLoading from "../../elements/ViewLoading";
 import React from "react";
 import { useHomeContext } from "../HomeContext";
@@ -9,35 +9,18 @@ import { useGetApiIdCheckIsUserHavePlan } from "../../../../api/generated/plan/p
 
 const Training: React.FC = () => {
   const { userId } = useHomeContext();
-  const [isUserHavePlan, setIsUserHavePlan] = useState<boolean>(false);
-  const [viewLoading, setViewLoading] = useState<boolean>(true);
 
-  const { data: planCheckResponse, isLoading, refetch } = useGetApiIdCheckIsUserHavePlan(
+  const { data: planCheckResponse, isLoading } = useGetApiIdCheckIsUserHavePlan(
     userId,
-    { query: { enabled: false } }
+    { query: { enabled: !!userId } }
   );
 
-  useEffect(() => {
-    init();
-  }, []);
+  const isUserHavePlan = useMemo(
+    () => planCheckResponse?.data ?? false,
+    [planCheckResponse]
+  );
 
-  const init = async () => {
-    await checkIsUserHavePlan();
-  };
-
-  const checkIsUserHavePlan = async () => {
-    try {
-      await refetch();
-      setIsUserHavePlan(planCheckResponse?.data ?? false);
-    } catch (error) {
-      console.error("Error checking if user has a plan:", error);
-      setIsUserHavePlan(false);
-    } finally {
-      setViewLoading(false);
-    }
-  };
-
-  if (viewLoading)
+  if (isLoading)
     return (
       <View className="bg-bgColor flex-1 w-full">
         <ViewLoading />

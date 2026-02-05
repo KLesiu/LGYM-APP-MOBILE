@@ -24,12 +24,12 @@ const SeriesSummaryRow: React.FC<SeriesSummaryRowProps> = ({ seriesComparison })
         </Text>
         <ProgressSummaryValue value={repsDiff} />
       </View>
-      <View className="flex-row items-baseline w-1/3">
-        <Text className="text-textColor text-base smallPhone:text-sm">
-          {currentResult.weight}{currentResult.unit}
-        </Text>
-        <ProgressSummaryValue value={weightDiff} unit={currentResult.unit} />
-      </View>
+       <View className="flex-row items-baseline w-1/3">
+         <Text className="text-textColor text-base smallPhone:text-sm">
+           {currentResult.weight}{currentResult.unit}
+         </Text>
+         <ProgressSummaryValue value={weightDiff} unit={currentResult.unit} />
+       </View>
     </View>
   );
 };
