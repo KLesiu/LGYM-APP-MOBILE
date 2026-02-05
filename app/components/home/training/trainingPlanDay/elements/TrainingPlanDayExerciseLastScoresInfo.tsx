@@ -71,26 +71,27 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
     return isExist;
   };
 
-  const createLastExerciseScoresText = (
-    lastExerciseScores: LastExerciseScoresWithGym
-  ) => {
-    const { seriesScores } = lastExerciseScores;
+   const createLastExerciseScoresText = (
+     lastExerciseScores: LastExerciseScoresWithGym
+   ) => {
+     const { seriesScores } = lastExerciseScores;
 
-    const text = seriesScores
-      .filter(
-        (seriesScore) =>
-          seriesScore.score &&
-          seriesScore.score.reps !== undefined &&
-          seriesScore.score.weight !== undefined
-      )
-      .map((seriesScore) => {
-        const { reps, weight, unit, gymName } = seriesScore.score!;
-        const gymText = !isGymFilterActive ? ` (${gymName})` : "";
-        return `${reps}x${weight}${unit}${gymText}`;
-      })
-      .join(", ");
-    return text;
-  };
+     const text = seriesScores
+       .filter(
+         (seriesScore) =>
+           seriesScore.score &&
+           seriesScore.score.reps !== undefined &&
+           seriesScore.score.weight !== undefined
+       )
+       .map((seriesScore) => {
+         const { reps, weight, unit, gymName } = seriesScore.score!;
+         const gymText = !isGymFilterActive ? ` (${gymName})` : "";
+         const unitString = typeof unit === 'string' ? unit : (unit as any)?.name || 'kg';
+         return `${reps}x${weight}${unitString}${gymText}`;
+       })
+       .join(", ");
+     return text;
+   };
 
   const text = useMemo(() => {
     if (isGymFilterActive) {
