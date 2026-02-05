@@ -3,9 +3,9 @@ import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { useEffect, useMemo, useState } from "react";
 import { useHomeContext } from "../../../HomeContext";
 import { LastExerciseScoresWithGym } from "../../../../../../interfaces/Exercise";
-import { useAppContext } from "../../../../../AppContext";
 import ViewLoading from "../../../../elements/ViewLoading";
 import React from "react";
+import { usePostApiExerciseIdGetLastExerciseScores } from "../../../../../../api/generated/exercise/exercise";
 
 interface TrainingPlanDayExerciseLastScoresInfoProps {}
 
@@ -19,40 +19,41 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
     lastExerciseScoresWithGym,
     setLastExerciseScoresWithGym,
   } = useTrainingPlanDay();
-  const {  userId } = useHomeContext();
-  const { postAPI } = useAppContext();
+  const { userId } = useHomeContext();
   const [lastExerciseScoresText, setLastExerciseScoresText] =
     useState<string>();
-  const [viewLoading, setViewLoading] = useState<boolean>(false);
+
+  const { mutate: getLastExerciseScores, isPending: viewLoading } =
+    usePostApiExerciseIdGetLastExerciseScores();
 
   useEffect(() => {
-    getLastExerciseScores();
-  }, [isGymFilterActive, currentExercise]);
+    if (!userId || !currentExercise) return;
 
-  const getLastExerciseScores = async () => {
-    setViewLoading(true);
-    await postAPI(
-      `/exercise/${userId}/getLastExerciseScores`,
-      (result: LastExerciseScoresWithGym) => {
-        if (isGymFilterActive && !checkIsExerciseScoresExistsInState(result)) {
-          const newLastExerciseScoresWithGym = [
-            ...lastExerciseScoresWithGym,
-            result,
-          ];
-          setLastExerciseScoresWithGym(newLastExerciseScoresWithGym);
-        }
-        setLastExerciseScoresText(createLastExerciseScoresText(result));
+    getLastExerciseScores(
+      {
+        id: userId,
+        data: {
+          gym: isGymFilterActive ? gym?._id : undefined,
+          series: currentExercise?.series,
+          exerciseId: currentExercise?.exercise._id,
+          exerciseName: currentExercise?.exercise.name,
+        },
       },
       {
-        gym: isGymFilterActive ? gym?._id : undefined,
-        series: currentExercise?.series,
-        reps: currentExercise?.reps,
-        exerciseId: currentExercise?.exercise._id,
-        exerciseName: currentExercise?.exercise.name,
+        onSuccess: (result: any) => {
+          const data = result.data as LastExerciseScoresWithGym;
+          if (isGymFilterActive && !checkIsExerciseScoresExistsInState(data)) {
+            const newLastExerciseScoresWithGym = [
+              ...lastExerciseScoresWithGym,
+              data,
+            ];
+            setLastExerciseScoresWithGym(newLastExerciseScoresWithGym);
+          }
+          setLastExerciseScoresText(createLastExerciseScoresText(data));
+        },
       }
     );
-    setViewLoading(false);
-  };
+  }, [isGymFilterActive, currentExercise, userId]);
 
   const checkIsExerciseScoresExistsInState = (
     lastExerciseScoresWithGymArg: LastExerciseScoresWithGym
