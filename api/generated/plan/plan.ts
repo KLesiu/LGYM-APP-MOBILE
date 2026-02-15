@@ -28,6 +28,7 @@ import type {
   PlanDto,
   PlanFormDto,
   ResponseMessageDto,
+  SetActivePlanDto,
   ShareCodeResponseDto
 } from '.././model';
 
@@ -343,12 +344,12 @@ export type getApiIdCheckIsUserHavePlanResponse200 = {
 }
 
 export type getApiIdCheckIsUserHavePlanResponse403 = {
-  data: ResponseMessageDto
+  data: boolean
   status: 403
 }
 
 export type getApiIdCheckIsUserHavePlanResponse404 = {
-  data: ResponseMessageDto
+  data: boolean
   status: 404
 }
     
@@ -391,7 +392,7 @@ export const getGetApiIdCheckIsUserHavePlanQueryKey = (id: string,) => {
     }
 
     
-export const getGetApiIdCheckIsUserHavePlanQueryOptions = <TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+export const getGetApiIdCheckIsUserHavePlanQueryOptions = <TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
@@ -410,10 +411,10 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 }
 
 export type GetApiIdCheckIsUserHavePlanQueryResult = NonNullable<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>>
-export type GetApiIdCheckIsUserHavePlanQueryError = ResponseMessageDto
+export type GetApiIdCheckIsUserHavePlanQueryError = boolean
 
 
-export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(
+export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(
  id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>,
@@ -423,7 +424,7 @@ export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(
+export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>,
@@ -433,12 +434,12 @@ export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof
       >, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(
+export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = ResponseMessageDto>(
+export function useGetApiIdCheckIsUserHavePlan<TData = Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError = boolean>(
  id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdCheckIsUserHavePlan>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient 
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -602,7 +603,7 @@ export const getPostApiIdSetNewActivePlanUrl = (id: string,) => {
 }
 
 export const postApiIdSetNewActivePlan = async (id: string,
-    planFormDto: PlanFormDto, options?: RequestInit): Promise<postApiIdSetNewActivePlanResponse> => {
+    setActivePlanDto: SetActivePlanDto, options?: RequestInit): Promise<postApiIdSetNewActivePlanResponse> => {
   
   return customInstance<postApiIdSetNewActivePlanResponse>(getPostApiIdSetNewActivePlanUrl(id),
   {      
@@ -610,7 +611,7 @@ export const postApiIdSetNewActivePlan = async (id: string,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      planFormDto,)
+      setActivePlanDto,)
   }
 );}
 
@@ -618,8 +619,8 @@ export const postApiIdSetNewActivePlan = async (id: string,
 
 
 export const getPostApiIdSetNewActivePlanMutationOptions = <TError = ResponseMessageDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>, TError,{id: string;data: PlanFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>, TError,{id: string;data: PlanFormDto}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>, TError,{id: string;data: SetActivePlanDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>, TError,{id: string;data: SetActivePlanDto}, TContext> => {
 
 const mutationKey = ['postApiIdSetNewActivePlan'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -631,7 +632,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>, {id: string;data: PlanFormDto}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>, {id: string;data: SetActivePlanDto}> = (props) => {
           const {id,data} = props ?? {};
 
           return  postApiIdSetNewActivePlan(id,data,requestOptions)
@@ -645,15 +646,15 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type PostApiIdSetNewActivePlanMutationResult = NonNullable<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>>
-    export type PostApiIdSetNewActivePlanMutationBody = PlanFormDto
+    export type PostApiIdSetNewActivePlanMutationBody = SetActivePlanDto
     export type PostApiIdSetNewActivePlanMutationError = ResponseMessageDto
 
     export const usePostApiIdSetNewActivePlan = <TError = ResponseMessageDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>, TError,{id: string;data: PlanFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>, TError,{id: string;data: SetActivePlanDto}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiIdSetNewActivePlan>>,
         TError,
-        {id: string;data: PlanFormDto},
+        {id: string;data: SetActivePlanDto},
         TContext
       > => {
       return useMutation(getPostApiIdSetNewActivePlanMutationOptions(options), queryClient);
@@ -746,31 +747,31 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
       return useMutation(getPostApiCopyMutationOptions(options), queryClient);
     }
-    export type patchApiIdShareResponse200 = {
+    export type postApiIdShareResponse200 = {
   data: ShareCodeResponseDto
   status: 200
 }
 
-export type patchApiIdShareResponse403 = {
+export type postApiIdShareResponse403 = {
   data: ResponseMessageDto
   status: 403
 }
 
-export type patchApiIdShareResponse404 = {
+export type postApiIdShareResponse404 = {
   data: ResponseMessageDto
   status: 404
 }
     
-export type patchApiIdShareResponseSuccess = (patchApiIdShareResponse200) & {
+export type postApiIdShareResponseSuccess = (postApiIdShareResponse200) & {
   headers: Headers;
 };
-export type patchApiIdShareResponseError = (patchApiIdShareResponse403 | patchApiIdShareResponse404) & {
+export type postApiIdShareResponseError = (postApiIdShareResponse403 | postApiIdShareResponse404) & {
   headers: Headers;
 };
 
-export type patchApiIdShareResponse = (patchApiIdShareResponseSuccess | patchApiIdShareResponseError)
+export type postApiIdShareResponse = (postApiIdShareResponseSuccess | postApiIdShareResponseError)
 
-export const getPatchApiIdShareUrl = (id: string,) => {
+export const getPostApiIdShareUrl = (id: string,) => {
 
 
   
@@ -778,12 +779,12 @@ export const getPatchApiIdShareUrl = (id: string,) => {
   return `/api/${id}/share`
 }
 
-export const patchApiIdShare = async (id: string, options?: RequestInit): Promise<patchApiIdShareResponse> => {
+export const postApiIdShare = async (id: string, options?: RequestInit): Promise<postApiIdShareResponse> => {
   
-  return customInstance<patchApiIdShareResponse>(getPatchApiIdShareUrl(id),
+  return customInstance<postApiIdShareResponse>(getPostApiIdShareUrl(id),
   {      
     ...options,
-    method: 'PATCH'
+    method: 'POST'
     
     
   }
@@ -792,11 +793,11 @@ export const patchApiIdShare = async (id: string, options?: RequestInit): Promis
 
 
 
-export const getPatchApiIdShareMutationOptions = <TError = ResponseMessageDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiIdShare>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof patchApiIdShare>>, TError,{id: string}, TContext> => {
+export const getPostApiIdShareMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiIdShare>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiIdShare>>, TError,{id: string}, TContext> => {
 
-const mutationKey = ['patchApiIdShare'];
+const mutationKey = ['postApiIdShare'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -806,10 +807,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchApiIdShare>>, {id: string}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiIdShare>>, {id: string}> = (props) => {
           const {id} = props ?? {};
 
-          return  patchApiIdShare(id,requestOptions)
+          return  postApiIdShare(id,requestOptions)
         }
 
 
@@ -819,18 +820,105 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type PatchApiIdShareMutationResult = NonNullable<Awaited<ReturnType<typeof patchApiIdShare>>>
+    export type PostApiIdShareMutationResult = NonNullable<Awaited<ReturnType<typeof postApiIdShare>>>
     
-    export type PatchApiIdShareMutationError = ResponseMessageDto
+    export type PostApiIdShareMutationError = ResponseMessageDto
 
-    export const usePatchApiIdShare = <TError = ResponseMessageDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchApiIdShare>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+    export const usePostApiIdShare = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiIdShare>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof patchApiIdShare>>,
+        Awaited<ReturnType<typeof postApiIdShare>>,
         TError,
         {id: string},
         TContext
       > => {
-      return useMutation(getPatchApiIdShareMutationOptions(options), queryClient);
+      return useMutation(getPostApiIdShareMutationOptions(options), queryClient);
+    }
+    export type postApiIdDeletePlanResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+
+export type postApiIdDeletePlanResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
+export type postApiIdDeletePlanResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
+    
+export type postApiIdDeletePlanResponseSuccess = (postApiIdDeletePlanResponse200) & {
+  headers: Headers;
+};
+export type postApiIdDeletePlanResponseError = (postApiIdDeletePlanResponse403 | postApiIdDeletePlanResponse404) & {
+  headers: Headers;
+};
+
+export type postApiIdDeletePlanResponse = (postApiIdDeletePlanResponseSuccess | postApiIdDeletePlanResponseError)
+
+export const getPostApiIdDeletePlanUrl = (id: string,) => {
+
+
+  
+
+  return `/api/${id}/deletePlan`
+}
+
+export const postApiIdDeletePlan = async (id: string, options?: RequestInit): Promise<postApiIdDeletePlanResponse> => {
+  
+  return customInstance<postApiIdDeletePlanResponse>(getPostApiIdDeletePlanUrl(id),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostApiIdDeletePlanMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiIdDeletePlan>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiIdDeletePlan>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['postApiIdDeletePlan'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiIdDeletePlan>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  postApiIdDeletePlan(id,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiIdDeletePlanMutationResult = NonNullable<Awaited<ReturnType<typeof postApiIdDeletePlan>>>
+    
+    export type PostApiIdDeletePlanMutationError = ResponseMessageDto
+
+    export const usePostApiIdDeletePlan = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiIdDeletePlan>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiIdDeletePlan>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getPostApiIdDeletePlanMutationOptions(options), queryClient);
     }
     

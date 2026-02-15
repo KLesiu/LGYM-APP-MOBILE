@@ -11,6 +11,8 @@ import { AppConfigInfo } from "../interfaces/AppConfigInfo";
 import { usePostApiAppConfigGetAppVersion, postApiAppConfigGetAppVersionResponse } from "../api/generated/app-config/app-config";
 import { useGetApiCheckToken, getApiCheckTokenResponse } from "../api/generated/user/user";
 
+import { UserInfoDto } from "../api/generated/model";
+
 export const useAppInitialization = () => {
   const router = useRouter();
   const [appConfig, setAppConfig] = useState<AppConfigInfo | null>(null);
@@ -27,8 +29,7 @@ export const useAppInitialization = () => {
 
   useEffect(() => {
     if (checkTokenData?.data) {
-      const response = checkTokenData as unknown as getApiCheckTokenResponse;
-      const userInfo = response.data;
+      const userInfo = checkTokenData.data as UserInfoDto;
       setSession(userInfo);
     }
   }, [checkTokenData]);
@@ -63,7 +64,7 @@ export const useAppInitialization = () => {
       },
       {
         onSuccess: (response: postApiAppConfigGetAppVersionResponse) => {
-          const appVersionConfig = response.data as unknown as AppConfigInfo;
+          const appVersionConfig = response.data as AppConfigInfo;
           checkIsUpdateRequired(appVersionConfig);
         },
         onError: (error: any) => {

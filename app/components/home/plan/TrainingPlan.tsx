@@ -36,10 +36,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiIdGetPlanConfigQueryKey } from "../../../../api/generated/plan/plan";
 
 import Toast from "react-native-toast-message";
+import { customInstance } from "../../../../api/custom-instance";
 
 const TrainingPlan: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
-  const { postAPI } = useAppContext();
   const queryClient = useQueryClient();
 
   const [isSwitchingPlan, setIsSwitchingPlan] = useState<boolean>(false);
@@ -50,7 +50,7 @@ const TrainingPlan: React.FC = () => {
   } = useGetApiIdGetPlanConfig(userId, { query: { enabled: !!userId, retry: false } });
 
   const planConfig = useMemo(
-    () => (planConfigData?.data as unknown as PlanForm) || undefined,
+    () => (planConfigData?.data as PlanForm) || undefined,
     [planConfigData]
   );
 
@@ -63,7 +63,7 @@ const TrainingPlan: React.FC = () => {
   });
 
   const planDaysBaseInfo = useMemo(
-    () => (planDaysData?.data as unknown as PlanDayBaseInfoVm[]) || [],
+    () => (planDaysData?.data as PlanDayBaseInfoVm[]) || [],
     [planDaysData]
   );
 
@@ -221,9 +221,13 @@ const TrainingPlan: React.FC = () => {
 
   const deletePlan = async () => {
     try {
-        if(planConfig?._id){
-             await postAPI('/deletePlan', () => refetchAll(), { planId: planConfig._id });
-        }
+      if (planConfig?._id) {
+        await customInstance("/deletePlan", {
+          method: "POST",
+          data: { planId: planConfig._id },
+        });
+        await refetchAll();
+      }
     } finally {
       setIsDeletePlanConfirmationDialogVisible(false);
     }

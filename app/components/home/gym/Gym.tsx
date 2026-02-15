@@ -28,7 +28,7 @@ const Gym: React.FC = () => {
   );
   
   const gyms = useMemo(() => {
-    return (gymsResponse?.data as unknown as GymChoiceInfoDto[]) || [];
+    return (gymsResponse?.data as GymChoiceInfoDto[]) || [];
   }, [gymsResponse]);
 
   const deleteGymMutation = usePostApiGymIdDeleteGym();

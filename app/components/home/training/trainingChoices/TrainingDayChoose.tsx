@@ -29,7 +29,10 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
 
   const trainingTypes = useMemo(() => {
     if (data?.data) {
-      return data.data as unknown as PlanDayChooseDto[];
+      return (data.data as PlanDayChooseDto[]).map((dto) => ({
+        _id: dto._id || "",
+        name: dto.name || "",
+      }));
     }
     return [];
   }, [data]);
@@ -59,13 +62,13 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
         ) : (
           <ScrollView className="w-full">
             <View className="flex flex-col">
-              {trainingTypes.map((ele: PlanDayChooseDto, index: number) => (
+              {trainingTypes.map((ele, index: number) => (
                 <CustomButton
                   key={index}
                   buttonStyleSize={ButtonSize.none}
                   onPress={() => ele._id && showDaySection(ele._id)}
                 >
-                  <TrainingDayToChoose trainingType={ele as any} />
+                  <TrainingDayToChoose trainingType={ele} />
                 </CustomButton>
               ))}
             </View>

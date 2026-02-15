@@ -66,20 +66,20 @@ const Exercises: React.FC<ExercisesProps> = ({
   });
 
   const globalExercises = useMemo(() => {
-    const data = globalExercisesData?.data as unknown as ExerciseResponseDto[];
+    const data = globalExercisesData?.data as ExerciseResponseDto[];
     if (!data) return [];
     return data.map((exercise) => ({
       ...exercise,
-      bodyPart: exercise.bodyPart?.name as BodyParts,
+      bodyPart: (exercise.bodyPart?.name as BodyParts) || BodyParts.Chest,
     })) as ExerciseForm[];
   }, [globalExercisesData]);
 
   const userExercises = useMemo(() => {
-    const data = userExercisesData?.data as unknown as ExerciseResponseDto[];
+    const data = userExercisesData?.data as ExerciseResponseDto[];
     if (!data) return [];
     return data.map((exercise) => ({
       ...exercise,
-      bodyPart: exercise.bodyPart?.name as BodyParts,
+      bodyPart: (exercise.bodyPart?.name as BodyParts) || BodyParts.Chest,
     })) as ExerciseForm[];
   }, [userExercisesData]);
   const isAdmin = !!isAdminData?.data;

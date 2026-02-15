@@ -19,6 +19,8 @@ import {
   usePostApiPlanDayUpdatePlanDay,
   useGetApiPlanDayIdGetPlanDay,
 } from "../../../../../api/generated/plan-day/plan-day";
+import { PlanDayVmDto } from "../../../../../api/generated/model";
+import { BodyParts } from "../../../../../enums/BodyParts";
 
 interface CreatePlanDayProps {
   planId?: string;
@@ -53,7 +55,25 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   useEffect(() => {
     if (planDayData?.data) {
-      const result = planDayData.data as unknown as PlanDayVm;
+      const dto = planDayData.data as PlanDayVmDto;
+      const result: PlanDayVm = {
+        _id: dto._id || "",
+        name: dto.name || "",
+        exercises:
+          dto.exercises?.map((e) => ({
+            series: e.series || 0,
+            reps: e.reps || "",
+            exercise: {
+              _id: e.exercise?._id || "",
+              name: e.exercise?.name || "",
+              user: e.exercise?.user || "",
+              bodyPart:
+                (e.exercise?.bodyPart?.name as BodyParts) || BodyParts.Chest,
+              description: e.exercise?.description || "",
+              image: e.exercise?.image || "",
+            },
+          })) || [],
+      };
       setPlanDayName(result.name);
       setExercisesList(mapExercisesListFromSend(result.exercises));
     }

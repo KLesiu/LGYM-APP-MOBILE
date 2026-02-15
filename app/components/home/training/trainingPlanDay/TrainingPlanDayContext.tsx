@@ -13,6 +13,8 @@ import { ScrollView } from "react-native";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiPlanDayIdGetPlanDayQueryOptions } from "../../../../../api/generated/plan-day/plan-day";
+import { PlanDayVmDto } from "../../../../../api/generated/model";
+import { BodyParts } from "../../../../../enums/BodyParts";
 
 interface TrainingPlanDayContextType {
   setPlanDay: (planDay: PlanDayVm) => void;
@@ -204,7 +206,25 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
         getGetApiPlanDayIdGetPlanDayQueryOptions(dayId)
       );
       if (result?.data) {
-        const data = result.data as unknown as PlanDayVm;
+        const dto = result.data as PlanDayVmDto;
+        const data: PlanDayVm = {
+          _id: dto._id || "",
+          name: dto.name || "",
+          exercises:
+            dto.exercises?.map((e) => ({
+              series: e.series || 0,
+              reps: e.reps || "",
+              exercise: {
+                _id: e.exercise?._id || "",
+                name: e.exercise?.name || "",
+                user: e.exercise?.user || "",
+                bodyPart:
+                  (e.exercise?.bodyPart?.name as BodyParts) || BodyParts.Chest,
+                description: e.exercise?.description || "",
+                image: e.exercise?.image || "",
+              },
+            })) || [],
+        };
         planDayFromApi = data;
         setPlanDay(data);
         setCurrentExercise(data.exercises[0]);

@@ -33,6 +33,7 @@ import {
 } from "../../../../../api/generated/training/training";
 import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
+import { ExerciseResponseDto } from "../../../../../api/generated/model";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -194,7 +195,15 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const exercise = await queryClient.fetchQuery(
         getGetApiExerciseIdGetExerciseQueryOptions(id)
     );
-    return exercise.data as unknown as ExerciseForm;
+    const dto = exercise.data as ExerciseResponseDto;
+    return {
+      _id: dto._id || "",
+      name: dto.name || "",
+      user: dto.user || "",
+      bodyPart: (dto.bodyPart?.name as BodyParts) || BodyParts.Chest,
+      description: dto.description || "",
+      image: dto.image || "",
+    };
   };
 
   const incrementOrDecrementExercise = async (

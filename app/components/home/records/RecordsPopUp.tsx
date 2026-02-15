@@ -15,6 +15,11 @@ import { useAppContext } from "../../../AppContext";
 import ValidationView from "../../elements/ValidationView";
 import React from "react";
 import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
+import { useGetApiExerciseIdGetAllExercises } from "../../../../api/generated/exercise/exercise";
+import { usePostApiMainRecordsIdAddNewRecord } from "../../../../api/generated/main-records/main-records";
+
+import { ExerciseResponseDto } from "../../../../api/generated/model";
+import { BodyParts } from "../../../../enums/BodyParts";
 
 interface RecordsPopUpProps {
   offPopUp: () => void;
@@ -28,42 +33,45 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const [weight, setWeight] = useState<string>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
   const { userId } = useHomeContext();
-  const { getAPI, setErrors, postAPI } = useAppContext();
+  const { setErrors } = useAppContext();
+
+  const { data: exercisesData } = useGetApiExerciseIdGetAllExercises(userId, {
+    query: { enabled: !!userId },
+  });
+
+  const { mutateAsync: addNewRecordMutation } =
+    usePostApiMainRecordsIdAddNewRecord();
 
   useEffect(() => {
-    getAllExercises();
-  }, []);
-
-  const getAllExercises = async () => {
-    try {
-      await getAPI(
-        `/exercise/${userId}/getAllExercises`,
-        (response: ExerciseForm[]) => {
-          const helpExercisesToSelect = response.map(
-            (exercise: ExerciseForm) => {
-              return {
-                label: exercise.name,
-                value: exercise._id,
-              } as DropdownItem;
-            }
-          );
-          if (props.exerciseId) {
-            const exercise = helpExercisesToSelect.find(
-              (exercise) => exercise.value === props.exerciseId
-            );
-            if (exercise) {
-              setSelectedExercise(exercise);
-            }
-          }
-          setExercisesToSelect(helpExercisesToSelect);
-        },
-        undefined,
-        false
+    if (exercisesData?.data) {
+      const response = (exercisesData.data as ExerciseResponseDto[]).map(
+        (dto) => ({
+          _id: dto._id || "",
+          name: dto.name || "",
+          user: dto.user || "",
+          bodyPart: (dto.bodyPart?.name as BodyParts) || BodyParts.Chest,
+          description: dto.description || "",
+          image: dto.image || "",
+        })
       );
-    } catch (error) {
-      console.error("Error fetching exercises:", error);
+      const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
+        return {
+          label: exercise.name,
+          value: exercise._id,
+        } as DropdownItem;
+      });
+      if (props.exerciseId) {
+        const exercise = helpExercisesToSelect.find(
+          (exercise) => exercise.value === props.exerciseId
+        );
+        if (exercise) {
+          setSelectedExercise(exercise);
+        }
+      }
+      setExercisesToSelect(helpExercisesToSelect);
     }
-  };
+  }, [exercisesData, props.exerciseId]);
+
   const clearAutoCompleteQuery = () => setClearQuery(false);
 
   const validator = (input: string): void => {
@@ -74,18 +82,18 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
 
   const createNewRecord = async () => {
     if (!weight || !selectedExercise) return setErrors([Message.FieldRequired]);
-    const form: MainRecordsForm = {
-      weight: parseFloat(weight),
-      exercise: selectedExercise.value,
-      unit: WeightUnits.KILOGRAMS,
-      date: new Date(),
-    };
+    
     try {
-      await postAPI(
-        `/mainRecords/${userId}/addNewRecord`,
-        () => props.offPopUp(),
-        form
-      );
+      await addNewRecordMutation({
+        id: userId,
+        data: {
+          weight: parseFloat(weight),
+          exercise: selectedExercise.value,
+          unit: WeightUnits.KILOGRAMS,
+          date: new Date().toISOString(),
+        },
+      });
+      props.offPopUp();
     } catch (error) {
       console.error("Error creating new record:", error);
       setErrors([Message.TryAgain]);

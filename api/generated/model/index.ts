@@ -68,6 +68,7 @@ export * from './scoreWithGymDto';
 export * from './seriesComparisonDto';
 export * from './seriesScoreDto';
 export * from './seriesScoreWithGymDto';
+export * from './setActivePlanDto';
 export * from './shareCodeResponseDto';
 export * from './trainingByDateDetailsDto';
 export * from './trainingByDateRequestDto';

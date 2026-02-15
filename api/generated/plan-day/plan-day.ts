@@ -48,6 +48,11 @@ export type postApiPlanDayIdCreatePlanDayResponse400 = {
   status: 400
 }
 
+export type postApiPlanDayIdCreatePlanDayResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type postApiPlanDayIdCreatePlanDayResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -56,7 +61,7 @@ export type postApiPlanDayIdCreatePlanDayResponse404 = {
 export type postApiPlanDayIdCreatePlanDayResponseSuccess = (postApiPlanDayIdCreatePlanDayResponse200) & {
   headers: Headers;
 };
-export type postApiPlanDayIdCreatePlanDayResponseError = (postApiPlanDayIdCreatePlanDayResponse400 | postApiPlanDayIdCreatePlanDayResponse404) & {
+export type postApiPlanDayIdCreatePlanDayResponseError = (postApiPlanDayIdCreatePlanDayResponse400 | postApiPlanDayIdCreatePlanDayResponse403 | postApiPlanDayIdCreatePlanDayResponse404) & {
   headers: Headers;
 };
 
@@ -137,6 +142,11 @@ export type postApiPlanDayUpdatePlanDayResponse400 = {
   status: 400
 }
 
+export type postApiPlanDayUpdatePlanDayResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type postApiPlanDayUpdatePlanDayResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -145,7 +155,7 @@ export type postApiPlanDayUpdatePlanDayResponse404 = {
 export type postApiPlanDayUpdatePlanDayResponseSuccess = (postApiPlanDayUpdatePlanDayResponse200) & {
   headers: Headers;
 };
-export type postApiPlanDayUpdatePlanDayResponseError = (postApiPlanDayUpdatePlanDayResponse400 | postApiPlanDayUpdatePlanDayResponse404) & {
+export type postApiPlanDayUpdatePlanDayResponseError = (postApiPlanDayUpdatePlanDayResponse400 | postApiPlanDayUpdatePlanDayResponse403 | postApiPlanDayUpdatePlanDayResponse404) & {
   headers: Headers;
 };
 
@@ -220,6 +230,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   status: 200
 }
 
+export type getApiPlanDayIdGetPlanDayResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiPlanDayIdGetPlanDayResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -228,7 +243,7 @@ export type getApiPlanDayIdGetPlanDayResponse404 = {
 export type getApiPlanDayIdGetPlanDayResponseSuccess = (getApiPlanDayIdGetPlanDayResponse200) & {
   headers: Headers;
 };
-export type getApiPlanDayIdGetPlanDayResponseError = (getApiPlanDayIdGetPlanDayResponse404) & {
+export type getApiPlanDayIdGetPlanDayResponseError = (getApiPlanDayIdGetPlanDayResponse403 | getApiPlanDayIdGetPlanDayResponse404) & {
   headers: Headers;
 };
 
@@ -331,6 +346,11 @@ export type getApiPlanDayIdGetPlanDaysResponse200 = {
   status: 200
 }
 
+export type getApiPlanDayIdGetPlanDaysResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiPlanDayIdGetPlanDaysResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -339,7 +359,7 @@ export type getApiPlanDayIdGetPlanDaysResponse404 = {
 export type getApiPlanDayIdGetPlanDaysResponseSuccess = (getApiPlanDayIdGetPlanDaysResponse200) & {
   headers: Headers;
 };
-export type getApiPlanDayIdGetPlanDaysResponseError = (getApiPlanDayIdGetPlanDaysResponse404) & {
+export type getApiPlanDayIdGetPlanDaysResponseError = (getApiPlanDayIdGetPlanDaysResponse403 | getApiPlanDayIdGetPlanDaysResponse404) & {
   headers: Headers;
 };
 
@@ -442,6 +462,11 @@ export type getApiPlanDayIdGetPlanDaysTypesResponse200 = {
   status: 200
 }
 
+export type getApiPlanDayIdGetPlanDaysTypesResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiPlanDayIdGetPlanDaysTypesResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -450,7 +475,7 @@ export type getApiPlanDayIdGetPlanDaysTypesResponse404 = {
 export type getApiPlanDayIdGetPlanDaysTypesResponseSuccess = (getApiPlanDayIdGetPlanDaysTypesResponse200) & {
   headers: Headers;
 };
-export type getApiPlanDayIdGetPlanDaysTypesResponseError = (getApiPlanDayIdGetPlanDaysTypesResponse404) & {
+export type getApiPlanDayIdGetPlanDaysTypesResponseError = (getApiPlanDayIdGetPlanDaysTypesResponse403 | getApiPlanDayIdGetPlanDaysTypesResponse404) & {
   headers: Headers;
 };
 
@@ -553,6 +578,11 @@ export type getApiPlanDayIdDeletePlanDayResponse200 = {
   status: 200
 }
 
+export type getApiPlanDayIdDeletePlanDayResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiPlanDayIdDeletePlanDayResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -561,7 +591,7 @@ export type getApiPlanDayIdDeletePlanDayResponse404 = {
 export type getApiPlanDayIdDeletePlanDayResponseSuccess = (getApiPlanDayIdDeletePlanDayResponse200) & {
   headers: Headers;
 };
-export type getApiPlanDayIdDeletePlanDayResponseError = (getApiPlanDayIdDeletePlanDayResponse404) & {
+export type getApiPlanDayIdDeletePlanDayResponseError = (getApiPlanDayIdDeletePlanDayResponse403 | getApiPlanDayIdDeletePlanDayResponse404) & {
   headers: Headers;
 };
 
@@ -664,6 +694,11 @@ export type getApiPlanDayIdGetPlanDaysInfoResponse200 = {
   status: 200
 }
 
+export type getApiPlanDayIdGetPlanDaysInfoResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiPlanDayIdGetPlanDaysInfoResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -672,7 +707,7 @@ export type getApiPlanDayIdGetPlanDaysInfoResponse404 = {
 export type getApiPlanDayIdGetPlanDaysInfoResponseSuccess = (getApiPlanDayIdGetPlanDaysInfoResponse200) & {
   headers: Headers;
 };
-export type getApiPlanDayIdGetPlanDaysInfoResponseError = (getApiPlanDayIdGetPlanDaysInfoResponse404) & {
+export type getApiPlanDayIdGetPlanDaysInfoResponseError = (getApiPlanDayIdGetPlanDaysInfoResponse403 | getApiPlanDayIdGetPlanDaysInfoResponse404) & {
   headers: Headers;
 };
 

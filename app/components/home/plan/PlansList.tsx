@@ -30,7 +30,7 @@ const PlansList: React.FC<PlansListProps> = ({
   });
 
   const plansList = useMemo(() => {
-    return (plansData?.data as unknown as PlanForm[]) || [];
+    return (plansData?.data as PlanForm[]) || [];
   }, [plansData]);
 
   return (

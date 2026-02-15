@@ -27,7 +27,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
 
   const gyms = useMemo(() => {
     if (data?.data) {
-        return data.data as unknown as GymChoiceInfoDto[];
+        return data.data as GymChoiceInfoDto[];
     }
     return [];
   }, [data]);

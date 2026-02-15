@@ -18,6 +18,8 @@ import {
   usePostApiExerciseIdGetExerciseByBodyPart,
 } from "../../../../../api/generated/exercise/exercise";
 
+import { ExerciseResponseDto } from "../../../../../api/generated/model";
+
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
   addExerciseToPlanDay: (
@@ -63,11 +65,29 @@ const TrainingPlanDayExerciseForm: React.FC<
     let data: ExerciseForm[] = [];
     if (props.bodyPart) {
       if (exercisesByBodyPartData?.data) {
-        data = exercisesByBodyPartData.data as unknown as ExerciseForm[];
+        data = (exercisesByBodyPartData.data as ExerciseResponseDto[]).map(
+          (dto) => ({
+            _id: dto._id || "",
+            name: dto.name || "",
+            user: dto.user || "",
+            bodyPart: (dto.bodyPart?.name as BodyParts) || BodyParts.Chest,
+            description: dto.description || "",
+            image: dto.image || "",
+          })
+        );
       }
     } else {
       if (allExercisesData?.data) {
-        data = allExercisesData.data as unknown as ExerciseForm[];
+        data = (allExercisesData.data as ExerciseResponseDto[]).map(
+          (dto) => ({
+            _id: dto._id || "",
+            name: dto.name || "",
+            user: dto.user || "",
+            bodyPart: (dto.bodyPart?.name as BodyParts) || BodyParts.Chest,
+            description: dto.description || "",
+            image: dto.image || "",
+          })
+        );
       }
     }
     return data.map((exercise: ExerciseForm) => ({

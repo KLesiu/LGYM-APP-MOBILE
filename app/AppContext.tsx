@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { get, post } from "./services/http";
-import { AxiosError, AxiosResponse } from "axios";
+
 import { Message } from "../enums/Message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserInfo } from "../interfaces/User";
@@ -9,19 +8,10 @@ import { useAuthStore } from "../stores/useAuthStore";
 import { getApiCheckToken } from "../api/generated/user/user";
 import { useQueryClient } from "@tanstack/react-query";
 
+import { UserInfoDto } from "../api/generated/model";
+
 interface AppContextProps {
-  postAPI: (
-    url: string,
-    callback: any,
-    data?: Record<string, any>,
-    serveErrors?: boolean
-  ) => Promise<void>;
-  getAPI: (
-    url: string,
-    callback: any,
-    params?: Record<string, any>,
-    serveErrors?: boolean
-  ) => Promise<void>;
+
   errors: string[];
   isLoading: boolean;
   setErrors: (errors: string[]) => void;
@@ -69,71 +59,29 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         useAuthStore.getState().setToken(token);
         
         try {
-            const response = await getApiCheckToken();
-            if(response && response.data && "name" in response.data) {
-                const userData = response.data as unknown as UserInfo;
-                setUserInfo(userData);
-                useAuthStore.getState().setUser(userData);
-            }
+          const response = await getApiCheckToken();
+          if (response && response.data && "name" in response.data) {
+            const userData = response.data as UserInfoDto;
+            const userInfo: UserInfo = {
+              ...userData,
+              createdAt: userData.createdAt
+                ? new Date(userData.createdAt)
+                : new Date(),
+              updatedAt: userData.updatedAt
+                ? new Date(userData.updatedAt)
+                : new Date(),
+            } as UserInfo;
+            setUserInfo(userInfo);
+            useAuthStore.getState().setUser(userInfo);
+          }
         } catch (error) {
-            console.error("Failed to fetch user info on startup", error);
+          console.error("Failed to fetch user info on startup", error);
         }
     }
     setCanAppStart(true);
   };
 
-  const getAPI = async (
-    url: string,
-    callback: any,
-    params?: Record<string, any>,
-    serveErrors = true
-  ) => {
-    try {
-      setErrors([]);
-      setIsLoading(true);
-      const response = await get(url, token, params);
-      callback(response);
-    } catch (error) {
-      if (serveErrors) catchErrors(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const postAPI = async (
-    url: string,
-    callback: any,
-    data?: Record<string, any>,
-    serveErrors = true
-  ) => {
-    try {
-      setIsLoading(true);
-      setErrors([]);
-      const response = await post(url, token, data);
-      callback(response);
-    } catch (error) {
-      if (serveErrors) catchErrors(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const catchErrors = (error: any) => {
-    if (error instanceof AxiosError) {
-      if (!error.response) {
-        setErrors([error.message]);
-        return;
-      }
-      const { status, data } = error.response as AxiosResponse;
-      if (status === 500) {
-        setErrors([Message.TryAgain]);
-      } else {
-        setErrors([data.msg]);
-      }
-    }
-  };
 
   const clearBeforeLogout = async () => {
     const keys = await AsyncStorage.getAllKeys();
@@ -178,8 +126,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        postAPI,
-        getAPI,
+
         errors,
         isLoading,
         setErrors,

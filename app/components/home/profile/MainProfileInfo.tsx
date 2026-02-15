@@ -9,6 +9,10 @@ import { FontWeights } from "../../../../enums/FontsProperties";
 import Checkbox from "../../elements/Checkbox";
 import { Message } from "../../../../enums/Message";
 import ResponseMessage from "../../../../interfaces/ResponseMessage";
+import {
+  getApiDeleteAccount,
+  usePostApiChangeVisibilityInRanking,
+} from "../../../../api/generated/user/user";
 
 interface MainProfileInfoProps {
   email: string;
@@ -21,8 +25,6 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
 }) => {
   const {
     clearBeforeLogout,
-    getAPI,
-    postAPI,
     setUserInfo,
     changeIsVisibleInRanking,
   } = useAppContext();
@@ -34,29 +36,28 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   const [isVisibleInRankingState, setIsVisibleInRankingState] =
     useState<boolean>(isVisibleInRanking);
 
+  const { mutateAsync: changeVisibilityMutation } =
+    usePostApiChangeVisibilityInRanking();
+
   const logout = async (): Promise<void> => {
     await clearBeforeLogout();
     router.push("/");
   };
 
   const deleteAccount = async (): Promise<void> => {
-    await getAPI("/deleteAccount", () => {
-      setIsDeleteConfirmationDialogVisible(false);
-      logout();
-    });
+    await getApiDeleteAccount();
+    setIsDeleteConfirmationDialogVisible(false);
+    logout();
   };
 
   const changeVisibility = async (newValue: boolean): Promise<void> => {
     setIsVisibleInRankingState(newValue);
-    await postAPI(
-      "/changeVisibilityInRanking",
-      (response: ResponseMessage) => {
-        if (response && response.msg === Message.Updated) {
-          changeIsVisibleInRanking(newValue);
-        }
-      },
-      { isVisibleInRanking: newValue }
-    );
+    const response = await changeVisibilityMutation({
+      data: { isVisibleInRanking: newValue },
+    });
+    if (response.data && response.data.msg === Message.Updated) {
+      changeIsVisibleInRanking(newValue);
+    }
   };
 
   return (
