@@ -26,6 +26,7 @@ import {
   useGetApiIdGetPlanConfig,
   usePostApiCopy,
   usePostApiIdSetNewActivePlan,
+  usePostApiIdDeletePlan,
 } from "../../../../api/generated/plan/plan";
 import {
   useGetApiPlanDayIdGetPlanDaysInfo,
@@ -36,7 +37,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiIdGetPlanConfigQueryKey } from "../../../../api/generated/plan/plan";
 
 import Toast from "react-native-toast-message";
-import { customInstance } from "../../../../api/custom-instance";
 
 const TrainingPlan: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
@@ -69,6 +69,7 @@ const TrainingPlan: React.FC = () => {
 
   const { mutateAsync: copyPlanMutation } = usePostApiCopy();
   const { mutateAsync: setNewActivePlanMutation } = usePostApiIdSetNewActivePlan();
+  const { mutateAsync: deletePlanMutation } = usePostApiIdDeletePlan();
 
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
@@ -222,10 +223,7 @@ const TrainingPlan: React.FC = () => {
   const deletePlan = async () => {
     try {
       if (planConfig?._id) {
-        await customInstance("/deletePlan", {
-          method: "POST",
-          data: { planId: planConfig._id },
-        });
+        await deletePlanMutation({ id: planConfig._id });
         await refetchAll();
       }
     } finally {
