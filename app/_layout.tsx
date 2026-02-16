@@ -16,7 +16,15 @@ NativeWindStyleSheet.setOutput({ default: "native" });
 
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+      gcTime: Infinity,
+      retry: false,
+    },
+  },
+});
 
 const Layout: React.FC = () => {
   const [fontsLoaded] = useFonts({

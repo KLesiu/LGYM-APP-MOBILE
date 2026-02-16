@@ -47,7 +47,7 @@ const TrainingPlan: React.FC = () => {
   const {
     data: planConfigData,
     isLoading: isPlanConfigLoading,
-  } = useGetApiIdGetPlanConfig(userId, { query: { enabled: !!userId, retry: false } });
+  } = useGetApiIdGetPlanConfig(userId, { query: { enabled: !!userId } });
 
   const planConfig = useMemo(
     () => (planConfigData?.data as PlanForm) || undefined,

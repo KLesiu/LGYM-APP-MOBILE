@@ -19,7 +19,7 @@ const LastTrainingStartInfo: React.FC = () => {
   const { getRankColor } = useAppContext();
   const { changeView, userId } = useHomeContext();
   const { data: lastTrainingResponse, isLoading } = useGetApiIdGetLastTraining(userId, {
-    query: { enabled: !!userId, staleTime: Infinity },
+    query: { enabled: !!userId },
   });
 
   const lastTrainingInfo = lastTrainingResponse?.data;

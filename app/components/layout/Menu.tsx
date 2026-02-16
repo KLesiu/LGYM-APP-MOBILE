@@ -50,27 +50,36 @@ const Menu: React.FC = () => {
     return { xMultiplier: 160, yMultiplier: 180 };
   }, [width]);
 
+  const startComponent = useMemo(() => <Start />, []);
+  const exercisesComponent = useMemo(() => <Exercises addExerciseToList={() => {}} />, []);
+  const gymComponent = useMemo(() => <Gym />, []);
+  const addTrainingComponent = useMemo(() => <AddTraining />, []);
+  const trainingPlanComponent = useMemo(() => <TrainingPlan />, []);
+  const historyComponent = useMemo(() => <History />, []);
+  const recordsComponent = useMemo(() => <Records />, []);
+  const profileComponent = useMemo(() => <Profile changeView={changeView} />, [changeView]);
+
   const menuItems = useMemo(() => {
     const items = [
-      { icon: <HomeIcon />, label: t("menu.home"), component: <Start /> },
+      { icon: <HomeIcon />, label: t("menu.home"), component: startComponent },
       { 
         icon: <ExerciseIcon />, 
         label: t("menu.exercises"), 
-        component: <Exercises addExerciseToList={() => {}} /> 
+        component: exercisesComponent 
       },
-      { icon: <GymIcon />, label: t("menu.gym"), component: <Gym /> },
+      { icon: <GymIcon />, label: t("menu.gym"), component: gymComponent },
       {
         icon: <AddTrainingIcon />,
         label: t("menu.training"),
-        component: <AddTraining />,
+        component: addTrainingComponent,
       },
-      { icon: <PlanIcon />, label: t("menu.plan"), component: <TrainingPlan /> },
-      { icon: <HistoryIcon />, label: t("menu.history"), component: <History /> },
-      { icon: <RecordIcon />, label: t("menu.records"), component: <Records /> },
+      { icon: <PlanIcon />, label: t("menu.plan"), component: trainingPlanComponent },
+      { icon: <HistoryIcon />, label: t("menu.history"), component: historyComponent },
+      { icon: <RecordIcon />, label: t("menu.records"), component: recordsComponent },
       {
         icon: <ProfileIcon />,
         label: t("menu.profile"),
-        component: <Profile changeView={changeView} />,
+        component: profileComponent,
       },
     ];
 
@@ -83,7 +92,7 @@ const Menu: React.FC = () => {
       const y = Math.cos(angle) * yMultiplier;
       return { ...item, x, y };
     });
-  }, [menuConfig, changeView, t]);
+  }, [menuConfig, t, startComponent, exercisesComponent, gymComponent, addTrainingComponent, trainingPlanComponent, historyComponent, recordsComponent, profileComponent]);
 
   if (!isMenuButtonVisible) return null;
 

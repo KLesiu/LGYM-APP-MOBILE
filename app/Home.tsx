@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import React, { JSX } from "react";
+import React, { JSX, useCallback } from "react";
 import { useState } from "react";
 import Menu from "./components/layout/Menu";
 import Header from "./components//layout/Header";
@@ -12,12 +12,13 @@ const Home: React.FC = () => {
   const [view, setView] = useState<JSX.Element>();
   const [isHeaderShow, setIsHeaderShow] = useState<boolean>(true);
 
-  const changeView = (view?: JSX.Element) => {
+  const changeView = useCallback((view?: JSX.Element) => {
     setView(view ?? <Start />);
-  };
-  const changeHeaderVisibility = (isVisible: boolean) => {
+  }, []);
+
+  const changeHeaderVisibility = useCallback((isVisible: boolean) => {
     setIsHeaderShow(isVisible);
-  };
+  }, []);
 
   return (
     <SafeAreaView className="bg-bgColor flex-1">

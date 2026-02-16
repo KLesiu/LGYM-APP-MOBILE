@@ -21,9 +21,7 @@ const UsersRanking: React.FC = () => {
   const { t } = useTranslation();
   const [ranking, setRanking] = useState<UserBaseInfoDto[]>([]);
   const { user } = useAuthStore();
-  const { data, isLoading } = useGetApiGetUsersRanking({
-    query: { staleTime: Infinity },
-  });
+  const { data, isLoading } = useGetApiGetUsersRanking();
 
   useEffect(() => {
     if (data?.data && Array.isArray(data.data)) {

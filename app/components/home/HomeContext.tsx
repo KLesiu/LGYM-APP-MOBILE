@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -93,20 +94,33 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
     },
     [isExpanded, toggleMenu, viewChange]
   );
+  const contextValue = useMemo(
+    () => ({
+      isExpanded,
+      animation,
+      toggleMenu,
+      toggleMenuButton,
+      isMenuButtonVisible,
+      changeView,
+      hideMenu,
+      userId,
+      changeHeaderVisibility,
+    }),
+    [
+      isExpanded,
+      animation,
+      toggleMenu,
+      toggleMenuButton,
+      isMenuButtonVisible,
+      changeView,
+      hideMenu,
+      userId,
+      changeHeaderVisibility,
+    ]
+  );
+
   return (
-    <HomeContext.Provider
-      value={{
-        isExpanded,
-        animation,
-        toggleMenu,
-        toggleMenuButton,
-        isMenuButtonVisible,
-        changeView,
-        hideMenu,
-        userId,
-        changeHeaderVisibility,
-      }}
-    >
+    <HomeContext.Provider value={contextValue}>
       {children}
     </HomeContext.Provider>
   );
