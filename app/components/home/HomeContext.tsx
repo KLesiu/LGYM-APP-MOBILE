@@ -46,7 +46,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
   const { user } = useAuthStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
-  const [userId, setUserId] = useState<string>("");
+  const userId = user?._id || "";
   const animation = useRef(new Animated.Value(0)).current;
 
 
@@ -59,12 +59,6 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
       backHandler.remove();
     };
   }, []);
-
-  useEffect(() => {
-    if (user && user._id) {
-      setUserId(user._id);
-    }
-  }, [user]);
 
   const handleBackButton = useCallback(() => {
     changeView();
