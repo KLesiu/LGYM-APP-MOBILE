@@ -9,6 +9,7 @@ import PlansListItem from "./PlansListItem";
 import React from "react";
 import { FontWeights } from "../../../../enums/FontsProperties";
 import { useGetApiIdGetPlansList } from "../../../../api/generated/plan/plan";
+import { useTranslation } from "react-i18next";
 
 interface PlansListProps {
   togglePlanConfig: (value: boolean) => void;
@@ -23,6 +24,7 @@ const PlansList: React.FC<PlansListProps> = ({
   setNewPlanConfig,
   showCopyPlanDialog,
 }) => {
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
 
   const { data: plansData, isLoading } = useGetApiIdGetPlansList(userId, {
@@ -42,7 +44,7 @@ const PlansList: React.FC<PlansListProps> = ({
               className="text-3xl smallPhone:text-xl text-textColor"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
-              Your Plans
+              {t('plans.yourPlans')}
             </Text>
           </View>
           {isLoading ? (
@@ -69,21 +71,21 @@ const PlansList: React.FC<PlansListProps> = ({
               buttonStyleType={ButtonStyle.outlineBlack}
               onPress={goBack}
               textWeight={FontWeights.bold}
-              text="Back"
+              text={t('plans.back')}
               width="flex-1"
             />
             <CustomButton
               buttonStyleType={ButtonStyle.default}
               onPress={showCopyPlanDialog}
               textWeight={FontWeights.bold}
-              text="Copy plan"
+              text={t('plans.copyPlan')}
               width="flex-1"
             />
             <CustomButton
               buttonStyleType={ButtonStyle.success}
               onPress={() => togglePlanConfig(true)}
               textWeight={FontWeights.bold}
-              text="Create new"
+              text={t('plans.createPlan')}
               width="flex-1"
             />
           </View>

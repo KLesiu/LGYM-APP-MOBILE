@@ -2,6 +2,9 @@ import { View, Text } from "react-native";
 import { useAppContext } from "../../AppContext";
 import { useEffect } from "react";
 import React from "react";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+
 interface ValidationViewProps {
   errors?: string[];
 }
@@ -10,6 +13,14 @@ const ValidationView: React.FC<ValidationViewProps> = ({ errors: propErrors }) =
   const { errors: contextErrors, setErrors } = useAppContext();
 
   const errorsToDisplay = propErrors && propErrors.length > 0 ? propErrors : contextErrors;
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!propErrors || propErrors.length === 0) {
+        setErrors([]);
+      }
+    }, [propErrors, setErrors])
+  );
 
   useEffect(() => {
     return () => {

@@ -6,14 +6,15 @@ import Card from "../../elements/Card";
 import { useAppContext } from "../../../AppContext";
 import React from "react";
 import { useAuthStore } from "../../../../stores/useAuthStore";
+import { useTranslation } from "react-i18next";
 
 const ProgressInfo: React.FC = () => {
+  const { t } = useTranslation();
   const { getRankColor } = useAppContext();
   const { user } = useAuthStore();
 
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
 
   useEffect(() => {
     setIsLoading(true);
@@ -36,7 +37,7 @@ const ProgressInfo: React.FC = () => {
             className="text-primaryColor  text-lg smallPhone:text-base"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
-              Progress
+              {t('start.progress')}
             </Text>
             <View className="flex flex-col px-1" style={{ gap: 2 }}>
               <View className="flex flex-row" style={{ gap: 4 }}>
@@ -44,7 +45,7 @@ const ProgressInfo: React.FC = () => {
                   className="text-textColor text-sm smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  Current Rank:
+                  {t('start.currentRank')}
                 </Text>
                 <Text
                   className={` midPhone:text-sm text-md smallPhone:text-xs`}
@@ -58,7 +59,7 @@ const ProgressInfo: React.FC = () => {
                   className="text-textColor text-sm smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  ELO:
+                  {t('start.elo')}
                 </Text>
                 <Text
                   className="text-textColor  midPhone:text-sm text-md smallPhone:text-xs"
@@ -72,7 +73,7 @@ const ProgressInfo: React.FC = () => {
                   className="text-textColor text-sm smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  Next Rank:
+                  {t('start.nextRank')}
                 </Text>
                 <Text
                   className={`text-textColor  midPhone:text-sm text-md smallPhone:text-xs`}
@@ -90,7 +91,7 @@ const ProgressInfo: React.FC = () => {
                   className="text-textColor text-sm smallPhone:text-xs"
                   style={{ fontFamily: "OpenSans_300Light" }}
                 >
-                  Completed:
+                  {t('start.completed')}
                 </Text>
                 <Text
                   className="text-textColor  midPhone:text-sm text-md smallPhone:text-xs"

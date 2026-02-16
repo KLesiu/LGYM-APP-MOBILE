@@ -10,6 +10,7 @@ import React from "react";
 import { useGetApiPlanDayIdGetPlanDaysTypes } from "../../../../../api/generated/plan-day/plan-day";
 import NoTrainingDaysInfo from "./elements/NoTrainingDaysInfo";
 import { useAppContext } from "../../../../AppContext";
+import { useTranslation } from "react-i18next";
 
 interface TrainingDayChooseProps {
   showDaySection: (day: string) => Promise<void>;
@@ -20,6 +21,7 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
   showDaySection,
   goBack,
 }) => {
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { errors } = useAppContext();
 
@@ -55,7 +57,7 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({
           className="text-lg text-textColor"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
-          Choose training day!
+          {t('training.chooseDay')}
         </Text>
         {errors.length || !trainingTypes.length ? (
           <NoTrainingDaysInfo goBack={goBack} />

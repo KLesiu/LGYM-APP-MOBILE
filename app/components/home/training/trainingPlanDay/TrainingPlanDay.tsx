@@ -34,6 +34,7 @@ import {
 import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
 import { ExerciseResponseDto } from "../../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -45,6 +46,7 @@ interface TrainingPlanDayProps {
 }
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
+  const { t } = useTranslation();
   const { changeHeaderVisibility, userId } = useHomeContext();
   const queryClient = useQueryClient();
   
@@ -146,7 +148,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         }
     } catch (e) {
         console.error(e);
-        Alert.alert("Error", "Failed to add training");
+        Alert.alert(t('training.error'), t('training.failedToAdd'));
     }
   };
 
@@ -311,8 +313,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const result = parseScoresIfValid(exercises);
     if (!result)
       return Alert.alert(
-        "Invalid Scores",
-        "Please make sure every score is a number and not empty."
+        t('training.invalidScores'),
+        t('training.invalidScoresMessage')
       );
     await addTraining(result);
   };

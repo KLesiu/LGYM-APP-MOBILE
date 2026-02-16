@@ -12,8 +12,10 @@ import { useAppContext } from "./AppContext";
 import Checkbox from "./components/elements/Checkbox";
 import { usePostApiRegister, postApiRegisterResponse } from "../api/generated/user/user";
 import { getErrorMessage } from "../utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 const Register: React.FC = () => {
+  const { t } = useTranslation();
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [rpassword, setRPassword] = useState<string>("");
@@ -36,21 +38,21 @@ const Register: React.FC = () => {
     const newErrors: string[] = [];
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!username.trim()) newErrors.push("Username is required");
+    if (!username.trim()) newErrors.push(t("auth.usernameRequired"));
     if (!email.trim()) {
-      newErrors.push("Email is required");
+      newErrors.push(t("auth.emailRequired"));
     } else if (!emailRegex.test(email)) {
-      newErrors.push("Invalid email format");
+      newErrors.push(t("auth.invalidEmail"));
     }
 
     if (!password) {
-      newErrors.push("Password is required");
+      newErrors.push(t("auth.passwordRequired"));
     } else if (password.length < 6) {
-      newErrors.push("Password must be at least 6 characters");
+      newErrors.push(t("auth.passwordLength"));
     }
 
     if (password !== rpassword) {
-      newErrors.push("Passwords do not match");
+      newErrors.push(t("auth.passwordsMismatch"));
     }
 
     setErrors(newErrors);
@@ -76,7 +78,7 @@ const Register: React.FC = () => {
         },
         onError: (error: any) => {
           console.error("Registration error:", error);
-          const errorMessage = getErrorMessage(error, "Registration failed");
+          const errorMessage = getErrorMessage(error, t("auth.registrationFailed"));
           setErrors([errorMessage]);
         },
       }
@@ -105,7 +107,7 @@ const Register: React.FC = () => {
               className="text-textColor text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Username
+              {t("auth.username")}
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -123,7 +125,7 @@ const Register: React.FC = () => {
               className="text-textColor text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Email
+              {t("auth.email")}
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -143,7 +145,7 @@ const Register: React.FC = () => {
               className="text-textColor text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Password
+              {t("auth.password")}
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -162,7 +164,7 @@ const Register: React.FC = () => {
               className="text-textColor text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Repeat password
+              {t("auth.repeatPassword")}
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -186,12 +188,12 @@ const Register: React.FC = () => {
           className="text-textColor text-sm smallPhone:text-xs"
           style={{ fontFamily: "OpenSans_300Light" }}
         >
-          Be visible in global rankings
+          {t("profile.visibleInRanking")}
         </Text>
       </View>
 
       <CustomButton
-        text="Register"
+        text={t("auth.register")}
         onPress={register}
         width="w-full"
         buttonStyleType={ButtonStyle.success}

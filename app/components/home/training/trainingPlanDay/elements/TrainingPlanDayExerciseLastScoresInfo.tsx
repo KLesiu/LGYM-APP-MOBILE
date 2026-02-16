@@ -6,12 +6,14 @@ import { LastExerciseScoresWithGym } from "../../../../../../interfaces/Exercise
 import ViewLoading from "../../../../elements/ViewLoading";
 import React from "react";
 import { usePostApiExerciseIdGetLastExerciseScores } from "../../../../../../api/generated/exercise/exercise";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayExerciseLastScoresInfoProps {}
 
 const TrainingPlanDayExerciseLastScoresInfo: React.FC<
   TrainingPlanDayExerciseLastScoresInfoProps
 > = () => {
+  const { t } = useTranslation();
   const {
     gym,
     isGymFilterActive,
@@ -103,7 +105,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
               fontFamily: "OpenSans_400Regular",
             }}
           >
-            {`Last training scores in`}
+            {t('training.lastScoresIn')}
           </Text>
           <Text
             className="text-sm smallPhone:text-xs text-primaryColor"
@@ -123,10 +125,10 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
           fontFamily: "OpenSans_400Regular",
         }}
       >
-        Last training scores:
+        {t('training.lastScores')}
       </Text>
     );
-  }, [isGymFilterActive]);
+  }, [isGymFilterActive, t]);
 
   return (
     viewLoading ? <ViewLoading /> :  <View className="px-5 flex flex-col justify-start w-full ">

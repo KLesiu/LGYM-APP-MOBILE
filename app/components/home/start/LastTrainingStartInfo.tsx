@@ -12,8 +12,10 @@ import ViewLoading from "../../elements/ViewLoading";
 import React from "react";
 import { FontWeights } from "../../../../enums/FontsProperties";
 import { useGetApiIdGetLastTraining } from "../../../../api/generated/training/training";
+import { useTranslation } from "react-i18next";
 
 const LastTrainingStartInfo: React.FC = () => {
+  const { t } = useTranslation();
   const { getRankColor } = useAppContext();
   const { changeView, userId } = useHomeContext();
   const { data: lastTrainingResponse, isLoading } = useGetApiIdGetLastTraining(userId, {
@@ -43,7 +45,7 @@ const LastTrainingStartInfo: React.FC = () => {
             className="text-primaryColor  text-lg smallPhone:text-base"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            Last Training:
+            {t('start.lastTraining')}
           </Text>
           <View className="flex flex-col px-1" style={{ gap: 2 }}>
            <View className="flex flex-row" style={{ gap: 4 }}>
@@ -51,7 +53,7 @@ const LastTrainingStartInfo: React.FC = () => {
                 className="text-textColor text-sm smallPhone:text-xs"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                Date:
+                {t('start.date')}
               </Text>
               <Text
                 className="text-textColor text-sm smallPhone:text-xs"
@@ -67,7 +69,7 @@ const LastTrainingStartInfo: React.FC = () => {
                 className="text-textColor text-sm smallPhone:text-xs"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                Type:
+                {t('start.type')}
               </Text>
               {getRankColor &&   <Text
                 className={`text-sm smallPhone:text-xs`}
@@ -88,7 +90,7 @@ const LastTrainingStartInfo: React.FC = () => {
           buttonStyleType={ButtonStyle.success}
           textWeight={FontWeights.bold}
           customClasses="self-center"
-          text="New"
+          text={t('start.newTraining')}
         />
       </View>
     </Card>

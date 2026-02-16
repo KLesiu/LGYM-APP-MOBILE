@@ -5,22 +5,24 @@ import CustomButton, {
 } from "../../../../elements/CustomButton";
 import ValidationView from "../../../../elements/ValidationView";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface NoTrainingDaysInfoProps {
     goBack: () => void;
 }
 
 const NoTrainingDaysInfo: React.FC<NoTrainingDaysInfoProps> = (props) => {
+  const { t } = useTranslation();
   return (
     <View className="w-full flex flex-col" style={{gap: 16}}>
       <Text
         className="text-textColor text-base text-center"
         style={{ fontFamily: "OpenSans_400Regular" }}
       >
-        There is no training days available!
+        {t('training.noDays')}
       </Text>
       <CustomButton
-        text="Back"
+        text={t('training.back')}
         buttonStyleSize={ButtonSize.regular}
         buttonStyleType={ButtonStyle.cancel}
         onPress={props.goBack}

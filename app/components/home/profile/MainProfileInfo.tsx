@@ -8,7 +8,8 @@ import ConfirmDialog from "../../elements/ConfirmDialog";
 import { FontWeights } from "../../../../enums/FontsProperties";
 import Checkbox from "../../elements/Checkbox";
 import { Message } from "../../../../enums/Message";
-import ResponseMessage from "../../../../interfaces/ResponseMessage";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../../elements/LanguageSwitcher";
 import {
   getApiDeleteAccount,
   usePostApiChangeVisibilityInRanking,
@@ -23,9 +24,9 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   email,
   isVisibleInRanking,
 }) => {
+  const { t } = useTranslation();
   const {
     clearBeforeLogout,
-    setUserInfo,
     changeIsVisibleInRanking,
   } = useAppContext();
   const [
@@ -61,18 +62,18 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   };
 
   return (
-    <View className="bg-bgColor flex flex-col flex-1 justify-between  items-center  w-full px-4 py-2">
+    <View className="bg-bgColor flex flex-col flex-1 justify-between items-center w-full px-4 py-2">
       <View className="flex flex-col w-full" style={{ gap: 8 }}>
         <View style={{ gap: 4 }} className="flex flex-col w-full">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="text-gray-200/80 font-light  text-xs"
+            className="text-gray-200/80 font-light text-xs"
           >
-            Email
+            {t('auth.email')}
           </Text>
           <View
             style={{ borderRadius: 8 }}
-            className="bg-secondaryColor flex justify-center items-center h-14 smallPhone:h-10 py-4 smallPhone:py-2 px-6 "
+            className="bg-secondaryColor flex justify-center items-center h-14 smallPhone:h-10 py-4 smallPhone:py-2 px-6"
           >
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
@@ -91,21 +92,24 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
             className="text-textColor text-sm smallPhone:text-xs"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
-            Be visible in global rankings
+            {t('profile.visibleInRanking')}
           </Text>
         </View>
+        
+        <LanguageSwitcher />
+
       </View>
 
-      <View className="flex flex-row w-full" style={{ gap: 8 }}>
+      <View className="flex flex-row w-full gap-4 mt-4">
         <CustomButton
-          text="Logout"
+          text={t('profile.logout')}
           customClasses="flex-1"
           onPress={logout}
           textWeight={FontWeights.bold}
           buttonStyleType={ButtonStyle.success}
         />
         <CustomButton
-          text="Delete account"
+          text={t('profile.deleteAccount')}
           onPress={() => setIsDeleteConfirmationDialogVisible(true)}
           customClasses="flex-1"
           textWeight={FontWeights.bold}
@@ -114,8 +118,8 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
       </View>
       <ConfirmDialog
         visible={isDeleteConfirmationDialogVisible}
-        title={`Delete account`}
-        message={`Are you sure you want to delete your account?`}
+        title={t('profile.confirmDeleteTitle')}
+        message={t('profile.confirmDeleteMessage')}
         onConfirm={deleteAccount}
         onCancel={() => setIsDeleteConfirmationDialogVisible(false)}
       />

@@ -62,8 +62,8 @@ export const postApiAppConfigGetAppVersion = async (postApiAppConfigGetAppVersio
   return customInstance<postApiAppConfigGetAppVersionResponse>(getPostApiAppConfigGetAppVersionUrl(),
   {      
     ...options,
-    method: 'POST'
-    ,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       postApiAppConfigGetAppVersionBody,)
   }

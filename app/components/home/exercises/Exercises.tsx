@@ -23,6 +23,7 @@ import {
 } from "../../../../api/generated/exercise/exercise";
 import { useGetApiIdIsAdmin } from "../../../../api/generated/user/user";
 import { ExerciseResponseDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -37,6 +38,7 @@ const Exercises: React.FC<ExercisesProps> = ({
   exercisesList,
   goBackToPlanDay,
 }) => {
+  const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [selectedBodyPart, setSelectedBodyPart] = useState<BodyParts | null>(
@@ -185,7 +187,7 @@ const Exercises: React.FC<ExercisesProps> = ({
             className="text-xl text-primaryColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            Exercises
+            {t('exercises.title')}
           </Text>
           <View className="flex flex-row" style={{ gap: 8 }}>
             {isAdmin && (
@@ -193,14 +195,14 @@ const Exercises: React.FC<ExercisesProps> = ({
                 onPress={() => openExerciseForm(true)}
                 buttonStyleType={ButtonStyle.outlineBlack}
                 buttonStyleSize={ButtonSize.long}
-                text="New global"
+                text={t('exercises.newGlobal')}
               />
             )}
             <CustomButton
               onPress={() => openExerciseForm()}
               buttonStyleType={ButtonStyle.outlineBlack}
               buttonStyleSize={ButtonSize.long}
-              text="New"
+              text={t('exercises.new')}
             />
           </View>
         </View>

@@ -18,8 +18,10 @@ import RecordIcon from "./../../../img/icons/recordsIcon.svg";
 import MenuIcon from "./../../../img/icons/menuIcon.svg";
 import { useHomeContext } from "../home/HomeContext";
 import Records from "../home/records/Records";
+import { useTranslation } from "react-i18next";
 
 const Menu: React.FC = () => {
+  const { t } = useTranslation();
   const {
     isExpanded,
     isMenuButtonVisible,
@@ -50,24 +52,24 @@ const Menu: React.FC = () => {
 
   const menuItems = useMemo(() => {
     const items = [
-      { icon: <HomeIcon />, label: "Home", component: <Start /> },
+      { icon: <HomeIcon />, label: t("menu.home"), component: <Start /> },
       { 
         icon: <ExerciseIcon />, 
-        label: "Exercises", 
+        label: t("menu.exercises"), 
         component: <Exercises addExerciseToList={() => {}} /> 
       },
-      { icon: <GymIcon />, label: "Gym", component: <Gym /> },
+      { icon: <GymIcon />, label: t("menu.gym"), component: <Gym /> },
       {
         icon: <AddTrainingIcon />,
-        label: "Training",
+        label: t("menu.training"),
         component: <AddTraining />,
       },
-      { icon: <PlanIcon />, label: "Plan", component: <TrainingPlan /> },
-      { icon: <HistoryIcon />, label: "History", component: <History /> },
-      { icon: <RecordIcon />, label: "Records", component: <Records /> },
+      { icon: <PlanIcon />, label: t("menu.plan"), component: <TrainingPlan /> },
+      { icon: <HistoryIcon />, label: t("menu.history"), component: <History /> },
+      { icon: <RecordIcon />, label: t("menu.records"), component: <Records /> },
       {
         icon: <ProfileIcon />,
-        label: "Profile",
+        label: t("menu.profile"),
         component: <Profile changeView={changeView} />,
       },
     ];
@@ -81,7 +83,7 @@ const Menu: React.FC = () => {
       const y = Math.cos(angle) * yMultiplier;
       return { ...item, x, y };
     });
-  }, [menuConfig, changeView]);
+  }, [menuConfig, changeView, t]);
 
   if (!isMenuButtonVisible) return null;
 

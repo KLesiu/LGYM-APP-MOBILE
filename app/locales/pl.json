@@ -1,0 +1,111 @@
+{
+  "common": {
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "update": "Aktualizuj",
+    "create": "Stwórz",
+    "error": "Błąd",
+    "loading": "Ładowanie...",
+    "fieldRequired": "Pole jest wymagane",
+    "tryAgain": "Spróbuj ponownie"
+  },
+  "auth": {
+    "login": "Zaloguj",
+    "register": "Zarejestruj",
+    "username": "Nazwa użytkownika",
+    "password": "Hasło",
+    "email": "Email",
+    "loginFailed": "Logowanie nieudane",
+    "welcome": "Witaj",
+    "usernameAndPasswordRequired": "Nazwa użytkownika i hasło są wymagane",
+    "invalidResponse": "Nieprawidłowa odpowiedź z serwera",
+    "failedToStoreCredentials": "Nie udało się zapisać danych logowania",
+    "repeatPassword": "Powtórz hasło",
+    "usernameRequired": "Nazwa użytkownika jest wymagana",
+    "emailRequired": "Email jest wymagany",
+    "invalidEmail": "Nieprawidłowy format email",
+    "passwordRequired": "Hasło jest wymagane",
+    "passwordLength": "Hasło musi mieć co najmniej 6 znaków",
+    "passwordsMismatch": "Hasła nie pasują do siebie",
+    "registrationFailed": "Rejestracja nieudana"
+  },
+  "start": {
+    "rankingTitle": "Ranking Winter Arc 2025",
+    "progress": "Postęp",
+    "currentRank": "Obecna Ranga:",
+    "elo": "ELO:",
+    "nextRank": "Następna Ranga:",
+    "completed": "Ukończono:",
+    "lastTraining": "Ostatni Trening:",
+    "date": "Data:",
+    "type": "Typ:",
+    "newTraining": "Nowy"
+  },
+  "menu": {
+    "home": "Start",
+    "exercises": "Ćwiczenia",
+    "gym": "Siłownia",
+    "training": "Trening",
+    "plan": "Plan",
+    "history": "Historia",
+    "records": "Rekordy",
+    "profile": "Profil"
+  },
+  "plans": {
+    "yourPlans": "Twoje Plany",
+    "copyPlan": "Kopiuj plan",
+    "createPlan": "Utwórz nowy",
+    "back": "Wróć"
+  },
+  "exercises": {
+    "title": "Ćwiczenia",
+    "newGlobal": "Nowe globalne",
+    "new": "Nowe",
+    "search": "Szukaj",
+    "addExercise": "Dodaj Ćwiczenie"
+  },
+  "training": {
+    "summary": "Podsumowanie Treningu",
+    "progress": "Postęp",
+    "currentRank": "Obecna Ranga: {{rank}}",
+    "elo": "Elo: ({{elo}}) ({{gain}})",
+    "nextRank": "Następna Ranga:",
+    "highestRank": "Jesteś na najwyższej randze",
+    "completed": "Ukończono: {{percent}}",
+    "continue": "Kontynuuj",
+    "noTraining": "Nie możesz dodać treningu, ponieważ nie masz planu lub dni treningowych!",
+    "invalidScores": "Nieprawidłowe wyniki",
+    "invalidScoresMessage": "Upewnij się, że każdy wynik jest liczbą i nie jest pusty.",
+    "failedToAdd": "Nie udało się dodać treningu",
+    "error": "Błąd",
+    "chooseDay": "Wybierz dzień treningowy!",
+    "chooseGym": "Wybierz siłownię!",
+    "noGyms": "Brak dostępnych siłowni!",
+    "noDays": "Brak dostępnych dni treningowych!",
+    "back": "Wróć",
+    "delete": "Usuń",
+    "finish": "Zakończ",
+    "exerciseNameRequired": "Nazwa ćwiczenia jest wymagana",
+    "cantOpenBrowser": "Nie można otworzyć przeglądarki",
+    "lastScoresIn": "Ostatnie wyniki w",
+    "lastScores": "Ostatnie wyniki:"
+  },
+  "gym": {
+    "newGym": "Nowa Siłownia",
+    "editGym": "Edytuj Siłownię",
+    "setGym": "Wybierz siłownię",
+    "gymName": "Nazwa Siłowni",
+    "createSuccess": "Siłownia utworzona pomyślnie",
+    "updateSuccess": "Siłownia zaktualizowana pomyślnie"
+  },
+  "profile": {
+    "settings": "Ustawienia",
+    "language": "Język",
+    "logout": "Wyloguj",
+    "changeLanguage": "Zmień Język",
+    "deleteAccount": "Usuń konto",
+    "visibleInRanking": "Bądź widoczny w rankingach",
+    "confirmDeleteTitle": "Usuń konto",
+    "confirmDeleteMessage": "Czy na pewno chcesz usunąć swoje konto?"
+  }
+}

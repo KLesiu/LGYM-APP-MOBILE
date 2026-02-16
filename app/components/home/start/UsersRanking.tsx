@@ -8,6 +8,7 @@ import { UserBaseInfoDto } from "../../../../api/generated/model";
 import { useGetApiGetUsersRanking } from "../../../../api/generated/user/user";
 import { useAuthStore } from "../../../../stores/useAuthStore";
 import colors from "../../../../constants/colors";
+import { useTranslation } from "react-i18next";
 
 const RANK_COLORS = {
   gold: colors.rankGold || "#FFD700",
@@ -17,6 +18,7 @@ const RANK_COLORS = {
 };
 
 const UsersRanking: React.FC = () => {
+  const { t } = useTranslation();
   const [ranking, setRanking] = useState<UserBaseInfoDto[]>([]);
   const { user } = useAuthStore();
   const { data, isLoading } = useGetApiGetUsersRanking();
@@ -110,7 +112,7 @@ const UsersRanking: React.FC = () => {
           <MaskedView
             maskElement={
               <Text className="text-lg smallPhone:text-base" style={{ fontFamily: "OpenSans_700Bold", backgroundColor: 'transparent' }}>
-                Winter Arc 2025 Ranking
+                {t('start.rankingTitle')}
               </Text>
             }
           >
@@ -120,7 +122,7 @@ const UsersRanking: React.FC = () => {
               end={{ x: 1, y: 1 }}
             >
               <Text className="text-lg smallPhone:text-base opacity-0" style={{ fontFamily: "OpenSans_700Bold" }}>
-                Winter Arc 2025 Ranking
+                {t('start.rankingTitle')}
               </Text>
             </LinearGradient>
           </MaskedView>

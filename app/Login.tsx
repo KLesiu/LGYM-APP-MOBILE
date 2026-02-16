@@ -15,9 +15,11 @@ import { useAppContext } from "./AppContext";
 import { usePostApiLogin, postApiLoginResponse } from "../api/generated/user/user";
 import { useAuthStore } from "../stores/useAuthStore";
 import { getErrorMessage } from "../utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 const Login: React.FC = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
@@ -36,7 +38,7 @@ const Login: React.FC = () => {
 
   const login = async (): Promise<void> => {
     if (!username || !password) {
-      setErrors(["Username and password are required"]);
+      setErrors([t('auth.usernameAndPasswordRequired')]);
       return;
     }
 
@@ -53,12 +55,12 @@ const Login: React.FC = () => {
             const loginResponse = response.data;
 
             if (!("token" in loginResponse) || !loginResponse.token) {
-              setErrors(["Invalid response: missing token"]);
+              setErrors([t('auth.invalidResponse')]);
               return;
             }
 
             if (!("req" in loginResponse) || !loginResponse.req) {
-              setErrors(["Invalid response: missing user info"]);
+              setErrors([t('auth.invalidResponse')]);
               return;
             }
 
@@ -77,12 +79,12 @@ const Login: React.FC = () => {
             router.push("/Home");
           } catch (error) {
             console.error("Error storing credentials:", error);
-            setErrors(["Failed to store credentials"]);
+            setErrors([t('auth.failedToStoreCredentials')]);
           }
         },
         onError: (error: any) => {
           console.error("Login error:", error);
-          const errorMessage = getErrorMessage(error, "Login failed");
+          const errorMessage = getErrorMessage(error, t('auth.loginFailed'));
           setErrors([errorMessage]);
           setAppErrors([errorMessage]);
         },
@@ -112,7 +114,7 @@ const Login: React.FC = () => {
               className="text-textColor  text-base"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Username
+              {t('auth.username')}
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -132,7 +134,7 @@ const Login: React.FC = () => {
               className="text-textColor text-base"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Password
+              {t('auth.password')}
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -162,7 +164,7 @@ const Login: React.FC = () => {
         onPress={login}
         disabled={isPending}
         buttonStyleType={ButtonStyle.success}
-        text="Login"
+        text={t('auth.login')}
         buttonStyleSize={ButtonSize.xl}
       />
       <MiniLoading />

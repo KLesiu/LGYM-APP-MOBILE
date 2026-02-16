@@ -10,6 +10,7 @@ import ViewLoading from "../../../elements/ViewLoading";
 import React from "react";
 import { useGetApiGymIdGetGyms } from "../../../../../api/generated/gym/gym";
 import { GymChoiceInfoDto } from "../../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface TrainingGymChooseProps {
   setGym: (gym: GymChoiceInfoDto) => void;
@@ -20,6 +21,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
   setGym,
   goBack,
 }) => {
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { errors } = useAppContext();
   
@@ -46,7 +48,7 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
           className="text-lg text-textColor"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
-          Choose your gym!
+          {t('training.chooseGym')}
         </Text>
         {errors.length || !gyms.length ? (
           <NoGymsInfo  goBack={goBack} />

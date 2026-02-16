@@ -1,0 +1,111 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "update": "Update",
+    "create": "Create",
+    "error": "Error",
+    "loading": "Loading...",
+    "fieldRequired": "Field is required",
+    "tryAgain": "Try again"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "loginFailed": "Login failed",
+    "welcome": "Welcome",
+    "usernameAndPasswordRequired": "Username and password are required",
+    "invalidResponse": "Invalid response from server",
+    "failedToStoreCredentials": "Failed to store credentials",
+    "repeatPassword": "Repeat password",
+    "usernameRequired": "Username is required",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Invalid email format",
+    "passwordRequired": "Password is required",
+    "passwordLength": "Password must be at least 6 characters",
+    "passwordsMismatch": "Passwords do not match",
+    "registrationFailed": "Registration failed"
+  },
+  "start": {
+    "rankingTitle": "Winter Arc 2025 Ranking",
+    "progress": "Progress",
+    "currentRank": "Current Rank:",
+    "elo": "ELO:",
+    "nextRank": "Next Rank:",
+    "completed": "Completed:",
+    "lastTraining": "Last Training:",
+    "date": "Date:",
+    "type": "Type:",
+    "newTraining": "New"
+  },
+  "menu": {
+    "home": "Home",
+    "exercises": "Exercises",
+    "gym": "Gym",
+    "training": "Training",
+    "plan": "Plan",
+    "history": "History",
+    "records": "Records",
+    "profile": "Profile"
+  },
+  "plans": {
+    "yourPlans": "Your Plans",
+    "copyPlan": "Copy plan",
+    "createPlan": "Create new",
+    "back": "Back"
+  },
+  "exercises": {
+    "title": "Exercises",
+    "newGlobal": "New global",
+    "new": "New",
+    "search": "Search",
+    "addExercise": "Add Exercise"
+  },
+  "training": {
+    "summary": "Training Summary",
+    "progress": "Progress",
+    "currentRank": "Current Rank: {{rank}}",
+    "elo": "Elo: ({{elo}}) ({{gain}})",
+    "nextRank": "Next Rank:",
+    "highestRank": "You are on the highest rank",
+    "completed": "Completed: {{percent}}",
+    "continue": "Continue",
+    "noTraining": "You cant add training, because you dont have plan or plan days!",
+    "invalidScores": "Invalid Scores",
+    "invalidScoresMessage": "Please make sure every score is a number and not empty.",
+    "failedToAdd": "Failed to add training",
+    "error": "Error",
+    "chooseDay": "Choose training day!",
+    "chooseGym": "Choose your gym!",
+    "noGyms": "There is no gyms available!",
+    "noDays": "There is no training days available!",
+    "back": "Back",
+    "delete": "Delete",
+    "finish": "Finish",
+    "exerciseNameRequired": "Exercise name is required",
+    "cantOpenBrowser": "Can't open browser",
+    "lastScoresIn": "Last training scores in",
+    "lastScores": "Last training scores:"
+  },
+  "gym": {
+    "newGym": "New Gym",
+    "editGym": "Edit Gym",
+    "setGym": "Set a gym",
+    "gymName": "Gym Name",
+    "createSuccess": "Gym created successfully",
+    "updateSuccess": "Gym updated successfully"
+  },
+  "profile": {
+    "settings": "Settings",
+    "language": "Language",
+    "logout": "Logout",
+    "changeLanguage": "Change Language",
+    "deleteAccount": "Delete account",
+    "visibleInRanking": "Be visible in global rankings",
+    "confirmDeleteTitle": "Delete account",
+    "confirmDeleteMessage": "Are you sure you want to delete your account?"
+  }
+}
