@@ -53,8 +53,9 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }, []);
 
   const getTokenFromLocalStorage = async () => {
-    const token = await AsyncStorage.getItem("token");
-    if (token) {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
         setToken(token);
         useAuthStore.getState().setToken(token);
         
@@ -76,9 +77,25 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           }
         } catch (error) {
           console.error("Failed to fetch user info on startup", error);
+          // Clear invalid token and reset auth state
+          await AsyncStorage.multiRemove(["token", "userInfo", "gym"]);
+          setToken(undefined);
+          setUserInfo(null);
+          useAuthStore.getState().setToken(null);
+          console.warn("Token validation failed. User treated as logged out.");
         }
+      }
+      setIsTokenChecked(true);
+    } catch (error) {
+      console.error("Error retrieving token from storage", error);
+      // Ensure clean state on any error
+      setToken(undefined);
+      setUserInfo(null);
+      useAuthStore.getState().setToken(null);
+      setIsTokenChecked(true);
+    } finally {
+      setCanAppStart(true);
     }
-    setCanAppStart(true);
   };
 
 
