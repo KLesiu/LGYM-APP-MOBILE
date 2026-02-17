@@ -7,7 +7,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from "../../../../helpers/toastConfig";
-import { usePatchApiIdShare } from "../../../../api/generated/plan/plan";
+import { usePostApiIdShare } from "../../../../api/generated/plan/plan";
 import { ShareCodeResponseDto } from "../../../../api/generated/model";
 
 interface PlanShareDialogProps {
@@ -25,7 +25,7 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
     plan.shareCode ?? null
   );
 
-  const { mutate: generateShareCode, isPending } = usePatchApiIdShare();
+  const { mutate: generateShareCode, isPending } = usePostApiIdShare();
 
   const copyToClipboard = async () => { 
     if (!currentShareCode) {
