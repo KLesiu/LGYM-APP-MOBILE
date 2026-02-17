@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({
     getName();
   }, []);
 
-  const displayName = user?.name || userInfo?.name || name;
+  const displayName = (typeof user?.name === 'string' ? user.name : userInfo?.name) || name;
   const userRank = useMemo(() => userInfo?.profileRank, [userInfo]);
 
   return (
