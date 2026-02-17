@@ -37,6 +37,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiIdGetPlanConfigQueryKey } from "../../../../api/generated/plan/plan";
 
 import Toast from "react-native-toast-message";
+import { toastConfig } from "../../../../helpers/toastConfig";
 
 const TrainingPlan: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
@@ -169,19 +170,23 @@ const TrainingPlan: React.FC = () => {
   const copyPlan = async (code: string) => {
     try {
       const response = await copyPlanMutation({ data: { shareCode: code } });
-      const newPlan = response.data; // This is PlanDto
+      const newPlan = response.data;
       
-      // Show success toast (matching PlanShareDialog style)
       Toast.show({
         type: 'success',
         text1: 'Copied!',
         text2: 'Plan copied successfully'
       });
 
-      // Set as active plan immediately
-      await changeActivePlan(newPlan as PlanForm);
+      if (newPlan && newPlan.id) {
+        const planToActivate: PlanForm = {
+          _id: newPlan.id,
+          name: newPlan.name || "",
+          isActive: newPlan.isActive
+        };
+        await changeActivePlan(planToActivate);
+      }
       
-      // Hide dialogs
       hideCopyPlanDialog();
       hidePlansList();
     } catch (e: any) {
@@ -383,6 +388,7 @@ const TrainingPlan: React.FC = () => {
         onConfirm={deletePlan}
         onCancel={() => setIsDeletePlanConfirmationDialogVisible(false)}
       />
+      <Toast config={toastConfig} />
     </BackgroundMainSection>
   );
 };
