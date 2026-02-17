@@ -1,4 +1,5 @@
 import { JSX, useCallback, useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ExerciseForPlanDay,
 } from "./../../../../../interfaces/Exercise";
@@ -18,6 +19,8 @@ import {
   usePostApiPlanDayIdCreatePlanDay,
   usePostApiPlanDayUpdatePlanDay,
   useGetApiPlanDayIdGetPlanDay,
+  getGetApiPlanDayIdGetPlanDayQueryKey,
+  getGetApiPlanDayIdGetPlanDaysInfoQueryKey,
 } from "../../../../../api/generated/plan-day/plan-day";
 import { PlanDayVmDto } from "../../../../../api/generated/model";
 import { BodyParts } from "../../../../../enums/BodyParts";
@@ -29,6 +32,7 @@ interface CreatePlanDayProps {
 }
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
+  const queryClient = useQueryClient();
   const {
     planDayName,
     setPlanDayName,
@@ -174,6 +178,12 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         },
         {
           onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: getGetApiPlanDayIdGetPlanDayQueryKey(props.planDayId!),
+            });
+            queryClient.invalidateQueries({
+              queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(props.planDayId!),
+            });
             closeForm();
           },
         }
