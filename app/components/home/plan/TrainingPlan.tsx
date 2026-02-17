@@ -168,8 +168,20 @@ const TrainingPlan: React.FC = () => {
 
   const copyPlan = async (code: string) => {
     try {
-      await copyPlanMutation({ data: { shareCode: code } });
-      await refetchAll();
+      const response = await copyPlanMutation({ data: { shareCode: code } });
+      const newPlan = response.data; // This is PlanDto
+      
+      // Show success toast (matching PlanShareDialog style)
+      Toast.show({
+        type: 'success',
+        text1: 'Copied!',
+        text2: 'Plan copied successfully'
+      });
+
+      // Set as active plan immediately
+      await changeActivePlan(newPlan as PlanForm);
+      
+      // Hide dialogs
       hideCopyPlanDialog();
       hidePlansList();
     } catch (e: any) {
