@@ -27,6 +27,7 @@ import {
   usePostApiCopy,
   usePostApiIdSetNewActivePlan,
   usePostApiIdDeletePlan,
+  getGetApiIdGetPlansListQueryKey,
 } from "../../../../api/generated/plan/plan";
 import {
   useGetApiPlanDayIdGetPlanDaysInfo,
@@ -185,6 +186,7 @@ const TrainingPlan: React.FC = () => {
           isActive: newPlan.isActive
         };
         await changeActivePlan(planToActivate);
+        await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlansListQueryKey(userId) });
       }
       
       hideCopyPlanDialog();
@@ -243,6 +245,7 @@ const TrainingPlan: React.FC = () => {
         await deletePlanMutation({ id: planConfig._id });
         // Explicitly set the query data to null to force "no plan" state
         queryClient.setQueryData(getGetApiIdGetPlanConfigQueryKey(userId), null);
+        await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlansListQueryKey(userId) });
         await refetchAll();
       }
     } finally {
