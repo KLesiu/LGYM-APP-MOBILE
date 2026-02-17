@@ -6,10 +6,10 @@ import SearchBox from "../../elements/SearchBox";
 import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
 import ViewLoading from "../../elements/ViewLoading";
 
-import { EnumLookupResponseDto } from "../../../../api/generated/model";
+import { EnumLookupDto, EnumLookupResponseDto } from "../../../../api/generated/model";
 
 interface BodyPartsListProps {
-  onSelectBodyPart: (bodyPart: BodyParts) => void;
+  onSelectBodyPart: (bodyPart: EnumLookupDto) => void;
 }
 
 const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
@@ -21,8 +21,8 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
     const responseData = data?.data as EnumLookupResponseDto;
     if (responseData && responseData.values) {
       return responseData.values
-        .map((item) => item.name as BodyParts)
-        .filter((item) => item);
+        .map((item) => item)
+       ;
     }
     return [];
   }, [data]);
@@ -33,7 +33,7 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
     }
     const lowercasedSearchText = searchText.toLowerCase();
     return allBodyParts.filter((bodyPart) =>
-      bodyPart.toLowerCase().includes(lowercasedSearchText)
+      bodyPart.displayName!.toLowerCase().includes(lowercasedSearchText)
     );
   }, [allBodyParts, searchText]);
 
@@ -47,7 +47,7 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
       <ScrollView className="mb-10 flex-1">
         {filteredBodyParts.map((bodyPart) => (
           <BodyPartsListElement
-            key={bodyPart}
+            key={bodyPart.name}
             bodyPart={bodyPart}
             onSelectBodyPart={onSelectBodyPart}
           />

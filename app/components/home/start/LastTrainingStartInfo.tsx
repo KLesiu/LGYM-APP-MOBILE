@@ -71,14 +71,14 @@ const LastTrainingStartInfo: React.FC = () => {
               >
                 {t('start.type')}
               </Text>
-              {getRankColor &&   <Text
-                className={`text-sm smallPhone:text-xs`}
-                style={{ fontFamily: "OpenSans_400Regular" ,color:getRankColor}}
-              >
-                {isValidTraining && lastTrainingInfo && (lastTrainingInfo as any).planDay
-                  ? (lastTrainingInfo as any).planDay.name
-                  : "N/A"}
-              </Text>}
+               {getRankColor &&   <Text
+                 className={`text-sm smallPhone:text-xs`}
+                 style={{ fontFamily: "OpenSans_400Regular" ,color:getRankColor}}
+               >
+                 {isValidTraining && lastTrainingInfo && (lastTrainingInfo as any).planDay
+                   ? String((lastTrainingInfo as any).planDay.name ?? "N/A")
+                   : "N/A"}
+               </Text>}
             
             </View>
           </View>

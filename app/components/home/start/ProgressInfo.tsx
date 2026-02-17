@@ -75,12 +75,12 @@ const ProgressInfo: React.FC = () => {
                 >
                   {t('start.nextRank')}
                 </Text>
-                <Text
-                  className={`text-textColor  midPhone:text-sm text-md smallPhone:text-xs`}
-                  style={{ fontFamily: "OpenSans_300Light" }}
-                >
-                  {user.nextRank.name}
-                </Text>
+                 <Text
+                   className={`text-textColor  midPhone:text-sm text-md smallPhone:text-xs`}
+                   style={{ fontFamily: "OpenSans_300Light" }}
+                 >
+                   {String(user.nextRank.name ?? "N/A")}
+                 </Text>
               </View>
 
               <View className="mt-2 mb-2">

@@ -39,6 +39,7 @@ import { getGetApiIdGetPlanConfigQueryKey } from "../../../../api/generated/plan
 
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../../../helpers/toastConfig";
+import { PlanDto } from "../../../../api/generated/model";
 
 const TrainingPlan: React.FC = () => {
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
@@ -171,7 +172,7 @@ const TrainingPlan: React.FC = () => {
   const copyPlan = async (code: string) => {
     try {
       const response = await copyPlanMutation({ data: { shareCode: code } });
-      const newPlan = response.data;
+      const newPlan = response.data as PlanDto;
       
       Toast.show({
         type: 'success',

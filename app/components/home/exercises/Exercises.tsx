@@ -22,7 +22,7 @@ import {
   useGetApiExerciseIdGetAllUserExercises,
 } from "../../../../api/generated/exercise/exercise";
 import { useGetApiIdIsAdmin } from "../../../../api/generated/user/user";
-import { ExerciseResponseDto } from "../../../../api/generated/model";
+import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 
 interface ExercisesProps {
@@ -115,8 +115,8 @@ const Exercises: React.FC<ExercisesProps> = ({
     [toggleMenuButton]
   );
 
-  const selectBodyPart = (bodyPart: BodyParts) => {
-    setSelectedBodyPart(bodyPart);
+  const selectBodyPart = (bodyPart: EnumLookupDto) => {
+    setSelectedBodyPart(bodyPart.name as BodyParts);
     setCurrentStep(1);
   };
 
