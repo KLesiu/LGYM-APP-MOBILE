@@ -224,6 +224,8 @@ const TrainingPlan: React.FC = () => {
     try {
       if (planConfig?._id) {
         await deletePlanMutation({ id: planConfig._id });
+        // Explicitly set the query data to null to force "no plan" state
+        queryClient.setQueryData(getGetApiIdGetPlanConfigQueryKey(userId), null);
         await refetchAll();
       }
     } finally {
