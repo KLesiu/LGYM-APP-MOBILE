@@ -39,11 +39,11 @@ const Profile: React.FC<ProfileProps> = ({ changeView }) => {
         <ViewLoading />
       ) : (
         <View className="w-full h-full p-4 relative  flex flex-col flex-1 ">
-          <Pressable
-            onPress={goBack}
-            style={{ borderRadius: 10000 }}
-            className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor "
-          >
+           <Pressable
+             onPress={goBack}
+             style={{ borderRadius: 10000, zIndex: 50 }}
+             className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor "
+           >
             <BackIcon />
           </Pressable>
           <View style={{ gap: 8 }} className="flex items-center flex-col px-6">
