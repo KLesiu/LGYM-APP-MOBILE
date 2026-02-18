@@ -19,6 +19,7 @@ import {
   useGetApiMainRecordsIdGetLastMainRecords,
   getApiMainRecordsIdDeleteMainRecord,
 } from "../../../../api/generated/main-records/main-records";
+import { MainRecordsLastDto } from "../../../../api/generated/model";
 
 interface RecordsProps {}
 
@@ -26,7 +27,7 @@ const Records: React.FC<RecordsProps> = () => {
   const [popUp, setPopUp] = useState<boolean>(false);
   const [exercise, setExercise] = useState<string | undefined>();
   const [choosenRecord, setChoosenRecord] = useState<
-    MainRecordsLast | undefined
+    MainRecordsLastDto | undefined
   >();
   const [
     isDeleteRecordConfirmationDialogVisible,
@@ -41,22 +42,6 @@ const Records: React.FC<RecordsProps> = () => {
   } = useGetApiMainRecordsIdGetLastMainRecords(userId, {
     query: { enabled: !!userId },
   });
-
-  const records = useMemo(
-    () => {
-        if (!recordsData?.data) return [];
-        return (recordsData.data as any[]).map(record => ({
-            ...record,
-            exerciseDetails: {
-                ...record.exerciseDetails,
-                bodyPart: typeof record.exerciseDetails?.bodyPart === 'object' 
-                    ? record.exerciseDetails.bodyPart.name 
-                    : record.exerciseDetails?.bodyPart
-            }
-        })) as MainRecordsLast[];
-    },
-    [recordsData]
-  );
 
   const changePopUpValue: VoidFunction = useCallback((): void => {
     setPopUp(false);
@@ -87,7 +72,7 @@ const Records: React.FC<RecordsProps> = () => {
   };
 
   const deleteDialogVisible = useCallback(
-    (visible: boolean, record?: MainRecordsLast) => {
+    (visible: boolean, record?: MainRecordsLastDto) => {
       if (visible) setChoosenRecord(record);
       else setChoosenRecord(undefined);
       setIsDeleteRecordConfirmationDialogVisible(visible);
@@ -124,9 +109,9 @@ const Records: React.FC<RecordsProps> = () => {
               className="w-full h-full"
               contentContainerStyle={{ padding: 8 }}
             >
-              {records && records.length ? (
+              {recordsData && recordsData.data && Array.isArray(recordsData.data) ? (
                 <View className="flex flex-col w-full" style={{ gap: 8 }}>
-                  {records.map((record) => (
+                  {recordsData.data.map((record) => (
                     <RecordsItem
                       key={record._id}
                       record={record}
@@ -145,7 +130,7 @@ const Records: React.FC<RecordsProps> = () => {
         <ConfirmDialog
           visible={isDeleteRecordConfirmationDialogVisible}
           title={`Delete: ${
-            choosenRecord ? choosenRecord.exerciseDetails.name : ""
+            choosenRecord ? choosenRecord.exerciseDetails?.name : ""
           }`}
           message={`Are you sure you want to delete?`}
           onConfirm={deleteRecord}

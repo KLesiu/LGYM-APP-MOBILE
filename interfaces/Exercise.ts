@@ -1,5 +1,4 @@
 import { BodyParts } from "../enums/BodyParts"
-import { UserEntity } from "../models/User";
 import { DropdownItem } from "./Dropdown";
 
 interface ExerciseForm{
@@ -14,7 +13,7 @@ interface ExerciseForm{
 interface ExerciseToCopy{
     _id?:string,
     name:string,
-    user:UserEntity,
+    user:string,
     bodyPart:BodyParts,
     description?:string,
     image?:string

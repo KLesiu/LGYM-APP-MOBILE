@@ -1,15 +1,15 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { MainRecordsLast } from "../../../../interfaces/MainRecords";
 import CustomButton, { ButtonSize } from "../../elements/CustomButton";
 import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
 import ProgressIcon from "./../../../../img/icons/progressIcon.svg";
 import Card from "../../elements/Card";
+  import { MainRecordsLastDto } from "../../../../api/generated/model";
 
 interface RecordsItemProps {
-  record: MainRecordsLast;
+  record: MainRecordsLastDto;
   updateSettedExerciseRecord: (exerciseId: string | undefined) => void;
-  deleteDialogVisible: (visible: boolean, record: MainRecordsLast) => void;
+  deleteDialogVisible: (visible: boolean, record: MainRecordsLastDto) => void;
 }
 
 const RecordsItem: React.FC<RecordsItemProps> = ({
@@ -29,13 +29,13 @@ const RecordsItem: React.FC<RecordsItemProps> = ({
             }}
             className="text-xl smallPhone:text-base font-bold text-primaryColor"
           >
-            {record.exerciseDetails.name}
+            {record.exerciseDetails?.name}
           </Text>
           <View style={{ gap: 16 }} className="flex flex-row">
             <CustomButton
               buttonStyleSize={ButtonSize.none}
               onPress={() =>
-                updateSettedExerciseRecord(record.exerciseDetails._id)
+                updateSettedExerciseRecord(record.exerciseDetails?._id!)
               }
               customSlots={[
                 <ProgressIcon stroke={"white"} height={24} width={24} />,
@@ -53,13 +53,13 @@ const RecordsItem: React.FC<RecordsItemProps> = ({
           style={{ fontFamily: "OpenSans_400Regular" }}
           className="text-base smallPhone:text-sm text-textColor"
         >
-          Weight: {record.weight} {record.unit}
+          Weight: {record.weight} {record.unit?.displayName}
         </Text>
         <Text
           style={{ fontFamily: "OpenSans_400Regular" }}
           className="text-base smallPhone:text-sm text-textColor"
         >
-          Date: {new Date(record.date).toLocaleString()}
+          Date: {new Date(record.date!).toLocaleString()}
         </Text>
       </View>
     </Card>
