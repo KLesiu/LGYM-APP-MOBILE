@@ -20,8 +20,10 @@ import {
 } from "../../../../api/generated/model";
 import { BodyParts } from "../../../../enums/BodyParts";
 import { WeightUnits } from "../../../../enums/Units";
+import { useTranslation } from "react-i18next";
 
 const History: React.FC = () => {
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
   const calendar = useRef(null);
   const [trainings, setTrainings] = useState<TrainingByDateDetails[]>();
@@ -160,7 +162,7 @@ const History: React.FC = () => {
               style={{ fontFamily: "OpenSans_700Bold" }}
               className="text-textColor text-xl text-center"
             >
-              You dont have training session this day!
+              {t('history.noSessionForDay')}
             </Text>
           </View>
         )}

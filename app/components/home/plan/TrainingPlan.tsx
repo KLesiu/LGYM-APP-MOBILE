@@ -40,8 +40,10 @@ import { getGetApiIdGetPlanConfigQueryKey } from "../../../../api/generated/plan
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../../../helpers/toastConfig";
 import { PlanDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 const TrainingPlan: React.FC = () => {
+  const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const queryClient = useQueryClient();
 
@@ -176,8 +178,8 @@ const TrainingPlan: React.FC = () => {
       
       Toast.show({
         type: 'success',
-        text1: 'Copied!',
-        text2: 'Plan copied successfully'
+        text1: t('plans.copiedTitle'),
+        text2: t('plans.copiedMessage')
       });
 
       if (newPlan && newPlan.id) {
@@ -195,8 +197,8 @@ const TrainingPlan: React.FC = () => {
     } catch (e: any) {
       Toast.show({
         type: "error",
-        text1: "Error",
-        text2: e.response?.data?.msg || "Failed to copy plan",
+        text1: t('common.error'),
+        text2: e.response?.data?.msg || t('plans.copyFailed'),
       });
     }
   };
@@ -263,7 +265,7 @@ const TrainingPlan: React.FC = () => {
           <View className="flex flex-row w-full justify-center items-center h-full">
             <CustomButton
               onPress={() => togglePlanConfigPopUp(true)}
-              text="Create plan"
+              text={t('plans.createPlanCta')}
               buttonStyleType={ButtonStyle.success}
             />
           </View>
@@ -277,7 +279,7 @@ const TrainingPlan: React.FC = () => {
                     fontFamily: "OpenSans_700Bold",
                   }}
                 >
-                  Current training plan:
+                  {t('plans.currentTrainingPlan')}
                 </Text>
                 <Text
                   style={{
@@ -291,7 +293,7 @@ const TrainingPlan: React.FC = () => {
 
               <View className="flex flex-row" style={{ gap: 16 }}>
                 <CustomButton
-                  text="Add training day"
+                  text={t('plans.addTrainingDay')}
                   onPress={() => showPlanDayForm(undefined)}
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}
@@ -380,15 +382,15 @@ const TrainingPlan: React.FC = () => {
       )}
       <ConfirmDialog
         visible={isDeletePlanDayConfirmationDialogVisible}
-        title={`Delete: ${currentPlanDay ? currentPlanDay.name : ""}`}
-        message={`Are you sure you want to delete?`}
+        title={t('plans.deleteConfirmTitle', { name: currentPlanDay?.name || '' })}
+        message={t('plans.deleteConfirmMessage')}
         onConfirm={handleDeletePlanDayConfirm}
         onCancel={() => deletePlanDayVisible(false)}
       />
       <ConfirmDialog
         visible={isDeletePlanConfirmationDialogVisible}
-        title={`Delete: ${planConfig ? planConfig.name : ""}`}
-        message={`Are you sure you want to delete?`}
+        title={t('plans.deleteConfirmTitle', { name: planConfig?.name || '' })}
+        message={t('plans.deleteConfirmMessage')}
         onConfirm={deletePlan}
         onCancel={() => setIsDeletePlanConfirmationDialogVisible(false)}
       />

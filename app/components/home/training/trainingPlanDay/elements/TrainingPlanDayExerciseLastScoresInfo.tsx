@@ -7,6 +7,7 @@ import ViewLoading from "../../../../elements/ViewLoading";
 import React from "react";
 import { usePostApiExerciseIdGetLastExerciseScores } from "../../../../../../api/generated/exercise/exercise";
 import { useTranslation } from "react-i18next";
+import { WeightUnits } from "../../../../../../enums/Units";
 
 interface TrainingPlanDayExerciseLastScoresInfoProps {}
 
@@ -88,7 +89,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
        .map((seriesScore) => {
          const { reps, weight, unit, gymName } = seriesScore.score!;
          const gymText = !isGymFilterActive ? ` (${gymName})` : "";
-         const unitString = typeof unit === 'string' ? unit : (unit as any)?.name || 'kg';
+         const unitString = typeof unit === 'string' ? unit : (unit as any)?.name || WeightUnits.KILOGRAMS;
          return `${reps}x${weight}${unitString}${gymText}`;
        })
        .join(", ");

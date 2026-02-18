@@ -89,7 +89,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
                    {t('training.nextRank')}
                    {' '}
                    {props.trainingSummary.nextRank
-                     ? (typeof props.trainingSummary.nextRank.name === 'string' ? props.trainingSummary.nextRank.name : (props.trainingSummary.nextRank.name as any)?.name || 'Unknown')
+                     ? (typeof props.trainingSummary.nextRank.name === 'string' ? props.trainingSummary.nextRank.name : (props.trainingSummary.nextRank.name as any)?.name || t('common.unknown'))
                      : t('training.highestRank')}
                 </Text>
               </View>

@@ -2,6 +2,7 @@ import { View, Text, ScrollView } from "react-native";
 import { ExerciseForPlanDay } from "./../../../../../../interfaces/Exercise";
 import ExerciseListItem from "./ExerciseListItem";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ExerciseListProps {
   exerciseList: ExerciseForPlanDay[];
@@ -11,6 +12,7 @@ interface ExerciseListProps {
 }
 
 const ExerciseList: React.FC<ExerciseListProps> = (props) => {
+  const { t } = useTranslation();
 
   const findExercisePosition = (exercise: ExerciseForPlanDay): number => {
     return props.exerciseList.findIndex(item => item.exercise.value === exercise.exercise.value);
@@ -23,13 +25,13 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
           style={{ fontFamily: "OpenSans_700Bold" }}
           className="text-textColor text-base smallPhone:text-sm"
         >
-          Exercises List:
+          {t('plans.exercisesList')}
         </Text>
         <Text
           style={{ fontFamily: "OpenSans_400Regular" }}
           className="text-textColor  text-base smallPhone:text-sm"
         >
-          {props.exerciseList.length} Total
+          {t('plans.total', { count: props.exerciseList.length })}
         </Text>
       </View>
       <View className="flex flex-col w-full " style={{ gap: 16 }}>
@@ -50,7 +52,7 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
               className="text-textColor"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              No exercises added yet.
+              {t('plans.noExercisesYet')}
             </Text>
           )}
         </View>

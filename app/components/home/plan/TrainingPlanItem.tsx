@@ -5,6 +5,7 @@ import EditIcon from "./../../../../img/icons/editIcon.svg";
 import DeleteIcon from "./../../../../img/icons/deleteIcon.svg";
 import Card from "../../elements/Card";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanItemProps {
   item: PlanDayBaseInfoVm;
@@ -16,13 +17,16 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
   showPlanDayForm,
   deletePlanDayVisible,
 }) => {
+  const { t } = useTranslation();
   return (
     <View key={item._id} className="w-full" style={{ gap: 10 }}>
       <Text
         style={{ fontFamily: "OpenSans_400Regular" }}
         className="text-base smallPhone:text-sm text-textColor"
       >
-        {`Last training : ${item.lastTrainingDate ? new Date(item.lastTrainingDate).toLocaleDateString() : "No training yet"}`}
+        {t('plans.lastTraining', {
+          date: item.lastTrainingDate ? new Date(item.lastTrainingDate).toLocaleDateString() : t('plans.noTrainingYet')
+        })}
       </Text>
       <Card onPress={() => showPlanDayForm(item, true)}>
         <View className="flex flex-col" style={{ gap: 4 }}>
@@ -40,7 +44,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             }}
             className=" text-base smallPhone:text-sm  text-fifthColor"
           >
-            Exercises: {item.totalNumberOfExercises}
+            {t('plans.exercisesCount', { count: item.totalNumberOfExercises })}
           </Text>
           <View className="flex flex-row w-full " style={{ gap: 16 }}>
             <Text
@@ -49,7 +53,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
               }}
               className=" text-base smallPhone:text-sm  text-fifthColor"
             >
-              Total series: {item.totalNumberOfSeries}
+              {t('plans.totalSeries', { count: item.totalNumberOfSeries })}
             </Text>
           </View>
         </View>

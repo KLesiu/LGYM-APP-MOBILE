@@ -4,12 +4,14 @@ import { ExerciseForm } from "../../../../../../interfaces/Exercise";
 import { TrainingSessionScores } from "../../../../../../interfaces/Training";
 import { useEffect, useState } from "react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayExerciseViewProps {}
 
 const TrainingPlanDayExerciseView: React.FC<
   TrainingPlanDayExerciseViewProps
 > = () => {
+  const { t } = useTranslation();
   const { currentExercise, setTrainingSessionScores, trainingSessionScores } =
     useTrainingPlanDay();
 
@@ -52,7 +54,7 @@ const TrainingPlanDayExerciseView: React.FC<
             fontFamily: "OpenSans_300Light",
           }}
         >
-          Series
+          {t('training.series')}
         </Text>
         <Text
           className="text-sm smallPhone:text-xs  text-textColor  w-2/5"
@@ -60,7 +62,7 @@ const TrainingPlanDayExerciseView: React.FC<
             fontFamily: "OpenSans_300Light",
           }}
         >
-          Reps
+          {t('training.reps')}
         </Text>
         <Text
           className=" text-sm smallPhone:text-xs text-textColor  w-2/5 "
@@ -68,7 +70,7 @@ const TrainingPlanDayExerciseView: React.FC<
             fontFamily: "OpenSans_300Light",
           }}
         >
-          Weight (kg)
+          {t('training.weightKg')}
         </Text>
       </View>
       <View className="w-full flex-1">

@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "Save",
+    "add": "Add",
     "cancel": "Cancel",
     "update": "Update",
     "create": "Create",
@@ -10,7 +11,8 @@
     "tryAgain": "Try again",
     "clearSelection": "Clear selection",
     "chooseOption": "Choose option",
-    "addRecord": "Add record"
+    "addRecord": "Add record",
+    "unknown": "Unknown"
   },
   "auth": {
     "login": "Login",
@@ -58,7 +60,40 @@
     "yourPlans": "Your Plans",
     "copyPlan": "Copy plan",
     "createPlan": "Create new",
-    "back": "Back"
+    "back": "Back",
+    "createPlanCta": "Create plan",
+    "currentTrainingPlan": "Current training plan:",
+    "addTrainingDay": "Add training day",
+    "deleteConfirmTitle": "Delete: {{name}}",
+    "deleteConfirmMessage": "Are you sure you want to delete?",
+    "copiedTitle": "Copied!",
+    "copiedMessage": "Plan copied successfully",
+    "copyFailed": "Failed to copy plan",
+    "planConfig": "Plan Config",
+    "planName": "Plan name",
+    "next": "Next",
+    "summary": "Summary",
+    "close": "Close",
+    "createPlanList": "Create plan list",
+    "addExercisesToList": "Add exercises to list",
+    "newPlanDay": "New Plan Day",
+    "setPlanName": "Set a plan name",
+    "name": "Name",
+    "exercisesList": "Exercises List:",
+    "total": "{{count}} Total",
+    "noExercisesYet": "No exercises added yet.",
+    "lastTraining": "Last training : {{date}}",
+    "noTrainingYet": "No training yet",
+    "exercisesCount": "Exercises: {{count}}",
+    "totalSeries": "Total series: {{count}}",
+    "copyDialogTitle": "Copy plan!",
+    "code": "Code",
+    "shareTitle": "Share your plan!",
+    "noShareCode": "No share code available",
+    "noCodeToCopy": "No code available to copy.",
+    "codeCopied": "Code copied to clipboard",
+    "generateNewCode": "Generate new code",
+    "shareCodeGenerateFailed": "Failed to generate share code"
   },
   "exercises": {
     "title": "Exercises",
@@ -91,7 +126,21 @@
     "exerciseNameRequired": "Exercise name is required",
     "cantOpenBrowser": "Can't open browser",
     "lastScoresIn": "Last training scores in",
-    "lastScores": "Last training scores:"
+    "lastScores": "Last training scores:",
+    "series": "Series",
+    "reps": "Reps",
+    "weightKg": "Weight (kg)",
+    "exerciseList": "Exercise list",
+    "seriesWithValue": "Series: {{series}}",
+    "repsWithValue": "{{reps}} reps.",
+    "seriesRepsSummary": "Series: {{series}} Reps: {{reps}}",
+    "addExercise": "Add Exercise",
+    "addExerciseToCurrentTraining": "Add exercise to the current training",
+    "exercise": "Exercise",
+    "startPause": "Start pause",
+    "finishPause": "Finish pause",
+    "planLoadErrorTitle": "Something went wrong!",
+    "planLoadErrorMessage": "We couldn't load your training plan. Please try again later."
   },
   "gym": {
     "newGym": "New Gym",
@@ -105,6 +154,11 @@
     "deleteConfirmTitle": "Delete: {{gymName}}",
     "deleteConfirmMessage": "Are you sure you want to delete?",
     "lastTraining": "Last training:"
+  },
+  "history": {
+    "noSessionForDay": "You dont have training session this day!",
+    "trainingWithPlan": "Training {{planName}}",
+    "seriesWithValue": "Series: {{series}}"
   },
   "profile": {
     "settings": "Settings",

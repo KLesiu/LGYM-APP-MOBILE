@@ -1,6 +1,7 @@
 {
   "common": {
     "save": "Zapisz",
+    "add": "Dodaj",
     "cancel": "Anuluj",
     "update": "Aktualizuj",
     "create": "Stwórz",
@@ -10,7 +11,8 @@
     "tryAgain": "Spróbuj ponownie",
     "clearSelection": "Wyczyść wybór",
     "chooseOption": "Wybierz opcję",
-    "addRecord": "Dodaj rekord"
+    "addRecord": "Dodaj rekord",
+    "unknown": "Nieznane"
   },
   "auth": {
     "login": "Zaloguj",
@@ -58,7 +60,40 @@
     "yourPlans": "Twoje Plany",
     "copyPlan": "Kopiuj plan",
     "createPlan": "Utwórz nowy",
-    "back": "Wróć"
+    "back": "Wróć",
+    "createPlanCta": "Utwórz plan",
+    "currentTrainingPlan": "Aktualny plan treningowy:",
+    "addTrainingDay": "Dodaj dzień treningowy",
+    "deleteConfirmTitle": "Usuń: {{name}}",
+    "deleteConfirmMessage": "Czy na pewno chcesz usunąć?",
+    "copiedTitle": "Skopiowano!",
+    "copiedMessage": "Plan został skopiowany pomyślnie",
+    "copyFailed": "Nie udało się skopiować planu",
+    "planConfig": "Konfiguracja planu",
+    "planName": "Nazwa planu",
+    "next": "Dalej",
+    "summary": "Podsumowanie",
+    "close": "Zamknij",
+    "createPlanList": "Utwórz listę planu",
+    "addExercisesToList": "Dodaj ćwiczenia do listy",
+    "newPlanDay": "Nowy dzień planu",
+    "setPlanName": "Ustaw nazwę planu",
+    "name": "Nazwa",
+    "exercisesList": "Lista ćwiczeń:",
+    "total": "{{count}} Łącznie",
+    "noExercisesYet": "Nie dodano jeszcze ćwiczeń.",
+    "lastTraining": "Ostatni trening : {{date}}",
+    "noTrainingYet": "Brak treningu",
+    "exercisesCount": "Ćwiczenia: {{count}}",
+    "totalSeries": "Łączna liczba serii: {{count}}",
+    "copyDialogTitle": "Kopiuj plan!",
+    "code": "Kod",
+    "shareTitle": "Udostępnij swój plan!",
+    "noShareCode": "Brak dostępnego kodu udostępniania",
+    "noCodeToCopy": "Brak kodu do skopiowania.",
+    "codeCopied": "Kod skopiowany do schowka",
+    "generateNewCode": "Wygeneruj nowy kod",
+    "shareCodeGenerateFailed": "Nie udało się wygenerować kodu udostępniania"
   },
   "exercises": {
     "title": "Ćwiczenia",
@@ -91,7 +126,21 @@
     "exerciseNameRequired": "Nazwa ćwiczenia jest wymagana",
     "cantOpenBrowser": "Nie można otworzyć przeglądarki",
     "lastScoresIn": "Ostatnie wyniki w",
-    "lastScores": "Ostatnie wyniki:"
+    "lastScores": "Ostatnie wyniki:",
+    "series": "Serie",
+    "reps": "Powtórzenia",
+    "weightKg": "Ciężar (kg)",
+    "exerciseList": "Lista ćwiczeń",
+    "seriesWithValue": "Serie: {{series}}",
+    "repsWithValue": "{{reps}} powt.",
+    "seriesRepsSummary": "Serie: {{series}} Powtórzenia: {{reps}}",
+    "addExercise": "Dodaj ćwiczenie",
+    "addExerciseToCurrentTraining": "Dodaj ćwiczenie do bieżącego treningu",
+    "exercise": "Ćwiczenie",
+    "startPause": "Start przerwy",
+    "finishPause": "Zakończ przerwę",
+    "planLoadErrorTitle": "Coś poszło nie tak!",
+    "planLoadErrorMessage": "Nie udało się wczytać planu treningowego. Spróbuj ponownie później."
   },
   "gym": {
     "newGym": "Nowa Siłownia",
@@ -105,6 +154,11 @@
     "deleteConfirmTitle": "Usuń: {{gymName}}",
     "deleteConfirmMessage": "Czy na pewno chcesz usunąć?",
     "lastTraining": "Ostatni trening:"
+  },
+  "history": {
+    "noSessionForDay": "Nie masz sesji treningowej w tym dniu!",
+    "trainingWithPlan": "Trening {{planName}}",
+    "seriesWithValue": "Serie: {{series}}"
   },
     "profile": {
       "settings": "Ustawienia",

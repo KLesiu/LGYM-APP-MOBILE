@@ -10,8 +10,10 @@ import { usePlanDay } from "./CreatePlanDayContext";
 import React from "react";
 import Dialog from "../../../elements/Dialog";
 import Exercises from "../../exercises/Exercises";
+import { useTranslation } from "react-i18next";
 
 const CreatePlanDayExerciseList: React.FC = () => {
+  const { t } = useTranslation();
   const { exercisesList, setExercisesList, goBack, goToNext } = usePlanDay();
 
   const [isAddExercisesListVisible, setIsAddExercisesListVisible] =
@@ -90,12 +92,12 @@ const CreatePlanDayExerciseList: React.FC = () => {
               className="text-3xl smallPhone:text-xl text-textColor"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
-              Create plan list
+              {t('plans.createPlanList')}
             </Text>
           </View>
           <View className="flex justify-between flex-row w-full ">
             <CustomButton
-              text="Add exercises to list"
+              text={t('plans.addExercisesToList')}
               onPress={toggleAddExercisesList}
               buttonStyleType={ButtonStyle.success}
             />
@@ -113,13 +115,13 @@ const CreatePlanDayExerciseList: React.FC = () => {
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
           onPress={goBack}
-          text="Back"
+          text={t('plans.back')}
           width="flex-1"
         />
         <CustomButton
           buttonStyleType={ButtonStyle.default}
           onPress={goToNext}
-          text="Next"
+          text={t('plans.next')}
           width="flex-1"
         />
       </View>

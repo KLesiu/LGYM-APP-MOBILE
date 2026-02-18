@@ -13,6 +13,7 @@ import { useAppContext } from "../../../../AppContext";
 import ValidationView from "../../../elements/ValidationView";
 import { Message } from "../../../../../enums/Message";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   useGetApiExerciseIdGetAllExercises,
   usePostApiExerciseIdGetExerciseByBodyPart,
@@ -33,6 +34,7 @@ interface TrainingPlanDayExerciseFormProps {
 const TrainingPlanDayExerciseForm: React.FC<
   TrainingPlanDayExerciseFormProps
 > = (props) => {
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { setErrors } = useAppContext();
 
@@ -99,7 +101,6 @@ const TrainingPlanDayExerciseForm: React.FC<
   const isLoading = isLoadingAll || isLoadingBodyPart;
 
   const clearAutoCompleteQuery = () => {
-    // Po wyczyszczeniu query resetujemy stan, aby zapobiec ponownemu wywołaniu
     setClearQuery(false);
   };
   const validator = (input: string): void => {
@@ -125,7 +126,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             className="text-3xl smallPhone:text-xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            Add exercise to the current training
+            {t('training.addExerciseToCurrentTraining')}
           </Text>
         </View>
         <View
@@ -138,7 +139,7 @@ const TrainingPlanDayExerciseForm: React.FC<
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                Exercise:
+                {t('training.exercise')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -157,7 +158,7 @@ const TrainingPlanDayExerciseForm: React.FC<
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                Series:
+                {t('training.series')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -181,7 +182,7 @@ const TrainingPlanDayExerciseForm: React.FC<
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                Reps:
+                {t('training.reps')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -206,14 +207,14 @@ const TrainingPlanDayExerciseForm: React.FC<
             width="flex-1"
             onPress={props.cancel}
             buttonStyleType={ButtonStyle.cancel}
-            text="Cancel"
+            text={t('common.cancel')}
           />
           <CustomButton
             width="flex-1"
             disabled={isLoading}
             onPress={sendNewExercise}
             buttonStyleType={ButtonStyle.success}
-            text="Add"
+            text={t('common.add')}
           />
         </View>
         <ValidationView />

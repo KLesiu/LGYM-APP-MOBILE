@@ -3,12 +3,14 @@ import { TrainingByDateDetails } from "./../../../../interfaces/Training";
 import GymIcon from "./../../../../img/icons/gymIcon.svg";
 import Card from "../../elements/Card";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface TrainingSessionProps {
   trainings: TrainingByDateDetails[];
 }
 
 const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
+  const { t } = useTranslation();
   return (
     <ScrollView
       contentContainerStyle={{ gap: 16 }}
@@ -22,7 +24,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                 style={{ fontFamily: "OpenSans_700Bold" }}
                 className="text-lg text-primaryColor"
               >
-                Training {training.planDay.name}
+                {t('history.trainingWithPlan', { planName: training.planDay.name })}
               </Text>
               <View className="flex flex-row items-center">
                 <GymIcon />
@@ -66,7 +68,7 @@ const TrainingSession: React.FC<TrainingSessionProps> = (props) => {
                                 style={{ fontFamily: "OpenSans_400Regular" }}
                                 className="text-textColor"
                               >
-                                Series: {score.series}
+                                {t('history.seriesWithValue', { series: score.series })}
                               </Text>
                               <Text
                                 style={{ fontFamily: "OpenSans_400Regular" }}
