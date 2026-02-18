@@ -23,7 +23,7 @@ import { WeightUnits } from "../../../../enums/Units";
 import { useTranslation } from "react-i18next";
 
 const History: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { userId } = useHomeContext();
   const calendar = useRef(null);
   const [trainings, setTrainings] = useState<TrainingByDateDetails[]>();
@@ -42,6 +42,20 @@ const History: React.FC = () => {
       dots: [{ color: "#94e798" }],
     }));
   }, [trainingDatesData]);
+
+  const calendarLocale = useMemo(() => {
+    const localeName = i18n.language.startsWith("pl") ? "pl" : "en";
+    return {
+      name: localeName,
+      config: {
+        months: t("history.calendar.months", { returnObjects: true }) as string[],
+        monthsShort: t("history.calendar.monthsShort", { returnObjects: true }) as string[],
+        weekdays: t("history.calendar.weekdays", { returnObjects: true }) as string[],
+        weekdaysShort: t("history.calendar.weekdaysShort", { returnObjects: true }) as string[],
+        weekdaysMin: t("history.calendar.weekdaysMin", { returnObjects: true }) as string[],
+      },
+    };
+  }, [i18n.language, t]);
 
   useEffect(() => {
     init();
@@ -151,6 +165,7 @@ const History: React.FC = () => {
             borderRadius: 4,
           }}
           numDaysInWeek={5}
+          locale={calendarLocale}
         />
         {viewLoading ? (
           <ViewLoading />

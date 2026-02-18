@@ -158,7 +158,77 @@
   "history": {
     "noSessionForDay": "Nie masz sesji treningowej w tym dniu!",
     "trainingWithPlan": "Trening {{planName}}",
-    "seriesWithValue": "Serie: {{series}}"
+    "seriesWithValue": "Serie: {{series}}",
+    "calendar": {
+      "months": [
+        "Styczeń",
+        "Luty",
+        "Marzec",
+        "Kwiecień",
+        "Maj",
+        "Czerwiec",
+        "Lipiec",
+        "Sierpień",
+        "Wrzesień",
+        "Październik",
+        "Listopad",
+        "Grudzień"
+      ],
+      "monthsShort": [
+        "Sty",
+        "Lut",
+        "Mar",
+        "Kwi",
+        "Maj",
+        "Cze",
+        "Lip",
+        "Sie",
+        "Wrz",
+        "Paź",
+        "Lis",
+        "Gru"
+      ],
+      "weekdays": [
+        "Niedziela",
+        "Poniedziałek",
+        "Wtorek",
+        "Środa",
+        "Czwartek",
+        "Piątek",
+        "Sobota"
+      ],
+      "weekdaysShort": [
+        "Ndz",
+        "Pon",
+        "Wt",
+        "Śr",
+        "Czw",
+        "Pt",
+        "Sob"
+      ],
+      "weekdaysMin": [
+        "Nd",
+        "Pn",
+        "Wt",
+        "Śr",
+        "Cz",
+        "Pt",
+        "Sb"
+      ]
+    }
+  },
+  "records": {
+    "yourRecords": "Twoje rekordy:",
+    "addNewRecords": "Dodaj nowe rekordy",
+    "deleteConfirmTitle": "Usuń: {{name}}",
+    "deleteConfirmMessage": "Czy na pewno chcesz usunąć?",
+    "weightLabel": "Ciężar: {{weight}} {{unit}}",
+    "dateLabel": "Data: {{date}}",
+    "editRecord": "Edytuj rekord",
+    "newRecord": "Nowy rekord",
+    "setRecord": "Ustaw rekord",
+    "exercise": "Ćwiczenie",
+    "weight": "Ciężar"
   },
     "profile": {
       "settings": "Ustawienia",

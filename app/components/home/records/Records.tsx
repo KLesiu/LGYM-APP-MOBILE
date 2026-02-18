@@ -20,10 +20,12 @@ import {
   getApiMainRecordsIdDeleteMainRecord,
 } from "../../../../api/generated/main-records/main-records";
 import { MainRecordsLastDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface RecordsProps {}
 
 const Records: React.FC<RecordsProps> = () => {
+  const { t } = useTranslation();
   const [popUp, setPopUp] = useState<boolean>(false);
   const [exercise, setExercise] = useState<string | undefined>();
   const [choosenRecord, setChoosenRecord] = useState<
@@ -92,10 +94,10 @@ const Records: React.FC<RecordsProps> = () => {
                 className="text-textColor  text-base "
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
-                Your records:
+                {t('records.yourRecords')}
               </Text>
               <CustomButton
-                text="Add new records"
+                text={t('records.addNewRecords')}
                 onPress={() => {
                   setExercise(undefined);
                   showPopUp();
@@ -129,10 +131,10 @@ const Records: React.FC<RecordsProps> = () => {
 
         <ConfirmDialog
           visible={isDeleteRecordConfirmationDialogVisible}
-          title={`Delete: ${
-            choosenRecord ? choosenRecord.exerciseDetails?.name : ""
-          }`}
-          message={`Are you sure you want to delete?`}
+          title={t('records.deleteConfirmTitle', {
+            name: choosenRecord?.exerciseDetails?.name || ''
+          })}
+          message={t('records.deleteConfirmMessage')}
           onConfirm={deleteRecord}
           onCancel={() => deleteDialogVisible(false)}
         />

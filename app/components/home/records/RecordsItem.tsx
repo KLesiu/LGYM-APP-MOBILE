@@ -5,6 +5,7 @@ import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
 import ProgressIcon from "./../../../../img/icons/progressIcon.svg";
 import Card from "../../elements/Card";
   import { MainRecordsLastDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface RecordsItemProps {
   record: MainRecordsLastDto;
@@ -17,6 +18,7 @@ const RecordsItem: React.FC<RecordsItemProps> = ({
   updateSettedExerciseRecord,
   deleteDialogVisible,
 }) => {
+  const { t } = useTranslation();
   return (
     <Card>
       <View
@@ -53,13 +55,18 @@ const RecordsItem: React.FC<RecordsItemProps> = ({
           style={{ fontFamily: "OpenSans_400Regular" }}
           className="text-base smallPhone:text-sm text-textColor"
         >
-          Weight: {record.weight} {record.unit?.displayName}
+          {t('records.weightLabel', {
+            weight: record.weight,
+            unit: record.unit?.displayName || ''
+          })}
         </Text>
         <Text
           style={{ fontFamily: "OpenSans_400Regular" }}
           className="text-base smallPhone:text-sm text-textColor"
         >
-          Date: {new Date(record.date!).toLocaleString()}
+          {t('records.dateLabel', {
+            date: new Date(record.date!).toLocaleString()
+          })}
         </Text>
       </View>
     </Card>

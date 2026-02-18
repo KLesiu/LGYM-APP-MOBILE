@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "./../../../../interfaces/Exercise";
 import { isIntValidator } from "./../../../../helpers/numberValidator";
-import { Message } from "./../../../../enums/Message";
 import { WeightUnits } from "./../../../../enums/Units";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "./../../../../interfaces/Dropdown";
@@ -14,6 +13,7 @@ import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ValidationView from "../../elements/ValidationView";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
 import { useGetApiExerciseIdGetAllExercises } from "../../../../api/generated/exercise/exercise";
 import { usePostApiMainRecordsIdAddNewRecord } from "../../../../api/generated/main-records/main-records";
@@ -26,6 +26,7 @@ interface RecordsPopUpProps {
   exerciseId: string | undefined;
 }
 const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
+  const { t } = useTranslation();
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
@@ -81,7 +82,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   };
 
   const createNewRecord = async () => {
-    if (!weight || !selectedExercise) return setErrors([Message.FieldRequired]);
+    if (!weight || !selectedExercise) return setErrors([t('common.fieldRequired')]);
     
     try {
       await addNewRecordMutation({
@@ -96,7 +97,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       props.offPopUp();
     } catch (error) {
       console.error("Error creating new record:", error);
-      setErrors([Message.TryAgain]);
+      setErrors([t('common.tryAgain')]);
     }
   };
   return (
@@ -108,8 +109,8 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
             {props.exerciseId && selectedExercise
-              ? "Edit record"
-              : "New record"}
+              ? t('records.editRecord')
+              : t('records.newRecord')}
           </Text>
         </View>
         <View className="px-5" style={{ gap: 16 }}>
@@ -119,7 +120,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               className=" text-xl smallPhone:text-lg text-textColor"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              Set a record
+              {t('records.setRecord')}
             </Text>
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
@@ -127,7 +128,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               style={{ fontFamily: "OpenSans_300Light" }}
               className="  text-textColor text-base smallPhone:text-sm"
             >
-              Exercise:
+              {t('records.exercise')}:
             </Text>
             {props.exerciseId && selectedExercise ? (
               <TextInput
@@ -150,7 +151,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               className="text-textColor  text-base smallPhone:text-sm"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Weight:
+              {t('records.weight')}:
             </Text>
             <TextInput
               style={{ fontFamily: "OpenSans_400Regular" }}
@@ -163,13 +164,13 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         </View>
         <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
           <CustomButton
-            text="Cancel"
+            text={t('common.cancel')}
             onPress={props.offPopUp}
             buttonStyleType={ButtonStyle.cancel}
             width="flex-1"
           />
           <CustomButton
-            text="Add"
+            text={t('common.add')}
             onPress={createNewRecord}
             buttonStyleType={ButtonStyle.success}
             width="flex-1"
