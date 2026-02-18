@@ -6,6 +6,7 @@ import React from "react";
 import ProfileRank from "../elements/ProfileRank";
 import { useAppContext } from "../../AppContext";
 import { useAuthStore } from "../../../stores/useAuthStore";
+import { useTranslation } from "react-i18next";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -21,6 +22,8 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const { userInfo, getRankColor } = useAppContext();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
+  
   const [name, setName] = useState<string>("");
 
   const getName = async () => {
@@ -72,7 +75,7 @@ const Header: React.FC<HeaderProps> = ({
                 className="text-textColor text-[10px]"
                 style={{ fontFamily: "OpenSans_400Regular" }}
             >
-                Welcome,
+                {t('auth.welcome')},
             </Text>
             {getRankColor && (
                 <Text

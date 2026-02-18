@@ -33,7 +33,7 @@ import {
 } from "../../../../../api/generated/training/training";
 import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
-import { ExerciseResponseDto } from "../../../../../api/generated/model";
+import { ExerciseResponseDto, EnumLookupDto } from "../../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayProps {
@@ -172,12 +172,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   /// Show exercise form for adding a new exercise with a specific body part
   const showExerciseFormByBodyPart = (
-    bodyPart: BodyParts,
+    bodyPart: EnumLookupDto | undefined,
     exerciseToSwitchId: string
   ) => {
     if (!exerciseToSwitchId) return;
     setExerciseWhichBeingSwitched(exerciseToSwitchId);
-    setBodyPart(bodyPart);
+    setBodyPart(bodyPart?.name as BodyParts || undefined);
     setIsTrainingPlanDayExerciseFormShow(true);
   };
 
@@ -202,7 +202,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       _id: dto._id || "",
       name: dto.name || "",
       user: dto.user || "",
-      bodyPart: (dto.bodyPart?.name as BodyParts) || BodyParts.Chest,
+      bodyPart: dto.bodyPart || undefined,
       description: dto.description || "",
       image: dto.image || "",
     };

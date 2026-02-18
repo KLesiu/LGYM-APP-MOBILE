@@ -1,4 +1,5 @@
 import { View, Text, Image } from "react-native";
+import { useTranslation } from "react-i18next";
 import { GymChoiceInfo, GymForm } from "./../../../../interfaces/Gym";
 import CustomButton, { ButtonSize } from "../../elements/CustomButton";
 import EditIcon from "./../../../../img/icons/editIcon.svg";
@@ -15,11 +16,12 @@ interface GymPlaceProps {
 }
 
 const GymPlace: React.FC<GymPlaceProps> = (props) => {
+  const { t } = useTranslation();
   const { lastTrainingInfo } = props.gym;
   const trainingDate = useMemo(
     () =>
       lastTrainingInfo && lastTrainingInfo.createdAt
-        ? new Date(props.gym.lastTrainingInfo.createdAt).toLocaleDateString()
+        ? new Date(lastTrainingInfo.createdAt).toLocaleDateString()
         : "",
     [lastTrainingInfo]
   );
@@ -47,7 +49,7 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
               style={{ fontFamily: "OpenSans_400Regular" }}
               className=" text-sm text-fifthColor"
             >
-              Last training: {`${trainingDate} ${trainingName}`}
+              {t("gym.lastTraining")} {`${trainingDate} ${trainingName}`}
             </Text>
           </View>
           {props.isEditable && (

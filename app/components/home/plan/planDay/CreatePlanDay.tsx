@@ -63,20 +63,19 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       const result: PlanDayVm = {
         _id: dto._id || "",
         name: dto.name || "",
-        exercises:
-          dto.exercises?.map((e) => ({
-            series: e.series || 0,
-            reps: e.reps || "",
-            exercise: {
-              _id: e.exercise?._id || "",
-              name: e.exercise?.name || "",
-              user: e.exercise?.user || "",
-              bodyPart:
-                (e.exercise?.bodyPart?.name as BodyParts) || BodyParts.Chest,
-              description: e.exercise?.description || "",
-              image: e.exercise?.image || "",
-            },
-          })) || [],
+       exercises:
+         dto.exercises?.map((e) => ({
+           series: e.series || 0,
+           reps: e.reps || "",
+           exercise: {
+             _id: e.exercise?._id || "",
+             name: e.exercise?.name || "",
+             user: e.exercise?.user || "",
+             bodyPart: e.exercise?.bodyPart || undefined,
+             description: e.exercise?.description || "",
+             image: e.exercise?.image || "",
+           },
+         })) || [],
       };
       setPlanDayName(result.name);
       setExercisesList(mapExercisesListFromSend(result.exercises));

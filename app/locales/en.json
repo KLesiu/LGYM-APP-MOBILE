@@ -7,7 +7,10 @@
     "error": "Error",
     "loading": "Loading...",
     "fieldRequired": "Field is required",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "clearSelection": "Clear selection",
+    "chooseOption": "Choose option",
+    "addRecord": "Add record"
   },
   "auth": {
     "login": "Login",
@@ -96,7 +99,12 @@
     "setGym": "Set a gym",
     "gymName": "Gym Name",
     "createSuccess": "Gym created successfully",
-    "updateSuccess": "Gym updated successfully"
+    "updateSuccess": "Gym updated successfully",
+    "yourGyms": "Your gyms:",
+    "addGym": "Add gym",
+    "deleteConfirmTitle": "Delete: {{gymName}}",
+    "deleteConfirmMessage": "Are you sure you want to delete?",
+    "lastTraining": "Last training:"
   },
   "profile": {
     "settings": "Settings",
@@ -106,6 +114,23 @@
     "deleteAccount": "Delete account",
     "visibleInRanking": "Be visible in global rankings",
     "confirmDeleteTitle": "Delete account",
-    "confirmDeleteMessage": "Are you sure you want to delete your account?"
+    "confirmDeleteMessage": "Are you sure you want to delete your account?",
+    "memberSince": "Member since:",
+    "elo": "Elo"
+  },
+  "createExercise": {
+    "newExercise": "New Exercise",
+    "editExercise": "Edit Exercise",
+    "setExercise": "Set an exercise",
+    "exerciseName": "Name",
+    "bodyPart": "BodyPart",
+    "description": "Description",
+    "nameAndBodyPartRequired": "Name and body part are required!",
+    "add": "Add",
+    "save": "Save",
+    "delete": "Delete",
+    "deleteExercise": "Delete Exercise",
+    "deleteExerciseMessage": "Are you sure you want to delete this exercise?",
+    "createGlobalExercise": "Create Global Exercise"
   }
 }

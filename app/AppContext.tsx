@@ -5,10 +5,7 @@ import { Message } from "../enums/Message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserInfo } from "../interfaces/User";
 import { useAuthStore } from "../stores/useAuthStore";
-import { getApiCheckToken } from "../api/generated/user/user";
 import { useQueryClient } from "@tanstack/react-query";
-
-import { UserInfoDto } from "../api/generated/model";
 
 interface AppContextProps {
 
@@ -54,45 +51,19 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const getTokenFromLocalStorage = async () => {
     try {
-      const token = await AsyncStorage.getItem("token");
-      if (token) {
-        setToken(token);
-        useAuthStore.getState().setToken(token);
-        
-        try {
-          const response = await getApiCheckToken();
-          if (response && response.data && "name" in response.data) {
-            const userData = response.data as UserInfoDto;
-            const userInfo: UserInfo = {
-              ...userData,
-              createdAt: userData.createdAt
-                ? new Date(userData.createdAt)
-                : new Date(),
-              updatedAt: userData.updatedAt
-                ? new Date(userData.updatedAt)
-                : new Date(),
-            } as UserInfo;
-            setUserInfo(userInfo);
-            useAuthStore.getState().setUser(userInfo);
-          }
-        } catch (error) {
-          console.error("Failed to fetch user info on startup", error);
-          // Clear invalid token and reset auth state
-          await AsyncStorage.multiRemove(["token", "userInfo", "gym"]);
-          setToken(undefined);
-          setUserInfo(null);
-          useAuthStore.getState().setToken(null);
-          console.warn("Token validation failed. User treated as logged out.");
-        }
+      const storedToken = await AsyncStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+        useAuthStore.getState().setToken(storedToken);
+      } else {
+        setToken(undefined);
+        useAuthStore.getState().setToken(null);
       }
-      setIsTokenChecked(true);
     } catch (error) {
       console.error("Error retrieving token from storage", error);
-      // Ensure clean state on any error
       setToken(undefined);
       setUserInfo(null);
       useAuthStore.getState().setToken(null);
-      setIsTokenChecked(true);
     } finally {
       setCanAppStart(true);
     }

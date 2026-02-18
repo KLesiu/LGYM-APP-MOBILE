@@ -36,7 +36,7 @@ const TrainingPlanDayExerciseHeader: React.FC<
         </Text>
         <Pressable
           className="w-10"
-          onPress={() => openSearch(currentExercise?.exercise.name)}
+          onPress={() => openSearch(currentExercise?.exercise.name || undefined)}
           hitSlop={8}
         >
           <Ionicons name="search-outline" size={24} color="white" />

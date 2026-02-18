@@ -1,10 +1,10 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { ExerciseTrainingHistoryItem } from "../../../../interfaces/Exercise";
 import GymIcon from "./../../../../img/icons/gymIcon.svg";
+import { ExerciseTrainingHistoryItemDto } from "../../../../api/generated/model";
 
 interface ExerciseSeriesInTrainingElementProps {
-  exerciseSeriesInTraining: ExerciseTrainingHistoryItem;
+  exerciseSeriesInTraining: ExerciseTrainingHistoryItemDto;
 }
 
 const ExerciseSeriesInTrainingElement: React.FC<
@@ -41,10 +41,10 @@ const ExerciseSeriesInTrainingElement: React.FC<
           className="text-sm font-light text-textColor"
           style={{ fontFamily: "OpenSans_300Light" }}
         >
-          {new Date(exerciseSeriesInTraining.date).toLocaleDateString()}
+          {new Date(exerciseSeriesInTraining.date!).toLocaleDateString()}
         </Text>
       </View>
-      {exerciseSeriesInTraining.seriesScores.map((seriesScores) => (
+      {exerciseSeriesInTraining.seriesScores!.map((seriesScores) => (
         <View
           key={seriesScores.series}
           className="flex flex-row justify-between py-1 px-2 border-t border-textColor"
@@ -60,7 +60,7 @@ const ExerciseSeriesInTrainingElement: React.FC<
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
             {seriesScores.score?.reps} x {seriesScores.score?.weight}
-            {seriesScores.score?.unit}
+            {seriesScores.score?.unit?.displayName}
           </Text>
         </View>
       ))}

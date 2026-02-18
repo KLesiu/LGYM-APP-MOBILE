@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, ScrollView } from "react-native";
+import { useTranslation } from "react-i18next";
 import BodyPartImage from "../../elements/BodyPartImage";
 import {
   ExerciseForm,
@@ -23,7 +24,7 @@ import {
   ExerciseTrainingHistoryItemDto,
   PossibleRecordForExerciseDto,
 } from "../../../../api/generated/model";
-import { WeightUnits } from "../../../../enums/Units";
+import { BodyParts } from "../../../../enums/BodyParts";
 
 interface ExerciseDetailsProps {
   exercise: ExerciseForm;
@@ -34,11 +35,12 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
   exercise,
   goBack,
 }) => {
+  const { t } = useTranslation();
   const [exerciseSeriesDetails, setExerciseSeriesDetails] = useState<
-    ExerciseTrainingHistoryItem[]
+    ExerciseTrainingHistoryItemDto[]
   >([]);
   const [exerciseRecord, setExerciseRecord] =
-    useState<PossibleRecordForExercise>();
+    useState<PossibleRecordForExerciseDto>();
 
   const [isRecordDialogShown, setIsRecordDialogShown] =
     useState<boolean>(false);
@@ -67,27 +69,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
         onSuccess: (response) => {
           if (response && response.data) {
             const data = response.data as ExerciseTrainingHistoryItemDto[];
-            const mappedData: ExerciseTrainingHistoryItem[] = data.map(
-              (item) => ({
-                _id: item._id || "",
-                date: item.date ? new Date(item.date) : new Date(),
-                gymName: item.gymName || "",
-                trainingName: item.trainingName || "",
-                seriesScores:
-                  item.seriesScores?.map((series) => ({
-                    series: series.series || 0,
-                    score: series.score
-                      ? {
-                          reps: series.score.reps || 0,
-                          weight: series.score.weight || 0,
-                          unit: series.score.unit?.displayName || "",
-                          _id: series.score._id || "",
-                        }
-                      : null,
-                  })) || [],
-              })
-            );
-            setExerciseSeriesDetails(mappedData);
+            setExerciseSeriesDetails(data);
           }
         },
       }
@@ -102,14 +84,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
         onSuccess: (response) => {
           if (response && response.data) {
             const data = response.data as PossibleRecordForExerciseDto;
-            if (data.weight !== undefined && data.reps !== undefined) {
-              setExerciseRecord({
-                weight: data.weight || 0,
-                reps: data.reps || 0,
-                unit: (data.unit?.displayName || "") as WeightUnits,
-                date: data.date ? new Date(data.date) : new Date(),
-              });
-            }
+            setExerciseRecord(data);
           }
         },
       }
@@ -125,7 +100,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
 
   if (isRecordDialogShown) {
     return (
-      <RecordsPopUp offPopUp={toggleRecordDialog} exerciseId={exercise._id} />
+      <RecordsPopUp offPopUp={toggleRecordDialog} exerciseId={exercise._id || ""} />
     );
   }
 
@@ -141,16 +116,10 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
         </Pressable>
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <Text
-            style={{ fontFamily: "OpenSans_300Light" }}
-            className="text-textColor text-base"
-          >
-            Body part:
-          </Text>
-          <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
             className="font-bold text-primaryColor text-xl"
           >
-            {exercise.bodyPart}
+            {exercise.bodyPart?.displayName}
           </Text>
         </View>
         <View></View>
@@ -162,7 +131,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
         <ScrollView>
           <View className="flex flex-col">
             <View className="flex flex-row justify-center">
-              <BodyPartImage bodyPart={exercise.bodyPart} showBig={true} />
+              <BodyPartImage bodyPart={exercise.bodyPart?.name as BodyParts} showBig={true} />
             </View>
             <View className="flex flex-col w-full" style={{ gap: 8 }}>
               <View className="flex flex-row justify-between flex-wrap">
@@ -183,7 +152,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
                       style={{ fontFamily: "OpenSans_700Bold" }}
                     >
                       {exerciseRecord.reps}x{exerciseRecord.weight}
-                      {exerciseRecord.unit}
+                      {exerciseRecord.unit?.displayName}
                     </Text>
                   </View>
                 )}
@@ -210,7 +179,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
             onPress={toggleRecordDialog}
             buttonStyleSize={ButtonSize.regular}
             buttonStyleType={ButtonStyle.success}
-            text="Add record"
+            text={t("common.addRecord")}
             customClasses="flex-1"
           ></CustomButton>
         </View>

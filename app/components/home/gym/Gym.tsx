@@ -1,4 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
+import { useTranslation } from "react-i18next";
 import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
 import { FontWeights } from "./../../../../enums/FontsProperties";
 import GymPlace from "./GymPlace";
@@ -13,6 +14,7 @@ import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../../api
 import type { GymChoiceInfoDto } from "../../../../api/generated/model";
 
 const Gym: React.FC = () => {
+  const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
 
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
@@ -91,7 +93,7 @@ const Gym: React.FC = () => {
                 fontFamily: "OpenSans_700Bold",
               }}
             >
-              Your gyms:
+              {t("gym.yourGyms")}
             </Text>
 
             <CustomButton
@@ -99,7 +101,7 @@ const Gym: React.FC = () => {
               buttonStyleType={ButtonStyle.success}
               buttonStyleSize={ButtonSize.long}
               textWeight={FontWeights.bold}
-              text="Add gym"
+              text={t("gym.addGym")}
             />
           </View>
         </View>
@@ -129,8 +131,8 @@ const Gym: React.FC = () => {
       )}
       <ConfirmDialog
         visible={isDeleteGymConfirmationDialogVisible}
-        title={`Delete: ${currentChosenGym ? currentChosenGym.name : ""}`}
-        message={`Are you sure you want to delete?`}
+        title={t("gym.deleteConfirmTitle", { gymName: currentChosenGym?.name || "" })}
+        message={t("gym.deleteConfirmMessage")}
         onConfirm={deleteGym}
         onCancel={() => deleteDialogVisible(false)}
       />

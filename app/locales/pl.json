@@ -7,7 +7,10 @@
     "error": "Błąd",
     "loading": "Ładowanie...",
     "fieldRequired": "Pole jest wymagane",
-    "tryAgain": "Spróbuj ponownie"
+    "tryAgain": "Spróbuj ponownie",
+    "clearSelection": "Wyczyść wybór",
+    "chooseOption": "Wybierz opcję",
+    "addRecord": "Dodaj rekord"
   },
   "auth": {
     "login": "Zaloguj",
@@ -96,16 +99,38 @@
     "setGym": "Wybierz siłownię",
     "gymName": "Nazwa Siłowni",
     "createSuccess": "Siłownia utworzona pomyślnie",
-    "updateSuccess": "Siłownia zaktualizowana pomyślnie"
+    "updateSuccess": "Siłownia zaktualizowana pomyślnie",
+    "yourGyms": "Twoje siłownie:",
+    "addGym": "Dodaj siłownię",
+    "deleteConfirmTitle": "Usuń: {{gymName}}",
+    "deleteConfirmMessage": "Czy na pewno chcesz usunąć?",
+    "lastTraining": "Ostatni trening:"
   },
-  "profile": {
-    "settings": "Ustawienia",
-    "language": "Język",
-    "logout": "Wyloguj",
-    "changeLanguage": "Zmień Język",
-    "deleteAccount": "Usuń konto",
-    "visibleInRanking": "Bądź widoczny w rankingach",
-    "confirmDeleteTitle": "Usuń konto",
-    "confirmDeleteMessage": "Czy na pewno chcesz usunąć swoje konto?"
-  }
+    "profile": {
+      "settings": "Ustawienia",
+      "language": "Język",
+      "logout": "Wyloguj",
+      "changeLanguage": "Zmień Język",
+      "deleteAccount": "Usuń konto",
+      "visibleInRanking": "Bądź widoczny w rankingach",
+      "confirmDeleteTitle": "Usuń konto",
+      "confirmDeleteMessage": "Czy na pewno chcesz usunąć swoje konto?",
+      "memberSince": "Członkiem od:",
+      "elo": "Elo"
+    },
+    "createExercise": {
+      "newExercise": "Nowe Ćwiczenie",
+      "editExercise": "Edytuj Ćwiczenie",
+      "setExercise": "Ustaw ćwiczenie",
+      "exerciseName": "Nazwa",
+      "bodyPart": "Grupa Mięśniowa",
+      "description": "Opis",
+      "nameAndBodyPartRequired": "Nazwa i grupa mięśniowa są wymagane!",
+      "add": "Dodaj",
+      "save": "Zapisz",
+      "delete": "Usuń",
+      "deleteExercise": "Usuń Ćwiczenie",
+      "deleteExerciseMessage": "Czy na pewno chcesz usunąć to ćwiczenie?",
+      "createGlobalExercise": "Utwórz Globalne Ćwiczenie"
+    }
 }

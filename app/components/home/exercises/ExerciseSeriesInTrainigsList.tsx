@@ -2,9 +2,10 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { ExerciseTrainingHistoryItem } from "../../../../interfaces/Exercise";
 import ExerciseSeriesInTrainingElement from "./ExerciseSeriesInTrainingElement";
+import { ExerciseTrainingHistoryItemDto } from "../../../../api/generated/model";
 
 interface ExerciseSeriesInTrainigsListProps {
-  listOfExerciseSeriesInTrainigs: ExerciseTrainingHistoryItem[];
+  listOfExerciseSeriesInTrainigs: ExerciseTrainingHistoryItemDto[];
 }
 
 const ExerciseSeriesInTrainigsList: React.FC<

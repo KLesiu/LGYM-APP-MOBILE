@@ -41,7 +41,7 @@ const Exercises: React.FC<ExercisesProps> = ({
   const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [selectedBodyPart, setSelectedBodyPart] = useState<BodyParts | null>(
+  const [selectedBodyPart, setSelectedBodyPart] = useState<EnumLookupDto | null>(
     null
   );
 
@@ -68,33 +68,27 @@ const Exercises: React.FC<ExercisesProps> = ({
   });
 
   const globalExercises = useMemo(() => {
-    const data = globalExercisesData?.data as ExerciseResponseDto[];
-    if (!data) return [];
-    return data.map((exercise) => ({
-      ...exercise,
-      bodyPart: (exercise.bodyPart?.name as BodyParts) || BodyParts.Chest,
-    })) as ExerciseForm[];
+    if(!Array.isArray(globalExercisesData?.data)) return [];
+   return globalExercisesData?.data 
   }, [globalExercisesData]);
 
   const userExercises = useMemo(() => {
-    const data = userExercisesData?.data as ExerciseResponseDto[];
-    if (!data) return [];
-    return data.map((exercise) => ({
-      ...exercise,
-      bodyPart: (exercise.bodyPart?.name as BodyParts) || BodyParts.Chest,
-    })) as ExerciseForm[];
+    if(!Array.isArray(userExercisesData?.data)) return [];
+    return userExercisesData?.data;
   }, [userExercisesData]);
+
+
   const isAdmin = !!isAdminData?.data;
 
   const filteredGlobalExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart
-      ? globalExercises.filter((e) => e.bodyPart === selectedBodyPart)
+      ? globalExercises.filter((e) => e.bodyPart?.name === selectedBodyPart.name)
       : [];
   }, [globalExercises, selectedBodyPart]);
 
   const filteredUserExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart
-      ? userExercises.filter((e) => e.bodyPart === selectedBodyPart)
+      ? userExercises.filter((e) => e.bodyPart?.name === selectedBodyPart.name)
       : [];
   }, [userExercises, selectedBodyPart]);
 
@@ -116,7 +110,7 @@ const Exercises: React.FC<ExercisesProps> = ({
   );
 
   const selectBodyPart = (bodyPart: EnumLookupDto) => {
-    setSelectedBodyPart(bodyPart.name as BodyParts);
+    setSelectedBodyPart(bodyPart);
     setCurrentStep(1);
   };
 
@@ -147,7 +141,7 @@ const Exercises: React.FC<ExercisesProps> = ({
       case 1:
         return (
           <ExercisesList
-            bodyPart={selectedBodyPart as BodyParts}
+            bodyPart={selectedBodyPart!}
             goBack={goBack}
             selectExercise={selectExercise}
             userExercises={filteredUserExercisesByBodyPart}

@@ -49,7 +49,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
           _id: dto._id || "",
           name: dto.name || "",
           user: dto.user || "",
-          bodyPart: (dto.bodyPart?.name as BodyParts) || BodyParts.Chest,
+          bodyPart: dto.bodyPart || undefined,
           description: dto.description || "",
           image: dto.image || "",
         })

@@ -4,7 +4,7 @@ interface AuthState {
   token: string | null;
   user: any | null;
   isAuthenticated: boolean;
-  setToken: (token: string) => void;
+  setToken: (token: string | null | undefined) => void;
   setUser: (user: any) => void;
   logout: () => void;
 }

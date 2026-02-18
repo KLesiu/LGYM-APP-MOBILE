@@ -25,7 +25,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
     const newExerciseForPlanDay: ExerciseForPlanDay = {
       exercise: {
         value: exercise._id!,
-        label: exercise.name,
+        label: exercise.name || "",
       },
       series: 1,
       reps: "Max",

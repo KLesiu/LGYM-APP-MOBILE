@@ -90,7 +90,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
       </View>
       <View className="w-12 h-12 flex justify-center items-center">
         <CustomButton
-          onPress={() => deleteExerciseFromPlan(exercise.exercise._id)}
+          onPress={() => deleteExerciseFromPlan(exercise.exercise._id || undefined)}
           buttonStyleSize={ButtonSize.none}
           buttonStyleType={ButtonStyle.none}
           customSlots={[<RemoveIcon width={20} height={20} />]}

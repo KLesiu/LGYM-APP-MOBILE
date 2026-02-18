@@ -10,15 +10,16 @@ import {
 } from "../../../../interfaces/Exercise";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ExercisesListElement from "./ExercisesListElement";
+import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
 
 interface ExercisesListProps {
-  bodyPart: BodyParts;
+  bodyPart: EnumLookupDto;
   goBack: () => void;
-  userExercises: ExerciseForm[];
-  globalExercises: ExerciseForm[];
-  selectExercise: (exercise: ExerciseForm, isEditing: boolean) => void;
+  userExercises: ExerciseResponseDto[];
+  globalExercises: ExerciseResponseDto[];
+  selectExercise: (exercise: ExerciseResponseDto, isEditing: boolean) => void;
   isCreatePlanDayMode?: boolean;
-  addExerciseToList?: (exercise: ExerciseForm) => void;
+  addExerciseToList?: (exercise: ExerciseResponseDto) => void;
   exercisesList?: ExerciseForPlanDay[];
 }
 
@@ -47,14 +48,14 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
   const filteredGlobalExercises = useMemo(() => {
     const lowercasedSearchText = searchText.toLowerCase();
     return globalExercises.filter((exercise) =>
-      exercise.name.toLowerCase().includes(lowercasedSearchText)
+      (exercise.name || "").toLowerCase().includes(lowercasedSearchText)
     );
   }, [globalExercises, searchText]);
 
   const filteredUserExercises = useMemo(() => {
     const lowercasedSearchText = searchText.toLowerCase();
     return userExercises.filter((exercise) =>
-      exercise.name.toLowerCase().includes(lowercasedSearchText)
+      (exercise.name || "").toLowerCase().includes(lowercasedSearchText)
     );
   }, [userExercises, searchText]);
 
@@ -70,16 +71,10 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
         </Pressable>
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <Text
-            style={{ fontFamily: "OpenSans_300Light" }}
-            className="text-textColor text-base"
-          >
-            Body part:
-          </Text>
-          <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
             className="font-bold text-primaryColor text-xl"
           >
-            {bodyPart}
+            {bodyPart.displayName}
           </Text>
         </View>
         <View

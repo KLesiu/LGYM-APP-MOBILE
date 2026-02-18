@@ -1,6 +1,6 @@
-import Exercise from "./../types/Exercise";
+import { ExerciseForm } from "./../interfaces/Exercise";
 
-export function isValidExerciseArray(exercises:Exercise[]) {
+export function isValidExerciseArray(exercises: ExerciseForm[]) {
   // Sprawdzenie czy exercises jest tablicą
   if (!Array.isArray(exercises)) {
     return false;
@@ -17,7 +17,7 @@ export function isValidExerciseArray(exercises:Exercise[]) {
       !('reps' in exercise) || 
       typeof exercise.name !== 'string' || 
       typeof exercise.reps !== 'string' ||
-      isNaN(exercise.series) ||
+      isNaN(Number(exercise.series)) ||
       /\d/.test(exercise.name) || // Sprawdzenie czy w polu name występują cyfry
       exercise.reps.trim() === "" // Sprawdzenie czy pole reps nie jest puste
     ) {

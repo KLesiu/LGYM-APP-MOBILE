@@ -51,6 +51,6 @@ i18n
       escapeValue: false, // react handles escaping
     },
     compatibilityJSON: 'v3', // for android
-  });
+  } as any);
 
 export default i18n;

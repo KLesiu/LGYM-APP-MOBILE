@@ -11,6 +11,7 @@ import {
 import AppProvider from "./AppContext";
 import Toast from "react-native-toast-message";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import './i18n';
 
 NativeWindStyleSheet.setOutput({ default: "native" });
 

@@ -18,7 +18,7 @@ import {
   usePostApiExerciseIdGetExerciseByBodyPart,
 } from "../../../../../api/generated/exercise/exercise";
 
-import { ExerciseResponseDto } from "../../../../../api/generated/model";
+import { ExerciseResponseDto, EnumLookupDto } from "../../../../../api/generated/model";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
@@ -70,7 +70,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             _id: dto._id || "",
             name: dto.name || "",
             user: dto.user || "",
-            bodyPart: (dto.bodyPart?.name as BodyParts) || BodyParts.Chest,
+            bodyPart: dto.bodyPart || undefined,
             description: dto.description || "",
             image: dto.image || "",
           })
@@ -83,7 +83,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             _id: dto._id || "",
             name: dto.name || "",
             user: dto.user || "",
-            bodyPart: (dto.bodyPart?.name as BodyParts) || BodyParts.Chest,
+            bodyPart: dto.bodyPart || undefined,
             description: dto.description || "",
             image: dto.image || "",
           })
@@ -91,7 +91,7 @@ const TrainingPlanDayExerciseForm: React.FC<
       }
     }
     return data.map((exercise: ExerciseForm) => ({
-      label: exercise.name,
+      label: exercise.name || "",
       value: exercise._id!,
     }));
   }, [exercisesByBodyPartData, allExercisesData, props.bodyPart]);

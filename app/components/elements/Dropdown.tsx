@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from "react-native";
+import { useTranslation } from "react-i18next";
 import { DropdownItem } from "../../../interfaces/Dropdown";
 
 interface CustomDropdownProps {
@@ -9,6 +10,7 @@ interface CustomDropdownProps {
 }
 
 const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }) => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<DropdownItem | null>(null);
 
@@ -41,7 +43,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
     <View>
       <TouchableOpacity style={styles.button} onPress={toggleDropdown}>
         <Text className=" text-md smallPhone:text-base">
-          {selectedItem ? selectedItem.label : "Choose option"}
+          {selectedItem ? selectedItem.label : t("common.chooseOption")}
         </Text>
       </TouchableOpacity>
 
@@ -49,11 +51,11 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
         <TouchableOpacity style={styles.overlay} onPress={toggleDropdown}>
           <View style={styles.dropdown}>
             <FlatList
-              data={[{ label: "Clear selection", value: "" }, ...data]} 
+              data={[{ label: t("common.clearSelection"), value: "" }, ...data]} 
               renderItem={({ item }) =>
                 item.value === "" ? (
                   <TouchableOpacity style={[styles.item, styles.clearItem]} onPress={() => handleSelect(null)}>
-                    <Text style={{ color: "black" }}>Clear selection</Text>
+                    <Text style={{ color: "black" }}>{t("common.clearSelection")}</Text>
                   </TouchableOpacity>
                 ) : (
                   renderItem({ item })

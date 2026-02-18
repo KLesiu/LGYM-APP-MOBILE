@@ -10,6 +10,7 @@ import ViewLoading from "../../elements/ViewLoading";
 import React from "react";
 import BackIcon from "./../../../../img/icons/backIcon.svg"
 import Start from "../start/Start";
+import { useTranslation } from "react-i18next";
 
 interface ProfileProps{
   changeView:(component?: React.JSX.Element | undefined) => void
@@ -17,6 +18,7 @@ interface ProfileProps{
 
 const Profile: React.FC<ProfileProps> = ({ changeView }) => {
   const { toggleMenuButton,hideMenu } = useHomeContext();
+  const { t } = useTranslation();
 
   const { userInfo } = useAppContext();
 
@@ -63,18 +65,18 @@ const Profile: React.FC<ProfileProps> = ({ changeView }) => {
               >
                 {userInfo.profileRank}
               </Text>
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-textColor w-full text-center text-sm smallPhone:text-xs"
-              >
-                {userInfo.elo} Elo
-              </Text>
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="text-textColor w-full text-center  text-sm smallPhone:text-xs"
-              >
-                Member since: {userInfo.createdAt.toString().slice(0, 10)}
-              </Text>
+               <Text
+                 style={{ fontFamily: "OpenSans_300Light" }}
+                 className="text-textColor w-full text-center text-sm smallPhone:text-xs"
+               >
+                 {userInfo.elo} {t('profile.elo')}
+               </Text>
+               <Text
+                 style={{ fontFamily: "OpenSans_300Light" }}
+                 className="text-textColor w-full text-center  text-sm smallPhone:text-xs"
+               >
+                 {t('profile.memberSince')} {userInfo.createdAt.toString().slice(0, 10)}
+               </Text>
             </View>
           </View>
           <MainProfileInfo email={userInfo.email} isVisibleInRanking={userInfo.isVisibleInRanking} />
