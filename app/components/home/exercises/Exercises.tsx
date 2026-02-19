@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from "react-native";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -10,7 +10,6 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import React from "react";
-import { BodyParts } from "../../../../enums/BodyParts";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
 import BodyPartsList from "./BodyPartsList";
@@ -18,6 +17,8 @@ import ExercisesList from "./ExercisesList";
 import ExerciseDetails from "./ExerciseDetails";
 import BackIcon from "./../../../../img/icons/backIcon.svg";
 import {
+  getGetApiExerciseGetAllGlobalExercisesQueryKey,
+  getGetApiExerciseIdGetAllUserExercisesQueryKey,
   useGetApiExerciseGetAllGlobalExercises,
   useGetApiExerciseIdGetAllUserExercises,
 } from "../../../../api/generated/exercise/exercise";
@@ -38,7 +39,7 @@ const Exercises: React.FC<ExercisesProps> = ({
   exercisesList,
   goBackToPlanDay,
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [selectedBodyPart, setSelectedBodyPart] = useState<EnumLookupDto | null>(
@@ -54,13 +55,26 @@ const Exercises: React.FC<ExercisesProps> = ({
   const {
     data: globalExercisesData,
     refetch: refetchGlobal,
-  } = useGetApiExerciseGetAllGlobalExercises();
+  } = useGetApiExerciseGetAllGlobalExercises({
+    query: {
+      queryKey: [
+        ...getGetApiExerciseGetAllGlobalExercisesQueryKey(),
+        i18n.language,
+      ],
+    },
+  });
 
   const {
     data: userExercisesData,
     refetch: refetchUser,
   } = useGetApiExerciseIdGetAllUserExercises(userId, {
-    query: { enabled: !!userId },
+    query: {
+      enabled: !!userId,
+      queryKey: [
+        ...getGetApiExerciseIdGetAllUserExercisesQueryKey(userId),
+        i18n.language,
+      ],
+    },
   });
 
   const { data: isAdminData } = useGetApiIdIsAdmin(userId, {
@@ -133,6 +147,12 @@ const Exercises: React.FC<ExercisesProps> = ({
     }
     setCurrentStep(newStep);
   };
+
+  useEffect(() => {
+    setCurrentStep(0);
+    setSelectedBodyPart(null);
+    setSelectedExercise(null);
+  }, [i18n.language]);
 
   const renderCurrentStep = () => {
     switch (currentStep) {

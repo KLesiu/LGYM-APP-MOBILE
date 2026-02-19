@@ -1,10 +1,13 @@
 import React, { useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { BodyParts } from "../../../../enums/BodyParts";
 import BodyPartsListElement from "./BodyPartsListElement";
 import SearchBox from "../../elements/SearchBox";
-import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
+import {
+  getGetApiEnumsEnumTypeQueryKey,
+  useGetApiEnumsEnumType,
+} from "../../../../api/generated/enum/enum";
 import ViewLoading from "../../elements/ViewLoading";
+import { useTranslation } from "react-i18next";
 
 import { EnumLookupDto, EnumLookupResponseDto } from "../../../../api/generated/model";
 
@@ -14,8 +17,16 @@ interface BodyPartsListProps {
 
 const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
   const [searchText, setSearchText] = useState<string>("");
+  const { i18n } = useTranslation();
 
-  const { data, isLoading } = useGetApiEnumsEnumType("BodyParts");
+  const { data, isLoading } = useGetApiEnumsEnumType("BodyParts", {
+    query: {
+      queryKey: [
+        ...getGetApiEnumsEnumTypeQueryKey("BodyParts"),
+        i18n.language,
+      ],
+    },
+  });
 
   const allBodyParts = useMemo(() => {
     const responseData = data?.data as EnumLookupResponseDto;
