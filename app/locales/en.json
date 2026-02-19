@@ -3,6 +3,7 @@
     "save": "Save",
     "add": "Add",
     "cancel": "Cancel",
+    "confirm": "Confirm",
     "update": "Update",
     "create": "Create",
     "error": "Error",
@@ -100,7 +101,9 @@
     "newGlobal": "New global",
     "new": "New",
     "search": "Search",
-    "addExercise": "Add Exercise"
+    "addExercise": "Add Exercise",
+    "history": "History",
+    "noHistoryAvailable": "No history available"
   },
   "training": {
     "summary": "Training Summary",

@@ -3,6 +3,7 @@
     "save": "Zapisz",
     "add": "Dodaj",
     "cancel": "Anuluj",
+    "confirm": "Potwierdź",
     "update": "Aktualizuj",
     "create": "Stwórz",
     "error": "Błąd",
@@ -100,7 +101,9 @@
     "newGlobal": "Nowe globalne",
     "new": "Nowe",
     "search": "Szukaj",
-    "addExercise": "Dodaj Ćwiczenie"
+    "addExercise": "Dodaj Ćwiczenie",
+    "history": "Historia",
+    "noHistoryAvailable": "Brak historii"
   },
   "training": {
     "summary": "Podsumowanie Treningu",

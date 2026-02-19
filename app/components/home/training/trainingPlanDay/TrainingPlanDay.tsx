@@ -110,7 +110,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     try {
         const result = await addTrainingMutation({ id: userId, data: body });
         if (result && result.data) {
-             console.log("Training result:", JSON.stringify(result.data, null, 2));
              await props.hideAndDeleteTrainingSession();
              props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
              // Map DTO to interface - extract string values from enums

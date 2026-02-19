@@ -21,6 +21,7 @@ import {
 import { BodyParts } from "../../../../enums/BodyParts";
 import { WeightUnits } from "../../../../enums/Units";
 import { useTranslation } from "react-i18next";
+import "moment/locale/pl";
 
 const History: React.FC = () => {
   const { t, i18n } = useTranslation();

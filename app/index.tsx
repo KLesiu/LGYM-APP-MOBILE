@@ -10,10 +10,13 @@ import Loading from "./components/elements/Loading";
 import UpdateDialog from "./components/elements/UpdateDialog";
 import React from "react";
 import { useAppInitialization } from "../hooks/useAppInitialization";
+import { useTranslation } from "react-i18next";
 
 const Preload: React.FC = () => {
   const router = useRouter();
   const { appConfig } = useAppInitialization();
+    const { t } = useTranslation();
+  
 
   const handleLoginPress: VoidFunction = (): void => {
     router.push("/Login");
@@ -37,14 +40,14 @@ const Preload: React.FC = () => {
           >
             <Image source={logoLGYM} className="w-[70%] h-2/5" />
             <CustomButton
-              text="SIGN IN"
+              text={t('auth.login')}
               onPress={handleLoginPress}
               buttonStyleSize={ButtonSize.xl}
               buttonStyleType={ButtonStyle.success}
               width="w-full"
             />
             <CustomButton
-              text="SIGN UP"
+              text={t('auth.register')}
               onPress={handleRegisterPress}
               buttonStyleType={ButtonStyle.outline}
               customClasses="bg-[#1b1b1bbd] "

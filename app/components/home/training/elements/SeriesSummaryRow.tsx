@@ -28,9 +28,9 @@ const SeriesSummaryRow: React.FC<SeriesSummaryRowProps> = ({ seriesComparison })
       </View>
        <View className="flex-row items-baseline w-1/3">
          <Text className="text-textColor text-base smallPhone:text-sm">
-           {currentResult.weight}{currentResult.unit}
+           {currentResult.weight}kg
          </Text>
-         <ProgressSummaryValue value={weightDiff} unit={currentResult.unit} />
+         <ProgressSummaryValue value={weightDiff} unit="kg" />
        </View>
     </View>
   );

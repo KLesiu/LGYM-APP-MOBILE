@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, View, Text} from "react-native";
 import CustomButton, { ButtonStyle } from "./CustomButton";
+import { useTranslation } from "react-i18next";
 
 interface ConfirmDialogProps {
   visible: boolean;
@@ -13,6 +14,8 @@ interface ConfirmDialogProps {
 const ConfirmDialog: React.FC<ConfirmDialogProps> = (
   props: ConfirmDialogProps
 ) => {
+  const { t } = useTranslation();
+
   return (
     <Modal
       transparent={true}
@@ -39,13 +42,13 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = (
               width="flex-1"
               onPress={props.onCancel}
               buttonStyleType={ButtonStyle.cancel}
-              text="Cancel"
+              text={t("common.cancel")}
             />
             <CustomButton
               width="flex-1"
               onPress={props.onConfirm}
               buttonStyleType={ButtonStyle.success}
-              text="Confirm"
+              text={t("common.confirm")}
             />
           </View>
         </View>
