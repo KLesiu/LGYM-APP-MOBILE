@@ -1,4 +1,4 @@
-import { View, Text, Pressable, ScrollView } from "react-native";
+ import { View, Text, Pressable, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import ProfileRank from "../../elements/ProfileRank";
 import ProgressBar from "../../elements/ProgressBar";

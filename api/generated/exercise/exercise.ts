@@ -24,6 +24,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ExerciseByBodyPartRequestDto,
   ExerciseFormDto,
   ExerciseResponseDto,
   ExerciseTrainingHistoryItemDto,
@@ -33,9 +34,6 @@ import type {
   PostApiExerciseIdDeleteExerciseBodyOne,
   PostApiExerciseIdDeleteExerciseBodyThree,
   PostApiExerciseIdDeleteExerciseBodyTwo,
-  PostApiExerciseIdGetExerciseByBodyPartBodyOne,
-  PostApiExerciseIdGetExerciseByBodyPartBodyThree,
-  PostApiExerciseIdGetExerciseByBodyPartBodyTwo,
   RecordOrPossibleRequestDto,
   ResponseMessageDto
 } from '.././model';
@@ -856,15 +854,15 @@ export const getPostApiExerciseIdGetExerciseByBodyPartUrl = (id: string,) => {
 }
 
 export const postApiExerciseIdGetExerciseByBodyPart = async (id: string,
-    postApiExerciseIdGetExerciseByBodyPartBody: PostApiExerciseIdGetExerciseByBodyPartBodyOne | PostApiExerciseIdGetExerciseByBodyPartBodyTwo | PostApiExerciseIdGetExerciseByBodyPartBodyThree, options?: RequestInit): Promise<postApiExerciseIdGetExerciseByBodyPartResponse> => {
+    exerciseByBodyPartRequestDto: ExerciseByBodyPartRequestDto, options?: RequestInit): Promise<postApiExerciseIdGetExerciseByBodyPartResponse> => {
   
   return customInstance<postApiExerciseIdGetExerciseByBodyPartResponse>(getPostApiExerciseIdGetExerciseByBodyPartUrl(id),
   {      
     ...options,
-    method: 'POST'
-    ,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      postApiExerciseIdGetExerciseByBodyPartBody,)
+      exerciseByBodyPartRequestDto,)
   }
 );}
 
@@ -872,8 +870,8 @@ export const postApiExerciseIdGetExerciseByBodyPart = async (id: string,
 
 
 export const getPostApiExerciseIdGetExerciseByBodyPartMutationOptions = <TError = ResponseMessageDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>, TError,{id: string;data: PostApiExerciseIdGetExerciseByBodyPartBodyOne | PostApiExerciseIdGetExerciseByBodyPartBodyTwo | PostApiExerciseIdGetExerciseByBodyPartBodyThree}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>, TError,{id: string;data: PostApiExerciseIdGetExerciseByBodyPartBodyOne | PostApiExerciseIdGetExerciseByBodyPartBodyTwo | PostApiExerciseIdGetExerciseByBodyPartBodyThree}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>, TError,{id: string;data: ExerciseByBodyPartRequestDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>, TError,{id: string;data: ExerciseByBodyPartRequestDto}, TContext> => {
 
 const mutationKey = ['postApiExerciseIdGetExerciseByBodyPart'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -885,7 +883,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>, {id: string;data: PostApiExerciseIdGetExerciseByBodyPartBodyOne | PostApiExerciseIdGetExerciseByBodyPartBodyTwo | PostApiExerciseIdGetExerciseByBodyPartBodyThree}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>, {id: string;data: ExerciseByBodyPartRequestDto}> = (props) => {
           const {id,data} = props ?? {};
 
           return  postApiExerciseIdGetExerciseByBodyPart(id,data,requestOptions)
@@ -899,15 +897,15 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type PostApiExerciseIdGetExerciseByBodyPartMutationResult = NonNullable<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>>
-    export type PostApiExerciseIdGetExerciseByBodyPartMutationBody = PostApiExerciseIdGetExerciseByBodyPartBodyOne | PostApiExerciseIdGetExerciseByBodyPartBodyTwo | PostApiExerciseIdGetExerciseByBodyPartBodyThree
+    export type PostApiExerciseIdGetExerciseByBodyPartMutationBody = ExerciseByBodyPartRequestDto
     export type PostApiExerciseIdGetExerciseByBodyPartMutationError = ResponseMessageDto
 
     export const usePostApiExerciseIdGetExerciseByBodyPart = <TError = ResponseMessageDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>, TError,{id: string;data: PostApiExerciseIdGetExerciseByBodyPartBodyOne | PostApiExerciseIdGetExerciseByBodyPartBodyTwo | PostApiExerciseIdGetExerciseByBodyPartBodyThree}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>, TError,{id: string;data: ExerciseByBodyPartRequestDto}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiExerciseIdGetExerciseByBodyPart>>,
         TError,
-        {id: string;data: PostApiExerciseIdGetExerciseByBodyPartBodyOne | PostApiExerciseIdGetExerciseByBodyPartBodyTwo | PostApiExerciseIdGetExerciseByBodyPartBodyThree},
+        {id: string;data: ExerciseByBodyPartRequestDto},
         TContext
       > => {
       return useMutation(getPostApiExerciseIdGetExerciseByBodyPartMutationOptions(options), queryClient);

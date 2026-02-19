@@ -35,6 +35,7 @@ import {
   EnumLookupDto,
   ExerciseScoresTrainingFormDto,
   TrainingFormDto,
+  WeightUnits,
 } from "../../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 
@@ -94,7 +95,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         reps: parseFloat(ele.reps),
         series: ele.series,
         weight: parseFloat(ele.weight),
-        unit: "kg",
+        unit:WeightUnits.Kilograms,
       };
       return exerciseScoresTrainingForm;
     });

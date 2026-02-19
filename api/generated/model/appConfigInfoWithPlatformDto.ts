@@ -4,6 +4,7 @@
  * LgymApi.Api
  * OpenAPI spec version: 1.0
  */
+import type { Platforms } from './platforms';
 
 export interface AppConfigInfoWithPlatformDto {
   /** @nullable */
@@ -15,6 +16,5 @@ export interface AppConfigInfoWithPlatformDto {
   updateUrl?: string | null;
   /** @nullable */
   releaseNotes?: string | null;
-  /** @nullable */
-  platform?: string | null;
+  platform: Platforms;
 }

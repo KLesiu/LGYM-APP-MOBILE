@@ -17,9 +17,7 @@ import type {
 import type {
   AppConfigInfoDto,
   AppConfigInfoWithPlatformDto,
-  PostApiAppConfigGetAppVersionBodyOne,
-  PostApiAppConfigGetAppVersionBodyThree,
-  PostApiAppConfigGetAppVersionBodyTwo,
+  AppConfigPlatformRequestDto,
   ResponseMessageDto
 } from '.././model';
 
@@ -57,7 +55,7 @@ export const getPostApiAppConfigGetAppVersionUrl = () => {
   return `/api/appConfig/getAppVersion`
 }
 
-export const postApiAppConfigGetAppVersion = async (postApiAppConfigGetAppVersionBody: PostApiAppConfigGetAppVersionBodyOne | PostApiAppConfigGetAppVersionBodyTwo | PostApiAppConfigGetAppVersionBodyThree, options?: RequestInit): Promise<postApiAppConfigGetAppVersionResponse> => {
+export const postApiAppConfigGetAppVersion = async (appConfigPlatformRequestDto: AppConfigPlatformRequestDto, options?: RequestInit): Promise<postApiAppConfigGetAppVersionResponse> => {
   
   return customInstance<postApiAppConfigGetAppVersionResponse>(getPostApiAppConfigGetAppVersionUrl(),
   {      
@@ -65,7 +63,7 @@ export const postApiAppConfigGetAppVersion = async (postApiAppConfigGetAppVersio
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      postApiAppConfigGetAppVersionBody,)
+      appConfigPlatformRequestDto,)
   }
 );}
 
@@ -73,8 +71,8 @@ export const postApiAppConfigGetAppVersion = async (postApiAppConfigGetAppVersio
 
 
 export const getPostApiAppConfigGetAppVersionMutationOptions = <TError = ResponseMessageDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>, TError,{data: PostApiAppConfigGetAppVersionBodyOne | PostApiAppConfigGetAppVersionBodyTwo | PostApiAppConfigGetAppVersionBodyThree}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>, TError,{data: PostApiAppConfigGetAppVersionBodyOne | PostApiAppConfigGetAppVersionBodyTwo | PostApiAppConfigGetAppVersionBodyThree}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>, TError,{data: AppConfigPlatformRequestDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>, TError,{data: AppConfigPlatformRequestDto}, TContext> => {
 
 const mutationKey = ['postApiAppConfigGetAppVersion'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -86,7 +84,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>, {data: PostApiAppConfigGetAppVersionBodyOne | PostApiAppConfigGetAppVersionBodyTwo | PostApiAppConfigGetAppVersionBodyThree}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>, {data: AppConfigPlatformRequestDto}> = (props) => {
           const {data} = props ?? {};
 
           return  postApiAppConfigGetAppVersion(data,requestOptions)
@@ -100,15 +98,15 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type PostApiAppConfigGetAppVersionMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>>
-    export type PostApiAppConfigGetAppVersionMutationBody = PostApiAppConfigGetAppVersionBodyOne | PostApiAppConfigGetAppVersionBodyTwo | PostApiAppConfigGetAppVersionBodyThree
+    export type PostApiAppConfigGetAppVersionMutationBody = AppConfigPlatformRequestDto
     export type PostApiAppConfigGetAppVersionMutationError = ResponseMessageDto
 
     export const usePostApiAppConfigGetAppVersion = <TError = ResponseMessageDto,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>, TError,{data: PostApiAppConfigGetAppVersionBodyOne | PostApiAppConfigGetAppVersionBodyTwo | PostApiAppConfigGetAppVersionBodyThree}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>, TError,{data: AppConfigPlatformRequestDto}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiAppConfigGetAppVersion>>,
         TError,
-        {data: PostApiAppConfigGetAppVersionBodyOne | PostApiAppConfigGetAppVersionBodyTwo | PostApiAppConfigGetAppVersionBodyThree},
+        {data: AppConfigPlatformRequestDto},
         TContext
       > => {
       return useMutation(getPostApiAppConfigGetAppVersionMutationOptions(options), queryClient);

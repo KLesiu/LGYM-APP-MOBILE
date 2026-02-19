@@ -6,6 +6,6 @@
  */
 import type { BodyParts } from './bodyParts';
 
-export type GetApiMeasurementsIdGetHistoryParams = {
-BodyPart?: BodyParts;
-};
+export interface ExerciseByBodyPartRequestDto {
+  bodyPart: BodyParts;
+}

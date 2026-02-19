@@ -4,6 +4,7 @@
  * LgymApi.Api
  * OpenAPI spec version: 1.0
  */
+import type { BodyParts } from './bodyParts';
 
 export interface ExerciseFormDto {
   /** @nullable */
@@ -12,8 +13,7 @@ export interface ExerciseFormDto {
   name?: string | null;
   /** @nullable */
   user?: string | null;
-  /** @nullable */
-  bodyPart?: string | null;
+  bodyPart: BodyParts;
   /** @nullable */
   description?: string | null;
   /** @nullable */
