@@ -1,16 +1,17 @@
 import { View, Text } from "react-native";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import { useAppContext } from "../../../AppContext";
 import { useRouter } from "expo-router";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import { FontWeights } from "../../../../enums/FontsProperties";
 import Checkbox from "../../elements/Checkbox";
-import { Message } from "../../../../enums/Message";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../../elements/LanguageSwitcher";
+import { useQueryClient } from "@tanstack/react-query";
 import {
+  getGetApiGetUsersRankingQueryKey,
   getApiDeleteAccount,
   usePostApiChangeVisibilityInRanking,
 } from "../../../../api/generated/user/user";
@@ -34,11 +35,16 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
     setIsDeleteConfirmationDialogVisible,
   ] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isVisibleInRankingState, setIsVisibleInRankingState] =
     useState<boolean>(isVisibleInRanking);
 
-  const { mutateAsync: changeVisibilityMutation } =
+  const { mutateAsync: changeVisibilityMutation, isPending: isChangingVisibility } =
     usePostApiChangeVisibilityInRanking();
+
+  useEffect(() => {
+    setIsVisibleInRankingState(isVisibleInRanking);
+  }, [isVisibleInRanking]);
 
   const logout = async (): Promise<void> => {
     await clearBeforeLogout();
@@ -52,12 +58,25 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   };
 
   const changeVisibility = async (newValue: boolean): Promise<void> => {
+    const previousValue = isVisibleInRankingState;
     setIsVisibleInRankingState(newValue);
-    const response = await changeVisibilityMutation({
-      data: { isVisibleInRanking: newValue },
-    });
-    if (response.data && response.data.msg === Message.Updated) {
-      changeIsVisibleInRanking(newValue);
+    changeIsVisibleInRanking(newValue);
+
+    try {
+      await changeVisibilityMutation({
+        data: { isVisibleInRanking: newValue },
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: getGetApiGetUsersRankingQueryKey(),
+      });
+      await queryClient.refetchQueries({
+        queryKey: getGetApiGetUsersRankingQueryKey(),
+        type: "all",
+      });
+    } catch {
+      setIsVisibleInRankingState(previousValue);
+      changeIsVisibleInRanking(previousValue);
     }
   };
 
@@ -86,7 +105,10 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
         <View className="flex flex-row w-full items-center" style={{ gap: 12 }}>
           <Checkbox
             value={isVisibleInRankingState}
-            setValue={changeVisibility}
+            setValue={(value: boolean) => {
+              if (isChangingVisibility) return;
+              void changeVisibility(value);
+            }}
           />
           <Text
             className="text-textColor text-sm smallPhone:text-xs"
@@ -100,7 +122,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
 
       </View>
 
-      <View className="flex flex-row w-full gap-4 mt-4">
+      <View className="flex flex-row  w-full" style={{gap:16}}>
         <CustomButton
           text={t('profile.logout')}
           customClasses="flex-1"
