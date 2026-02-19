@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, TextInput, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MiniLoading from "./components/elements/MiniLoading";
@@ -96,13 +105,21 @@ const Login: React.FC = () => {
     router.push("/");
   };
   return (
-    <View
-      style={{ gap: 16 }}
-      className="flex items-center flex-col h-full justify-start bg-bgColor  p-4"
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
-        <Image className="w-full h-full" source={logoLGYM} />
-      </Pressable>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View
+          style={{ gap: 16, flexGrow: 1 }}
+          className="flex items-center flex-col justify-start bg-bgColor p-4"
+        >
+          <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
+            <Image className="w-full h-full" source={logoLGYM} />
+          </Pressable>
 
       <View
         className="w-full flex flex-col items-center justify-start"
@@ -159,17 +176,19 @@ const Login: React.FC = () => {
           </Pressable>
         </View>
       </View>
-      <CustomButton
-        width="w-full"
-        onPress={login}
-        disabled={isPending}
-        buttonStyleType={ButtonStyle.success}
-        text={t('auth.login')}
-        buttonStyleSize={ButtonSize.xl}
-      />
-      <MiniLoading />
-      <ValidationView errors={errors} />
-    </View>
+          <CustomButton
+            width="w-full"
+            onPress={login}
+            disabled={isPending}
+            buttonStyleType={ButtonStyle.success}
+            text={t('auth.login')}
+            buttonStyleSize={ButtonSize.xl}
+          />
+          <MiniLoading />
+          <ValidationView errors={errors} />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 export default Login;

@@ -1,5 +1,14 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, TextInput, Image, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
 import { useRouter, useFocusEffect } from "expo-router";
 import MiniLoading from "./components/elements/MiniLoading";
@@ -90,17 +99,25 @@ const Register: React.FC = () => {
   };
 
   return (
-    <View
-      style={{ gap: 16 }}
-      className="flex items-center flex-col h-full justify-start bg-bgColor p-4"
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
-        <Image className="w-full h-full mb-[5%]" source={logoLGYM} />
-      </Pressable>
-      <View
-        className="w-full flex flex-col items-center justify-start "
-        style={{ gap: 8 }}
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
       >
+        <View
+          style={{ gap: 16, flexGrow: 1 }}
+          className="flex items-center flex-col justify-start bg-bgColor p-4"
+        >
+          <Pressable onPress={goToPreload} className="w-2/5 h-1/5">
+            <Image className="w-full h-full mb-[5%]" source={logoLGYM} />
+          </Pressable>
+          <View
+            className="w-full flex flex-col items-center justify-start "
+            style={{ gap: 8 }}
+          >
         <View className="flex flex-col w-full" style={{ gap: 8 }}>
           <View className="flex flex-row gap-1">
             <Text
@@ -176,33 +193,34 @@ const Register: React.FC = () => {
             className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
           />
         </View>
-      </View>
+          </View>
 
-      <View className="flex flex-row w-full items-center" style={{ gap: 12 }}>
-        <Checkbox
-          value={isVisibleInRanking}
-          setValue={setIsVisibleInRanking}
-         
-        />
-        <Text
-          className="text-textColor text-sm smallPhone:text-xs"
-          style={{ fontFamily: "OpenSans_300Light" }}
-        >
-          {t("profile.visibleInRanking")}
-        </Text>
-      </View>
+          <View className="flex flex-row w-full items-center" style={{ gap: 12 }}>
+            <Checkbox
+              value={isVisibleInRanking}
+              setValue={setIsVisibleInRanking}
+            />
+            <Text
+              className="text-textColor text-sm smallPhone:text-xs"
+              style={{ fontFamily: "OpenSans_300Light" }}
+            >
+              {t("profile.visibleInRanking")}
+            </Text>
+          </View>
 
-      <CustomButton
-        text={t("auth.register")}
-        onPress={register}
-        width="w-full"
-        buttonStyleType={ButtonStyle.success}
-        buttonStyleSize={ButtonSize.xl}
-        disabled={isPending}
-      />
-      <MiniLoading />
-      <ValidationView errors={errors} />
-    </View>
+          <CustomButton
+            text={t("auth.register")}
+            onPress={register}
+            width="w-full"
+            buttonStyleType={ButtonStyle.success}
+            buttonStyleSize={ButtonSize.xl}
+            disabled={isPending}
+          />
+          <MiniLoading />
+          <ValidationView errors={errors} />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
