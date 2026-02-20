@@ -1,5 +1,5 @@
 import { View, Text, Pressable } from "react-native";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -10,14 +10,21 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import React from "react";
-import { BodyParts } from "../../../../enums/BodyParts";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
 import BodyPartsList from "./BodyPartsList";
 import ExercisesList from "./ExercisesList";
 import ExerciseDetails from "./ExerciseDetails";
 import BackIcon from "./../../../../img/icons/backIcon.svg";
+import {
+  getGetApiExerciseGetAllGlobalExercisesQueryKey,
+  getGetApiExerciseIdGetAllUserExercisesQueryKey,
+  useGetApiExerciseGetAllGlobalExercises,
+  useGetApiExerciseIdGetAllUserExercises,
+} from "../../../../api/generated/exercise/exercise";
+import { useGetApiIdIsAdmin } from "../../../../api/generated/user/user";
+import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -32,89 +39,78 @@ const Exercises: React.FC<ExercisesProps> = ({
   exercisesList,
   goBackToPlanDay,
 }) => {
+  const { t, i18n } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [selectedBodyPart, setSelectedBodyPart] = useState<BodyParts | null>(
+  const [selectedBodyPart, setSelectedBodyPart] = useState<EnumLookupDto | null>(
     null
   );
-  const [globalExercises, setGlobalExercises] = useState<ExerciseForm[]>([]);
-  const [userExercises, setUserExercises] = useState<ExerciseForm[]>([]);
 
   const [selectedExercise, setSelectedExercise] = useState<ExerciseForm | null>(
     null
   );
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
   const [isExerciseFormVisible, setIsExerciseFormVisible] = useState(false);
-  const { getAPI } = useAppContext();
 
-  useEffect(() => {
-    init();
-  }, []);
+  const {
+    data: globalExercisesData,
+    refetch: refetchGlobal,
+  } = useGetApiExerciseGetAllGlobalExercises({
+    query: {
+      queryKey: [
+        ...getGetApiExerciseGetAllGlobalExercisesQueryKey(),
+        i18n.language,
+      ],
+    },
+  });
 
-  const init = async () => {
-    await Promise.all([
-      checkIsAdmin(),
-      getAllGlobalExercises(),
-      getAllUserExercises(),
-    ]);
-  };
+  const {
+    data: userExercisesData,
+    refetch: refetchUser,
+  } = useGetApiExerciseIdGetAllUserExercises(userId, {
+    query: {
+      enabled: !!userId,
+      queryKey: [
+        ...getGetApiExerciseIdGetAllUserExercisesQueryKey(userId),
+        i18n.language,
+      ],
+    },
+  });
 
-  const getAllGlobalExercises = async () => {
-    try {
-      await getAPI(
-        `/exercise/getAllGlobalExercises`,
-        (response: ExerciseForm[]) => setGlobalExercises(response),
-        undefined,
-        false
-      );
-    } catch (error) {
-      setGlobalExercises([]);
-    }
-  };
+  const { data: isAdminData } = useGetApiIdIsAdmin(userId, {
+    query: { enabled: !!userId },
+  });
 
-  const getAllUserExercises = async () => {
-    try {
-      await getAPI(
-        `/exercise/${userId}/getAllUserExercises`,
-        (response: ExerciseForm[]) => {
-          setUserExercises(response);
-        },
-        undefined,
-        false
-      );
-    } catch (error) {
-      setUserExercises([]);
-    }
-  };
+  const globalExercises = useMemo(() => {
+    if(!Array.isArray(globalExercisesData?.data)) return [];
+   return globalExercisesData?.data 
+  }, [globalExercisesData]);
+
+  const userExercises = useMemo(() => {
+    if(!Array.isArray(userExercisesData?.data)) return [];
+    return userExercisesData?.data;
+  }, [userExercisesData]);
+
+
+  const isAdmin = !!isAdminData?.data;
 
   const filteredGlobalExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart
-      ? globalExercises.filter((e) => e.bodyPart === selectedBodyPart)
+      ? globalExercises.filter((e) => e.bodyPart?.name === selectedBodyPart.name)
       : [];
   }, [globalExercises, selectedBodyPart]);
 
   const filteredUserExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart
-      ? userExercises.filter((e) => e.bodyPart === selectedBodyPart)
+      ? userExercises.filter((e) => e.bodyPart?.name === selectedBodyPart.name)
       : [];
   }, [userExercises, selectedBodyPart]);
-
-  const checkIsAdmin = async () => {
-    try {
-      await getAPI(`/${userId}/isAdmin`, (response: boolean) =>
-        setIsAdmin(response)
-      );
-    } catch (error) {
-      console.error("Error checking admin status:", error);
-    }
-  };
 
   const closeExerciseForm = async () => {
     setIsExerciseFormVisible(false);
     if (!isCreatePlanDayMode) toggleMenuButton(false);
     hideMenu();
-    await Promise.all([getAllUserExercises(), getAllGlobalExercises()]);
+    await Promise.all([refetchUser(), refetchGlobal()]);
     setSelectedExercise(null);
   };
 
@@ -127,7 +123,7 @@ const Exercises: React.FC<ExercisesProps> = ({
     [toggleMenuButton]
   );
 
-  const selectBodyPart = (bodyPart: BodyParts) => {
+  const selectBodyPart = (bodyPart: EnumLookupDto) => {
     setSelectedBodyPart(bodyPart);
     setCurrentStep(1);
   };
@@ -144,13 +140,19 @@ const Exercises: React.FC<ExercisesProps> = ({
   const goBack = () => {
     const newStep = currentStep - 1;
     if (newStep < 0) return;
-    if(newStep === 1){
+    if (newStep === 1) {
       setSelectedExercise(null);
-    }else if(newStep === 0 && !isCreatePlanDayMode){
+    } else if (newStep === 0 && !isCreatePlanDayMode) {
       toggleMenuButton(false);
     }
     setCurrentStep(newStep);
   };
+
+  useEffect(() => {
+    setCurrentStep(0);
+    setSelectedBodyPart(null);
+    setSelectedExercise(null);
+  }, [i18n.language]);
 
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -159,7 +161,7 @@ const Exercises: React.FC<ExercisesProps> = ({
       case 1:
         return (
           <ExercisesList
-            bodyPart={selectedBodyPart as BodyParts}
+            bodyPart={selectedBodyPart!}
             goBack={goBack}
             selectExercise={selectExercise}
             userExercises={filteredUserExercisesByBodyPart}
@@ -199,7 +201,7 @@ const Exercises: React.FC<ExercisesProps> = ({
             className="text-xl text-primaryColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            Exercises
+            {t('exercises.title')}
           </Text>
           <View className="flex flex-row" style={{ gap: 8 }}>
             {isAdmin && (
@@ -207,14 +209,14 @@ const Exercises: React.FC<ExercisesProps> = ({
                 onPress={() => openExerciseForm(true)}
                 buttonStyleType={ButtonStyle.outlineBlack}
                 buttonStyleSize={ButtonSize.long}
-                text="New global"
+                text={t('exercises.newGlobal')}
               />
             )}
             <CustomButton
               onPress={() => openExerciseForm()}
               buttonStyleType={ButtonStyle.outlineBlack}
               buttonStyleSize={ButtonSize.long}
-              text="New"
+              text={t('exercises.new')}
             />
           </View>
         </View>

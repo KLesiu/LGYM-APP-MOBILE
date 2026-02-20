@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
 import {
-  TrainingForm,
   TrainingSessionScores,
 } from "../../../../../interfaces/Training";
 import { GymForm } from "../../../../../interfaces/Gym";
@@ -21,14 +20,24 @@ import TrainingPlanDayHeaderButtons from "./elements/TrainingPlanDayHeaderButton
 import CreatePlanDay from "../../plan/planDay/CreatePlanDay";
 import PlanDayProvider from "../../plan/planDay/CreatePlanDayContext";
 import { PlanDayVm } from "../../../../../interfaces/PlanDay";
-import { WeightUnits } from "../../../../../enums/Units";
-import { ExerciseScoresTrainingForm } from "../../../../../interfaces/ExercisesScores";
 import { TrainingSummary } from "../../../../../interfaces/Training";
-import { useAppContext } from "../../../../AppContext";
 import { ExerciseForm } from "../../../../../interfaces/Exercise";
 import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
 import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";
+import {
+  usePostApiIdAddTraining,
+} from "../../../../../api/generated/training/training";
+import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  ExerciseResponseDto,
+  EnumLookupDto,
+  ExerciseScoresTrainingFormDto,
+  TrainingFormDto,
+  WeightUnits,
+} from "../../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -40,8 +49,10 @@ interface TrainingPlanDayProps {
 }
 
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
+  const { t } = useTranslation();
   const { changeHeaderVisibility, userId } = useHomeContext();
-  const { getAPI, postAPI } = useAppContext();
+  const queryClient = useQueryClient();
+  
   const {
     planDay,
     setPlanDay,
@@ -54,6 +65,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setTrainingSessionScores,
     scrollViewRef,
   } = useTrainingPlanDay();
+
   const [
     isTrainingPlanDayExerciseFormShow,
     setIsTrainingPlanDayExerciseFormShow,
@@ -63,6 +75,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const [exerciseWhichBeingSwitched, setExerciseWhichBeingSwitched] = useState<
     string | undefined
   >();
+
+  const { mutateAsync: addTrainingMutation, isPending: isAddingTraining } = usePostApiIdAddTraining();
 
   useEffect(() => {
     changeHeaderVisibility(false);
@@ -74,33 +88,70 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   /// Submit training and delete training session from localStorage then show summary.
   const addTraining = async (exercises: TrainingSessionScores[]) => {
     const type = props.dayId;
-    const createdAt = new Date();
-    const training = exercises.map((ele: TrainingSessionScores) => {
-      const exerciseScoresTrainingForm: ExerciseScoresTrainingForm = {
+    const createdAt = new Date().toISOString();
+    const training: ExerciseScoresTrainingFormDto[] = exercises.map((ele: TrainingSessionScores) => {
+      const exerciseScoresTrainingForm: ExerciseScoresTrainingFormDto = {
         exercise: `${ele.exercise._id}`,
         reps: parseFloat(ele.reps),
         series: ele.series,
         weight: parseFloat(ele.weight),
-        unit: WeightUnits.KILOGRAMS,
+        unit:WeightUnits.Kilograms,
       };
       return exerciseScoresTrainingForm;
     });
 
-    const body: TrainingForm = {
+    const body: TrainingFormDto = {
       type: type!,
       createdAt: createdAt,
       exercises: training,
       gym: gym?._id!,
     };
-    await postAPI(
-      `/${userId}/addTraining`,
-      async (result: TrainingSummary) => {
-        await props.hideAndDeleteTrainingSession();
-        props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
-        props.setTrainingSummary(result);
-      },
-      body
-    );
+
+    try {
+        const result = await addTrainingMutation({ id: userId, data: body });
+        if (result && result.data) {
+             await props.hideAndDeleteTrainingSession();
+             props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
+             // Map DTO to interface - extract string values from enums
+              const trainingSummaryData = result.data as any;
+              const mapUnitValue = (unit: any): string => {
+                return typeof unit === 'string' ? unit : (unit?.name || t('common.unknown'));
+              };
+             const mappedSummary: TrainingSummary = {
+               ...trainingSummaryData,
+               comparison: trainingSummaryData.comparison?.map((comp: any) => ({
+                 ...comp,
+                 seriesComparisons: comp.seriesComparisons?.map((series: any) => ({
+                   ...series,
+                   currentResult: series.currentResult ? {
+                     ...series.currentResult,
+                     unit: mapUnitValue(series.currentResult.unit)
+                   } : series.currentResult,
+                   previousResult: series.previousResult ? {
+                     ...series.previousResult,
+                     unit: mapUnitValue(series.previousResult.unit)
+                   } : series.previousResult
+                 }))
+               })) || [],
+                profileRank: {
+                  name: typeof trainingSummaryData.profileRank === 'string' 
+                    ? trainingSummaryData.profileRank 
+                    : trainingSummaryData.profileRank?.name || t('common.unknown'),
+                  needElo: trainingSummaryData.profileRank?.needElo || 0
+                },
+                nextRank: trainingSummaryData.nextRank ? {
+                  name: typeof trainingSummaryData.nextRank === 'string' 
+                    ? trainingSummaryData.nextRank 
+                    : trainingSummaryData.nextRank?.name || t('common.unknown'),
+                  needElo: trainingSummaryData.nextRank?.needElo || 0
+                } : null
+              };
+             props.setTrainingSummary(mappedSummary);
+        }
+    } catch (e) {
+        console.error(e);
+        Alert.alert(t('training.error'), t('training.failedToAdd'));
+    }
   };
 
   /// Delete exercise from plan day
@@ -123,12 +174,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   /// Show exercise form for adding a new exercise with a specific body part
   const showExerciseFormByBodyPart = (
-    bodyPart: BodyParts,
+    bodyPart: EnumLookupDto | undefined,
     exerciseToSwitchId: string
   ) => {
     if (!exerciseToSwitchId) return;
     setExerciseWhichBeingSwitched(exerciseToSwitchId);
-    setBodyPart(bodyPart);
+    setBodyPart(bodyPart?.name as BodyParts || undefined);
     setIsTrainingPlanDayExerciseFormShow(true);
   };
 
@@ -144,15 +195,19 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setIsTrainingPlanDayExerciseFormShow(false);
   };
 
-  const getExercise = async (id: string) => {
-    let result: ExerciseForm = {} as ExerciseForm;
-    await getAPI(
-      `/exercise/${id}/getExercise`,
-      (exercise: ExerciseForm) => (result = exercise),
-      undefined,
-      false
+  const getExercise = async (id: string): Promise<ExerciseForm> => {
+    const exercise = await queryClient.fetchQuery(
+        getGetApiExerciseIdGetExerciseQueryOptions(id)
     );
-    return result;
+    const dto = exercise.data as ExerciseResponseDto;
+    return {
+      _id: dto._id || "",
+      name: dto.name || "",
+      user: dto.user || "",
+      bodyPart: dto.bodyPart || undefined,
+      description: dto.description || "",
+      image: dto.image || "",
+    };
   };
 
   const incrementOrDecrementExercise = async (
@@ -260,8 +315,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const result = parseScoresIfValid(exercises);
     if (!result)
       return Alert.alert(
-        "Invalid Scores",
-        "Please make sure every score is a number and not empty."
+        t('training.invalidScores'),
+        t('training.invalidScoresMessage')
       );
     await addTraining(result);
   };

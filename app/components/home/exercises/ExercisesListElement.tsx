@@ -7,14 +7,15 @@ import EditIcon from "./../../../../img/icons/editIcon.svg";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import Checkbox from "../../elements/Checkbox";
+import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
 
 interface ExercisesListElementProps {
-  exercise: ExerciseForm;
-  onPress: (exercise: ExerciseForm) => void;
+  exercise: ExerciseResponseDto;
+  onPress: (exercise: ExerciseResponseDto) => void;
   isGlobal?: boolean;
-  editExercise: (exercise: ExerciseForm) => void;
+  editExercise: (exercise: ExerciseResponseDto) => void;
   isCreatePlanDayMode?: boolean;
-  addExerciseToList?: (exercise: ExerciseForm) => void;
+  addExerciseToList?: (exercise: ExerciseResponseDto) => void;
   exercisesList?: ExerciseForPlanDay[];
 }
 
@@ -28,6 +29,8 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
   exercisesList
 }) => {
   const { userInfo } = useAppContext();
+  
+
   return (
     <Card customClasses="flex flex-row items-center mb-2">
       <View className="flex flex-row items-center flex-1" style={{ gap: 8 }}>
@@ -43,7 +46,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
             className="font-light text-xs text-textColor"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
-            {exercise.bodyPart}
+            {exercise.bodyPart?.displayName}
           </Text>
         </View>
       </View>

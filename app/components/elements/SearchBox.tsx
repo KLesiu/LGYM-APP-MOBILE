@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { View, TextInput } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
@@ -8,6 +9,7 @@ interface SearchBoxProps {
 }
 
 const SearchBox: React.FC<SearchBoxProps> = ({ onChangeText, value }) => {
+  const {t} = useTranslation()
   return (
     <View className="w-full flex-row items-center px-2 py-2 bg-cardColor rounded-lg">
       <Ionicons
@@ -17,7 +19,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({ onChangeText, value }) => {
         style={{ marginRight: 8 }}
       />
       <TextInput
-        placeholder="Search..."
+        placeholder={t("exercises.search")+'...'}
         placeholderTextColor="gray"
         style={{
           fontFamily: "OpenSans_400Regular",

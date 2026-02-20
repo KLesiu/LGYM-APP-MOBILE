@@ -11,7 +11,7 @@ import CustomButton, {
 } from "../../../../elements/CustomButton";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
-import { BodyParts } from "../../../../../../enums/BodyParts";
+import { EnumLookupDto } from "../../../../../../api/generated/model";
 import useDeviceCategory from "../../../../../../helpers/hooks/useDeviceCategory";
 
 enum ActionButtonsEnum {
@@ -39,7 +39,7 @@ interface TrainingPlanDayActionsButtonsProps {
     | undefined
   >;
   showExerciseFormByBodyPart: (
-    bodyPart: BodyParts,
+    bodyPart: EnumLookupDto | undefined,
     exerciseToSwitchId: string
   ) => void;
   togglePlanShow: () => void;
@@ -141,7 +141,7 @@ const TrainingPlanDayActionsButtons: React.FC<
       case ActionButtonsEnum.SWITCH:
         if (currentExercise)
           showExerciseFormByBodyPart(
-            currentExercise.exercise.bodyPart,
+            currentExercise.exercise.bodyPart || undefined,
             currentExercise.exercise._id!
           );
         break;
@@ -161,8 +161,8 @@ const TrainingPlanDayActionsButtons: React.FC<
             currentExercise.reps,
           );
         break;
-      case ActionButtonsEnum.REMOVE:
-        await deleteExerciseFromPlan(currentExercise?.exercise._id);
+       case ActionButtonsEnum.REMOVE:
+        await deleteExerciseFromPlan(currentExercise?.exercise._id || undefined);
         break;
     }
   };

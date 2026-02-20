@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect,createContext, useMemo } from "react";
-import { View, TouchableOpacity, Image, Text, Animated } from "react-native";
+import React, { useEffect, useMemo } from "react";
+import { View, TouchableOpacity, Text, Animated, useWindowDimensions } from "react-native";
 import TrainingPlan from "../home/plan/TrainingPlan";
 import History from "../home/history/History";
 import AddTraining from "../home/training/Training";
@@ -14,20 +14,25 @@ import AddTrainingIcon from "./../../../img/icons/plusCircleIcon.svg";
 import ExerciseIcon from "./../../../img/icons/exercisesIcon.svg";
 import PlanIcon from "./../../../img/icons/planIcon.svg";
 import GymIcon from "./../../../img/icons/gymIcon.svg";
-import RecordIcon  from "./../../../img/icons/recordsIcon.svg"
+import RecordIcon from "./../../../img/icons/recordsIcon.svg";
 import MenuIcon from "./../../../img/icons/menuIcon.svg";
 import { useHomeContext } from "../home/HomeContext";
-import { Dimensions } from 'react-native';
 import Records from "../home/records/Records";
-
+import { useTranslation } from "react-i18next";
 
 const Menu: React.FC = () => {
-  const {isExpanded,isMenuButtonVisible,animation,changeView,toggleMenu} = useHomeContext()
-  const { width } = Dimensions.get('window');
-
+  const { t } = useTranslation();
+  const {
+    isExpanded,
+    isMenuButtonVisible,
+    animation,
+    changeView,
+    toggleMenu,
+  } = useHomeContext();
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
-    changeView(<Start  />);
+    changeView(<Start />);
   }, []);
 
   const animatedScale = animation.interpolate({
@@ -40,23 +45,58 @@ const Menu: React.FC = () => {
     outputRange: [0, 1],
   });
 
-  const items = [
-    { icon: <HomeIcon />, label: "Home", component: <Start/> },
-    { icon: <ExerciseIcon/>, label: "Exercises", component: <Exercises/> },
-    { icon: <GymIcon />, label: "Gym", component: <Gym /> },
-    { icon: <AddTrainingIcon />, label: "Training", component: <AddTraining/> },
-    { icon: <PlanIcon />, label: "Plan", component: <TrainingPlan /> },
-    { icon: <HistoryIcon />, label: "History", component: <History /> },
-    { icon: <RecordIcon />, label: "Records", component: <Records /> },
-    { icon: <ProfileIcon />, label: "Profile", component: <Profile changeView={changeView}/> },
-  ];
+  const menuConfig = useMemo(() => {
+    if (width <= 360) return { xMultiplier: 140, yMultiplier: 160 };
+    return { xMultiplier: 160, yMultiplier: 180 };
+  }, [width]);
 
-  const returnProperties = useMemo(()=>{
-    if(width <= 360)return {xMultiplier:140,yMultiplier:160}
-    return {xMultiplier:160,yMultiplier:180}
-  },[width])
+  const startComponent = useMemo(() => <Start />, []);
+  const exercisesComponent = useMemo(() => <Exercises addExerciseToList={() => {}} />, []);
+  const gymComponent = useMemo(() => <Gym />, []);
+  const addTrainingComponent = useMemo(() => <AddTraining />, []);
+  const trainingPlanComponent = useMemo(() => <TrainingPlan />, []);
+  const historyComponent = useMemo(() => <History />, []);
+  const recordsComponent = useMemo(() => <Records />, []);
+  const profileComponent = useMemo(() => <Profile changeView={changeView} />, [changeView]);
 
-  return isMenuButtonVisible ? (
+  const menuItems = useMemo(() => {
+    const items = [
+      { icon: <HomeIcon />, label: t("menu.home"), component: startComponent },
+      { 
+        icon: <ExerciseIcon />, 
+        label: t("menu.exercises"), 
+        component: exercisesComponent 
+      },
+      { icon: <GymIcon />, label: t("menu.gym"), component: gymComponent },
+      {
+        icon: <AddTrainingIcon />,
+        label: t("menu.training"),
+        component: addTrainingComponent,
+      },
+      { icon: <PlanIcon />, label: t("menu.plan"), component: trainingPlanComponent },
+      { icon: <HistoryIcon />, label: t("menu.history"), component: historyComponent },
+      { icon: <RecordIcon />, label: t("menu.records"), component: recordsComponent },
+      {
+        icon: <ProfileIcon />,
+        label: t("menu.profile"),
+        component: profileComponent,
+      },
+    ];
+
+    const totalItems = items.length;
+    const { xMultiplier, yMultiplier } = menuConfig;
+
+    return items.map((item, index) => {
+      const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2;
+      const x = -Math.sin(angle) * xMultiplier;
+      const y = Math.cos(angle) * yMultiplier;
+      return { ...item, x, y };
+    });
+  }, [menuConfig, t, startComponent, exercisesComponent, gymComponent, addTrainingComponent, trainingPlanComponent, historyComponent, recordsComponent, profileComponent]);
+
+  if (!isMenuButtonVisible) return null;
+
+  return (
     <View className="flex items-center justify-end bg-bgColor relative w-full">
       {isExpanded && (
         <Animated.View
@@ -65,27 +105,28 @@ const Menu: React.FC = () => {
             opacity: animatedOpacity,
           }}
           className="absolute items-center justify-center bottom-[-65px]"
-          pointerEvents={isExpanded ? "auto" : "none"} 
+          pointerEvents={isExpanded ? "auto" : "none"}
         >
-          <View style={{ borderRadius: 10000 }} className="relative w-[450px] smallPhone:w-[400px] h-[440px] smallPhone:h-[380px] items-center justify-center bg-[#282424db] -mb-[82px] ">
-            {items.map((item, index) => {
-              const totalItems = items.length;
-              const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2;
-              const {xMultiplier,yMultiplier} = returnProperties;
-              const X = -Math.sin(angle) * xMultiplier;
-              const Y = Math.cos(angle) * yMultiplier;
-              return (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => changeView(item.component)}
-                  style={{ transform: [{ translateX: X }, { translateY: Y }], borderRadius: 10000 }}
-                  className="absolute w-20 h-20 smallPhone:w-16 smallPhone:h-16 items-center justify-center bg-bgColor p-1 smallPhone:p-0"
-                >
-                  {item.icon}
-                  <Text className="text-gray-400 text-sm smallPhone:text-xs font-light">{item.label}</Text>
-                </TouchableOpacity>
-              );
-            })}
+          <View
+            style={{ borderRadius: 10000 }}
+            className="relative w-[450px] smallPhone:w-[400px] h-[440px] smallPhone:h-[380px] items-center justify-center bg-[#282424db] -mb-[82px] "
+          >
+            {menuItems.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => changeView(item.component)}
+                style={{
+                  transform: [{ translateX: item.x }, { translateY: item.y }],
+                  borderRadius: 10000,
+                }}
+                className="absolute w-20 h-20 smallPhone:w-16 smallPhone:h-16 items-center justify-center bg-bgColor p-1 smallPhone:p-0"
+              >
+                {item.icon}
+                <Text className="text-gray-400 text-sm smallPhone:text-xs font-light">
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </Animated.View>
       )}
@@ -97,7 +138,7 @@ const Menu: React.FC = () => {
         <MenuIcon />
       </TouchableOpacity>
     </View>
-  ) : null;
+  );
 };
 
 export default Menu;

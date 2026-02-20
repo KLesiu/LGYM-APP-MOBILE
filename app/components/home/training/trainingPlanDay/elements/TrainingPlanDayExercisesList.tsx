@@ -3,6 +3,7 @@ import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import TrainingPlanDayExerciseListCard from "./TrainingPlanDayExerciseListCard";
 import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayExercisesListProps {
   deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
@@ -18,6 +19,7 @@ interface TrainingPlanDayExercisesListProps {
 const TrainingPlanDayExercisesList: React.FC<
   TrainingPlanDayExercisesListProps
 > = ({ deleteExerciseFromPlan }) => {
+  const { t } = useTranslation();
   const { exercisesInPlanList } = useTrainingPlanDay();
   return (
     <View className="flex flex-col w-full px-5 flex-1" style={{ gap: 8 }}>
@@ -27,8 +29,7 @@ const TrainingPlanDayExercisesList: React.FC<
           fontFamily: "OpenSans_400Regular",
         }}
       >
-        Exercise list 
-        
+        {t('training.exerciseList')}
       </Text>
       <View className="w-full flex-1" style={{ gap: 8 }}>
         {exercisesInPlanList?.map((exercise, index) => (

@@ -7,8 +7,10 @@ import { Message } from "./../../../../../enums/Message";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { useAppContext } from "../../../../AppContext";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const CreatePlanDayName: React.FC = () => {
+  const { t } = useTranslation();
   const { planDayName, setPlanDayName, goBack, goToNext } = usePlanDay();
   const { setErrors } = useAppContext();
 
@@ -31,7 +33,7 @@ const CreatePlanDayName: React.FC = () => {
           className="text-3xl smallPhone:text-xl text-textColor"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
-          New Plan Day
+          {t('plans.newPlanDay')}
         </Text>
       </View>
       <View className="px-5" style={{ gap: 16 }}>
@@ -41,7 +43,7 @@ const CreatePlanDayName: React.FC = () => {
             className="text-xl smallPhone:text-base text-textColor"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
-            Set a plan name
+            {t('plans.setPlanName')}
           </Text>
         </View>
         <View style={{ gap: 4 }} className="flex flex-col">
@@ -50,7 +52,7 @@ const CreatePlanDayName: React.FC = () => {
               style={{ fontFamily: "OpenSans_300Light" }}
               className="  text-textColor  text-base smallPhone:text-sm"
             >
-              Name:
+              {t('plans.name')}:
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -71,13 +73,13 @@ const CreatePlanDayName: React.FC = () => {
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
           onPress={goBack}
-          text="Back"
+          text={t('plans.back')}
           width="flex-1"
         />
         <CustomButton
           buttonStyleType={ButtonStyle.default}
           onPress={goNextSection}
-          text="Next"
+          text={t('plans.next')}
           width="flex-1"
         />
       </View>

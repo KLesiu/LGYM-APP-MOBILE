@@ -1,14 +1,20 @@
 import { View, Text } from "react-native";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
 import { useAppContext } from "../../../AppContext";
 import { useRouter } from "expo-router";
 import ConfirmDialog from "../../elements/ConfirmDialog";
 import { FontWeights } from "../../../../enums/FontsProperties";
 import Checkbox from "../../elements/Checkbox";
-import { Message } from "../../../../enums/Message";
-import ResponseMessage from "../../../../interfaces/ResponseMessage";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../../elements/LanguageSwitcher";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  getGetApiGetUsersRankingQueryKey,
+  getApiDeleteAccount,
+  usePostApiChangeVisibilityInRanking,
+} from "../../../../api/generated/user/user";
 
 interface MainProfileInfoProps {
   email: string;
@@ -19,11 +25,9 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   email,
   isVisibleInRanking,
 }) => {
+  const { t } = useTranslation();
   const {
     clearBeforeLogout,
-    getAPI,
-    postAPI,
-    setUserInfo,
     changeIsVisibleInRanking,
   } = useAppContext();
   const [
@@ -31,8 +35,16 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
     setIsDeleteConfirmationDialogVisible,
   ] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isVisibleInRankingState, setIsVisibleInRankingState] =
     useState<boolean>(isVisibleInRanking);
+
+  const { mutateAsync: changeVisibilityMutation, isPending: isChangingVisibility } =
+    usePostApiChangeVisibilityInRanking();
+
+  useEffect(() => {
+    setIsVisibleInRankingState(isVisibleInRanking);
+  }, [isVisibleInRanking]);
 
   const logout = async (): Promise<void> => {
     await clearBeforeLogout();
@@ -40,38 +52,47 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   };
 
   const deleteAccount = async (): Promise<void> => {
-    await getAPI("/deleteAccount", () => {
-      setIsDeleteConfirmationDialogVisible(false);
-      logout();
-    });
+    await getApiDeleteAccount();
+    setIsDeleteConfirmationDialogVisible(false);
+    logout();
   };
 
   const changeVisibility = async (newValue: boolean): Promise<void> => {
+    const previousValue = isVisibleInRankingState;
     setIsVisibleInRankingState(newValue);
-    await postAPI(
-      "/changeVisibilityInRanking",
-      (response: ResponseMessage) => {
-        if (response && response.msg === Message.Updated) {
-          changeIsVisibleInRanking(newValue);
-        }
-      },
-      { isVisibleInRanking: newValue }
-    );
+    changeIsVisibleInRanking(newValue);
+
+    try {
+      await changeVisibilityMutation({
+        data: { isVisibleInRanking: newValue },
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: getGetApiGetUsersRankingQueryKey(),
+      });
+      await queryClient.refetchQueries({
+        queryKey: getGetApiGetUsersRankingQueryKey(),
+        type: "all",
+      });
+    } catch {
+      setIsVisibleInRankingState(previousValue);
+      changeIsVisibleInRanking(previousValue);
+    }
   };
 
   return (
-    <View className="bg-bgColor flex flex-col flex-1 justify-between  items-center  w-full px-4 py-2">
+    <View className="bg-bgColor flex flex-col flex-1 justify-between items-center w-full px-4 py-2">
       <View className="flex flex-col w-full" style={{ gap: 8 }}>
         <View style={{ gap: 4 }} className="flex flex-col w-full">
           <Text
             style={{ fontFamily: "OpenSans_300Light" }}
-            className="text-gray-200/80 font-light  text-xs"
+            className="text-gray-200/80 font-light text-xs"
           >
-            Email
+            {t('auth.email')}
           </Text>
           <View
             style={{ borderRadius: 8 }}
-            className="bg-secondaryColor flex justify-center items-center h-14 smallPhone:h-10 py-4 smallPhone:py-2 px-6 "
+            className="bg-secondaryColor flex justify-center items-center h-14 smallPhone:h-10 py-4 smallPhone:py-2 px-6"
           >
             <Text
               style={{ fontFamily: "OpenSans_300Light" }}
@@ -84,27 +105,33 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
         <View className="flex flex-row w-full items-center" style={{ gap: 12 }}>
           <Checkbox
             value={isVisibleInRankingState}
-            setValue={changeVisibility}
+            setValue={(value: boolean) => {
+              if (isChangingVisibility) return;
+              void changeVisibility(value);
+            }}
           />
           <Text
             className="text-textColor text-sm smallPhone:text-xs"
             style={{ fontFamily: "OpenSans_300Light" }}
           >
-            Be visible in global rankings
+            {t('profile.visibleInRanking')}
           </Text>
         </View>
+        
+        <LanguageSwitcher />
+
       </View>
 
-      <View className="flex flex-row w-full" style={{ gap: 8 }}>
+      <View className="flex flex-row  w-full" style={{gap:16}}>
         <CustomButton
-          text="Logout"
+          text={t('profile.logout')}
           customClasses="flex-1"
           onPress={logout}
           textWeight={FontWeights.bold}
           buttonStyleType={ButtonStyle.success}
         />
         <CustomButton
-          text="Delete account"
+          text={t('profile.deleteAccount')}
           onPress={() => setIsDeleteConfirmationDialogVisible(true)}
           customClasses="flex-1"
           textWeight={FontWeights.bold}
@@ -113,8 +140,8 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
       </View>
       <ConfirmDialog
         visible={isDeleteConfirmationDialogVisible}
-        title={`Delete account`}
-        message={`Are you sure you want to delete your account?`}
+        title={t('profile.confirmDeleteTitle')}
+        message={t('profile.confirmDeleteMessage')}
         onConfirm={deleteAccount}
         onCancel={() => setIsDeleteConfirmationDialogVisible(false)}
       />

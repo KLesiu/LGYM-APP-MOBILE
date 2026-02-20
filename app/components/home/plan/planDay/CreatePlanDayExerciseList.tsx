@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { View, Text, TextInput, ScrollView } from "react-native";
+import { useState } from "react";
+import { View, Text, ScrollView } from "react-native";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -7,20 +7,17 @@ import {
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";
-import { useHomeContext } from "../../HomeContext";
-import { useAppContext } from "../../../../AppContext";
 import React from "react";
 import Dialog from "../../../elements/Dialog";
 import Exercises from "../../exercises/Exercises";
+import { useTranslation } from "react-i18next";
 
 const CreatePlanDayExerciseList: React.FC = () => {
+  const { t } = useTranslation();
   const { exercisesList, setExercisesList, goBack, goToNext } = usePlanDay();
 
   const [isAddExercisesListVisible, setIsAddExercisesListVisible] =
     useState<boolean>(false);
-
-  const { getAPI } = useAppContext();
-  const { userId } = useHomeContext();
 
   const toggleAddExercisesList = () => {
     setIsAddExercisesListVisible(!isAddExercisesListVisible);
@@ -30,7 +27,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
     const newExerciseForPlanDay: ExerciseForPlanDay = {
       exercise: {
         value: exercise._id!,
-        label: exercise.name,
+        label: exercise.name || "",
       },
       series: 1,
       reps: "Max",
@@ -95,12 +92,12 @@ const CreatePlanDayExerciseList: React.FC = () => {
               className="text-3xl smallPhone:text-xl text-textColor"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
-              Create plan list
+              {t('plans.createPlanList')}
             </Text>
           </View>
           <View className="flex justify-between flex-row w-full ">
             <CustomButton
-              text="Add exercises to list"
+              text={t('plans.addExercisesToList')}
               onPress={toggleAddExercisesList}
               buttonStyleType={ButtonStyle.success}
             />
@@ -118,13 +115,13 @@ const CreatePlanDayExerciseList: React.FC = () => {
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
           onPress={goBack}
-          text="Back"
+          text={t('plans.back')}
           width="flex-1"
         />
         <CustomButton
           buttonStyleType={ButtonStyle.default}
           onPress={goToNext}
-          text="Next"
+          text={t('plans.next')}
           width="flex-1"
         />
       </View>

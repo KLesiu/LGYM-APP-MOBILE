@@ -1,5 +1,5 @@
 import { Text, View, ScrollView } from "react-native";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import ViewLoading from "../../elements/ViewLoading";
 import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./planDay/CreatePlanDay";
@@ -16,23 +16,66 @@ import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import TrainingPlanItem from "./TrainingPlanItem";
 import PlanDayProvider from "./planDay/CreatePlanDayContext";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
 import PlansList from "./PlansList";
 import { PlanForm } from "../../../../interfaces/Plan";
 import DeleteIcon from "./../../../../img/icons/deleteIcon.svg";
-import ResponseMessage from "../../../../interfaces/ResponseMessage";
 import React from "react";
 import PlanShareDialog from "./PlanShareDialog";
 import PlanCopyDialog from "./PlanCopyDialog";
+import {
+  useGetApiIdGetPlanConfig,
+  usePostApiCopy,
+  usePostApiIdSetNewActivePlan,
+  usePostApiIdDeletePlan,
+  getGetApiIdGetPlansListQueryKey,
+} from "../../../../api/generated/plan/plan";
+import {
+  useGetApiPlanDayIdGetPlanDaysInfo,
+  useGetApiPlanDayIdDeletePlanDay,
+} from "../../../../api/generated/plan-day/plan-day";
+import { useAppContext } from "../../../AppContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { getGetApiIdGetPlanConfigQueryKey } from "../../../../api/generated/plan/plan";
+
+import Toast from "react-native-toast-message";
+import { toastConfig } from "../../../../helpers/toastConfig";
+import { PlanDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 const TrainingPlan: React.FC = () => {
+  const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
-  const { getAPI, postAPI } = useAppContext();
-  const [planConfig, setPlanConfig] = useState<PlanForm>();
-  const [viewLoading, setViewLoading] = useState<boolean>(false);
-  const [planDaysBaseInfo, setPlanDaysBaseInfo] = useState<PlanDayBaseInfoVm[]>(
-    []
+  const queryClient = useQueryClient();
+
+  const [isSwitchingPlan, setIsSwitchingPlan] = useState<boolean>(false);
+
+  const {
+    data: planConfigData,
+    isLoading: isPlanConfigLoading,
+  } = useGetApiIdGetPlanConfig(userId, { query: { enabled: !!userId } });
+
+  const planConfig = useMemo(
+    () => (planConfigData?.data as PlanForm) || undefined,
+    [planConfigData]
   );
+
+  const {
+    data: planDaysData,
+    isLoading: isPlanDaysLoading,
+    refetch: refetchPlanDays,
+  } = useGetApiPlanDayIdGetPlanDaysInfo(planConfig?._id || "", {
+    query: { enabled: !!planConfig?._id },
+  });
+
+  const planDaysBaseInfo = useMemo(
+    () => (planDaysData?.data as PlanDayBaseInfoVm[]) || [],
+    [planDaysData]
+  );
+
+  const { mutateAsync: copyPlanMutation } = usePostApiCopy();
+  const { mutateAsync: setNewActivePlanMutation } = usePostApiIdSetNewActivePlan();
+  const { mutateAsync: deletePlanMutation } = usePostApiIdDeletePlan();
+
   const [isPlanDayFormVisible, setIsPlanDayFormVisible] =
     useState<boolean>(false);
   const [isPlansListVisible, setIsPlansListVisible] = useState<boolean>(false);
@@ -54,43 +97,27 @@ const TrainingPlan: React.FC = () => {
     setIsDeletePlanConfirmationDialogVisible,
   ] = useState<boolean>(false);
 
-  useEffect(() => {
-    init();
-  }, []);
+  const isLoading = isPlanConfigLoading || isPlanDaysLoading || isSwitchingPlan;
 
-  const init = async () => {
-    setViewLoading(true);
-    await getUserPlanConfig();
-  };
-
-  const getPlanDaysBaseInfo = async (planConfig: PlanForm): Promise<void> => {
-    setViewLoading(true);
-    try {
-      await getAPI(
-        `/planDay/${planConfig._id}/getPlanDaysInfo`,
-        (result: PlanDayBaseInfoVm[]) => {
-          setPlanDaysBaseInfo(result);
-        },
-        undefined,
-        false
-      );
-    } catch (e: unknown) {
-      setPlanDaysBaseInfo([]);
-    } finally {
-      setViewLoading(false);
+  const refetchAll = async () => {
+    await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlanConfigQueryKey(userId) });
+    if (planConfig?._id) {
+        // We rely on React Query dependency to fetch plan days, but we can invalidate to be sure
+        // The key for plan days depends on planConfig._id
     }
   };
 
-  const deletePlanDay = async (): Promise<void> => {
-    if (!currentPlanDay) return;
-    await getAPI(
-      `/planDay/${currentPlanDay._id}/deletePlanDay`,
-      () => init(),
-      undefined,
-      false
-    );
-    deletePlanDayVisible(false);
-  };
+  const { refetch: triggerDeletePlanDay } = useGetApiPlanDayIdDeletePlanDay(
+    currentPlanDay?._id || "",
+    { query: { enabled: false } }
+  );
+
+  const handleDeletePlanDayConfirm = async () => {
+      await triggerDeletePlanDay();
+      await refetchPlanDays();
+      deletePlanDayVisible(false);
+  }
+
 
   const togglePlanConfigPopUp = useCallback((value: boolean): void => {
     if (value) {
@@ -98,7 +125,7 @@ const TrainingPlan: React.FC = () => {
     }
     toggleMenuButton(value);
     setShowPlanConfig(value);
-  }, []);
+  }, [toggleMenuButton]);
 
   const showPlanDayForm = useCallback(
     (planDay?: PlanDayBaseInfoVm, isPreview?: boolean): void => {
@@ -107,72 +134,72 @@ const TrainingPlan: React.FC = () => {
       toggleMenuButton(true);
       setIsPlanDayFormVisible(true);
     },
-    []
+    [toggleMenuButton]
   );
 
   const showPlansList = useCallback((): void => {
     setIsPlansListVisible(true);
     toggleMenuButton(true);
-  }, []);
+  }, [toggleMenuButton]);
 
   const hidePlansList = useCallback((): void => {
     setIsPlansListVisible(false);
     toggleMenuButton(false);
-  }, []);
+  }, [toggleMenuButton]);
 
   const showShareCodeDialog = useCallback((): void => {
     setIsShareCodeDialogShowed(true);
     toggleMenuButton(true);
-  }, []);
+  }, [toggleMenuButton]);
 
   const hideShareCodeDialog = useCallback((): void => {
     setIsShareCodeDialogShowed(false);
     toggleMenuButton(false);
-  }, []);
+  }, [toggleMenuButton]);
 
   const hidePlanDayForm = useCallback(async (): Promise<void> => {
-    setViewLoading(true);
     setIsPlanDayFormVisible(false);
     toggleMenuButton(false);
-    setViewLoading(false);
     hideMenu();
-    await init();
-  }, []);
+    await refetchPlanDays();
+  }, [toggleMenuButton, hideMenu, refetchPlanDays]);
 
   const reloadSection = useCallback(async (): Promise<void> => {
     setShowPlanConfig(false);
     toggleMenuButton(false);
-    await init();
-  }, []);
+    await refetchAll();
+  }, [toggleMenuButton]);
 
-  const getUserPlanConfig = async () => {
-    try {
-      await getAPI(
-        `/${userId}/getPlanConfig`,
-        async (result: PlanForm) => {
-          setPlanConfig(result);
-          await getPlanDaysBaseInfo(result);
-        },
-        undefined,
-        false
-      );
-    } finally {
-      setViewLoading(false);
-    }
-  };
 
   const copyPlan = async (code: string) => {
     try {
-      await postAPI(
-        "/copyPlan",
-        async (result: ResponseMessage) => {
-          await init();
-        },
-        { shareCode: code }
-      );
-    } finally {
+      const response = await copyPlanMutation({ data: { shareCode: code } });
+      const newPlan = response.data as PlanDto;
+      
+      Toast.show({
+        type: 'success',
+        text1: t('plans.copiedTitle'),
+        text2: t('plans.copiedMessage')
+      });
+
+      if (newPlan && newPlan.id) {
+        const planToActivate: PlanForm = {
+          _id: newPlan.id,
+          name: newPlan.name || "",
+          isActive: newPlan.isActive
+        };
+        await changeActivePlan(planToActivate);
+        await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlansListQueryKey(userId) });
+      }
+      
       hideCopyPlanDialog();
       hidePlansList();
+    } catch (e: any) {
+      Toast.show({
+        type: "error",
+        text1: t('common.error'),
+        text2: e.response?.data?.msg || t('plans.copyFailed'),
+      });
     }
   };
 
@@ -186,24 +213,23 @@ const TrainingPlan: React.FC = () => {
     toggleMenuButton(false);
   };
 
-  const setNewPlanConfig = async (planConfig: PlanForm) => {
-    await changeActivePlan(planConfig);
-    setPlanConfig(planConfig);
+  const setNewPlanConfig = async (newPlanConfig: PlanForm) => {
     hidePlansList();
+    if (newPlanConfig._id === planConfig?._id || isSwitchingPlan) return;
+    await changeActivePlan(newPlanConfig);
   };
 
-  const changeActivePlan = async (planConfig: PlanForm) => {
+  const changeActivePlan = async (newPlanConfig: PlanForm) => {
     try {
-      await postAPI(
-        `/${userId}/setNewActivePlan`,
-        async (result: ResponseMessage) => {
-          await getPlanDaysBaseInfo(planConfig);
-        },
-        { _id: planConfig._id }
-      );
+        if(newPlanConfig._id){
+            setIsSwitchingPlan(true);
+            await setNewActivePlanMutation({ id: userId, data: { _id: newPlanConfig._id } as any });
+            await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlanConfigQueryKey(userId) });
+        }
     } catch (e: unknown) {
-      setPlanDaysBaseInfo([]);
       console.error(e);
+    } finally {
+        setIsSwitchingPlan(false);
     }
   };
 
@@ -218,13 +244,13 @@ const TrainingPlan: React.FC = () => {
 
   const deletePlan = async () => {
     try {
-      await postAPI(
-        "/deletePlan",
-        async (result: ResponseMessage) => {
-          await init();
-        },
-        { planId: planConfig?._id }
-      );
+      if (planConfig?._id) {
+        await deletePlanMutation({ id: planConfig._id });
+        // Explicitly set the query data to null to force "no plan" state
+        queryClient.setQueryData(getGetApiIdGetPlanConfigQueryKey(userId), null);
+        await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlansListQueryKey(userId) });
+        await refetchAll();
+      }
     } finally {
       setIsDeletePlanConfirmationDialogVisible(false);
     }
@@ -233,13 +259,13 @@ const TrainingPlan: React.FC = () => {
   return (
     <BackgroundMainSection>
       <View className="w-full h-full flex flex-col">
-        {viewLoading ? (
+        {isLoading ? (
           <ViewLoading />
         ) : !planConfig ? (
           <View className="flex flex-row w-full justify-center items-center h-full">
             <CustomButton
               onPress={() => togglePlanConfigPopUp(true)}
-              text="Create plan"
+              text={t('plans.createPlanCta')}
               buttonStyleType={ButtonStyle.success}
             />
           </View>
@@ -253,7 +279,7 @@ const TrainingPlan: React.FC = () => {
                     fontFamily: "OpenSans_700Bold",
                   }}
                 >
-                  Current training plan:
+                  {t('plans.currentTrainingPlan')}
                 </Text>
                 <Text
                   style={{
@@ -267,8 +293,8 @@ const TrainingPlan: React.FC = () => {
 
               <View className="flex flex-row" style={{ gap: 16 }}>
                 <CustomButton
-                  text="Add training day"
-                  onPress={showPlanDayForm}
+                  text={t('plans.addTrainingDay')}
+                  onPress={() => showPlanDayForm(undefined)}
                   buttonStyleType={ButtonStyle.success}
                   textWeight={FontWeights.bold}
                   buttonStyleSize={ButtonSize.long}
@@ -356,18 +382,19 @@ const TrainingPlan: React.FC = () => {
       )}
       <ConfirmDialog
         visible={isDeletePlanDayConfirmationDialogVisible}
-        title={`Delete: ${currentPlanDay ? currentPlanDay.name : ""}`}
-        message={`Are you sure you want to delete?`}
-        onConfirm={deletePlanDay}
+        title={t('plans.deleteConfirmTitle', { name: currentPlanDay?.name || '' })}
+        message={t('plans.deleteConfirmMessage')}
+        onConfirm={handleDeletePlanDayConfirm}
         onCancel={() => deletePlanDayVisible(false)}
       />
       <ConfirmDialog
         visible={isDeletePlanConfirmationDialogVisible}
-        title={`Delete: ${planConfig ? planConfig.name : ""}`}
-        message={`Are you sure you want to delete?`}
+        title={t('plans.deleteConfirmTitle', { name: planConfig?.name || '' })}
+        message={t('plans.deleteConfirmMessage')}
         onConfirm={deletePlan}
         onCancel={() => setIsDeletePlanConfirmationDialogVisible(false)}
       />
+      <Toast config={toastConfig} />
     </BackgroundMainSection>
   );
 };

@@ -3,12 +3,13 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import { createContext } from "react";
 import { Animated, BackHandler } from "react-native";
-import { useAppContext } from "../../AppContext";
+import { useAuthStore } from "../../../stores/useAuthStore";
 
 interface HomeContextProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -43,10 +44,10 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
   viewChange,
   changeHeaderVisibility,
 }) => {
-  const {userInfo} = useAppContext()
+  const { user } = useAuthStore();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
-  const [userId, setUserId] = useState<string>("");
+  const userId = user?._id || "";
   const animation = useRef(new Animated.Value(0)).current;
 
 
@@ -59,12 +60,6 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
       backHandler.remove();
     };
   }, []);
-
-  useEffect(()=>{
-    if(userInfo){
-      setUserId(userInfo._id)
-    }
-  },[userInfo])
 
   const handleBackButton = useCallback(() => {
     changeView();
@@ -99,20 +94,33 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
     },
     [isExpanded, toggleMenu, viewChange]
   );
+  const contextValue = useMemo(
+    () => ({
+      isExpanded,
+      animation,
+      toggleMenu,
+      toggleMenuButton,
+      isMenuButtonVisible,
+      changeView,
+      hideMenu,
+      userId,
+      changeHeaderVisibility,
+    }),
+    [
+      isExpanded,
+      animation,
+      toggleMenu,
+      toggleMenuButton,
+      isMenuButtonVisible,
+      changeView,
+      hideMenu,
+      userId,
+      changeHeaderVisibility,
+    ]
+  );
+
   return (
-    <HomeContext.Provider
-      value={{
-        isExpanded,
-        animation,
-        toggleMenu,
-        toggleMenuButton,
-        isMenuButtonVisible,
-        changeView,
-        hideMenu,
-        userId,
-        changeHeaderVisibility,
-      }}
-    >
+    <HomeContext.Provider value={contextValue}>
       {children}
     </HomeContext.Provider>
   );

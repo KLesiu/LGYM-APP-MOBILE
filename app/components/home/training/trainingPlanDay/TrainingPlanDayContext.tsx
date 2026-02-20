@@ -11,6 +11,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import useInterval from "../../../../../helpers/hooks/useInterval";
 import { ScrollView } from "react-native";
 import React from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { getGetApiPlanDayIdGetPlanDayQueryOptions } from "../../../../../api/generated/plan-day/plan-day";
+import { PlanDayVmDto } from "../../../../../api/generated/model";
+import { BodyParts } from "../../../../../enums/BodyParts";
 
 interface TrainingPlanDayContextType {
   setPlanDay: (planDay: PlanDayVm) => void;
@@ -34,11 +38,12 @@ interface TrainingPlanDayContextType {
     exercise: PlanDayExercisesFormVm
   ) => void;
   incrementOrDecrementExerciseInTrainingSessionScores: (
-   exerciseId: string,
-   series: number,
+    exerciseId: string,
+    series: number
   ) => void;
   scrollViewRef: React.RefObject<ScrollView | null>;
   scrollToTop: () => void;
+  isError: boolean;
 }
 
 const TrainingPlanDayContext = createContext<TrainingPlanDayContextType | null>(
@@ -66,7 +71,7 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   gym,
   dayId,
 }) => {
-  const { getAPI } = useAppContext();
+  const queryClient = useQueryClient();
   const [planDay, setPlanDay] = useState<PlanDayVm>();
   const [trainingSessionScores, setTrainingSessionScores] = useState<
     Array<TrainingSessionScores>
@@ -79,6 +84,7 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   >([]);
   const [intervalDelay, setIntervalDelay] = useState<number | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     init();
@@ -107,6 +113,7 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   };
 
   const init = async () => {
+    setIsError(false);
     const response = (await initExercisePlanDay()) as PlanDayVm;
     const storedScores =
       (await loadTrainingSessionScores()) as TrainingSessionScores[];
@@ -146,30 +153,31 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   };
 
   const incrementOrDecrementExerciseInTrainingSessionScores = (
-    exerciseId:string,
-    seriesChange: number,
+    exerciseId: string,
+    seriesChange: number
   ) => {
-
     const currentTrainingSessionScoresWithThisExericse =
       trainingSessionScores.filter(
         (score) => score.exercise._id === exerciseId
       );
-      if(seriesChange < 0){
-        currentTrainingSessionScoresWithThisExericse.pop()
-      }else{
-        currentTrainingSessionScoresWithThisExericse.push({
-          exercise: currentTrainingSessionScoresWithThisExericse[0].exercise,
-          series: currentTrainingSessionScoresWithThisExericse.length +1,
-          reps: '',
-          weight: ''
-        })
-      }
+    if (seriesChange < 0) {
+      currentTrainingSessionScoresWithThisExericse.pop();
+    } else {
+      currentTrainingSessionScoresWithThisExericse.push({
+        exercise: currentTrainingSessionScoresWithThisExericse[0].exercise,
+        series: currentTrainingSessionScoresWithThisExericse.length + 1,
+        reps: "",
+        weight: "",
+      });
+    }
 
-      const newTrainingSessionScores = trainingSessionScores.filter(x=>x.exercise._id !== exerciseId)
-      setTrainingSessionScores([
-        ...newTrainingSessionScores,
-        ...currentTrainingSessionScoresWithThisExericse
-      ]);
+    const newTrainingSessionScores = trainingSessionScores.filter(
+      (x) => x.exercise._id !== exerciseId
+    );
+    setTrainingSessionScores([
+      ...newTrainingSessionScores,
+      ...currentTrainingSessionScoresWithThisExericse,
+    ]);
   };
 
   const toggleGymFilter = () => {
@@ -177,9 +185,8 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   };
 
   const scrollToTop = () => {
-  scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-};
-
+    scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+  };
 
   /// Load training session scores from local storage
   const loadTrainingSessionScores = async () => {
@@ -194,17 +201,38 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   /// Get information about plan day from API
   const getInformationAboutPlanDay = async () => {
     let planDayFromApi: PlanDayVm | undefined;
-    await getAPI(
-      `/planDay/${dayId}/getPlanDay`,
-      async (result: PlanDayVm) => {
-        planDayFromApi = result;
-        setPlanDay(result);
-        setCurrentExercise(result.exercises[0]);
-        await sendPlanDayToLocalStorage(result);
-      },
-      undefined,
-      false
-    );
+    try {
+      const result = await queryClient.fetchQuery(
+        getGetApiPlanDayIdGetPlanDayQueryOptions(dayId)
+      );
+      if (result?.data) {
+        const dto = result.data as PlanDayVmDto;
+        const data: PlanDayVm = {
+          _id: dto._id || "",
+          name: dto.name || "",
+          exercises:
+            dto.exercises?.map((e) => ({
+              series: e.series || 0,
+              reps: e.reps || "",
+              exercise: {
+                _id: e.exercise?._id || "",
+                name: e.exercise?.name || "",
+                user: e.exercise?.user || "",
+                bodyPart: e.exercise?.bodyPart || undefined,
+                description: e.exercise?.description || "",
+                image: e.exercise?.image || "",
+              },
+            })) || [],
+        };
+        planDayFromApi = data;
+        setPlanDay(data);
+        setCurrentExercise(data.exercises[0]);
+        await sendPlanDayToLocalStorage(data);
+      }
+    } catch (e) {
+      console.error(e);
+      setIsError(true);
+    }
     return planDayFromApi;
   };
 
@@ -246,9 +274,6 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
     return result;
   };
 
-
- 
-
   return (
     <TrainingPlanDayContext.Provider
       value={{
@@ -271,7 +296,7 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
         incrementOrDecrementExerciseInTrainingSessionScores,
         scrollViewRef,
         scrollToTop,
-
+        isError,
       }}
     >
       {children}

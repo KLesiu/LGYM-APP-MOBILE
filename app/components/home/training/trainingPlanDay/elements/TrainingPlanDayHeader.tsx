@@ -15,8 +15,8 @@ const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
   const { gym, planDayName } = useTrainingPlanDay();
   return (
     <View className="flex flex-row items-center w-full justify-between h-16 px-5 relative">
-      <Pressable onPress={hideDaySection}  style={{ borderRadius: 10000 }}
-        className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor ">
+       <Pressable onPress={hideDaySection}  style={{ borderRadius: 10000, zIndex: 50 }}
+         className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor ">
         <BackIcon />
       </Pressable>
       <View className="flex flex-col items-center w-full" style={{ gap: 4 }}>

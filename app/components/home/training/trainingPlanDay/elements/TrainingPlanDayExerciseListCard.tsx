@@ -10,6 +10,7 @@ import CustomButton, {
   ButtonStyle,
 } from "../../../../elements/CustomButton";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayExerciseListCardProps {
   exercise: PlanDayExercisesFormVm;
@@ -26,6 +27,7 @@ interface TrainingPlanDayExerciseListCardProps {
 const TrainingPlanDayExerciseListCard: React.FC<
   TrainingPlanDayExerciseListCardProps
 > = ({ exercise, deleteExerciseFromPlan }) => {
+  const { t } = useTranslation();
   const { setCurrentExercise, trainingSessionScores,scrollToTop } = useTrainingPlanDay();
   const [isDone, setIsDone] = useState(false);
 
@@ -84,13 +86,13 @@ const TrainingPlanDayExerciseListCard: React.FC<
               fontFamily: "OpenSans_300Light",
             }}
           >
-            Series: {exercise.series} Reps: {exercise.reps}
+            {t('training.seriesRepsSummary', { series: exercise.series, reps: exercise.reps })}
           </Text>
         </View>
       </View>
       <View className="w-12 h-12 flex justify-center items-center">
         <CustomButton
-          onPress={() => deleteExerciseFromPlan(exercise.exercise._id)}
+          onPress={() => deleteExerciseFromPlan(exercise.exercise._id || undefined)}
           buttonStyleSize={ButtonSize.none}
           buttonStyleType={ButtonStyle.none}
           customSlots={[<RemoveIcon width={20} height={20} />]}

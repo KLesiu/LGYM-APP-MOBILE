@@ -7,40 +7,68 @@ import GymIcon from "./../../../../img/icons/gymIcon.svg";
 import ValidationView from "../../elements/ValidationView";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
+import { getErrorMessage } from "../../../../utils/errorHandler";
 import React from "react";
+import { usePostApiGymIdAddGym, usePostApiGymEditGym } from "../../../../api/generated/gym/gym";
+import type { GymFormDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface GymFormProps {
   closeForm: () => void;
-  gym?: GymFormVm;
+  gym?: GymFormDto;
 }
 
 const GymForm: React.FC<GymFormProps> = (props) => {
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
+  const { setErrors } = useAppContext();
   const [gymName, setGymName] = useState<string>("");
-  const { postAPI, isLoading } = useAppContext();
+
+  const addGymMutation = usePostApiGymIdAddGym();
+  const editGymMutation = usePostApiGymEditGym();
+
+  const isLoading = addGymMutation.isPending || editGymMutation.isPending;
 
   useEffect(() => {
-    if (props.gym) setGymName(props.gym.name);
+    if (props.gym && props.gym.name) setGymName(props.gym.name);
   }, []);
 
-  const updateGym = async () => {
-    try {
-      await postAPI("/gym/editGym", () => props.closeForm(), {
-        name: gymName,
-        _id: props.gym?._id,
-      });
-    } catch (error) {
-      console.error("Error updating gym:", error);
-    }
+  const updateGym = () => {
+    const payload: GymFormDto = {
+      name: gymName,
+      _id: props.gym?._id,
+    };
+    editGymMutation.mutate({
+      data: payload,
+    }, {
+      onSuccess: () => {
+        props.closeForm();
+      },
+      onError: (error: any) => {
+        console.error("Error updating gym:", error);
+        const errorMessage = getErrorMessage(error, t('common.error'));
+        setErrors([errorMessage]);
+      }
+    });
   };
-  const createGym = async () => {
-    try {
-      await postAPI(`/gym/${userId}/addGym`, () => props.closeForm(), {
-        name: gymName,
-      });
-    } catch (error) {
-      console.error("Error creating gym:", error);
-    }
+
+  const createGym = () => {
+    const payload: GymFormDto = {
+      name: gymName,
+    };
+    addGymMutation.mutate({
+      id: userId,
+      data: payload,
+    }, {
+      onSuccess: () => {
+        props.closeForm();
+      },
+      onError: (error: any) => {
+        console.error("Error creating gym:", error);
+        const errorMessage = getErrorMessage(error, t('common.error'));
+        setErrors([errorMessage]);
+      }
+    });
   };
 
   const handleSubmit = () => {
@@ -56,7 +84,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
             className=" text-3xl smallPhone:text-2xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            {props.gym ? "Edit Gym" : "New Gym"}
+            {props.gym ? t('gym.editGym') : t('gym.newGym')}
           </Text>
         </View>
         <View className="px-5" style={{ gap: 16 }}>
@@ -66,7 +94,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
               className="text-xl smallPhone:text-lg text-textColor"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              Set a gym
+              {t('gym.setGym')}
             </Text>
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
@@ -75,7 +103,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
                 style={{ fontFamily: "OpenSans_300Light" }}
                 className="  text-textColor   text-base smallPhone:text-sm"
               >
-                Name:
+                {t('gym.gymName')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -95,14 +123,14 @@ const GymForm: React.FC<GymFormProps> = (props) => {
         <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
           <CustomButton
             onPress={props.closeForm}
-            text="Cancel"
+            text={t('common.cancel')}
             buttonStyleType={ButtonStyle.outlineBlack}
             width="flex-1"
           />
           <CustomButton
             onPress={handleSubmit}
             disabled={isLoading}
-            text={props.gym ? "Update" : "Create"}
+            text={props.gym ? t('common.update') : t('common.create')}
             buttonStyleType={ButtonStyle.success}
             width="flex-1"
           />
@@ -114,3 +142,4 @@ const GymForm: React.FC<GymFormProps> = (props) => {
 };
 
 export default GymForm;
+

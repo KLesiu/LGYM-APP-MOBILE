@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { isIntValidator } from "../../../../../../helpers/numberValidator";
 import RemoveIcon from "./../../../../../../img/icons/deleteIcon.svg";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useTranslation } from "react-i18next";
 interface ExerciseListItemProps {
   exerciseListItem: ExerciseForPlanDay;
   removeExerciseFromList?: (item: ExerciseForPlanDay) => void;
@@ -25,6 +26,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
   moveExerciseUp,
   moveExerciseDown,
 }) => {
+  const { t } = useTranslation();
   const [seriesNumber, setSeriesNumber] = useState<string>(
     exerciseListItem.series.toString()
   );
@@ -124,7 +126,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                   style={{ fontFamily: "OpenSans_300Light" }}
                   className="  text-textColor text-sm "
                 >
-                  Series:
+                  {t('training.series')}:
                 </Text>
                 <Text className="text-redColor">*</Text>
               </View>
@@ -145,7 +147,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                   style={{ fontFamily: "OpenSans_300Light" }}
                   className="text-textColor text-sm"
                 >
-                  Reps:
+                  {t('training.reps')}:
                 </Text>
                 <Text className="text-redColor">*</Text>
               </View>
@@ -167,9 +169,9 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                 fontFamily: "OpenSans_400Regular",
               }}
               className="text-sm smallPhone:text-xs  text-fifthColor"
-            >
-              Series: {exerciseListItem.series}
-            </Text>
+              >
+                {t('training.seriesWithValue', { series: exerciseListItem.series })}
+              </Text>
             <View className="flex flex-row" style={{ gap: 16 }}>
               <Text
                 style={{
@@ -177,7 +179,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                 }}
                 className="text-sm smallPhone:text-xs  text-fifthColor"
               >
-                Reps: {exerciseListItem.reps}
+                {t('training.reps')}: {exerciseListItem.reps}
               </Text>
             </View>
           </View>

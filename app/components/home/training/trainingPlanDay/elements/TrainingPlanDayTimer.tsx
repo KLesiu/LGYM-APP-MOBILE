@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text } from "react-native";
 import ClockIcon from "./../../../../../../img/icons/clockIcon.svg";
 import CustomButton, { ButtonStyle } from "../../../../elements/CustomButton";
+import { useTranslation } from "react-i18next";
 
 const TrainingPlanDayTimer: React.FC = () => {
+  const { t } = useTranslation();
   const [timerCount, setTimerCount] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   
@@ -54,7 +56,7 @@ const TrainingPlanDayTimer: React.FC = () => {
   return (
     <View className="flex flex-row justify-between items-center flex-1">
       <CustomButton
-        text={isRunning ? "Finish pause" : "Start pause"}
+        text={isRunning ? t('training.finishPause') : t('training.startPause')}
         onPress={handleTimerAction}
         buttonStyleType={ButtonStyle.grey}
       />

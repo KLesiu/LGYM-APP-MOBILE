@@ -1,6 +1,6 @@
 import { View, Text, TextInput, Pressable } from "react-native";
 import AutoComplete from "../../../elements/Autocomplete";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { isIntValidator } from "../../../../../helpers/numberValidator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "../../../../../interfaces/Exercise";
@@ -13,6 +13,13 @@ import { useAppContext } from "../../../../AppContext";
 import ValidationView from "../../../elements/ValidationView";
 import { Message } from "../../../../../enums/Message";
 import React from "react";
+import { useTranslation } from "react-i18next";
+import {
+  useGetApiExerciseIdGetAllExercises,
+  usePostApiExerciseIdGetExerciseByBodyPart,
+} from "../../../../../api/generated/exercise/exercise";
+
+import { ExerciseResponseDto, EnumLookupDto } from "../../../../../api/generated/model";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
@@ -27,48 +34,73 @@ interface TrainingPlanDayExerciseFormProps {
 const TrainingPlanDayExerciseForm: React.FC<
   TrainingPlanDayExerciseFormProps
 > = (props) => {
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
-  const { postAPI, getAPI, isLoading, setErrors } = useAppContext();
+  const { setErrors } = useAppContext();
 
-  const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
-    []
-  );
   const [numberOfSeries, setNumberOfSeries] = useState<string>("");
   const [exerciseReps, setExerciseReps] = useState<string>("");
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (props.bodyPart) getExercisesByBodyPart();
-    else getAllExercises();
-  }, []);
+  const { data: allExercisesData, isLoading: isLoadingAll } =
+    useGetApiExerciseIdGetAllExercises(userId, {
+      query: { enabled: !props.bodyPart },
+    });
 
-  const getExercisesByBodyPart = async () => {
-    await postAPI(
-      `/exercise/${userId}/getExerciseByBodyPart`,
-      (result: ExerciseForm[]) => {
-        const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
-          return { label: exercise.name, value: exercise._id! };
-        });
-        setExercisesToSelect(helpExercisesToSelect);
-      },
-      { bodyPart: props.bodyPart }
-    );
-  };
-  const getAllExercises = async () => {
-    await getAPI(
-      `/exercise/${userId}/getAllExercises`,
-      (result: ExerciseForm[]) => {
-        const helpExercisesToSelect = result.map((exercise: ExerciseForm) => {
-          return { label: exercise.name, value: exercise._id! };
-        });
-        setExercisesToSelect(helpExercisesToSelect);
+  const {
+    mutate: getExercisesByBodyPart,
+    data: exercisesByBodyPartData,
+    isPending: isLoadingBodyPart,
+  } = usePostApiExerciseIdGetExerciseByBodyPart();
+
+  useEffect(() => {
+    if (props.bodyPart) {
+      getExercisesByBodyPart({
+        id: userId,
+        data: { bodyPart: props.bodyPart },
+      });
+    }
+  }, [props.bodyPart]);
+
+  const exercisesToSelect = useMemo(() => {
+    let data: ExerciseForm[] = [];
+    if (props.bodyPart) {
+      if (exercisesByBodyPartData?.data) {
+        data = (exercisesByBodyPartData.data as ExerciseResponseDto[]).map(
+          (dto) => ({
+            _id: dto._id || "",
+            name: dto.name || "",
+            user: dto.user || "",
+            bodyPart: dto.bodyPart || undefined,
+            description: dto.description || "",
+            image: dto.image || "",
+          })
+        );
       }
-    );
-  };
+    } else {
+      if (allExercisesData?.data) {
+        data = (allExercisesData.data as ExerciseResponseDto[]).map(
+          (dto) => ({
+            _id: dto._id || "",
+            name: dto.name || "",
+            user: dto.user || "",
+            bodyPart: dto.bodyPart || undefined,
+            description: dto.description || "",
+            image: dto.image || "",
+          })
+        );
+      }
+    }
+    return data.map((exercise: ExerciseForm) => ({
+      label: exercise.name || "",
+      value: exercise._id!,
+    }));
+  }, [exercisesByBodyPartData, allExercisesData, props.bodyPart]);
+
+  const isLoading = isLoadingAll || isLoadingBodyPart;
 
   const clearAutoCompleteQuery = () => {
-    // Po wyczyszczeniu query resetujemy stan, aby zapobiec ponownemu wywołaniu
     setClearQuery(false);
   };
   const validator = (input: string): void => {
@@ -94,7 +126,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             className="text-3xl smallPhone:text-xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            Add exercise to the current training
+            {t('training.addExerciseToCurrentTraining')}
           </Text>
         </View>
         <View
@@ -107,7 +139,7 @@ const TrainingPlanDayExerciseForm: React.FC<
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                Exercise:
+                {t('training.exercise')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -126,7 +158,7 @@ const TrainingPlanDayExerciseForm: React.FC<
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                Series:
+                {t('training.series')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -150,7 +182,7 @@ const TrainingPlanDayExerciseForm: React.FC<
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
                 style={{ fontFamily: "OpenSans_300Light" }}
               >
-                Reps:
+                {t('training.reps')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -175,14 +207,14 @@ const TrainingPlanDayExerciseForm: React.FC<
             width="flex-1"
             onPress={props.cancel}
             buttonStyleType={ButtonStyle.cancel}
-            text="Cancel"
+            text={t('common.cancel')}
           />
           <CustomButton
             width="flex-1"
             disabled={isLoading}
             onPress={sendNewExercise}
             buttonStyleType={ButtonStyle.success}
-            text="Add"
+            text={t('common.add')}
           />
         </View>
         <ValidationView />

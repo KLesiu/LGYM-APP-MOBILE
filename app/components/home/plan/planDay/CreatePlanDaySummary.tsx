@@ -5,6 +5,7 @@ import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { ExerciseForPlanDay } from "../../../../../interfaces/Exercise";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface CreatePlanDaySummaryProps {
   saveCurrentPlan: (
@@ -16,6 +17,7 @@ interface CreatePlanDaySummaryProps {
 }
 
 const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
+  const { t } = useTranslation();
   const { exercisesList, goBack, planDayName, closeForm } = usePlanDay();
 
   const savePlan = async () => {
@@ -29,7 +31,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
           className="text-3xl smallPhone:text-xl  text-textColor"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
-          Summary
+          {t('plans.summary')}
         </Text>
         <View className="flex flex-row" style={{ gap: 8 }}>
           <PlanNameIcon />
@@ -49,7 +51,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
           onPress={props.isPreview ? closeForm : goBack}
-          text={props.isPreview ? "Close" : "Back"}
+          text={props.isPreview ? t('plans.close') : t('plans.back')}
           width="flex-1"
         />
 
@@ -57,7 +59,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
           <CustomButton
             buttonStyleType={ButtonStyle.success}
             onPress={savePlan}
-            text="Save"
+            text={t('common.save')}
             isLoading={props.isLoading}
             width="flex-1"
           />

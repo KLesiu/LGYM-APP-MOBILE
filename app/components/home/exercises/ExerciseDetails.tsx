@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Switch, ScrollView } from "react-native";
+import { View, Text, Pressable, ScrollView } from "react-native";
+import { useTranslation } from "react-i18next";
 import BodyPartImage from "../../elements/BodyPartImage";
 import {
   ExerciseForm,
@@ -7,7 +8,6 @@ import {
 } from "../../../../interfaces/Exercise";
 
 import BackIcon from "./../../../../img/icons/backIcon.svg";
-import { useAppContext } from "../../../AppContext";
 import ViewLoading from "../../elements/ViewLoading";
 import ExerciseSeriesInTrainigsList from "./ExerciseSeriesInTrainigsList";
 import CustomButton, {
@@ -18,6 +18,13 @@ import { useHomeContext } from "../HomeContext";
 import { PossibleRecordForExercise } from "../../../../interfaces/MainRecords";
 import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
 import RecordsPopUp from "../records/RecordsPopUp";
+import { usePostApiExerciseGetExerciseScoresFromTrainingByExercise } from "../../../../api/generated/exercise/exercise";
+import { usePostApiMainRecordsGetRecordOrPossibleRecordInExercise } from "../../../../api/generated/main-records/main-records";
+import {
+  ExerciseTrainingHistoryItemDto,
+  PossibleRecordForExerciseDto,
+} from "../../../../api/generated/model";
+import { BodyParts } from "../../../../enums/BodyParts";
 
 interface ExerciseDetailsProps {
   exercise: ExerciseForm;
@@ -28,16 +35,25 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
   exercise,
   goBack,
 }) => {
+  const { t } = useTranslation();
   const [exerciseSeriesDetails, setExerciseSeriesDetails] = useState<
-    ExerciseTrainingHistoryItem[]
+    ExerciseTrainingHistoryItemDto[]
   >([]);
   const [exerciseRecord, setExerciseRecord] =
-    useState<PossibleRecordForExercise>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+    useState<PossibleRecordForExerciseDto>();
+
   const [isRecordDialogShown, setIsRecordDialogShown] =
     useState<boolean>(false);
-  const { postAPI } = useAppContext();
   const { toggleMenuButton } = useHomeContext();
+
+  const {
+    mutate: getScores,
+    isPending: isScoresLoading,
+  } = usePostApiExerciseGetExerciseScoresFromTrainingByExercise();
+
+  const {
+    mutate: getRecord,
+  } = usePostApiMainRecordsGetRecordOrPossibleRecordInExercise();
 
   useEffect(() => {
     getPossibleOrExerciseRecord();
@@ -45,38 +61,46 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
     toggleMenuButton(true);
   }, []);
 
-  const getExerciseSeriesDetails = async () => {
-    setIsLoading(true);
-    await postAPI(
-      `/exercise/getExerciseScoresFromTrainingByExercise`,
-      (response: ExerciseTrainingHistoryItem[]) => {
-        setExerciseSeriesDetails(response);
-      },
-      { exerciseId: exercise._id }
+  const getExerciseSeriesDetails = () => {
+    if (!exercise._id) return;
+    getScores(
+      { data: { exerciseId: exercise._id } },
+      {
+        onSuccess: (response) => {
+          if (response && response.data) {
+            const data = response.data as ExerciseTrainingHistoryItemDto[];
+            setExerciseSeriesDetails(data);
+          }
+        },
+      }
     );
-    setIsLoading(false);
   };
 
-  const getPossibleOrExerciseRecord = async () => {
-    await postAPI(
-      `/mainRecords/getRecordOrPossibleRecordInExercise`,
-      (response: PossibleRecordForExercise) => {
-        setExerciseRecord(response);
-      },
-      { exerciseId: exercise._id }
+  const getPossibleOrExerciseRecord = () => {
+    if (!exercise._id) return;
+    getRecord(
+      { data: { exerciseId: exercise._id } },
+      {
+        onSuccess: (response) => {
+          if (response && response.data) {
+            const data = response.data as PossibleRecordForExerciseDto;
+            setExerciseRecord(data);
+          }
+        },
+      }
     );
   };
 
   const toggleRecordDialog = async () => {
     setIsRecordDialogShown(!isRecordDialogShown);
     if (isRecordDialogShown) {
-      await getPossibleOrExerciseRecord();
+      getPossibleOrExerciseRecord();
     }
   };
 
   if (isRecordDialogShown) {
     return (
-      <RecordsPopUp offPopUp={toggleRecordDialog} exerciseId={exercise._id} />
+      <RecordsPopUp offPopUp={toggleRecordDialog} exerciseId={exercise._id || ""} />
     );
   }
 
@@ -92,16 +116,10 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
         </Pressable>
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <Text
-            style={{ fontFamily: "OpenSans_300Light" }}
-            className="text-textColor text-base"
-          >
-            Body part:
-          </Text>
-          <Text
             style={{ fontFamily: "OpenSans_700Bold" }}
             className="font-bold text-primaryColor text-xl"
           >
-            {exercise.bodyPart}
+            {exercise.bodyPart?.displayName}
           </Text>
         </View>
         <View></View>
@@ -113,7 +131,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
         <ScrollView>
           <View className="flex flex-col">
             <View className="flex flex-row justify-center">
-              <BodyPartImage bodyPart={exercise.bodyPart} showBig={true} />
+              <BodyPartImage bodyPart={exercise.bodyPart?.name as BodyParts} showBig={true} />
             </View>
             <View className="flex flex-col w-full" style={{ gap: 8 }}>
               <View className="flex flex-row justify-between flex-wrap">
@@ -134,7 +152,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
                       style={{ fontFamily: "OpenSans_700Bold" }}
                     >
                       {exerciseRecord.reps}x{exerciseRecord.weight}
-                      {exerciseRecord.unit}
+                      {exerciseRecord.unit?.displayName}
                     </Text>
                   </View>
                 )}
@@ -147,7 +165,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
                 {exercise.description}
               </Text>
             </View>
-            {isLoading ? (
+            {isScoresLoading ? (
               <ViewLoading />
             ) : (
               <ExerciseSeriesInTrainigsList
@@ -157,19 +175,11 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
           </View>
         </ScrollView>
         <View className="flex flex-row" style={{ gap: 8 }}>
-          {/* <CustomButton
-            onPress={() => {}}
-            buttonStyleSize={ButtonSize.regular}
-            buttonStyleType={ButtonStyle.grey}
-            text="Add to training day"
-            customClasses="flex-1"
-          ></CustomButton> */}
-
           <CustomButton
             onPress={toggleRecordDialog}
             buttonStyleSize={ButtonSize.regular}
             buttonStyleType={ButtonStyle.success}
-            text="Add record"
+            text={t("common.addRecord")}
             customClasses="flex-1"
           ></CustomButton>
         </View>

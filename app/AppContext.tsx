@@ -1,24 +1,14 @@
 import React, { useMemo } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { get, post } from "./services/http";
-import { AxiosError, AxiosResponse } from "axios";
+
 import { Message } from "../enums/Message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UserInfo } from "../interfaces/User";
+import { useAuthStore } from "../stores/useAuthStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface AppContextProps {
-  postAPI: (
-    url: string,
-    callback: any,
-    data?: Record<string, any>,
-    serveErrors?: boolean
-  ) => Promise<void>;
-  getAPI: (
-    url: string,
-    callback: any,
-    params?: Record<string, any>,
-    serveErrors?: boolean
-  ) => Promise<void>;
+
   errors: string[];
   isLoading: boolean;
   setErrors: (errors: string[]) => void;
@@ -53,75 +43,42 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string>();
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [isTokenChecked, setIsTokenChecked] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     getTokenFromLocalStorage();
   }, []);
 
   const getTokenFromLocalStorage = async () => {
-    const token = await AsyncStorage.getItem("token");
-    if (token) setToken(token);
-    setCanAppStart(true);
-  };
-
-  const getAPI = async (
-    url: string,
-    callback: any,
-    params?: Record<string, any>,
-    serveErrors = true
-  ) => {
     try {
-      setErrors([]);
-      setIsLoading(true);
-      const response = await get(url, token, params);
-      callback(response);
-    } catch (error) {
-      if (serveErrors) catchErrors(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const postAPI = async (
-    url: string,
-    callback: any,
-    data?: Record<string, any>,
-    serveErrors = true
-  ) => {
-    try {
-      setIsLoading(true);
-      setErrors([]);
-      const response = await post(url, token, data);
-      callback(response);
-    } catch (error) {
-      if (serveErrors) catchErrors(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const catchErrors = (error: any) => {
-    if (error instanceof AxiosError) {
-      if (!error.response) {
-        setErrors([error.message]);
-        return;
-      }
-      const { status, data } = error.response as AxiosResponse;
-      if (status === 500) {
-        setErrors([Message.TryAgain]);
+      const storedToken = await AsyncStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+        useAuthStore.getState().setToken(storedToken);
       } else {
-        setErrors([data.msg]);
+        setToken(undefined);
+        useAuthStore.getState().setToken(null);
       }
+    } catch (error) {
+      console.error("Error retrieving token from storage", error);
+      setToken(undefined);
+      setUserInfo(null);
+      useAuthStore.getState().setToken(null);
+    } finally {
+      setCanAppStart(true);
     }
   };
+
+
 
   const clearBeforeLogout = async () => {
     const keys = await AsyncStorage.getAllKeys();
     await Promise.all(keys.map((key) => deleteFromStorage(key)));
     setUserInfo(null);
     setToken(undefined);
+    setIsTokenChecked(false);
+    useAuthStore.getState().logout();
+    queryClient.removeQueries();
   };
 
   const deleteFromStorage = async (key: string): Promise<void> => {
@@ -157,8 +114,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        postAPI,
-        getAPI,
+
         errors,
         isLoading,
         setErrors,

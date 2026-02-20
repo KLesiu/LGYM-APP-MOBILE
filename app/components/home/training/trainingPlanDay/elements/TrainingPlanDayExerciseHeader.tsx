@@ -2,15 +2,17 @@ import { View, Text, Linking, Alert, Pressable } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayExerciseHeaderProps {}
 
 const TrainingPlanDayExerciseHeader: React.FC<
   TrainingPlanDayExerciseHeaderProps
 > = () => {
+  const { t } = useTranslation();
   const { currentExercise } = useTrainingPlanDay();
   const openSearch = async (exerciseName?: string) => {
-    if (!exerciseName) return Alert.alert("Exercise name is required");
+    if (!exerciseName) return Alert.alert(t('training.exerciseNameRequired'));
     const query = encodeURIComponent(exerciseName);
     const url = `https://www.google.com/search?q=${query}`;
 
@@ -18,7 +20,7 @@ const TrainingPlanDayExerciseHeader: React.FC<
     if (supported) {
       await Linking.openURL(url);
     } else {
-      Alert.alert("Can't open browser");
+      Alert.alert(t('training.cantOpenBrowser'));
     }
   };
   return (
@@ -34,7 +36,7 @@ const TrainingPlanDayExerciseHeader: React.FC<
         </Text>
         <Pressable
           className="w-10"
-          onPress={() => openSearch(currentExercise?.exercise.name)}
+          onPress={() => openSearch(currentExercise?.exercise.name || undefined)}
           hitSlop={8}
         >
           <Ionicons name="search-outline" size={24} color="white" />

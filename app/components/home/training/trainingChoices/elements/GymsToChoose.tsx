@@ -1,12 +1,12 @@
 import { ScrollView, View } from "react-native";
 import CustomButton, { ButtonSize } from "../../../../elements/CustomButton";
 import GymPlace from "../../../gym/GymPlace";
-import { GymChoiceInfo } from "../../../../../../interfaces/Gym";
 import React from "react";
+import { GymChoiceInfoDto } from "../../../../../../api/generated/model";
 
 interface GymsToChooseProps {
-  gyms: GymChoiceInfo[];
-  setGym: (gym: GymChoiceInfo) => void;
+  gyms: GymChoiceInfoDto[];
+  setGym: (gym: GymChoiceInfoDto) => void;
 }
 
 const GymsToChoose: React.FC<GymsToChooseProps> = ({ gyms, setGym }) => {

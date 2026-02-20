@@ -1,5 +1,5 @@
 import { Text, View, ScrollView, Pressable, Image } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import RecordsPopUp from "./RecordsPopUp";
 import ViewLoading from "../../elements/ViewLoading";
 import { MainRecordsLast } from "./../../../../interfaces/MainRecords";
@@ -15,32 +15,40 @@ import { useHomeContext } from "../HomeContext";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import RecordsItem from "./RecordsItem";
 import { FontWeights } from "../../../../enums/FontsProperties";
+import {
+  useGetApiMainRecordsIdGetLastMainRecords,
+  getApiMainRecordsIdDeleteMainRecord,
+} from "../../../../api/generated/main-records/main-records";
+import { MainRecordsLastDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface RecordsProps {}
 
 const Records: React.FC<RecordsProps> = () => {
+  const { t } = useTranslation();
   const [popUp, setPopUp] = useState<boolean>(false);
-  const [records, setRecords] = useState<MainRecordsLast[]>([]);
-  const [viewLoading, setViewLoading] = useState<boolean>(true);
   const [exercise, setExercise] = useState<string | undefined>();
   const [choosenRecord, setChoosenRecord] = useState<
-    MainRecordsLast | undefined
+    MainRecordsLastDto | undefined
   >();
   const [
     isDeleteRecordConfirmationDialogVisible,
     setIsDeleteRecordConfirmationDialogVisible,
   ] = useState<boolean>(false);
   const { userId } = useHomeContext();
-  const { getAPI } = useAppContext();
 
-  useEffect(() => {
-    getRecords();
-  }, []);
+  const {
+    data: recordsData,
+    isLoading: isRecordsLoading,
+    refetch: refetchRecords,
+  } = useGetApiMainRecordsIdGetLastMainRecords(userId, {
+    query: { enabled: !!userId },
+  });
 
   const changePopUpValue: VoidFunction = useCallback((): void => {
     setPopUp(false);
-    getRecords();
-  }, []);
+    refetchRecords();
+  }, [refetchRecords]);
 
   const showPopUp = useCallback(() => {
     setPopUp(true);
@@ -55,35 +63,18 @@ const Records: React.FC<RecordsProps> = () => {
     []
   );
 
-  const getRecords = async () => {
-    try {
-      await getAPI(
-        `/mainRecords/${userId}/getLastMainRecords`,
-        (response: MainRecordsLast[]) => setRecords(response),
-        undefined,
-        false
-      );
-    } finally {
-      setViewLoading(false);
-    }
-  };
-
   const deleteRecord = async () => {
-    if (!choosenRecord) return;
-    setViewLoading(true);
+    if (!choosenRecord || !choosenRecord._id) return;
     try {
-      await getAPI(
-        `/mainRecords/${choosenRecord._id}/deleteMainRecord`,
-        async () => await getRecords()
-      );
+      await getApiMainRecordsIdDeleteMainRecord(choosenRecord._id);
+      await refetchRecords();
     } finally {
       deleteDialogVisible(false);
-      setViewLoading(false);
     }
   };
 
   const deleteDialogVisible = useCallback(
-    (visible: boolean, record?: MainRecordsLast) => {
+    (visible: boolean, record?: MainRecordsLastDto) => {
       if (visible) setChoosenRecord(record);
       else setChoosenRecord(undefined);
       setIsDeleteRecordConfirmationDialogVisible(visible);
@@ -94,7 +85,7 @@ const Records: React.FC<RecordsProps> = () => {
   return (
     <BackgroundMainSection>
       <View className="flex flex-col h-full w-full" style={{ gap: 8 }}>
-        {viewLoading ? (
+        {isRecordsLoading ? (
           <ViewLoading />
         ) : (
           <View className="flex flex-col p-4" style={{ gap: 16 }}>
@@ -103,10 +94,10 @@ const Records: React.FC<RecordsProps> = () => {
                 className="text-textColor  text-base "
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
-                Your records:
+                {t('records.yourRecords')}
               </Text>
               <CustomButton
-                text="Add new records"
+                text={t('records.addNewRecords')}
                 onPress={() => {
                   setExercise(undefined);
                   showPopUp();
@@ -120,9 +111,16 @@ const Records: React.FC<RecordsProps> = () => {
               className="w-full h-full"
               contentContainerStyle={{ padding: 8 }}
             >
-              {records && records.length ? (
+              {recordsData && recordsData.data && Array.isArray(recordsData.data) ? (
                 <View className="flex flex-col w-full" style={{ gap: 8 }}>
-                  {records.map((record) => <RecordsItem key={record._id}  record={record} updateSettedExerciseRecord={updateSettedExerciseRecord} deleteDialogVisible={deleteDialogVisible} />)}
+                  {recordsData.data.map((record) => (
+                    <RecordsItem
+                      key={record._id}
+                      record={record}
+                      updateSettedExerciseRecord={updateSettedExerciseRecord}
+                      deleteDialogVisible={deleteDialogVisible}
+                    />
+                  ))}
                 </View>
               ) : (
                 <></>
@@ -133,10 +131,10 @@ const Records: React.FC<RecordsProps> = () => {
 
         <ConfirmDialog
           visible={isDeleteRecordConfirmationDialogVisible}
-          title={`Delete: ${
-            choosenRecord ? choosenRecord.exerciseDetails.name : ""
-          }`}
-          message={`Are you sure you want to delete?`}
+          title={t('records.deleteConfirmTitle', {
+            name: choosenRecord?.exerciseDetails?.name || ''
+          })}
+          message={t('records.deleteConfirmMessage')}
           onConfirm={deleteRecord}
           onCancel={() => deleteDialogVisible(false)}
         />

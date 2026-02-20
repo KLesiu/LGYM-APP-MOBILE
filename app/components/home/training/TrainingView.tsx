@@ -12,6 +12,7 @@ import { useHomeContext } from "../HomeContext";
 import TrainingPlanDayProvider from "./trainingPlanDay/TrainingPlanDayContext";
 import { TrainingViewSteps } from "../../../../enums/TrainingView";
 import React from "react";
+import { GymChoiceInfoDto } from "../../../../api/generated/model";
 
 interface TrainingViewProps {}
 
@@ -54,8 +55,13 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
   };
 
   /// Set gym, hide gym choice popUp and show day choice popUp
-  const changeGym = async (gym: GymForm) => {
-    setGym(gym);
+  const changeGym = async (gymData: GymChoiceInfoDto) => {
+    const gymForm: GymForm = {
+        name: gymData.name || "",
+        address: gymData.address || undefined,
+        _id: gymData._id || undefined
+    };
+    setGym(gymForm);
     setStep(TrainingViewSteps.CHOOSE_DAY);
   };
 
@@ -120,7 +126,12 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
           <TrainingGymChoose goBack={resetTrainingView} setGym={changeGym} />
         );
       case TrainingViewSteps.CHOOSE_DAY:
-        return <TrainingDayChoose showDaySection={showDaySection} />;
+        return (
+          <TrainingDayChoose
+            goBack={getInformationAboutGyms}
+            showDaySection={showDaySection}
+          />
+        );
       case TrainingViewSteps.TRAINING_PLAN_DAY:
         return (
           <TrainingPlanDayProvider gym={gym} dayId={dayId!}>

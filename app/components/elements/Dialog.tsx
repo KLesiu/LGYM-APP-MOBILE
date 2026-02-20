@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactNode } from "react";
-import { View } from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 
 interface DialogProps {
   children: ReactNode;
@@ -8,12 +8,19 @@ interface DialogProps {
 
 const Dialog: React.FC<DialogProps> = ({ children }) => {
   return (
-    <View
-      className="absolute top-0 left-0  flex flex-col w-full h-full items-center bg-bgColor"
-      style={{ gap: 16 }}
+    <KeyboardAvoidingView
+      className="absolute top-0 left-0 w-full h-full bg-bgColor"
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      {children}
-    </View>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View className="flex flex-col w-full h-full items-center" style={{ gap: 16 }}>
+          {children}
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

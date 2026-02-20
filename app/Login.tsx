@@ -1,5 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Image, Pressable } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from "react-native";
 import logoLGYM from "./../assets/logoLGYMNew.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MiniLoading from "./components/elements/MiniLoading";
@@ -10,54 +19,107 @@ import CustomButton, {
   ButtonStyle,
 } from "./components/elements/CustomButton";
 import ValidationView from "./components/elements/ValidationView";
-import { useRouter, usePathname } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 import { useAppContext } from "./AppContext";
-import { UserInfo } from "../interfaces/User";
+import { usePostApiLogin, postApiLoginResponse } from "../api/generated/user/user";
+import { useAuthStore } from "../stores/useAuthStore";
+import { getErrorMessage } from "../utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 const Login: React.FC = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
+  const [errors, setErrors] = useState<string[]>([]);
 
-  const { postAPI, setErrors, isLoading, setUserInfo, setToken } =
-    useAppContext();
+  const { setErrors: setAppErrors, setUserInfo } = useAppContext();
+  const { mutate, isPending } = usePostApiLogin();
+  const { setToken, setUser } = useAuthStore();
 
-  useEffect(() => {
-    setErrors([]);
-  }, [usePathname()]);
+  useFocusEffect(
+    useCallback(() => {
+      setErrors([]);
+      setAppErrors([]);
+    }, [])
+  );
 
   const login = async (): Promise<void> => {
-    await postAPI("/login", loginSuccessCallback, {
-      name: username,
-      password: password,
-    });
-  };
+    if (!username || !password) {
+      setErrors([t('auth.usernameAndPasswordRequired')]);
+      return;
+    }
 
-  const loginSuccessCallback = async (response: {
-    token: string;
-    req: UserInfo;
-  }) => {
-    await AsyncStorage.setItem("token", response.token);
-    await AsyncStorage.setItem("username", response.req.name);
-    await AsyncStorage.setItem("id", response.req._id);
-    await AsyncStorage.setItem("email", response.req.email);
-    setToken(response.token);
-    setUserInfo(response.req);
-    router.push("/Home");
+    mutate(
+      {
+        data: {
+          name: username,
+          password: password,
+        },
+      },
+      {
+          onSuccess: async (response: postApiLoginResponse) => {
+          try {
+            const loginResponse = response.data;
+
+            if (!("token" in loginResponse) || !loginResponse.token) {
+              setErrors([t('auth.invalidResponse')]);
+              return;
+            }
+
+            if (!("req" in loginResponse) || !loginResponse.req) {
+              setErrors([t('auth.invalidResponse')]);
+              return;
+            }
+
+            const userInfo = loginResponse.req;
+
+            await AsyncStorage.setItem("token", loginResponse.token);
+            await AsyncStorage.setItem("username", userInfo.name || "");
+            await AsyncStorage.setItem("id", userInfo._id || "");
+            if (userInfo.email) {
+              await AsyncStorage.setItem("email", userInfo.email);
+            }
+
+            setToken(loginResponse.token);
+            setUser(userInfo as any);
+            setUserInfo(userInfo as any);
+            router.push("/Home");
+          } catch (error) {
+            console.error("Error storing credentials:", error);
+            setErrors([t('auth.failedToStoreCredentials')]);
+          }
+        },
+        onError: (error: any) => {
+          console.error("Login error:", error);
+          const errorMessage = getErrorMessage(error, t('auth.loginFailed'));
+          setErrors([errorMessage]);
+          setAppErrors([errorMessage]);
+        },
+      }
+    );
   };
 
   const goToPreload = () => {
     router.push("/");
   };
   return (
-    <View
-      style={{ gap: 16 }}
-      className="flex items-center flex-col h-full justify-start bg-bgColor  p-4"
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
-        <Image className="w-full h-full" source={logoLGYM} />
-      </Pressable>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View
+          style={{ gap: 16, flexGrow: 1 }}
+          className="flex items-center flex-col justify-start bg-bgColor p-4"
+        >
+          <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
+            <Image className="w-full h-full" source={logoLGYM} />
+          </Pressable>
 
       <View
         className="w-full flex flex-col items-center justify-start"
@@ -69,7 +131,7 @@ const Login: React.FC = () => {
               className="text-textColor  text-base"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Username
+              {t('auth.username')}
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -89,7 +151,7 @@ const Login: React.FC = () => {
               className="text-textColor text-base"
               style={{ fontFamily: "OpenSans_300Light" }}
             >
-              Password
+              {t('auth.password')}
             </Text>
             <Text className="text-redColor">*</Text>
           </View>
@@ -114,17 +176,19 @@ const Login: React.FC = () => {
           </Pressable>
         </View>
       </View>
-      <CustomButton
-        width="w-full"
-        onPress={login}
-        disabled={isLoading}
-        buttonStyleType={ButtonStyle.success}
-        text="Login"
-        buttonStyleSize={ButtonSize.xl}
-      />
-      <MiniLoading />
-      <ValidationView />
-    </View>
+          <CustomButton
+            width="w-full"
+            onPress={login}
+            disabled={isPending}
+            buttonStyleType={ButtonStyle.success}
+            text={t('auth.login')}
+            buttonStyleSize={ButtonSize.xl}
+          />
+          <MiniLoading />
+          <ValidationView errors={errors} />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 export default Login;

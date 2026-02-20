@@ -3,6 +3,7 @@ import { Modal, View, Pressable, Text, TextInput } from "react-native";
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../../../helpers/toastConfig";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
+import { useTranslation } from "react-i18next";
 
 interface PlanCopyDialogProps {
   visible: boolean;
@@ -15,6 +16,7 @@ const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({
   onCancel,
   copyPlan,
 }) => {
+  const { t } = useTranslation();
   const [code, setCode] = useState<string>("");
   return (
     <Modal
@@ -32,7 +34,7 @@ const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({
             style={{ fontFamily: "OpenSans_700Bold" }}
             className="text-2xl font-bold text-primaryColor"
           >
-            Copy plan!
+            {t('plans.copyDialogTitle')}
           </Text>
 
           <View style={{ gap: 4 }} className="flex w-full flex-col">
@@ -41,7 +43,7 @@ const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({
                 style={{ fontFamily: "OpenSans_300Light" }}
                 className="  text-textColor  text-base smallPhone:text-sm"
               >
-                Code:
+                {t('plans.code')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -58,13 +60,13 @@ const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({
           </View>
           <View className="flex-row w-full" style={{ gap: 8 }}>
             <CustomButton
-              text="Cancel"
+              text={t('common.cancel')}
               onPress={onCancel}
               buttonStyleType={ButtonStyle.cancel}
               width="flex-1"
             />
             <CustomButton
-              text="Copy plan"
+              text={t('plans.copyPlan')}
               buttonStyleType={ButtonStyle.success}
               onPress={()=> copyPlan(code)}
               width="flex-1"

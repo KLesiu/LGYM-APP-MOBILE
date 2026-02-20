@@ -16,7 +16,7 @@ interface Rank{
     needElo:number
 }
 interface UserInfo extends UserBaseInfo{
-    nextRank:Rank,
+    nextRank?:Rank,
 }
 interface LoginUser {
     name:string,

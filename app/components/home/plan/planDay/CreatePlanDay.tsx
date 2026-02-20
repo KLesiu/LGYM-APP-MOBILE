@@ -1,4 +1,5 @@
-import { JSX, useCallback, useEffect, useRef, useState } from "react";
+import { JSX, useCallback, useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ExerciseForPlanDay,
 } from "./../../../../../interfaces/Exercise";
@@ -13,8 +14,16 @@ import {
 } from "./../../../../../interfaces/PlanDay";
 import { BackHandler } from "react-native";
 import { usePlanDay } from "./CreatePlanDayContext";
-import { useAppContext } from "../../../../AppContext";
 import React from "react";
+import {
+  usePostApiPlanDayIdCreatePlanDay,
+  usePostApiPlanDayUpdatePlanDay,
+  useGetApiPlanDayIdGetPlanDay,
+  getGetApiPlanDayIdGetPlanDayQueryKey,
+  getGetApiPlanDayIdGetPlanDaysInfoQueryKey,
+} from "../../../../../api/generated/plan-day/plan-day";
+import { PlanDayVmDto } from "../../../../../api/generated/model";
+import { BodyParts } from "../../../../../enums/BodyParts";
 
 interface CreatePlanDayProps {
   planId?: string;
@@ -23,6 +32,7 @@ interface CreatePlanDayProps {
 }
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
+  const queryClient = useQueryClient();
   const {
     planDayName,
     setPlanDayName,
@@ -30,17 +40,47 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     currentStep,
     setCurrentStep,
     closeForm,
+    exercisesList,
   } = usePlanDay();
 
-  const { postAPI, getAPI } = useAppContext();
+  const { mutate: createPlanDayMutation, isPending: isCreatePending } = usePostApiPlanDayIdCreatePlanDay();
+  const { mutate: updatePlanDayMutation, isPending: isUpdatePending } = usePostApiPlanDayUpdatePlanDay();
+  
+  const { data: planDayData, isLoading: isGetPlanDayLoading } = useGetApiPlanDayIdGetPlanDay(
+    props.planDayId || "",
+    { query: { enabled: !!props.planDayId } }
+  );
 
   const currentStepRef = useRef(currentStep);
-
-  const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   useEffect(() => {
     init();
   }, []);
+
+  useEffect(() => {
+    if (planDayData?.data) {
+      const dto = planDayData.data as PlanDayVmDto;
+      const result: PlanDayVm = {
+        _id: dto._id || "",
+        name: dto.name || "",
+       exercises:
+         dto.exercises?.map((e) => ({
+           series: e.series || 0,
+           reps: e.reps || "",
+           exercise: {
+             _id: e.exercise?._id || "",
+             name: e.exercise?.name || "",
+             user: e.exercise?.user || "",
+             bodyPart: e.exercise?.bodyPart || undefined,
+             description: e.exercise?.description || "",
+             image: e.exercise?.image || "",
+           },
+         })) || [],
+      };
+      setPlanDayName(result.name);
+      setExercisesList(mapExercisesListFromSend(result.exercises));
+    }
+  }, [planDayData]);
 
   useEffect(() => {
     currentStepRef.current = currentStep;
@@ -57,7 +97,6 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   }, []);
 
   const init = async () => {
-    if (props.planDayId) await getPlanDay();
     if (props.isPreview) setCurrentStep(2);
     else setCurrentStep(0);
   };
@@ -102,60 +141,65 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     []
   );
 
-  const createPlanDay = async (
+  const createPlanDay = (
     planNameArg: string,
     exercisesArg: ExerciseForPlanDay[]
   ) => {
     const exercises = mapExercisesListToSend(exercisesArg);
-    await postAPI(
-      `/planDay/${props.planId}/createPlanDay`,
-      () => {
-        closeForm();
-      },
-      { name: planNameArg, exercises: exercises }
-    );
+    if (props.planId) {
+      createPlanDayMutation(
+        {
+          id: props.planId,
+          data: { name: planNameArg, exercises: exercises },
+        },
+        {
+          onSuccess: () => {
+            closeForm();
+          },
+        }
+      );
+    }
   };
 
-  const editPlanDay = async (
+  const editPlanDay = (
     planNameArg: string,
     exercisesArg: ExerciseForPlanDay[]
   ) => {
     const exercises = mapExercisesListToSend(exercisesArg);
-    await postAPI(`/planDay/updatePlanDay`, () => closeForm(), {
-      _id: props.planDayId,
-      name: planNameArg,
-      exercises: exercises,
-    });
-  };
-
-  const getPlanDay = async () => {
-    await getAPI(
-      `/planDay/${props.planDayId}/getPlanDay`,
-      (result: PlanDayVm) => {
-        requestAnimationFrame(() => {
-          setPlanDayName(result.name);
-          setExercisesList(mapExercisesListFromSend(result.exercises));
-        });
-      },
-      undefined,
-      false
-    );
+    if (props.planDayId) {
+      updatePlanDayMutation(
+        {
+          data: {
+            _id: props.planDayId,
+            name: planNameArg,
+            exercises: exercises,
+          },
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: getGetApiPlanDayIdGetPlanDayQueryKey(props.planDayId!),
+            });
+            queryClient.invalidateQueries({
+              queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(props.planDayId!),
+            });
+            closeForm();
+          },
+        }
+      );
+    }
   };
 
   const savePlan = async (
     planNameArg: string,
     exercisesArg: ExerciseForPlanDay[]
   ) => {
-    setViewLoading(true)
-    if (props.planDayId) await editPlanDay(planNameArg, exercisesArg);
-    else await createPlanDay(planDayName, exercisesArg);
-    setViewLoading(false);
+    if (props.planDayId) editPlanDay(planNameArg, exercisesArg);
+    else createPlanDay(planNameArg, exercisesArg);
   };
 
   const renderStep = (): JSX.Element => {
     switch (currentStep) {
-      case -1:
-        closeForm();
       case 0:
         return <CreatePlanDayName />;
       case 1:
@@ -165,7 +209,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
           <CreatePlanDaySummary
             isPreview={props.isPreview}
             saveCurrentPlan={savePlan}
-            isLoading={viewLoading}
+            isLoading={isCreatePending || isUpdatePending}
           />
         );
       default:
@@ -173,10 +217,18 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     }
   };
 
+  const isLoading = isCreatePending || isUpdatePending || isGetPlanDayLoading;
+
+  useEffect(() => {
+    if (currentStep === -1) {
+      closeForm();
+    }
+  }, [currentStep]);
+
   return (
     <>
       <Dialog>{renderStep()}</Dialog>
-      {viewLoading ? <ViewLoading /> : <></>}
+      {isLoading ? <ViewLoading /> : <></>}
     </>
   );
 };

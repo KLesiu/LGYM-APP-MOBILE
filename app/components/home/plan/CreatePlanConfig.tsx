@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable } from "react-native";
-import { isIntValidator } from "./../../../../helpers/numberValidator";
-import ResponseMessage from "./../../../../interfaces/ResponseMessage";
+import { View, Text, TextInput } from "react-native";
 import { Message } from "./../../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
@@ -9,8 +7,9 @@ import Dialog from "../../elements/Dialog";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import ValidationView from "../../elements/ValidationView";
-import PlanNameIcon from "./../../../../img/icons/planIcon.svg";
 import React from "react";
+import { usePostApiIdCreatePlan } from "../../../../api/generated/plan/plan";
+import { useTranslation } from "react-i18next";
 
 interface CreatePlanConfigProps {
   reloadSection: VoidFunction;
@@ -18,25 +17,33 @@ interface CreatePlanConfigProps {
 }
 
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
-  const { postAPI, setErrors } = useAppContext();
+  const { setErrors } = useAppContext();
   const [planName, setPlanName] = useState<string>("");
-  const [viewLoading, setViewLoading] = useState<boolean>(false);
 
-  const sendConfig = async (): Promise<void> => {
+  const { mutate: createPlan, isPending } = usePostApiIdCreatePlan();
+
+  const sendConfig = () => {
     if (!planName) return setErrors([Message.FieldRequired]);
-    setViewLoading(true);
-    await submitPlanConfig();
-    setViewLoading(false);
+    submitPlanConfig();
   };
 
-  const submitPlanConfig = async (): Promise<void> => {
-    await postAPI(
-      `/${userId}/createPlan`,
-      (result: ResponseMessage) => {
-        props.reloadSection();
+  const submitPlanConfig = () => {
+    createPlan(
+      {
+        id: userId,
+        data: { name: planName },
       },
-      { name: planName }
+      {
+        onSuccess: async () => {
+          await props.reloadSection();
+        },
+        onError: (error) => {
+          console.error("Failed to create plan:", error);
+          setErrors([t('common.tryAgain')]);
+        },
+      }
     );
   };
 
@@ -48,7 +55,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             className="text-3xl smallPhone:text-xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            Plan Config
+            {t('plans.planConfig')}
           </Text>
         </View>
         <View className="px-5">
@@ -58,7 +65,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
                 style={{ fontFamily: "OpenSans_300Light" }}
                 className="  text-textColor  text-base smallPhone:text-sm"
               >
-                Plan name:
+                {t('plans.planName')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -76,14 +83,14 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
         </View>
         <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
           <CustomButton
-            text="Cancel"
+            text={t('common.cancel')}
             onPress={props.hidePlanConfig}
             buttonStyleType={ButtonStyle.cancel}
             width="flex-1"
           />
           <CustomButton
-            text="Next"
-            isLoading={viewLoading}
+            text={t('plans.next')}
+            isLoading={isPending}
             onPress={sendConfig}
             buttonStyleType={ButtonStyle.success}
             width="flex-1"
@@ -91,7 +98,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
         </View>
         <ValidationView />
       </View>
-      {viewLoading && <ViewLoading />}
+      {isPending && <ViewLoading />}
     </Dialog>
   );
 };

@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MarkedDates } from "./../../../../interfaces/Training";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
@@ -11,13 +11,52 @@ import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import React from "react";
+import {
+  usePostApiIdGetTrainingByDate,
+  useGetApiIdGetTrainingDates,
+} from "../../../../api/generated/training/training";
+import {
+  TrainingByDateDetailsDto,
+} from "../../../../api/generated/model";
+import { BodyParts } from "../../../../enums/BodyParts";
+import { WeightUnits } from "../../../../enums/Units";
+import { useTranslation } from "react-i18next";
+import "moment/locale/pl";
+
 const History: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const { userId } = useHomeContext();
-  const { getAPI, postAPI } = useAppContext();
   const calendar = useRef(null);
   const [trainings, setTrainings] = useState<TrainingByDateDetails[]>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
-  const [trainingDates, setTrainingDates] = useState<MarkedDates[]>([]);
+
+  const { mutateAsync: getTrainingByDateMutation } =
+    usePostApiIdGetTrainingByDate();
+  const { data: trainingDatesData } = useGetApiIdGetTrainingDates(userId, {
+    query: { enabled: !!userId },
+  });
+
+  const trainingDates = useMemo(() => {
+    if (!trainingDatesData?.data) return [];
+    return (trainingDatesData.data as any[]).map((date: any) => ({
+      date: date,
+      dots: [{ color: "#94e798" }],
+    }));
+  }, [trainingDatesData]);
+
+  const calendarLocale = useMemo(() => {
+    const localeName = i18n.language.startsWith("pl") ? "pl" : "en";
+    return {
+      name: localeName,
+      config: {
+        months: t("history.calendar.months", { returnObjects: true }) as string[],
+        monthsShort: t("history.calendar.monthsShort", { returnObjects: true }) as string[],
+        weekdays: t("history.calendar.weekdays", { returnObjects: true }) as string[],
+        weekdaysShort: t("history.calendar.weekdaysShort", { returnObjects: true }) as string[],
+        weekdaysMin: t("history.calendar.weekdaysMin", { returnObjects: true }) as string[],
+      },
+    };
+  }, [i18n.language, t]);
 
   useEffect(() => {
     init();
@@ -25,7 +64,6 @@ const History: React.FC = () => {
 
   const init = async () => {
     setViewLoading(true);
-    await getTrainingDates();
     const initialDateObj = { _d: new Date() };
     await getTrainingByDate(initialDateObj);
     setViewLoading(false);
@@ -35,38 +73,50 @@ const History: React.FC = () => {
     const date: Date = new Date(dateObject._d);
     if (!date) return;
     setViewLoading(true);
-    try{
-       await postAPI(
-      `/${userId}/getTrainingByDate`,
-      (result: TrainingByDateDetails[]) => {
-        setTrainings(result);
-      },
-      { createdAt: date },
-      false
-    );
-    }
-    catch (error) {
+    try {
+      const result = await getTrainingByDateMutation({
+        id: userId,
+        data: { createdAt: date.toISOString() },
+      });
+      
+      const mappedTrainings: TrainingByDateDetails[] = (
+        result.data as TrainingByDateDetailsDto[]
+      ).map((dto) => ({
+        _id: dto._id || "",
+        type: dto.type || "",
+        createdAt: dto.createdAt ? new Date(dto.createdAt) : new Date(),
+        planDay: {
+          name: dto.planDay?.name || "",
+        },
+        gym: dto.gym || "",
+        exercises:
+          dto.exercises?.map((exercise) => ({
+            exerciseScoreId: exercise.exerciseScoreId || "",
+            scoresDetails:
+              exercise.scoresDetails?.map((score) => ({
+                _id: score._id || undefined,
+                weight: score.weight || 0,
+                unit: (score.unit?.displayName as WeightUnits) || WeightUnits.KILOGRAMS,
+                reps: score.reps || 0,
+                exercise: score.exercise || "",
+                series: score.series || 0,
+              })) || [],
+            exerciseDetails: {
+              _id: exercise.exerciseDetails?._id || "",
+              name: exercise.exerciseDetails?.name || "",
+              bodyPart: (exercise.exerciseDetails?.bodyPart?.displayName as BodyParts) || BodyParts.Chest,
+            },
+          })) || [],
+      }));
+
+      setTrainings(mappedTrainings);
+    } catch (error) {
       setTrainings([]);
-    }finally{
+    } finally {
       setViewLoading(false);
     }
-    
-   
   };
-  const getTrainingDates = async (): Promise<void> => {
-    await getAPI(
-      `/${userId}/getTrainingDates`,
-      (result: Date[]) => {
-        const markedDates: MarkedDates[] = result.map((date: Date) => ({
-          date: date,
-          dots: [{ color: "#94e798" }],
-        }));
-        setTrainingDates(markedDates);
-      },
-      undefined,
-      false
-    );
-  };
+
   return (
     <BackgroundMainSection>
       <View className="flex flex-col h-full p-4">
@@ -116,8 +166,11 @@ const History: React.FC = () => {
             borderRadius: 4,
           }}
           numDaysInWeek={5}
+          locale={calendarLocale}
         />
-        {viewLoading ? <ViewLoading /> : trainings && trainings.length ? (
+        {viewLoading ? (
+          <ViewLoading />
+        ) : trainings && trainings.length ? (
           <TrainingSession trainings={trainings} />
         ) : (
           <View className="flex justify-center w-full h-1/2 items-center p-4">
@@ -125,7 +178,7 @@ const History: React.FC = () => {
               style={{ fontFamily: "OpenSans_700Bold" }}
               className="text-textColor text-xl text-center"
             >
-              You dont have training session this day!
+              {t('history.noSessionForDay')}
             </Text>
           </View>
         )}

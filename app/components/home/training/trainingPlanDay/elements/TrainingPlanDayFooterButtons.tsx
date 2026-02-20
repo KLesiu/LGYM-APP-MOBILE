@@ -6,6 +6,7 @@ import CustomButton, {
   ButtonStyle,
 } from "../../../../elements/CustomButton";
 import { TrainingSessionScores } from "../../../../../../interfaces/Training";
+import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayFooterButtonsProps {
   hideAndDeleteTrainingSession: () => void;
@@ -15,6 +16,7 @@ interface TrainingPlanDayFooterButtonsProps {
 const TrainingPlanDayFooterButtons: React.FC<
   TrainingPlanDayFooterButtonsProps
 > = ({ hideAndDeleteTrainingSession, sendTraining }) => {
+  const { t } = useTranslation();
   const { trainingSessionScores } = useTrainingPlanDay();
   const [isEnabled, setIsEnabled] = useState(false);
   const [isButtonLoading, setIsButtonLoading] = useState(false);
@@ -38,7 +40,7 @@ const TrainingPlanDayFooterButtons: React.FC<
         disabled={!isEnabled}
         buttonStyleSize={ButtonSize.regular}
         buttonStyleType={ButtonStyle.grey}
-        text="Delete"
+        text={t('training.delete')}
         customClasses="flex-1"
       ></CustomButton>
       <SwitchComp onValueChange={toggleSwitch} value={isEnabled} className="mt-auto mb-auto" />
@@ -48,7 +50,7 @@ const TrainingPlanDayFooterButtons: React.FC<
         isLoading={isButtonLoading}
         buttonStyleSize={ButtonSize.regular}
         buttonStyleType={ButtonStyle.success}
-        text="Add"
+        text={t('training.finish')}
         customClasses="flex-1"
       ></CustomButton>
     </View>

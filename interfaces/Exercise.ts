@@ -1,23 +1,23 @@
-import { BodyParts } from "../enums/BodyParts"
-import { UserEntity } from "../models/User";
 import { DropdownItem } from "./Dropdown";
+import { ExerciseResponseDto, EnumLookupDto } from "../api/generated/model";
+import { BodyParts } from "../enums/BodyParts";
 
-interface ExerciseForm{
-    _id?:string,
-    name:string,
-    user?:string,
-    bodyPart:BodyParts,
-    description?:string,
-    image?:string
+interface ExerciseForm {
+    _id?: string | null;
+    name?: string | null;
+    user?: string | null;
+    bodyPart?: EnumLookupDto | null;
+    description?: string | null;
+    image?: string | null;
 }
 
-interface ExerciseToCopy{
-    _id?:string,
-    name:string,
-    user:UserEntity,
-    bodyPart:BodyParts,
-    description?:string,
-    image?:string
+interface ExerciseToCopy {
+    _id?: string;
+    name: string;
+    user: string;
+    bodyPart: EnumLookupDto;
+    description?: string;
+    image?: string;
 }
 
 interface ExerciseForPlanDay{

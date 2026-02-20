@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 import { PlanForm } from "../../../../interfaces/Plan";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { useAppContext } from "../../../AppContext";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import * as Clipboard from 'expo-clipboard';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from "../../../../helpers/toastConfig";
+import { usePostApiIdShare } from "../../../../api/generated/plan/plan";
+import { ShareCodeResponseDto } from "../../../../api/generated/model";
+import { useTranslation } from "react-i18next";
 
 interface PlanShareDialogProps {
   visible: boolean;
@@ -20,17 +22,19 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
   onCancel,
   plan,
 }) => {
-  const { postAPI } = useAppContext();
+  const { t } = useTranslation();
   const [currentShareCode, setCurrentShareCode] = useState<string | null>(
     plan.shareCode ?? null
   );
+
+  const { mutate: generateShareCode, isPending } = usePostApiIdShare();
 
   const copyToClipboard = async () => { 
     if (!currentShareCode) {
         Toast.show({
             type: 'error',
-            text1: 'Error',
-            text2: 'No code available to copy.'
+            text1: t('common.error'),
+            text2: t('plans.noCodeToCopy')
         });
         return;
     }
@@ -39,18 +43,32 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
     
     Toast.show({
       type: 'success',
-      text1: 'Copied!',
-      text2: 'Code copied to clipboard'
+      text1: t('plans.copiedTitle'),
+      text2: t('plans.codeCopied')
     });
   };
 
-  const generateShareCode = async () => {
-    await postAPI(
-      "/generateShareCode",
-      (result: string) => {
-        setCurrentShareCode(result);
-      },
-      { planId: plan._id }
+  const handleGenerateShareCode = () => {
+    if(!plan._id) return;
+    
+    generateShareCode(
+        { id: plan._id },
+        {
+            onSuccess: (response) => {
+                const data = response.data as ShareCodeResponseDto;
+                if(data && data.shareCode) {
+                    setCurrentShareCode(data.shareCode);
+                }
+            },
+            onError: (error) => {
+                console.error("Failed to generate share code", error);
+                Toast.show({
+                    type: 'error',
+                    text1: t('common.error'),
+                    text2: t('plans.shareCodeGenerateFailed')
+                });
+            }
+        }
     );
   };
 
@@ -70,7 +88,7 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
             style={{ fontFamily: "OpenSans_700Bold" }}
             className="text-2xl font-bold text-primaryColor"
           >
-            Share your plan!
+            {t('plans.shareTitle')}
           </Text>
           <View
             className="flex justify-center items-center p-4 bg-secondaryColor rounded-lg flex-row"
@@ -80,7 +98,7 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
               style={{ fontFamily: "OpenSans_700Bold" }}
               className="text-xl font-bold text-white"
             >
-              {currentShareCode ?? "No share code available"}
+              {currentShareCode ?? t('plans.noShareCode')}
             </Text>
             {currentShareCode &&<Pressable onPress={copyToClipboard} hitSlop={8}>
               <Ionicons name="copy-outline" size={24} color="white" />
@@ -88,16 +106,17 @@ const PlanShareDialog: React.FC<PlanShareDialogProps> = ({
           </View>
           <View className="flex-row w-full" style={{ gap: 8 }}>
             <CustomButton
-              text="Cancel"
+              text={t('common.cancel')}
               onPress={onCancel}
               buttonStyleType={ButtonStyle.cancel}
               width="flex-1"
             />
             <CustomButton
-              text="Generate new code"
+              text={t('plans.generateNewCode')}
               buttonStyleType={ButtonStyle.success}
-              onPress={generateShareCode}
+              onPress={handleGenerateShareCode}
               width="flex-1"
+              isLoading={isPending}
             />
           </View>
         </View>
