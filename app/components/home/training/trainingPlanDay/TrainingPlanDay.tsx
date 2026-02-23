@@ -26,10 +26,12 @@ import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
 import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";
 import {
+  getGetApiIdGetLastTrainingQueryKey,
   usePostApiIdAddTraining,
 } from "../../../../../api/generated/training/training";
 import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
+import { getGetApiGetUsersRankingQueryKey } from "../../../../../api/generated/user/user";
 import {
   ExerciseResponseDto,
   EnumLookupDto,
@@ -38,6 +40,7 @@ import {
   WeightUnits,
 } from "../../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "../../../../../stores/useAuthStore";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -52,6 +55,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const { t } = useTranslation();
   const { changeHeaderVisibility, userId } = useHomeContext();
   const queryClient = useQueryClient();
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
   
   const {
     planDay,
@@ -144,9 +149,30 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                     ? trainingSummaryData.nextRank 
                     : trainingSummaryData.nextRank?.name || t('common.unknown'),
                   needElo: trainingSummaryData.nextRank?.needElo || 0
-                } : null
-              };
+                 } : null
+               };
              props.setTrainingSummary(mappedSummary);
+
+             if (user) {
+               const currentElo = Number(mappedSummary.userOldElo ?? user.elo ?? 0);
+               const gainElo = Number(mappedSummary.gainElo ?? 0);
+               const updatedElo = currentElo + gainElo;
+               setUser({
+                 ...user,
+                 elo: updatedElo,
+                 profileRank: mappedSummary.profileRank?.name ?? user.profileRank,
+                 nextRank: mappedSummary.nextRank ?? user.nextRank,
+               });
+             }
+
+             await Promise.all([
+               queryClient.invalidateQueries({
+                 queryKey: getGetApiIdGetLastTrainingQueryKey(userId),
+               }),
+               queryClient.invalidateQueries({
+                 queryKey: getGetApiGetUsersRankingQueryKey(),
+               }),
+             ]);
         }
     } catch (e) {
         console.error(e);
