@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo } from "react";
 import ViewLoading from "../../elements/ViewLoading";
 import CreatePlanConfig from "./CreatePlanConfig";
 import CreatePlanDay from "./planDay/CreatePlanDay";
-import { PlanDayBaseInfoVm } from "./../../../../interfaces/PlanDay";
+import { PlanDayBaseInfoVm } from "./../../../../types/models";
 import CustomButton, {
   ButtonSize,
   ButtonStyle,
@@ -17,7 +17,7 @@ import TrainingPlanItem from "./TrainingPlanItem";
 import PlanDayProvider from "./planDay/CreatePlanDayContext";
 import { useHomeContext } from "../HomeContext";
 import PlansList from "./PlansList";
-import { PlanForm } from "../../../../interfaces/Plan";
+import { PlanForm } from "../../../../types/models";
 import DeleteIcon from "./../../../../img/icons/deleteIcon.svg";
 import React from "react";
 import PlanShareDialog from "./PlanShareDialog";
@@ -354,7 +354,7 @@ const TrainingPlan: React.FC = () => {
           <CreatePlanDay
             isPreview={isPreviewPlanDay}
             planId={planConfig._id}
-            planDayId={currentPlanDay ? currentPlanDay._id : ""}
+            planDayId={currentPlanDay?._id ?? ""}
           />
         </PlanDayProvider>
       )}

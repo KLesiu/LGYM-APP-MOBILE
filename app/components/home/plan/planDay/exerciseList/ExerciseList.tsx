@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import { ExerciseForPlanDay } from "./../../../../../../interfaces/Exercise";
+import { ExerciseForPlanDay } from "./../../../../../../types/models";
 import ExerciseListItem from "./ExerciseListItem";
 import React from "react";
 import { useTranslation } from "react-i18next";

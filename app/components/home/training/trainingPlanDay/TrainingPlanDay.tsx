@@ -4,8 +4,8 @@ import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
 import {
   TrainingSessionScores,
-} from "../../../../../interfaces/Training";
-import { GymForm } from "../../../../../interfaces/Gym";
+} from "../../../../../types/models";
+import { GymForm } from "../../../../../types/models";
 import React from "react";
 import { useHomeContext } from "../../HomeContext";
 import { useTrainingPlanDay } from "./TrainingPlanDayContext";
@@ -19,9 +19,9 @@ import TrainingPlanDayExerciseHeader from "./elements/TrainingPlanDayExerciseHea
 import TrainingPlanDayHeaderButtons from "./elements/TrainingPlanDayHeaderButtons";
 import CreatePlanDay from "../../plan/planDay/CreatePlanDay";
 import PlanDayProvider from "../../plan/planDay/CreatePlanDayContext";
-import { PlanDayVm } from "../../../../../interfaces/PlanDay";
-import { TrainingSummary } from "../../../../../interfaces/Training";
-import { ExerciseForm } from "../../../../../interfaces/Exercise";
+import { PlanDayVm } from "../../../../../types/models";
+import { TrainingSummary } from "../../../../../types/models";
+import { ExerciseForm } from "../../../../../types/models";
 import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
 import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";

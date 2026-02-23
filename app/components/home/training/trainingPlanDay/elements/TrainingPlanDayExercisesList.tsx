@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import TrainingPlanDayExerciseListCard from "./TrainingPlanDayExerciseListCard";
-import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
+import { PlanDayExercisesFormVm } from "../../../../../../types/models";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, TextInput } from "react-native";
-import { GymForm as GymFormVm } from "./../../../../interfaces/Gym";
+import { GymForm as GymFormVm } from "./../../../../types/models";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import Dialog from "../../elements/Dialog";
 import GymIcon from "./../../../../img/icons/gymIcon.svg";

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { View, Text } from "react-native";
-import { GymForm } from "../../../../../interfaces/Gym";
+import { GymForm } from "../../../../../types/models";
 import Dialog from "../../../elements/Dialog";
 import { useHomeContext } from "../../HomeContext";
 import NoGymsInfo from "./elements/NoGymsInfo";

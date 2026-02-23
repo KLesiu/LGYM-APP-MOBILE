@@ -1,5 +1,5 @@
 import React from "react";
-import { ExerciseForm, ExerciseForPlanDay } from "../../../../interfaces/Exercise";
+import { ExerciseForm, ExerciseForPlanDay } from "../../../../types/models";
 import Card from "../../elements/Card";
 import { View, Text, Image, Pressable } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";

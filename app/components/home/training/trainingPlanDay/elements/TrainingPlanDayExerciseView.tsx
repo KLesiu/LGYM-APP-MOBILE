@@ -1,7 +1,7 @@
 import { View, Text, TextInput } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
-import { ExerciseForm } from "../../../../../../interfaces/Exercise";
-import { TrainingSessionScores } from "../../../../../../interfaces/Training";
+import { ExerciseForm } from "../../../../../../types/models";
+import { TrainingSessionScores } from "../../../../../../types/models";
 import { useEffect, useState } from "react";
 import React from "react";
 import { useTranslation } from "react-i18next";

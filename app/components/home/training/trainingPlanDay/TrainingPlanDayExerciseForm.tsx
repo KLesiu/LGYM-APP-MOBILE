@@ -3,7 +3,7 @@ import AutoComplete from "../../../elements/Autocomplete";
 import { useEffect, useMemo, useState } from "react";
 import { isIntValidator } from "../../../../../helpers/numberValidator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ExerciseForm } from "../../../../../interfaces/Exercise";
+import { ExerciseForm } from "../../../../../types/models";
 import { BodyParts } from "../../../../../enums/BodyParts";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import { DropdownItem } from "../../../../../interfaces/Dropdown";

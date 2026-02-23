@@ -2,10 +2,10 @@ import { createContext, useContext, useEffect, useMemo, useRef, useState } from 
 import {
   PlanDayExercisesFormVm,
   PlanDayVm,
-} from "../../../../../interfaces/PlanDay";
-import { TrainingSessionScores } from "../../../../../interfaces/Training";
-import { GymForm } from "../../../../../interfaces/Gym";
-import { LastExerciseScoresWithGym } from "../../../../../interfaces/Exercise";
+} from "../../../../../types/models";
+import { TrainingSessionScores } from "../../../../../types/models";
+import { GymForm } from "../../../../../types/models";
+import { LastExerciseScoresResponseDto } from "../../../../../api/generated/model";
 import { useAppContext } from "../../../../AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useInterval from "../../../../../helpers/hooks/useInterval";
@@ -29,9 +29,9 @@ interface TrainingPlanDayContextType {
   isGymFilterActive: boolean;
   setIsGymFilterActive: (isActive: boolean) => void;
   toggleGymFilter: () => void;
-  lastExerciseScoresWithGym: LastExerciseScoresWithGym[];
+  lastExerciseScoresWithGym: LastExerciseScoresResponseDto[];
   setLastExerciseScoresWithGym: (
-    lastExerciseScoresWithGym: LastExerciseScoresWithGym[]
+    lastExerciseScoresWithGym: LastExerciseScoresResponseDto[]
   ) => void;
   sendPlanDayToLocalStorage: (planDay: PlanDayVm) => Promise<void>;
   addNewExerciseToTrainingSessionScores: (
@@ -79,9 +79,8 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   const [currentExercise, setCurrentExercise] =
     useState<PlanDayExercisesFormVm>();
   const [isGymFilterActive, setIsGymFilterActive] = useState(true);
-  const [lastExerciseScoresWithGym, setLastExerciseScoresWithGym] = useState<
-    LastExerciseScoresWithGym[]
-  >([]);
+  const [lastExerciseScoresWithGym, setLastExerciseScoresWithGym] =
+    useState<LastExerciseScoresResponseDto[]>([]);
   const [intervalDelay, setIntervalDelay] = useState<number | null>(null);
   const scrollViewRef = useRef<ScrollView>(null);
   const [isError, setIsError] = useState(false);

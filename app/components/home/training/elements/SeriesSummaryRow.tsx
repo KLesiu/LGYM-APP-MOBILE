@@ -1,7 +1,7 @@
 import {Text, View} from "react-native";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { SeriesComparison } from "../../../../../interfaces/Training";
+import { SeriesComparison } from "../../../../../types/models";
 import ProgressSummaryValue from "./ProgressSummaryValue";
 
 interface SeriesSummaryRowProps {

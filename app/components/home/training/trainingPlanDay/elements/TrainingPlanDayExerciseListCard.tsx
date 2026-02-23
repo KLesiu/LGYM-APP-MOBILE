@@ -1,10 +1,10 @@
 import { View, Text, Pressable } from "react-native";
-import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
+import { PlanDayExercisesFormVm } from "../../../../../../types/models";
 import Checkbox from "../../../../elements/Checkbox";
 import RemoveIcon from "./../../../../../../img/icons/deleteIcon.svg";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { useEffect, useState } from "react";
-import { TrainingSessionScores } from "../../../../../../interfaces/Training";
+import { TrainingSessionScores } from "../../../../../../types/models";
 import CustomButton, {
   ButtonSize,
   ButtonStyle,

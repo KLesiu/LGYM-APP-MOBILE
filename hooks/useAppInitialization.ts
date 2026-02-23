@@ -7,15 +7,15 @@ import * as Updates from "expo-updates";
 import * as Application from "expo-application";
 import { useAppContext } from "../app/AppContext";
 import { useAuthStore } from "../stores/useAuthStore";
-import { Platforms } from "../enums/Platforms";
-import { AppConfigInfo } from "../interfaces/AppConfigInfo";
+import { Platforms } from "../api/generated/model";
+import { AppConfigInfoDto } from "../api/generated/model";
 import { usePostApiAppConfigGetAppVersion, postApiAppConfigGetAppVersionResponse } from "../api/generated/app-config/app-config";
 import { getApiCheckToken } from "../api/generated/user/user";
 import { UserInfoDto } from "../api/generated/model";
 
 export const useAppInitialization = () => {
   const router = useRouter();
-  const [appConfig, setAppConfig] = useState<AppConfigInfo | null>(null);
+  const [appConfig, setAppConfig] = useState<AppConfigInfoDto | null>(null);
   const [canValidateToken, setCanValidateToken] = useState<boolean>(false);
   const { setIsTokenChecked, isTokenChecked, setUserInfo, setToken, token } = useAppContext();
   
@@ -31,14 +31,14 @@ export const useAppInitialization = () => {
   }, [canValidateToken, token, isTokenChecked]);
 
   const initializeApp = async (): Promise<void> => {
-    const platform = Platform.OS === "android" ? Platforms.ANDROID : Platforms.IOS;
+    const platform = Platform.OS === "android" ? Platforms.Android : Platforms.Ios;
     checkVersion(
       {
         data: { platform: platform },
       },
       {
         onSuccess: (response: postApiAppConfigGetAppVersionResponse) => {
-          const appVersionConfig = response.data as AppConfigInfo;
+          const appVersionConfig = response.data as AppConfigInfoDto;
           checkIsUpdateRequired(appVersionConfig);
         },
         onError: (error: any) => {
@@ -87,7 +87,7 @@ export const useAppInitialization = () => {
     }
   };
 
-  const checkIsUpdateRequired = async (appVersionConfig: AppConfigInfo) => {
+  const checkIsUpdateRequired = async (appVersionConfig: AppConfigInfoDto) => {
     const appVersion = getAppVersion();
 
     if (

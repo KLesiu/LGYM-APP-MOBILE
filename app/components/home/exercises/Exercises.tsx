@@ -3,7 +3,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
-} from "../../../../interfaces/Exercise";
+} from "../../../../types/models";
 import CreateExercise from "./CreateExercise";
 import CustomButton, {
   ButtonSize,

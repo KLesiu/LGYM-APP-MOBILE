@@ -3,7 +3,7 @@ import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";
-import { ExerciseForPlanDay } from "../../../../../interfaces/Exercise";
+import { ExerciseForPlanDay } from "../../../../../types/models";
 import React from "react";
 import { useTranslation } from "react-i18next";
 

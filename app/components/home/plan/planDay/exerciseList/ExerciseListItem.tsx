@@ -1,5 +1,5 @@
 import { View, Text, TextInput } from "react-native";
-import { ExerciseForPlanDay } from "./../../../../../../interfaces/Exercise";
+import { ExerciseForPlanDay } from "./../../../../../../types/models";
 import CustomButton, {
   ButtonSize,
   ButtonStyle,

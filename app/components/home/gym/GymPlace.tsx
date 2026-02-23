@@ -1,6 +1,5 @@
 import { View, Text, Image } from "react-native";
 import { useTranslation } from "react-i18next";
-import { GymChoiceInfo, GymForm } from "./../../../../interfaces/Gym";
 import CustomButton, { ButtonSize } from "../../elements/CustomButton";
 import EditIcon from "./../../../../img/icons/editIcon.svg";
 import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";

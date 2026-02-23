@@ -10,7 +10,7 @@ import CustomButton, {
   ButtonStyle,
 } from "../../../../elements/CustomButton";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
-import { PlanDayExercisesFormVm } from "../../../../../../interfaces/PlanDay";
+import { PlanDayExercisesFormVm } from "../../../../../../types/models";
 import { EnumLookupDto } from "../../../../../../api/generated/model";
 import useDeviceCategory from "../../../../../../helpers/hooks/useDeviceCategory";
 

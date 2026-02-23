@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { Message } from "../enums/Message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserInfo } from "../interfaces/User";
+import { UserInfo } from "../types/models";
 import { useAuthStore } from "../stores/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";
 

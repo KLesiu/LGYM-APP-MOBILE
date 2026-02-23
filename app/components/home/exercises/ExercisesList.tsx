@@ -7,7 +7,7 @@ import TypeOfExercises from "../../../../enums/TypeOfExercises";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
-} from "../../../../interfaces/Exercise";
+} from "../../../../types/models";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ExercisesListElement from "./ExercisesListElement";
 import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";

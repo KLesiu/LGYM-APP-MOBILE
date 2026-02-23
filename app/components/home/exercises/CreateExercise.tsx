@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { useTranslation } from "react-i18next";
-import { BodyParts } from "./../../../../enums/BodyParts";
 import { Message } from "./../../../../enums/Message";
 import CustomDropdown from "../../elements/Dropdown";
-import { ExerciseForm } from "./../../../../interfaces/Exercise";
+import { ExerciseForm } from "./../../../../types/models";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "./../../../../interfaces/Dropdown";
 import React from "react";
@@ -14,7 +13,13 @@ import ValidationView from "../../elements/ValidationView";
 import { useAppContext } from "../../../AppContext";
 import { useHomeContext } from "../HomeContext";
 import { usePostApiExerciseIdAddUserExercise, usePostApiExerciseAddExercise, usePostApiExerciseUpdateExercise, usePostApiExerciseIdDeleteExercise } from "../../../../api/generated/exercise/exercise";
-import { ExerciseFormDto, EnumLookupDto, EnumLookupResponseDto } from "../../../../api/generated/model";
+import {
+  ExerciseFormDto,
+  EnumLookupDto,
+  EnumLookupResponseDto,
+  BodyParts as ApiBodyParts,
+} from "../../../../api/generated/model";
+import type { BodyParts as BodyPartValue } from "../../../../api/generated/model";
 import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
 
 
@@ -70,7 +75,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     try {
       const payload: ExerciseFormDto = {
         name: exerciseName,
-        bodyPart: bodyPart?.name || null,
+        bodyPart: toBodyPartValue(bodyPart?.name),
         description: description,
       };
       await createUserExerciseMutation.mutateAsync({
@@ -88,7 +93,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     try {
       const payload: ExerciseFormDto = {
         name: exerciseName,
-        bodyPart: bodyPart?.name || null,
+        bodyPart: toBodyPartValue(bodyPart?.name),
         description: description,
       };
       await createGlobalExerciseMutation.mutateAsync({
@@ -107,7 +112,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       const payload: ExerciseFormDto = {
         _id: props.form?._id,
         name: exerciseName,
-        bodyPart: bodyPart?.name || null,
+        bodyPart: toBodyPartValue(bodyPart?.name),
         description: description,
       };
       await updateExerciseMutation.mutateAsync({
@@ -292,3 +297,10 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
 };
 
 export default CreateExercise;
+  const toBodyPartValue = (value?: string | null): BodyPartValue => {
+    const allowed = Object.values(ApiBodyParts);
+    if (value && allowed.includes(value as BodyPartValue)) {
+      return value as BodyPartValue;
+    }
+    return ApiBodyParts.Unknown;
+  };

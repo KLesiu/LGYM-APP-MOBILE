@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-import { PlanForm } from "../../../../interfaces/Plan";
+import { PlanForm } from "../../../../types/models";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import Ionicons from "react-native-vector-icons/Ionicons";
 

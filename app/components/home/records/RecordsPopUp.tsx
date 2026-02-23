@@ -1,11 +1,10 @@
 import { Text, View, TextInput, Pressable } from "react-native";
-import { MainRecordsForm } from "./../../../../interfaces/MainRecords";
 import AutoComplete from "./../../elements/Autocomplete";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ExerciseForm } from "./../../../../interfaces/Exercise";
+import { ExerciseForm } from "./../../../../types/models";
 import { isIntValidator } from "./../../../../helpers/numberValidator";
-import { WeightUnits } from "./../../../../enums/Units";
+import { WeightUnits } from "../../../../api/generated/model";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "./../../../../interfaces/Dropdown";
 import Dialog from "../../elements/Dialog";
@@ -90,7 +89,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         data: {
           weight: parseFloat(weight),
           exercise: selectedExercise.value,
-          unit: WeightUnits.KILOGRAMS,
+          unit: WeightUnits.Kilograms,
           date: new Date().toISOString(),
         },
       });

@@ -1,4 +1,4 @@
-import { ExerciseForm } from "./../interfaces/Exercise";
+import { ExerciseForm } from "../types/models";
 
 export function isValidExerciseArray(exercises: ExerciseForm[]) {
   // Sprawdzenie czy exercises jest tablicą

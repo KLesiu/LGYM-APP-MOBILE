@@ -1,5 +1,5 @@
 import { View,Text, Pressable } from "react-native";
-import { PlanForm } from "../../../../interfaces/Plan";
+import { PlanForm } from "../../../../types/models";
 import Card from "../../elements/Card";
 import React from "react";
 

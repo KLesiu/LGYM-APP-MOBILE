@@ -1,6 +1,6 @@
 import { View, Text, Pressable } from "react-native";
 import CustomButton, { ButtonSize } from "../../elements/CustomButton";
-import { PlanDayBaseInfoVm } from "./../../../../interfaces/PlanDay";
+import { PlanDayBaseInfoVm } from "./../../../../types/models";
 import EditIcon from "./../../../../img/icons/editIcon.svg";
 import DeleteIcon from "./../../../../img/icons/deleteIcon.svg";
 import Card from "../../elements/Card";

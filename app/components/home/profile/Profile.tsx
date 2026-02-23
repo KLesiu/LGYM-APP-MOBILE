@@ -50,7 +50,7 @@ const Profile: React.FC<ProfileProps> = ({ changeView }) => {
           </Pressable>
           <View style={{ gap: 8 }} className="flex items-center flex-col px-6">
             <View className="flex ">
-              <ProfileRank rank={userInfo.profileRank} />
+              <ProfileRank rank={userInfo.profileRank ?? ""} />
             </View>
             <View className="flex flex-col items-center w-full">
               <Text
@@ -75,11 +75,11 @@ const Profile: React.FC<ProfileProps> = ({ changeView }) => {
                  style={{ fontFamily: "OpenSans_300Light" }}
                  className="text-textColor w-full text-center  text-sm smallPhone:text-xs"
                >
-                 {t('profile.memberSince')} {userInfo.createdAt.toString().slice(0, 10)}
-               </Text>
+                  {t('profile.memberSince')} {userInfo.createdAt?.toString().slice(0, 10) ?? ""}
+                </Text>
             </View>
           </View>
-          <MainProfileInfo email={userInfo.email} isVisibleInRanking={userInfo.isVisibleInRanking} />
+          <MainProfileInfo email={userInfo.email ?? ""} isVisibleInRanking={userInfo.isVisibleInRanking ?? false} />
         </View>
       )}
     </BackgroundMainSection>

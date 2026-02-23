@@ -1,10 +1,10 @@
 import React from "react";
-import { PlanDayChoose } from "../../../../../../interfaces/PlanDay";
+import { PlanDayChooseDto } from "../../../../../../api/generated/model";
 import Card from "../../../../elements/Card";
 import { View, Text, Pressable } from "react-native";
 
 interface TrainingDayToChooseProps {
-  trainingType: PlanDayChoose;
+  trainingType: PlanDayChooseDto;
 }
 
 const TrainingDayToChoose: React.FC<TrainingDayToChooseProps> = ({

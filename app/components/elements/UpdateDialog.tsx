@@ -1,15 +1,19 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Linking, Image } from "react-native";
-import { AppConfigInfo } from "../../../interfaces/AppConfigInfo";
+import { AppConfigInfoDto } from "../../../api/generated/model";
 import CustomButton, { ButtonSize, ButtonStyle } from "./CustomButton";
 import logoLGYM from "./../../../assets/logoLGYMNew.png";
 
 interface UpdateDialogProps {
-  config: AppConfigInfo;
+  config: AppConfigInfoDto;
 }
 
 const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
   const handleUpdatePress = () => {
+    if (!config.updateUrl) {
+      alert("Could not open the update link.");
+      return;
+    }
     Linking.openURL(config.updateUrl).catch(() =>
       alert("Could not open the update link.")
     );

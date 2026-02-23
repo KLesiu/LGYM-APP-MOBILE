@@ -4,7 +4,7 @@ import ProfileRank from "../../elements/ProfileRank";
 import ProgressBar from "../../elements/ProgressBar";
 import {
   TrainingSummary as TrainingSummaryInterface,
-} from "./../../../../interfaces/Training";
+} from "./../../../../types/models";
 import React from "react";
 import SeriesSummaryRow from "./elements/SeriesSummaryRow";
 import { useTranslation } from "react-i18next";
@@ -106,7 +106,13 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
               </Text>
             </View>
           </View>
-          <ProfileRank rank={typeof props.trainingSummary.profileRank === 'string' ? props.trainingSummary.profileRank : (props.trainingSummary.profileRank as any)?.name} />
+          <ProfileRank
+            rank={
+              typeof props.trainingSummary.profileRank === "string"
+                ? props.trainingSummary.profileRank
+                : props.trainingSummary.profileRank?.name ?? ""
+            }
+          />
         </View>
         {props.trainingSummary.comparison.map((exercise) => (
           <View key={exercise.exerciseId} className="bg-secondaryColor w-full rounded-lg p-4">
@@ -116,7 +122,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
             >
               {exercise.exerciseName}
             </Text>
-            {exercise.seriesComparisons.map((seriesData) => (
+            {(exercise.seriesComparisons ?? []).map((seriesData, index) => (
               <SeriesSummaryRow key={seriesData.series} seriesComparison={seriesData} />
             ))}
           </View>

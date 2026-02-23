@@ -5,7 +5,7 @@ import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "../../../../elements/CustomButton";
-import { TrainingSessionScores } from "../../../../../../interfaces/Training";
+import { TrainingSessionScores } from "../../../../../../types/models";
 import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayFooterButtonsProps {

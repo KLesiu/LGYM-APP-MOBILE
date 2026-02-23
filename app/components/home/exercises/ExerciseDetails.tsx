@@ -4,8 +4,7 @@ import { useTranslation } from "react-i18next";
 import BodyPartImage from "../../elements/BodyPartImage";
 import {
   ExerciseForm,
-  ExerciseTrainingHistoryItem,
-} from "../../../../interfaces/Exercise";
+} from "../../../../types/models";
 
 import BackIcon from "./../../../../img/icons/backIcon.svg";
 import ViewLoading from "../../elements/ViewLoading";
@@ -15,7 +14,6 @@ import CustomButton, {
   ButtonStyle,
 } from "../../elements/CustomButton";
 import { useHomeContext } from "../HomeContext";
-import { PossibleRecordForExercise } from "../../../../interfaces/MainRecords";
 import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
 import RecordsPopUp from "../records/RecordsPopUp";
 import { usePostApiExerciseGetExerciseScoresFromTrainingByExercise } from "../../../../api/generated/exercise/exercise";

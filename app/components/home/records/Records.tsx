@@ -2,7 +2,6 @@ import { Text, View, ScrollView, Pressable, Image } from "react-native";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import RecordsPopUp from "./RecordsPopUp";
 import ViewLoading from "../../elements/ViewLoading";
-import { MainRecordsLast } from "./../../../../interfaces/MainRecords";
 
 import CustomButton, {
   ButtonSize,

@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import { useEffect, useMemo, useState } from "react";
 import { useHomeContext } from "../../../HomeContext";
-import { LastExerciseScoresWithGym } from "../../../../../../interfaces/Exercise";
+import { LastExerciseScoresResponseDto } from "../../../../../../api/generated/model";
 import ViewLoading from "../../../../elements/ViewLoading";
 import React from "react";
 import { usePostApiExerciseIdGetLastExerciseScores } from "../../../../../../api/generated/exercise/exercise";
@@ -45,7 +45,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
       },
       {
         onSuccess: (result: any) => {
-          const data = result.data as LastExerciseScoresWithGym;
+          const data = result.data as LastExerciseScoresResponseDto;
           if (isGymFilterActive && !checkIsExerciseScoresExistsInState(data)) {
             const newLastExerciseScoresWithGym = [
               ...lastExerciseScoresWithGym,
@@ -60,14 +60,16 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
   }, [isGymFilterActive, currentExercise, userId]);
 
   const checkIsExerciseScoresExistsInState = (
-    lastExerciseScoresWithGymArg: LastExerciseScoresWithGym
+    lastExerciseScoresWithGymArg: LastExerciseScoresResponseDto
   ) => {
     const { seriesScores, exerciseId } = lastExerciseScoresWithGymArg;
+    const incomingSeriesScores = seriesScores ?? [];
     let isExist = false;
     lastExerciseScoresWithGym.forEach((lastExerciseScores) => {
+      const existingSeriesScores = lastExerciseScores.seriesScores ?? [];
       if (
         lastExerciseScores.exerciseId === exerciseId &&
-        lastExerciseScores.seriesScores.length === seriesScores.length
+        existingSeriesScores.length === incomingSeriesScores.length
       ) {
         isExist = true;
       }
@@ -76,9 +78,9 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
   };
 
    const createLastExerciseScoresText = (
-     lastExerciseScores: LastExerciseScoresWithGym
+     lastExerciseScores: LastExerciseScoresResponseDto
    ) => {
-     const { seriesScores } = lastExerciseScores;
+     const seriesScores = lastExerciseScores.seriesScores ?? [];
 
      const text = seriesScores
        .filter(

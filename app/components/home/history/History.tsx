@@ -1,11 +1,10 @@
 import { Text, View } from "react-native";
 import { useState, useEffect, useRef, useMemo } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MarkedDates } from "./../../../../interfaces/Training";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import TrainingSession from "./TrainingSession";
 import ViewLoading from "../../elements/ViewLoading";
-import { TrainingByDateDetails } from "./../../../../interfaces/Training";
+import { TrainingByDateDetails } from "./../../../../types/models";
 import { Message } from "./../../../../enums/Message";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";

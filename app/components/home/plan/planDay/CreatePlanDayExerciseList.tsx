@@ -3,7 +3,7 @@ import { View, Text, ScrollView } from "react-native";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
-} from "./../../../../../interfaces/Exercise";
+} from "./../../../../../types/models";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";

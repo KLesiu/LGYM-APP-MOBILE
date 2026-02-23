@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import { useHomeContext } from "../HomeContext";
-import { PlanForm } from "../../../../interfaces/Plan";
+import { PlanForm } from "../../../../types/models";
 import { useMemo } from "react";
 import Dialog from "../../elements/Dialog";
 import ViewLoading from "../../elements/ViewLoading";

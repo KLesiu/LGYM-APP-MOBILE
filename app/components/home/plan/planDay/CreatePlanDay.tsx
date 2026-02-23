@@ -2,7 +2,7 @@ import { JSX, useCallback, useEffect, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   ExerciseForPlanDay,
-} from "./../../../../../interfaces/Exercise";
+} from "./../../../../../types/models";
 import CreatePlanDayName from "./CreatePlanDayName";
 import Dialog from "../../../elements/Dialog";
 import CreatePlanDayExerciseList from "./CreatePlanDayExerciseList";
@@ -11,7 +11,7 @@ import CreatePlanDaySummary from "./CreatePlanDaySummary";
 import {
   PlanDayExercisesFormVm,
   PlanDayVm,
-} from "./../../../../../interfaces/PlanDay";
+} from "./../../../../../types/models";
 import { BackHandler } from "react-native";
 import { usePlanDay } from "./CreatePlanDayContext";
 import React from "react";
