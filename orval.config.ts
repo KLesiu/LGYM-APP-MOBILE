@@ -1,9 +1,13 @@
 import { defineConfig } from 'orval';
 
+import 'dotenv/config';
+
+const swaggerUrl = process.env.ORVAL_SWAGGER_URL ?? 'http://localhost:4000/swagger/v1/swagger.json';
+
 export default defineConfig({
   lgym: {
     input: {
-      target: 'http://localhost:4000/swagger/v1/swagger.json',
+      target: swaggerUrl,
     },
     output: {
       mode: 'tags-split',

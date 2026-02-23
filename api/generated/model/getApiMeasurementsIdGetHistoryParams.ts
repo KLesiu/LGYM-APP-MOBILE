@@ -4,8 +4,10 @@
  * LgymApi.Api
  * OpenAPI spec version: 1.0
  */
-import type { BodyParts } from './bodyParts';
+import type { GetApiMeasurementsIdGetHistoryBodyPart } from './getApiMeasurementsIdGetHistoryBodyPart';
+import type { GetApiMeasurementsIdGetHistoryUnit } from './getApiMeasurementsIdGetHistoryUnit';
 
 export type GetApiMeasurementsIdGetHistoryParams = {
-BodyPart?: BodyParts;
+BodyPart?: GetApiMeasurementsIdGetHistoryBodyPart;
+Unit?: GetApiMeasurementsIdGetHistoryUnit;
 };

@@ -44,6 +44,11 @@ export type postApiIdAddTrainingResponse200 = {
   status: 200
 }
 
+export type postApiIdAddTrainingResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type postApiIdAddTrainingResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -57,7 +62,7 @@ export type postApiIdAddTrainingResponse500 = {
 export type postApiIdAddTrainingResponseSuccess = (postApiIdAddTrainingResponse200) & {
   headers: Headers;
 };
-export type postApiIdAddTrainingResponseError = (postApiIdAddTrainingResponse404 | postApiIdAddTrainingResponse500) & {
+export type postApiIdAddTrainingResponseError = (postApiIdAddTrainingResponse403 | postApiIdAddTrainingResponse404 | postApiIdAddTrainingResponse500) & {
   headers: Headers;
 };
 
@@ -133,6 +138,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   status: 200
 }
 
+export type getApiIdGetLastTrainingResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiIdGetLastTrainingResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -141,7 +151,7 @@ export type getApiIdGetLastTrainingResponse404 = {
 export type getApiIdGetLastTrainingResponseSuccess = (getApiIdGetLastTrainingResponse200) & {
   headers: Headers;
 };
-export type getApiIdGetLastTrainingResponseError = (getApiIdGetLastTrainingResponse404) & {
+export type getApiIdGetLastTrainingResponseError = (getApiIdGetLastTrainingResponse403 | getApiIdGetLastTrainingResponse404) & {
   headers: Headers;
 };
 
@@ -244,6 +254,11 @@ export type postApiIdGetTrainingByDateResponse200 = {
   status: 200
 }
 
+export type postApiIdGetTrainingByDateResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type postApiIdGetTrainingByDateResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -252,7 +267,7 @@ export type postApiIdGetTrainingByDateResponse404 = {
 export type postApiIdGetTrainingByDateResponseSuccess = (postApiIdGetTrainingByDateResponse200) & {
   headers: Headers;
 };
-export type postApiIdGetTrainingByDateResponseError = (postApiIdGetTrainingByDateResponse404) & {
+export type postApiIdGetTrainingByDateResponseError = (postApiIdGetTrainingByDateResponse403 | postApiIdGetTrainingByDateResponse404) & {
   headers: Headers;
 };
 
@@ -328,6 +343,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   status: 200
 }
 
+export type getApiIdGetTrainingDatesResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiIdGetTrainingDatesResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -336,7 +356,7 @@ export type getApiIdGetTrainingDatesResponse404 = {
 export type getApiIdGetTrainingDatesResponseSuccess = (getApiIdGetTrainingDatesResponse200) & {
   headers: Headers;
 };
-export type getApiIdGetTrainingDatesResponseError = (getApiIdGetTrainingDatesResponse404) & {
+export type getApiIdGetTrainingDatesResponseError = (getApiIdGetTrainingDatesResponse403 | getApiIdGetTrainingDatesResponse404) & {
   headers: Headers;
 };
 

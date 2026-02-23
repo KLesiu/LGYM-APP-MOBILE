@@ -10,4 +10,6 @@ export interface LoginResponseDto {
   /** @nullable */
   token?: string | null;
   req?: UserInfoDto;
+  /** @nullable */
+  permissionClaims?: string[] | null;
 }

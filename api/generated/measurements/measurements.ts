@@ -25,9 +25,13 @@ import type {
 
 import type {
   GetApiMeasurementsIdGetHistoryParams,
+  GetApiMeasurementsIdListParams,
+  GetApiMeasurementsIdTrendParams,
   MeasurementFormDto,
   MeasurementResponseDto,
+  MeasurementTrendDto,
   MeasurementsHistoryDto,
+  MeasurementsListDto,
   ResponseMessageDto
 } from '.././model';
 
@@ -242,6 +246,11 @@ export type getApiMeasurementsIdGetHistoryResponse200 = {
   status: 200
 }
 
+export type getApiMeasurementsIdGetHistoryResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
 export type getApiMeasurementsIdGetHistoryResponse403 = {
   data: ResponseMessageDto
   status: 403
@@ -255,7 +264,7 @@ export type getApiMeasurementsIdGetHistoryResponse404 = {
 export type getApiMeasurementsIdGetHistoryResponseSuccess = (getApiMeasurementsIdGetHistoryResponse200) & {
   headers: Headers;
 };
-export type getApiMeasurementsIdGetHistoryResponseError = (getApiMeasurementsIdGetHistoryResponse403 | getApiMeasurementsIdGetHistoryResponse404) & {
+export type getApiMeasurementsIdGetHistoryResponseError = (getApiMeasurementsIdGetHistoryResponse400 | getApiMeasurementsIdGetHistoryResponse403 | getApiMeasurementsIdGetHistoryResponse404) & {
   headers: Headers;
 };
 
@@ -359,6 +368,278 @@ export function useGetApiMeasurementsIdGetHistory<TData = Awaited<ReturnType<typ
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetApiMeasurementsIdGetHistoryQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+export type getApiMeasurementsIdListResponse200 = {
+  data: MeasurementsListDto
+  status: 200
+}
+
+export type getApiMeasurementsIdListResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
+export type getApiMeasurementsIdListResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
+export type getApiMeasurementsIdListResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
+    
+export type getApiMeasurementsIdListResponseSuccess = (getApiMeasurementsIdListResponse200) & {
+  headers: Headers;
+};
+export type getApiMeasurementsIdListResponseError = (getApiMeasurementsIdListResponse400 | getApiMeasurementsIdListResponse403 | getApiMeasurementsIdListResponse404) & {
+  headers: Headers;
+};
+
+export type getApiMeasurementsIdListResponse = (getApiMeasurementsIdListResponseSuccess | getApiMeasurementsIdListResponseError)
+
+export const getGetApiMeasurementsIdListUrl = (id: string,
+    params?: GetApiMeasurementsIdListParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/measurements/${id}/list?${stringifiedParams}` : `/api/measurements/${id}/list`
+}
+
+export const getApiMeasurementsIdList = async (id: string,
+    params?: GetApiMeasurementsIdListParams, options?: RequestInit): Promise<getApiMeasurementsIdListResponse> => {
+  
+  return customInstance<getApiMeasurementsIdListResponse>(getGetApiMeasurementsIdListUrl(id,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiMeasurementsIdListQueryKey = (id: string,
+    params?: GetApiMeasurementsIdListParams,) => {
+    return [
+    `/api/measurements/${id}/list`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+    
+export const getGetApiMeasurementsIdListQueryOptions = <TData = Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError = ResponseMessageDto>(id: string,
+    params?: GetApiMeasurementsIdListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiMeasurementsIdListQueryKey(id,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiMeasurementsIdList>>> = ({ signal }) => getApiMeasurementsIdList(id,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiMeasurementsIdListQueryResult = NonNullable<Awaited<ReturnType<typeof getApiMeasurementsIdList>>>
+export type GetApiMeasurementsIdListQueryError = ResponseMessageDto
+
+
+export function useGetApiMeasurementsIdList<TData = Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError = ResponseMessageDto>(
+ id: string,
+    params: undefined |  GetApiMeasurementsIdListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiMeasurementsIdList>>,
+          TError,
+          Awaited<ReturnType<typeof getApiMeasurementsIdList>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiMeasurementsIdList<TData = Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError = ResponseMessageDto>(
+ id: string,
+    params?: GetApiMeasurementsIdListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiMeasurementsIdList>>,
+          TError,
+          Awaited<ReturnType<typeof getApiMeasurementsIdList>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiMeasurementsIdList<TData = Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError = ResponseMessageDto>(
+ id: string,
+    params?: GetApiMeasurementsIdListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiMeasurementsIdList<TData = Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError = ResponseMessageDto>(
+ id: string,
+    params?: GetApiMeasurementsIdListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdList>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiMeasurementsIdListQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+export type getApiMeasurementsIdTrendResponse200 = {
+  data: MeasurementTrendDto
+  status: 200
+}
+
+export type getApiMeasurementsIdTrendResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
+export type getApiMeasurementsIdTrendResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
+export type getApiMeasurementsIdTrendResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
+    
+export type getApiMeasurementsIdTrendResponseSuccess = (getApiMeasurementsIdTrendResponse200) & {
+  headers: Headers;
+};
+export type getApiMeasurementsIdTrendResponseError = (getApiMeasurementsIdTrendResponse400 | getApiMeasurementsIdTrendResponse403 | getApiMeasurementsIdTrendResponse404) & {
+  headers: Headers;
+};
+
+export type getApiMeasurementsIdTrendResponse = (getApiMeasurementsIdTrendResponseSuccess | getApiMeasurementsIdTrendResponseError)
+
+export const getGetApiMeasurementsIdTrendUrl = (id: string,
+    params?: GetApiMeasurementsIdTrendParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/measurements/${id}/trend?${stringifiedParams}` : `/api/measurements/${id}/trend`
+}
+
+export const getApiMeasurementsIdTrend = async (id: string,
+    params?: GetApiMeasurementsIdTrendParams, options?: RequestInit): Promise<getApiMeasurementsIdTrendResponse> => {
+  
+  return customInstance<getApiMeasurementsIdTrendResponse>(getGetApiMeasurementsIdTrendUrl(id,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiMeasurementsIdTrendQueryKey = (id: string,
+    params?: GetApiMeasurementsIdTrendParams,) => {
+    return [
+    `/api/measurements/${id}/trend`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+    
+export const getGetApiMeasurementsIdTrendQueryOptions = <TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError = ResponseMessageDto>(id: string,
+    params?: GetApiMeasurementsIdTrendParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiMeasurementsIdTrendQueryKey(id,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>> = ({ signal }) => getApiMeasurementsIdTrend(id,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiMeasurementsIdTrendQueryResult = NonNullable<Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>>
+export type GetApiMeasurementsIdTrendQueryError = ResponseMessageDto
+
+
+export function useGetApiMeasurementsIdTrend<TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError = ResponseMessageDto>(
+ id: string,
+    params: undefined |  GetApiMeasurementsIdTrendParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>,
+          TError,
+          Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiMeasurementsIdTrend<TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError = ResponseMessageDto>(
+ id: string,
+    params?: GetApiMeasurementsIdTrendParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>,
+          TError,
+          Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiMeasurementsIdTrend<TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError = ResponseMessageDto>(
+ id: string,
+    params?: GetApiMeasurementsIdTrendParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiMeasurementsIdTrend<TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError = ResponseMessageDto>(
+ id: string,
+    params?: GetApiMeasurementsIdTrendParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrend>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiMeasurementsIdTrendQueryOptions(id,params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

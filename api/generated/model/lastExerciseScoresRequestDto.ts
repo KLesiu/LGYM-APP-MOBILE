@@ -6,7 +6,7 @@
  */
 
 export interface LastExerciseScoresRequestDto {
-  series?: number;
+  series: number;
   /** @nullable */
   exerciseId?: string | null;
   /** @nullable */
