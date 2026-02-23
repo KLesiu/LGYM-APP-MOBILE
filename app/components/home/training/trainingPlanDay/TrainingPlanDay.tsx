@@ -157,11 +157,25 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                const currentElo = Number(mappedSummary.userOldElo ?? user.elo ?? 0);
                const gainElo = Number(mappedSummary.gainElo ?? 0);
                const updatedElo = currentElo + gainElo;
+               const hasProfileRankFromApi = Boolean(
+                 trainingSummaryData.profileRank &&
+                   (typeof trainingSummaryData.profileRank === "string" ||
+                     trainingSummaryData.profileRank?.name)
+               );
+               const hasNextRankFromApi = Object.prototype.hasOwnProperty.call(
+                 trainingSummaryData,
+                 "nextRank"
+               );
+
                setUser({
                  ...user,
                  elo: updatedElo,
-                 profileRank: mappedSummary.profileRank?.name ?? user.profileRank,
-                 nextRank: mappedSummary.nextRank ?? user.nextRank,
+                 profileRank: hasProfileRankFromApi
+                   ? mappedSummary.profileRank?.name
+                   : user.profileRank,
+                 nextRank: hasNextRankFromApi
+                   ? mappedSummary.nextRank
+                   : user.nextRank,
                });
              }
 
