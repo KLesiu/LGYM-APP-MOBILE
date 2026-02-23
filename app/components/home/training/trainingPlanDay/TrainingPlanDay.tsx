@@ -236,15 +236,26 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
              await props.hideAndDeleteTrainingSession();
              props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
              const trainingSummaryData = result.data as Record<string, unknown>;
+             const hasUserOldEloFromApi =
+               Object.hasOwn(trainingSummaryData, "userOldElo") &&
+               typeof trainingSummaryData.userOldElo === "number";
              const mappedSummary = mapTrainingSummary(
                trainingSummaryData,
                t("common.unknown")
              );
-             props.setTrainingSummary(mappedSummary);
+             const normalizedSummary: TrainingSummary = {
+               ...mappedSummary,
+               userOldElo: hasUserOldEloFromApi
+                 ? mappedSummary.userOldElo
+                 : Number(user?.elo ?? 0),
+             };
+             props.setTrainingSummary(normalizedSummary);
 
              if (user) {
-                const currentElo = Number(mappedSummary.userOldElo ?? user.elo ?? 0);
-                const gainElo = Number(mappedSummary.gainElo ?? 0);
+                const currentElo = hasUserOldEloFromApi
+                  ? Number(trainingSummaryData.userOldElo)
+                  : Number(user.elo ?? 0);
+                const gainElo = Number(normalizedSummary.gainElo ?? 0);
                 const updatedElo = currentElo + gainElo;
                 const hasProfileRankFromApi = hasRankName(trainingSummaryData.profileRank);
                 const hasNextRankFromApi = Object.hasOwn(trainingSummaryData, "nextRank");
@@ -253,10 +264,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                   ...user,
                   elo: updatedElo,
                   profileRank: hasProfileRankFromApi
-                   ? mappedSummary.profileRank?.name
+                   ? normalizedSummary.profileRank?.name
                    : user.profileRank,
                   nextRank: hasNextRankFromApi
-                    ? mappedSummary.nextRank
+                    ? normalizedSummary.nextRank
                     : user.nextRank,
                 });
               }
