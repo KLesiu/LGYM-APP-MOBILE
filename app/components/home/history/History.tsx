@@ -16,9 +16,9 @@ import {
 } from "../../../../api/generated/training/training";
 import {
   TrainingByDateDetailsDto,
+  WeightUnits,
 } from "../../../../api/generated/model";
 import { BodyParts } from "../../../../enums/BodyParts";
-import { WeightUnits } from "../../../../enums/Units";
 import { useTranslation } from "react-i18next";
 import "moment/locale/pl";
 
@@ -95,7 +95,7 @@ const History: React.FC = () => {
               exercise.scoresDetails?.map((score) => ({
                 _id: score._id || undefined,
                 weight: score.weight || 0,
-                unit: (score.unit?.displayName as WeightUnits) || WeightUnits.KILOGRAMS,
+                unit: (score.unit?.displayName as WeightUnits) || WeightUnits.Kilograms,
                 reps: score.reps || 0,
                 exercise: score.exercise || "",
                 series: score.series || 0,

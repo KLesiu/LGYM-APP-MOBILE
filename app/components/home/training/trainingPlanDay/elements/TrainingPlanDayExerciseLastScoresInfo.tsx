@@ -7,7 +7,6 @@ import ViewLoading from "../../../../elements/ViewLoading";
 import React from "react";
 import { usePostApiExerciseIdGetLastExerciseScores } from "../../../../../../api/generated/exercise/exercise";
 import { useTranslation } from "react-i18next";
-import { WeightUnits } from "../../../../../../enums/Units";
 import { EnumLookupDto } from "../../../../../../api/generated/model";
 
 interface TrainingPlanDayExerciseLastScoresInfoProps {}
