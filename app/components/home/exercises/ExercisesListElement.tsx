@@ -8,6 +8,7 @@ import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import Checkbox from "../../elements/Checkbox";
 import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
+import { isAdminUser } from "../../../../utils/authorization";
 
 interface ExercisesListElementProps {
   exercise: ExerciseResponseDto;
@@ -29,7 +30,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
   exercisesList
 }) => {
   const { userInfo } = useAppContext();
-  const isAdmin = userInfo?.roles?.some((role) => role?.toLowerCase() === 'admin') ?? false;
+  const isAdmin = isAdminUser(userInfo);
   
 
   return (

@@ -25,6 +25,7 @@ import { usePostApiLogin, postApiLoginResponse } from "../api/generated/user/use
 import { useAuthStore } from "../stores/useAuthStore";
 import { getErrorMessage } from "../utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import type { UserInfoDto } from "../api/generated/model";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -73,7 +74,7 @@ const Login: React.FC = () => {
               return;
             }
 
-            const userInfo = loginResponse.req;
+            const userInfo: UserInfoDto = loginResponse.req;
 
             await AsyncStorage.setItem("token", loginResponse.token);
             await AsyncStorage.setItem("username", userInfo.name || "");
@@ -83,8 +84,8 @@ const Login: React.FC = () => {
             }
 
             setToken(loginResponse.token);
-            setUser(userInfo as any);
-            setUserInfo(userInfo as any);
+            setUser(userInfo);
+            setUserInfo(userInfo);
             router.push("/Home");
           } catch (error) {
             console.error("Error storing credentials:", error);
