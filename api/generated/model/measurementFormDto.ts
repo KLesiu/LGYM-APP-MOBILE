@@ -4,15 +4,15 @@
  * LgymApi.Api
  * OpenAPI spec version: 1.0
  */
-import type { BodyParts } from './bodyParts';
-import type { HeightUnits } from './heightUnits';
+import type { MeasurementFormDtoBodyPart } from './measurementFormDtoBodyPart';
+import type { MeasurementFormDtoUnit } from './measurementFormDtoUnit';
 
 export interface MeasurementFormDto {
   /** @nullable */
   user?: string | null;
-  bodyPart: BodyParts;
-  unit: HeightUnits;
-  value?: number;
+  bodyPart: MeasurementFormDtoBodyPart;
+  unit: MeasurementFormDtoUnit;
+  value: number;
   /** @nullable */
   createdAt?: string | null;
   /** @nullable */

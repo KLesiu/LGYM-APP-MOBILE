@@ -44,6 +44,11 @@ export type postApiMainRecordsIdAddNewRecordResponse200 = {
   status: 200
 }
 
+export type postApiMainRecordsIdAddNewRecordResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type postApiMainRecordsIdAddNewRecordResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -52,7 +57,7 @@ export type postApiMainRecordsIdAddNewRecordResponse404 = {
 export type postApiMainRecordsIdAddNewRecordResponseSuccess = (postApiMainRecordsIdAddNewRecordResponse200) & {
   headers: Headers;
 };
-export type postApiMainRecordsIdAddNewRecordResponseError = (postApiMainRecordsIdAddNewRecordResponse404) & {
+export type postApiMainRecordsIdAddNewRecordResponseError = (postApiMainRecordsIdAddNewRecordResponse403 | postApiMainRecordsIdAddNewRecordResponse404) & {
   headers: Headers;
 };
 
@@ -128,6 +133,11 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   status: 200
 }
 
+export type getApiMainRecordsIdGetMainRecordsHistoryResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiMainRecordsIdGetMainRecordsHistoryResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -136,7 +146,7 @@ export type getApiMainRecordsIdGetMainRecordsHistoryResponse404 = {
 export type getApiMainRecordsIdGetMainRecordsHistoryResponseSuccess = (getApiMainRecordsIdGetMainRecordsHistoryResponse200) & {
   headers: Headers;
 };
-export type getApiMainRecordsIdGetMainRecordsHistoryResponseError = (getApiMainRecordsIdGetMainRecordsHistoryResponse404) & {
+export type getApiMainRecordsIdGetMainRecordsHistoryResponseError = (getApiMainRecordsIdGetMainRecordsHistoryResponse403 | getApiMainRecordsIdGetMainRecordsHistoryResponse404) & {
   headers: Headers;
 };
 
@@ -239,6 +249,11 @@ export type getApiMainRecordsIdGetLastMainRecordsResponse200 = {
   status: 200
 }
 
+export type getApiMainRecordsIdGetLastMainRecordsResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiMainRecordsIdGetLastMainRecordsResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -247,7 +262,7 @@ export type getApiMainRecordsIdGetLastMainRecordsResponse404 = {
 export type getApiMainRecordsIdGetLastMainRecordsResponseSuccess = (getApiMainRecordsIdGetLastMainRecordsResponse200) & {
   headers: Headers;
 };
-export type getApiMainRecordsIdGetLastMainRecordsResponseError = (getApiMainRecordsIdGetLastMainRecordsResponse404) & {
+export type getApiMainRecordsIdGetLastMainRecordsResponseError = (getApiMainRecordsIdGetLastMainRecordsResponse403 | getApiMainRecordsIdGetLastMainRecordsResponse404) & {
   headers: Headers;
 };
 
@@ -350,6 +365,11 @@ export type getApiMainRecordsIdDeleteMainRecordResponse200 = {
   status: 200
 }
 
+export type getApiMainRecordsIdDeleteMainRecordResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiMainRecordsIdDeleteMainRecordResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -358,7 +378,7 @@ export type getApiMainRecordsIdDeleteMainRecordResponse404 = {
 export type getApiMainRecordsIdDeleteMainRecordResponseSuccess = (getApiMainRecordsIdDeleteMainRecordResponse200) & {
   headers: Headers;
 };
-export type getApiMainRecordsIdDeleteMainRecordResponseError = (getApiMainRecordsIdDeleteMainRecordResponse404) & {
+export type getApiMainRecordsIdDeleteMainRecordResponseError = (getApiMainRecordsIdDeleteMainRecordResponse403 | getApiMainRecordsIdDeleteMainRecordResponse404) & {
   headers: Headers;
 };
 
@@ -461,6 +481,11 @@ export type postApiMainRecordsIdUpdateMainRecordsResponse200 = {
   status: 200
 }
 
+export type postApiMainRecordsIdUpdateMainRecordsResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type postApiMainRecordsIdUpdateMainRecordsResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -469,7 +494,7 @@ export type postApiMainRecordsIdUpdateMainRecordsResponse404 = {
 export type postApiMainRecordsIdUpdateMainRecordsResponseSuccess = (postApiMainRecordsIdUpdateMainRecordsResponse200) & {
   headers: Headers;
 };
-export type postApiMainRecordsIdUpdateMainRecordsResponseError = (postApiMainRecordsIdUpdateMainRecordsResponse404) & {
+export type postApiMainRecordsIdUpdateMainRecordsResponseError = (postApiMainRecordsIdUpdateMainRecordsResponse403 | postApiMainRecordsIdUpdateMainRecordsResponse404) & {
   headers: Headers;
 };
 

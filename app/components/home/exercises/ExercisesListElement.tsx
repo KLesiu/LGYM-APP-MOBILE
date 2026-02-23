@@ -29,6 +29,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
   exercisesList
 }) => {
   const { userInfo } = useAppContext();
+  const isAdmin = userInfo?.roles?.some((role) => role?.toLowerCase() === 'admin') ?? false;
   
 
   return (
@@ -56,7 +57,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
         </View>
       ) : (
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
-          {((isGlobal && userInfo && userInfo.admin) || !isGlobal) && (
+          {((isGlobal && isAdmin) || !isGlobal) && (
             <Pressable onPress={() => editExercise(exercise)}>
               <EditIcon fill={"white"} width={24} height={24} />
             </Pressable>

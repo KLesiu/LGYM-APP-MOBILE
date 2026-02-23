@@ -4,14 +4,14 @@
  * LgymApi.Api
  * OpenAPI spec version: 1.0
  */
-import type { WeightUnits } from './weightUnits';
+import type { MainRecordsFormDtoUnit } from './mainRecordsFormDtoUnit';
 
 export interface MainRecordsFormDto {
   /** @nullable */
   _id?: string | null;
-  weight?: number;
-  date?: string;
-  unit: WeightUnits;
+  weight: number;
+  date: string;
+  unit: MainRecordsFormDtoUnit;
   /** @nullable */
   exercise?: string | null;
 }

@@ -6,5 +6,5 @@
  */
 
 export interface TrainingByDateRequestDto {
-  createdAt?: string;
+  createdAt: string;
 }

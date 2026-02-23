@@ -403,7 +403,82 @@ export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiChec
 
 
 
-export type getApiGetUsersRankingResponse200 = {
+export type postApiLogoutResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+    
+export type postApiLogoutResponseSuccess = (postApiLogoutResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiLogoutResponse = (postApiLogoutResponseSuccess)
+
+export const getPostApiLogoutUrl = () => {
+
+
+  
+
+  return `/api/logout`
+}
+
+export const postApiLogout = async ( options?: RequestInit): Promise<postApiLogoutResponse> => {
+  
+  return customInstance<postApiLogoutResponse>(getPostApiLogoutUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostApiLogoutMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiLogout>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiLogout>>, TError,void, TContext> => {
+
+const mutationKey = ['postApiLogout'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiLogout>>, void> = () => {
+          
+
+          return  postApiLogout(requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiLogoutMutationResult = NonNullable<Awaited<ReturnType<typeof postApiLogout>>>
+    
+    export type PostApiLogoutMutationError = unknown
+
+    export const usePostApiLogout = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiLogout>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiLogout>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getPostApiLogoutMutationOptions(options), queryClient);
+    }
+    export type getApiGetUsersRankingResponse200 = {
   data: UserBaseInfoDto[]
   status: 200
 }

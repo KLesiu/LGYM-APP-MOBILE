@@ -831,6 +831,11 @@ export type postApiExerciseIdGetExerciseByBodyPartResponse200 = {
   status: 200
 }
 
+export type postApiExerciseIdGetExerciseByBodyPartResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
 export type postApiExerciseIdGetExerciseByBodyPartResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -839,7 +844,7 @@ export type postApiExerciseIdGetExerciseByBodyPartResponse404 = {
 export type postApiExerciseIdGetExerciseByBodyPartResponseSuccess = (postApiExerciseIdGetExerciseByBodyPartResponse200) & {
   headers: Headers;
 };
-export type postApiExerciseIdGetExerciseByBodyPartResponseError = (postApiExerciseIdGetExerciseByBodyPartResponse404) & {
+export type postApiExerciseIdGetExerciseByBodyPartResponseError = (postApiExerciseIdGetExerciseByBodyPartResponse400 | postApiExerciseIdGetExerciseByBodyPartResponse404) & {
   headers: Headers;
 };
 

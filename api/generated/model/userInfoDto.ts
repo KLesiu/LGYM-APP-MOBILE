@@ -16,14 +16,15 @@ export interface UserInfoDto {
   /** @nullable */
   avatar?: string | null;
   /** @nullable */
-  admin?: boolean | null;
-  /** @nullable */
   profileRank?: string | null;
   createdAt?: string;
   updatedAt?: string;
   elo?: number;
   nextRank?: RankDto;
   isDeleted?: boolean;
-  isTester?: boolean;
   isVisibleInRanking?: boolean;
+  /** @nullable */
+  roles?: string[] | null;
+  /** @nullable */
+  permissionClaims?: string[] | null;
 }

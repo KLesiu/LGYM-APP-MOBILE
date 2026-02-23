@@ -4,8 +4,8 @@
  * LgymApi.Api
  * OpenAPI spec version: 1.0
  */
-import type { BodyParts } from './bodyParts';
+import type { ExerciseByBodyPartRequestDtoBodyPart } from './exerciseByBodyPartRequestDtoBodyPart';
 
 export interface ExerciseByBodyPartRequestDto {
-  bodyPart: BodyParts;
+  bodyPart: ExerciseByBodyPartRequestDtoBodyPart;
 }
