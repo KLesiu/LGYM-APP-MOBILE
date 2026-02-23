@@ -26,18 +26,22 @@ import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
 import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";
 import {
+  getGetApiIdGetLastTrainingQueryKey,
   usePostApiIdAddTraining,
 } from "../../../../../api/generated/training/training";
 import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
+import { getGetApiGetUsersRankingQueryKey } from "../../../../../api/generated/user/user";
 import {
   ExerciseResponseDto,
   EnumLookupDto,
   ExerciseScoresTrainingFormDto,
+  RankDto,
   TrainingFormDto,
   WeightUnits,
 } from "../../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "../../../../../stores/useAuthStore";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -48,10 +52,129 @@ interface TrainingPlanDayProps {
   setTrainingSummary: (trainingSummary: TrainingSummary) => void;
 }
 
+const getRankName = (rank: unknown, unknownLabel: string): string => {
+  if (typeof rank === "string") {
+    return rank;
+  }
+
+  if (rank && typeof rank === "object") {
+    const rankName = (rank as RankDto).name;
+    if (typeof rankName === "string" && rankName.length > 0) {
+      return rankName;
+    }
+  }
+
+  return unknownLabel;
+};
+
+const getRankNeedElo = (rank: unknown): number => {
+  if (rank && typeof rank === "object") {
+    const rankNeedElo = (rank as RankDto).needElo;
+    if (typeof rankNeedElo === "number") {
+      return rankNeedElo;
+    }
+  }
+
+  return 0;
+};
+
+const hasRankName = (rank: unknown): boolean => {
+  if (typeof rank === "string") {
+    return rank.length > 0;
+  }
+
+  if (rank && typeof rank === "object") {
+    const rankName = (rank as RankDto).name;
+    return typeof rankName === "string" && rankName.length > 0;
+  }
+
+  return false;
+};
+
+const mapUnitValue = (unit: unknown, unknownLabel: string): string => {
+  if (typeof unit === "string") {
+    return unit;
+  }
+
+  if (unit && typeof unit === "object") {
+    const unitName = (unit as { name?: unknown }).name;
+    if (typeof unitName === "string" && unitName.length > 0) {
+      return unitName;
+    }
+  }
+
+  return unknownLabel;
+};
+
+const mapTrainingSummary = (
+  source: Record<string, unknown>,
+  unknownLabel: string
+): TrainingSummary => {
+  const comparisonSource = Array.isArray(source.comparison) ? source.comparison : [];
+  const mappedComparison = comparisonSource.map((comp) => {
+    const compRecord = (comp ?? {}) as Record<string, unknown>;
+    const seriesSource = Array.isArray(compRecord.seriesComparisons)
+      ? compRecord.seriesComparisons
+      : [];
+
+    return {
+      ...compRecord,
+      seriesComparisons: seriesSource.map((series) => {
+        const seriesRecord = (series ?? {}) as Record<string, unknown>;
+        const currentResult = seriesRecord.currentResult as
+          | Record<string, unknown>
+          | undefined;
+        const previousResult = seriesRecord.previousResult as
+          | Record<string, unknown>
+          | undefined
+          | null;
+
+        return {
+          ...seriesRecord,
+          currentResult: currentResult
+            ? {
+                ...currentResult,
+                unit: mapUnitValue(currentResult.unit, unknownLabel),
+              }
+            : currentResult,
+          previousResult: previousResult
+            ? {
+                ...previousResult,
+                unit: mapUnitValue(previousResult.unit, unknownLabel),
+              }
+            : previousResult,
+        };
+      }),
+    };
+  }) as TrainingSummary["comparison"];
+
+  return {
+    comparison: mappedComparison,
+    gainElo: typeof source.gainElo === "number" ? source.gainElo : 0,
+    userOldElo: typeof source.userOldElo === "number" ? source.userOldElo : 0,
+    profileRank: {
+      name: getRankName(source.profileRank, unknownLabel),
+      needElo: getRankNeedElo(source.profileRank),
+    },
+    nextRank: source.nextRank
+      ? {
+          name: getRankName(source.nextRank, unknownLabel),
+          needElo: getRankNeedElo(source.nextRank),
+        }
+      : null,
+    msg:
+      typeof source.msg === "string"
+        ? (source.msg as TrainingSummary["msg"])
+        : ("" as TrainingSummary["msg"]),
+  };
+};
+
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const { t } = useTranslation();
   const { changeHeaderVisibility, userId } = useHomeContext();
   const queryClient = useQueryClient();
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
   
   const {
     planDay,
@@ -112,41 +235,58 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         if (result && result.data) {
              await props.hideAndDeleteTrainingSession();
              props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
-             // Map DTO to interface - extract string values from enums
-              const trainingSummaryData = result.data as any;
-              const mapUnitValue = (unit: any): string => {
-                return typeof unit === 'string' ? unit : (unit?.name || t('common.unknown'));
-              };
-             const mappedSummary: TrainingSummary = {
-               ...trainingSummaryData,
-               comparison: trainingSummaryData.comparison?.map((comp: any) => ({
-                 ...comp,
-                 seriesComparisons: comp.seriesComparisons?.map((series: any) => ({
-                   ...series,
-                   currentResult: series.currentResult ? {
-                     ...series.currentResult,
-                     unit: mapUnitValue(series.currentResult.unit)
-                   } : series.currentResult,
-                   previousResult: series.previousResult ? {
-                     ...series.previousResult,
-                     unit: mapUnitValue(series.previousResult.unit)
-                   } : series.previousResult
-                 }))
-               })) || [],
-                profileRank: {
-                  name: typeof trainingSummaryData.profileRank === 'string' 
-                    ? trainingSummaryData.profileRank 
-                    : trainingSummaryData.profileRank?.name || t('common.unknown'),
-                  needElo: trainingSummaryData.profileRank?.needElo || 0
-                },
-                nextRank: trainingSummaryData.nextRank ? {
-                  name: typeof trainingSummaryData.nextRank === 'string' 
-                    ? trainingSummaryData.nextRank 
-                    : trainingSummaryData.nextRank?.name || t('common.unknown'),
-                  needElo: trainingSummaryData.nextRank?.needElo || 0
-                } : null
-              };
-             props.setTrainingSummary(mappedSummary);
+             const trainingSummaryData = result.data as Record<string, unknown>;
+             const hasUserOldEloFromApi =
+               Object.hasOwn(trainingSummaryData, "userOldElo") &&
+               typeof trainingSummaryData.userOldElo === "number";
+             const mappedSummary = mapTrainingSummary(
+               trainingSummaryData,
+               t("common.unknown")
+             );
+             const normalizedSummary: TrainingSummary = {
+               ...mappedSummary,
+               userOldElo: hasUserOldEloFromApi
+                 ? mappedSummary.userOldElo
+                 : Number(user?.elo ?? 0),
+             };
+             props.setTrainingSummary(normalizedSummary);
+
+             if (user) {
+                const currentElo = hasUserOldEloFromApi
+                  ? Number(trainingSummaryData.userOldElo)
+                  : Number(user.elo ?? 0);
+                const gainElo = Number(normalizedSummary.gainElo ?? 0);
+                const updatedElo = currentElo + gainElo;
+                const hasProfileRankFromApi = hasRankName(trainingSummaryData.profileRank);
+                const hasNextRankFromApi = Object.hasOwn(trainingSummaryData, "nextRank");
+
+                setUser({
+                  ...user,
+                  elo: updatedElo,
+                  profileRank: hasProfileRankFromApi
+                   ? normalizedSummary.profileRank?.name
+                   : user.profileRank,
+                  nextRank: hasNextRankFromApi
+                    ? normalizedSummary.nextRank
+                    : user.nextRank,
+                });
+              }
+
+             const invalidatePromises = [
+               queryClient.invalidateQueries({
+                 queryKey: getGetApiGetUsersRankingQueryKey(),
+               }),
+             ];
+
+             if (userId) {
+               invalidatePromises.push(
+                 queryClient.invalidateQueries({
+                   queryKey: getGetApiIdGetLastTrainingQueryKey(userId),
+                 })
+               );
+             }
+
+             await Promise.all(invalidatePromises);
         }
     } catch (e) {
         console.error(e);

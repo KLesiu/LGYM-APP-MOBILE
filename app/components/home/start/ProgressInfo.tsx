@@ -19,9 +19,13 @@ const ProgressInfo: React.FC = () => {
   useEffect(() => {
     setIsLoading(true);
     if(user){
-      setProgress(
-        Math.floor((user.elo / user.nextRank.needElo) * 10000) / 100
-      );
+      if (user.nextRank?.needElo) {
+        setProgress(
+          Math.floor((user.elo / user.nextRank.needElo) * 10000) / 100
+        );
+      } else {
+        setProgress(100);
+      }
       setIsLoading(false);
     }
   }, [user]);
@@ -79,7 +83,7 @@ const ProgressInfo: React.FC = () => {
                    className={`text-textColor  midPhone:text-sm text-md smallPhone:text-xs`}
                    style={{ fontFamily: "OpenSans_300Light" }}
                  >
-                   {String(user.nextRank.name ?? "N/A")}
+                   {user.nextRank?.name ?? t('training.highestRank')}
                  </Text>
               </View>
 
