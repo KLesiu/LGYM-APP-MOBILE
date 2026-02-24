@@ -12,10 +12,24 @@ import { useHomeContext } from "../HomeContext";
 import ViewLoading from "../../elements/ViewLoading";
 import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../../api/generated/gym/gym";
 import type { GymChoiceInfoDto } from "../../../../api/generated/model";
+import { getErrorMessage } from "../../../../utils/errorHandler";
+import { useAppContext } from "../../../AppContext";
+
+const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
+  if (!value || typeof value !== "object") return false;
+
+  const gym = value as GymChoiceInfoDto;
+  return (
+    gym._id === undefined ||
+    gym._id === null ||
+    typeof gym._id === "string"
+  );
+};
 
 const Gym: React.FC = () => {
   const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
+  const { setErrors } = useAppContext();
 
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
@@ -30,7 +44,11 @@ const Gym: React.FC = () => {
   );
   
   const gyms = useMemo(() => {
-    return (gymsResponse?.data as GymChoiceInfoDto[]) || [];
+    if (!Array.isArray(gymsResponse?.data)) {
+      return [];
+    }
+
+    return gymsResponse.data.filter(isGymChoiceInfoDto);
   }, [gymsResponse]);
 
   const deleteGymMutation = usePostApiGymIdDeleteGym();
@@ -77,6 +95,9 @@ const Gym: React.FC = () => {
         id: currentChosenGym._id,
       });
       await refetch();
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, t("common.error"));
+      setErrors([errorMessage]);
     } finally {
       setIsDeleteConfirmationDialogVisible(false);
     }
@@ -113,7 +134,7 @@ const Gym: React.FC = () => {
             <View style={{ gap: 8 }} className="flex flex-col pb-12">
               {gyms.map((gym, index) => (
                 <GymPlace
-                  key={index}
+                  key={gym._id ?? `${index}`}
                   gym={gym}
                   editGym={editGym}
                   deleteGym={() => deleteDialogVisible(true, gym)}

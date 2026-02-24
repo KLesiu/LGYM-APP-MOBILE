@@ -16,6 +16,20 @@ import { GymChoiceInfoDto } from "../../../../api/generated/model";
 
 interface TrainingViewProps {}
 
+const parseStoredValue = <T,>(value: string | null): T | null => {
+  if (!value) return null;
+
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return null;
+  }
+};
+
+const isValidStoredGym = (gym: GymForm | null): gym is GymForm => {
+  return !!gym && typeof gym._id === "string" && gym._id.length > 0;
+};
+
 const TrainingView: React.FC<TrainingViewProps> = () => {
   const { toggleMenuButton } = useHomeContext();
 
@@ -42,10 +56,16 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
 
   /// Check is user have active plan day training
   const checkIsUserHaveActivePlanDayTraining = async () => {
-    const response = JSON.parse(`${await AsyncStorage.getItem("planDay")}`);
-    if (response && Object.keys(response).length)
-      await getCurrentPlanDayTraining();
-    else setStep(TrainingViewSteps.None);
+    const planDay = parseStoredValue<{ _id?: string }>(
+      await AsyncStorage.getItem("planDay")
+    );
+
+    if (planDay?._id) {
+      await getCurrentPlanDayTraining(planDay._id);
+      return;
+    }
+
+    setStep(TrainingViewSteps.None);
   };
 
   /// Show Gym choice popUp and hide menu button
@@ -86,16 +106,29 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
   };
 
   /// Get active plan day from localStorage, set gym and show TrainingPlanDay.
-  const getCurrentPlanDayTraining = async () => {
-    const response = await AsyncStorage.getItem("planDay");
-    if (!response) return;
-    const result = JSON.parse(response);
+  const getCurrentPlanDayTraining = async (storedDayId?: string) => {
+    const dayIdFromStorage =
+      storedDayId ??
+      parseStoredValue<{ _id?: string }>(await AsyncStorage.getItem("planDay"))
+        ?._id;
 
-    const responseGym = await AsyncStorage.getItem("gym");
-    if (!responseGym) return;
-    const resultGym = JSON.parse(responseGym) as GymForm;
-    setGym(resultGym);
-    showDaySection(result._id);
+    if (!dayIdFromStorage) {
+      await hideAndDeleteTrainingSession();
+      return;
+    }
+
+    const storedGym = parseStoredValue<GymForm>(await AsyncStorage.getItem("gym"));
+    if (!isValidStoredGym(storedGym)) {
+      await hideAndDeleteTrainingSession();
+      return;
+    }
+
+    setGym({
+      _id: storedGym._id,
+      name: storedGym.name ?? "",
+      address: storedGym.address ?? undefined,
+    });
+    showDaySection(dayIdFromStorage);
   };
 
   /// Show TrainingPlanDay and hide day choice popUp
@@ -110,7 +143,6 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     await AsyncStorage.removeItem("planDay");
     await AsyncStorage.removeItem("trainingSessionScores");
     await AsyncStorage.removeItem("gym");
-    setStep(TrainingViewSteps.None);
     resetTrainingView();
   };
 
