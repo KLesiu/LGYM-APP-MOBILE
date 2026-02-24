@@ -1,4 +1,4 @@
-import { Alert, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useEffect, useState } from "react";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
@@ -24,6 +24,7 @@ import { TrainingSummary } from "../../../../../types/models";
 import { ExerciseForm } from "../../../../../types/models";
 import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
+import ValidationView from "../../../elements/ValidationView";
 import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";
 import {
   getGetApiIdGetLastTrainingQueryKey,
@@ -197,6 +198,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setIsTrainingPlanDayExerciseFormShow,
   ] = useState<boolean>(false);
   const [isPlanShow, setIsPlanShow] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [bodyPart, setBodyPart] = useState<BodyParts | undefined>();
   const [exerciseWhichBeingSwitched, setExerciseWhichBeingSwitched] = useState<
     string | undefined
@@ -217,7 +219,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const gymId = gym?._id;
 
     if (!userId || !type || !gymId) {
-      Alert.alert(t("training.error"), t("training.failedToAdd"));
+      setValidationErrors([t("training.failedToAdd")]);
       return;
     }
 
@@ -243,6 +245,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     try {
         const result = await addTrainingMutation({ id: userId, data: body });
         if (result && result.data) {
+             setValidationErrors([]);
              await props.hideAndDeleteTrainingSession();
              props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
              const trainingSummaryData = result.data as Record<string, unknown>;
@@ -300,7 +303,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         }
     } catch (e) {
         console.error(e);
-        Alert.alert(t('training.error'), t('training.failedToAdd'));
+        setValidationErrors([t('training.failedToAdd')]);
     }
   };
 
@@ -463,11 +466,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   const sendTraining = async (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
-    if (!result)
-      return Alert.alert(
-        t('training.invalidScores'),
-        t('training.invalidScoresMessage')
-      );
+    if (!result) {
+      setValidationErrors([t('training.invalidScoresMessage')]);
+      return;
+    }
+
+    setValidationErrors([]);
     await addTraining(result);
   };
 
@@ -483,6 +487,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           className=" h-full flex flex-col justify-between pb-4"
         >
           <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
+          <ValidationView errors={validationErrors} />
 
           <ScrollView
             ref={scrollViewRef}
