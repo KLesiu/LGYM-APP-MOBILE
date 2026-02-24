@@ -100,10 +100,12 @@ export const useAppInitialization = () => {
     }
   };
 
-  const setSession = async (userInfo: any): Promise<void> => {
-    await AsyncStorage.setItem("username", userInfo.name);
-    await AsyncStorage.setItem("id", userInfo._id);
-    if(userInfo.email) await AsyncStorage.setItem("email", userInfo.email);
+  const setSession = async (userInfo: UserInfoDto): Promise<void> => {
+    await AsyncStorage.setItem("username", userInfo.name ?? "");
+    await AsyncStorage.setItem("id", userInfo._id ?? "");
+    if (userInfo.email) {
+      await AsyncStorage.setItem("email", userInfo.email);
+    }
     setIsTokenChecked(true);
     setUserInfo(userInfo);
     useAuthStore.getState().setUser(userInfo);
