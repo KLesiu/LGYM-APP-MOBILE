@@ -116,7 +116,7 @@ export const customInstance = <T>(
 ): Promise<T> => {
   const source = axios.CancelToken.source();
 
-  const { body } = options || {};
+  const { body } = options ?? {};
   const axiosConfig: AxiosRequestConfig = {
     url,
     method: options?.method,
@@ -159,7 +159,7 @@ export const customInstance = <T>(
 
 AXIOS_INSTANCE.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
-  const language = i18n.language || 'en';
+  const language = i18n.language ?? 'en';
 
   const requestHeaders = AxiosHeaders.from(config.headers);
 
