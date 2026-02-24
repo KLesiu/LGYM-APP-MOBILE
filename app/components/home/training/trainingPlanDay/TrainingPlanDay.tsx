@@ -34,11 +34,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiGetUsersRankingQueryKey } from "../../../../../api/generated/user/user";
 import {
   ExerciseResponseDto,
+  ExerciseScoresTrainingFormDtoUnit,
   EnumLookupDto,
   ExerciseScoresTrainingFormDto,
   RankDto,
   TrainingFormDto,
-  WeightUnits,
 } from "../../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../../../stores/useAuthStore";
@@ -169,6 +169,9 @@ const mapTrainingSummary = (
   };
 };
 
+const getKilogramsUnit = (): ExerciseScoresTrainingFormDtoUnit =>
+  ExerciseScoresTrainingFormDtoUnit.Kilograms;
+
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const { t } = useTranslation();
   const { changeHeaderVisibility, userId } = useHomeContext();
@@ -211,6 +214,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   /// Submit training and delete training session from localStorage then show summary.
   const addTraining = async (exercises: TrainingSessionScores[]) => {
     const type = props.dayId;
+    const gymId = gym?._id;
+
+    if (!userId || !type || !gymId) {
+      Alert.alert(t("training.error"), t("training.failedToAdd"));
+      return;
+    }
+
     const createdAt = new Date().toISOString();
     const training: ExerciseScoresTrainingFormDto[] = exercises.map((ele: TrainingSessionScores) => {
       const exerciseScoresTrainingForm: ExerciseScoresTrainingFormDto = {
@@ -218,16 +228,16 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         reps: parseFloat(ele.reps),
         series: ele.series,
         weight: parseFloat(ele.weight),
-        unit:WeightUnits.Kilograms,
+        unit: getKilogramsUnit(),
       };
       return exerciseScoresTrainingForm;
     });
 
     const body: TrainingFormDto = {
-      type: type!,
+      type,
       createdAt: createdAt,
       exercises: training,
-      gym: gym?._id!,
+      gym: gymId,
     };
 
     try {
@@ -435,7 +445,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       const parsedReps = parseFloat(repsWithDot);
       const parsedWeight = parseFloat(weightWithDot);
 
-      if (isNaN(parsedReps) || isNaN(parsedWeight)) {
+      if (!Number.isFinite(parsedReps) || !Number.isFinite(parsedWeight)) {
         return null;
       }
 
