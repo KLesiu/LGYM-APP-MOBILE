@@ -21,6 +21,12 @@ import {
 } from "../../../../api/generated/model";
 import type { BodyParts as BodyPartValue } from "../../../../api/generated/model";
 import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
+import {
+  getGetApiExerciseGetAllGlobalExercisesQueryKey,
+  getGetApiExerciseIdGetAllExercisesQueryKey,
+  getGetApiExerciseIdGetAllUserExercisesQueryKey,
+} from "../../../../api/generated/exercise/exercise";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 interface CreateExerciseProps {
@@ -38,6 +44,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const { setErrors } = useAppContext();
   const { userId } = useHomeContext();
+  const queryClient = useQueryClient();
 
   const createUserExerciseMutation = usePostApiExerciseIdAddUserExercise();
   const createGlobalExerciseMutation = usePostApiExerciseAddExercise();
@@ -70,6 +77,29 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     return true;
   }, [exerciseName, bodyPart, setErrors, t]);
 
+  const refreshExerciseQueries = useCallback(async () => {
+    const invalidatePromises: Promise<unknown>[] = [
+      queryClient.invalidateQueries({
+        queryKey: getGetApiExerciseGetAllGlobalExercisesQueryKey(),
+      }),
+    ];
+
+    if (userId) {
+      invalidatePromises.push(
+        queryClient.invalidateQueries({
+          queryKey: getGetApiExerciseIdGetAllExercisesQueryKey(userId),
+        })
+      );
+      invalidatePromises.push(
+        queryClient.invalidateQueries({
+          queryKey: getGetApiExerciseIdGetAllUserExercisesQueryKey(userId),
+        })
+      );
+    }
+
+    await Promise.all(invalidatePromises);
+  }, [queryClient, userId]);
+
   const createExercise = async (): Promise<void> => {
     if (!validateForm()) return;
     try {
@@ -82,6 +112,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
         id: userId,
         data: payload,
       });
+      await refreshExerciseQueries();
       props.closeForm();
     } catch (error) {
       setErrors([t("common.tryAgain")]);
@@ -99,6 +130,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       await createGlobalExerciseMutation.mutateAsync({
         data: payload,
       });
+      await refreshExerciseQueries();
       props.closeForm();
     } catch (error) {
       setErrors([t("common.tryAgain")]);
@@ -118,6 +150,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       await updateExerciseMutation.mutateAsync({
         data: payload,
       });
+      await refreshExerciseQueries();
       props.closeForm();
     } catch (error) {
       setErrors([t("common.tryAgain")]);
@@ -133,6 +166,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           id: props.form._id,
         },
       });
+      await refreshExerciseQueries();
       props.closeForm();
     } catch (error) {
       setErrors([t("common.tryAgain")]);
