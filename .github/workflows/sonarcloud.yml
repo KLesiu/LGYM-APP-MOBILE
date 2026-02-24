@@ -38,3 +38,4 @@ jobs:
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             -Dsonar.sources=.
             -Dsonar.exclusions=**/node_modules/**,**/android/**,**/ios/**,**/dist/**,**/build/**
+            -Dsonar.coverage.exclusions=**/*
