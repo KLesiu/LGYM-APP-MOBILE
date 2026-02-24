@@ -12,7 +12,15 @@ import ExerciseIcon from "./../../../../img/icons/exercisesIcon.svg";
 import ValidationView from "../../elements/ValidationView";
 import { useAppContext } from "../../../AppContext";
 import { useHomeContext } from "../HomeContext";
-import { usePostApiExerciseIdAddUserExercise, usePostApiExerciseAddExercise, usePostApiExerciseUpdateExercise, usePostApiExerciseIdDeleteExercise } from "../../../../api/generated/exercise/exercise";
+import {
+  getGetApiExerciseGetAllGlobalExercisesQueryKey,
+  getGetApiExerciseIdGetAllExercisesQueryKey,
+  getGetApiExerciseIdGetAllUserExercisesQueryKey,
+  usePostApiExerciseIdAddUserExercise,
+  usePostApiExerciseAddExercise,
+  usePostApiExerciseUpdateExercise,
+  usePostApiExerciseIdDeleteExercise,
+} from "../../../../api/generated/exercise/exercise";
 import {
   ExerciseFormDto,
   EnumLookupDto,
@@ -21,11 +29,6 @@ import {
 } from "../../../../api/generated/model";
 import type { BodyParts as BodyPartValue } from "../../../../api/generated/model";
 import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
-import {
-  getGetApiExerciseGetAllGlobalExercisesQueryKey,
-  getGetApiExerciseIdGetAllExercisesQueryKey,
-  getGetApiExerciseIdGetAllUserExercisesQueryKey,
-} from "../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
 
 
@@ -82,20 +85,17 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       queryClient.invalidateQueries({
         queryKey: getGetApiExerciseGetAllGlobalExercisesQueryKey(),
       }),
+      ...(userId
+        ? [
+            queryClient.invalidateQueries({
+              queryKey: getGetApiExerciseIdGetAllExercisesQueryKey(userId),
+            }),
+            queryClient.invalidateQueries({
+              queryKey: getGetApiExerciseIdGetAllUserExercisesQueryKey(userId),
+            }),
+          ]
+        : []),
     ];
-
-    if (userId) {
-      invalidatePromises.push(
-        queryClient.invalidateQueries({
-          queryKey: getGetApiExerciseIdGetAllExercisesQueryKey(userId),
-        })
-      );
-      invalidatePromises.push(
-        queryClient.invalidateQueries({
-          queryKey: getGetApiExerciseIdGetAllUserExercisesQueryKey(userId),
-        })
-      );
-    }
 
     await Promise.all(invalidatePromises);
   }, [queryClient, userId]);
