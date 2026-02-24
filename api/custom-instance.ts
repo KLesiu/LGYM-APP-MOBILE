@@ -6,9 +6,22 @@ import i18n from '../app/i18n';
 
 type CancelablePromise<T> = Promise<T> & { cancel: () => void };
 
-const trimTrailingSlash = (value: string): string => value.replace(/\/+$/, '');
+const trimTrailingSlash = (value: string): string => {
+  let end = value.length;
+
+  while (end > 0 && value[end - 1] === '/') {
+    end -= 1;
+  }
+
+  return value.slice(0, end);
+};
 
 const isLoopbackHost = (host: string): boolean => host === 'localhost' || host === '127.0.0.1';
+
+const getAndroidEmulatorHost = (): string | null => {
+  const configuredHost = process.env.REACT_APP_ANDROID_EMULATOR_HOST?.trim();
+  return configuredHost ? configuredHost : null;
+};
 
 const getMetroHostName = (): string | null => {
   const fromExpoConfig = Constants.expoConfig?.hostUri;
@@ -54,8 +67,19 @@ const resolveBackendBaseUrl = (rawUrl?: string): string | undefined => {
     }
 
     if (Platform.OS === 'android') {
-      parsed.hostname = '10.0.2.2';
-      return trimTrailingSlash(parsed.toString());
+      const emulatorHost = getAndroidEmulatorHost();
+      if (emulatorHost) {
+        parsed.hostname = emulatorHost;
+        return trimTrailingSlash(parsed.toString());
+      }
+
+      if (__DEV__) {
+        console.warn(
+          '[custom-instance] Android loopback detected. Set REACT_APP_ANDROID_EMULATOR_HOST or use a LAN IP in REACT_APP_BACKEND.'
+        );
+      }
+
+      return normalizedInput;
     }
 
     return normalizedInput;
@@ -92,7 +116,7 @@ export const customInstance = <T>(
 ): Promise<T> => {
   const source = axios.CancelToken.source();
 
-  const { body, ...rest } = options || {};
+  const { body } = options || {};
   const axiosConfig: AxiosRequestConfig = {
     url,
     method: options?.method,

@@ -8,12 +8,14 @@ Example:
 
 ```env
 REACT_APP_BACKEND=https://localhost:7025
+# Optional, mainly for Android emulator when localhost should map to emulator loopback:
+# REACT_APP_ANDROID_EMULATOR_HOST=10.0.2.2
 ```
 
 ### Which URL should I use?
 
 - iOS simulator: `localhost` usually works.
-- Android emulator: if `localhost` is used, runtime fallback maps host to `10.0.2.2`.
+- Android emulator: if `localhost` is used, set `REACT_APP_ANDROID_EMULATOR_HOST` (usually `10.0.2.2`) so the app rewrites loopback to emulator-reachable host.
 - Physical device: runtime tries to replace localhost with Metro host IP when available; if your network blocks this, set `REACT_APP_BACKEND` to your machine LAN IP directly (for example `http://192.168.x.x:4000`).
 
 ### Axios behavior
