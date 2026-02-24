@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { View, Text } from "react-native";
-import { GymForm } from "../../../../../types/models";
 import Dialog from "../../../elements/Dialog";
 import { useHomeContext } from "../../HomeContext";
 import NoGymsInfo from "./elements/NoGymsInfo";
@@ -11,6 +10,17 @@ import React from "react";
 import { useGetApiGymIdGetGyms } from "../../../../../api/generated/gym/gym";
 import { GymChoiceInfoDto } from "../../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
+
+const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
+  if (!value || typeof value !== "object") return false;
+
+  const gym = value as GymChoiceInfoDto;
+  return (
+    gym._id === undefined ||
+    gym._id === null ||
+    typeof gym._id === "string"
+  );
+};
 
 interface TrainingGymChooseProps {
   setGym: (gym: GymChoiceInfoDto) => void;
@@ -28,9 +38,11 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
   const { data, isLoading } = useGetApiGymIdGetGyms(userId, { query: { enabled: !!userId } });
 
   const gyms = useMemo(() => {
-    return Array.isArray(data?.data)
-      ? (data.data as GymChoiceInfoDto[])
-      : [];
+    if (!Array.isArray(data?.data)) {
+      return [];
+    }
+
+    return data.data.filter(isGymChoiceInfoDto);
   }, [data]);
   
   if(isLoading){

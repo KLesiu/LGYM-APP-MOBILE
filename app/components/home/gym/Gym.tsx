@@ -15,6 +15,17 @@ import type { GymChoiceInfoDto } from "../../../../api/generated/model";
 import { getErrorMessage } from "../../../../utils/errorHandler";
 import { useAppContext } from "../../../AppContext";
 
+const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
+  if (!value || typeof value !== "object") return false;
+
+  const gym = value as GymChoiceInfoDto;
+  return (
+    gym._id === undefined ||
+    gym._id === null ||
+    typeof gym._id === "string"
+  );
+};
+
 const Gym: React.FC = () => {
   const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
@@ -33,9 +44,11 @@ const Gym: React.FC = () => {
   );
   
   const gyms = useMemo(() => {
-    return Array.isArray(gymsResponse?.data)
-      ? (gymsResponse.data as GymChoiceInfoDto[])
-      : [];
+    if (!Array.isArray(gymsResponse?.data)) {
+      return [];
+    }
+
+    return gymsResponse.data.filter(isGymChoiceInfoDto);
   }, [gymsResponse]);
 
   const deleteGymMutation = usePostApiGymIdDeleteGym();
