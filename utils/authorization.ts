@@ -24,10 +24,5 @@ export const hasPermissionClaim = (
 };
 
 export const isAdminUser = (user: UserInfoDto | null | undefined): boolean => {
-  if (hasRole(user, "admin")) {
-    return true;
-  }
-
-  const claims = normalizeList(user?.permissionClaims);
-  return claims.some((claim) => claim === "admin" || claim.endsWith(":admin") || claim.endsWith(".admin"));
+  return hasPermissionClaim(user, "admin.access");
 };
