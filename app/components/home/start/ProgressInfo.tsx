@@ -20,8 +20,9 @@ const ProgressInfo: React.FC = () => {
     setIsLoading(true);
     if(user){
       if (user.nextRank?.needElo) {
+        const currentElo = user.elo ?? 0;
         setProgress(
-          Math.floor((user.elo / user.nextRank.needElo) * 10000) / 100
+          Math.floor((currentElo / user.nextRank.needElo) * 10000) / 100
         );
       } else {
         setProgress(100);

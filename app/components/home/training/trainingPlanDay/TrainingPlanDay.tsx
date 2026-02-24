@@ -260,17 +260,17 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                 const hasProfileRankFromApi = hasRankName(trainingSummaryData.profileRank);
                 const hasNextRankFromApi = Object.hasOwn(trainingSummaryData, "nextRank");
 
-                setUser({
-                  ...user,
-                  elo: updatedElo,
-                  profileRank: hasProfileRankFromApi
-                   ? normalizedSummary.profileRank?.name
-                   : user.profileRank,
-                  nextRank: hasNextRankFromApi
-                    ? normalizedSummary.nextRank
+                 setUser({
+                   ...user,
+                   elo: updatedElo,
+                   profileRank: hasProfileRankFromApi
+                    ? normalizedSummary.profileRank?.name
+                    : user.profileRank,
+                   nextRank: hasNextRankFromApi
+                    ? (normalizedSummary.nextRank ?? undefined)
                     : user.nextRank,
-                });
-              }
+                 });
+               }
 
              const invalidatePromises = [
                queryClient.invalidateQueries({

@@ -9,7 +9,7 @@ import type { ExerciseScoresTrainingFormDto } from './exerciseScoresTrainingForm
 export interface TrainingFormDto {
   /** @nullable */
   type?: string | null;
-  createdAt?: string;
+  createdAt: string;
   /** @nullable */
   gym?: string | null;
   /** @nullable */

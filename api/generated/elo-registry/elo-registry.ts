@@ -36,6 +36,11 @@ export type getApiEloRegistryIdGetEloRegistryChartResponse200 = {
   status: 200
 }
 
+export type getApiEloRegistryIdGetEloRegistryChartResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type getApiEloRegistryIdGetEloRegistryChartResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -44,7 +49,7 @@ export type getApiEloRegistryIdGetEloRegistryChartResponse404 = {
 export type getApiEloRegistryIdGetEloRegistryChartResponseSuccess = (getApiEloRegistryIdGetEloRegistryChartResponse200) & {
   headers: Headers;
 };
-export type getApiEloRegistryIdGetEloRegistryChartResponseError = (getApiEloRegistryIdGetEloRegistryChartResponse404) & {
+export type getApiEloRegistryIdGetEloRegistryChartResponseError = (getApiEloRegistryIdGetEloRegistryChartResponse403 | getApiEloRegistryIdGetEloRegistryChartResponse404) & {
   headers: Headers;
 };
 

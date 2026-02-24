@@ -13,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   getGetApiGetUsersRankingQueryKey,
   getApiDeleteAccount,
+  usePostApiLogout,
   usePostApiChangeVisibilityInRanking,
 } from "../../../../api/generated/user/user";
 
@@ -41,20 +42,27 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
 
   const { mutateAsync: changeVisibilityMutation, isPending: isChangingVisibility } =
     usePostApiChangeVisibilityInRanking();
+  const { mutateAsync: logoutMutation } = usePostApiLogout();
 
   useEffect(() => {
     setIsVisibleInRankingState(isVisibleInRanking);
   }, [isVisibleInRanking]);
 
   const logout = async (): Promise<void> => {
-    await clearBeforeLogout();
-    router.push("/");
+    try {
+      await logoutMutation();
+    } catch (error) {
+      console.error("Logout API request failed, proceeding with local logout", error);
+    } finally {
+      await clearBeforeLogout();
+      router.push("/");
+    }
   };
 
   const deleteAccount = async (): Promise<void> => {
     await getApiDeleteAccount();
     setIsDeleteConfirmationDialogVisible(false);
-    logout();
+    await logout();
   };
 
   const changeVisibility = async (newValue: boolean): Promise<void> => {

@@ -22,9 +22,10 @@ import {
   useGetApiExerciseGetAllGlobalExercises,
   useGetApiExerciseIdGetAllUserExercises,
 } from "../../../../api/generated/exercise/exercise";
-import { useGetApiIdIsAdmin } from "../../../../api/generated/user/user";
 import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "../../../../stores/useAuthStore";
+import { hasPermissionClaim } from "../../../../utils/authorization";
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -41,6 +42,7 @@ const Exercises: React.FC<ExercisesProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
+  const { user } = useAuthStore();
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [selectedBodyPart, setSelectedBodyPart] = useState<EnumLookupDto | null>(
     null
@@ -77,10 +79,6 @@ const Exercises: React.FC<ExercisesProps> = ({
     },
   });
 
-  const { data: isAdminData } = useGetApiIdIsAdmin(userId, {
-    query: { enabled: !!userId },
-  });
-
   const globalExercises = useMemo(() => {
     if(!Array.isArray(globalExercisesData?.data)) return [];
    return globalExercisesData?.data 
@@ -92,7 +90,7 @@ const Exercises: React.FC<ExercisesProps> = ({
   }, [userExercisesData]);
 
 
-  const isAdmin = !!isAdminData?.data;
+  const isAdmin = hasPermissionClaim(user, "admin.access");
 
   const filteredGlobalExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart

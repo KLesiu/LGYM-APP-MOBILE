@@ -1,11 +1,12 @@
 import { create } from 'zustand';
+import type { UserInfoDto } from '../api/generated/model';
 
 interface AuthState {
   token: string | null;
-  user: any | null;
+  user: UserInfoDto | null;
   isAuthenticated: boolean;
   setToken: (token: string | null | undefined) => void;
-  setUser: (user: any) => void;
+  setUser: (user: UserInfoDto | null) => void;
   logout: () => void;
 }
 

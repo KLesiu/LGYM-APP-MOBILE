@@ -195,109 +195,6 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
       return useMutation(getPostApiLoginMutationOptions(options), queryClient);
     }
-    export type getApiIdIsAdminResponse200 = {
-  data: boolean
-  status: 200
-}
-    
-export type getApiIdIsAdminResponseSuccess = (getApiIdIsAdminResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getApiIdIsAdminResponse = (getApiIdIsAdminResponseSuccess)
-
-export const getGetApiIdIsAdminUrl = (id: string,) => {
-
-
-  
-
-  return `/api/${id}/isAdmin`
-}
-
-export const getApiIdIsAdmin = async (id: string, options?: RequestInit): Promise<getApiIdIsAdminResponse> => {
-  
-  return customInstance<getApiIdIsAdminResponse>(getGetApiIdIsAdminUrl(id),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
-
-
-
-export const getGetApiIdIsAdminQueryKey = (id: string,) => {
-    return [
-    `/api/${id}/isAdmin`
-    ] as const;
-    }
-
-    
-export const getGetApiIdIsAdminQueryOptions = <TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiIdIsAdminQueryKey(id);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiIdIsAdmin>>> = ({ signal }) => getApiIdIsAdmin(id, { signal, ...requestOptions });
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetApiIdIsAdminQueryResult = NonNullable<Awaited<ReturnType<typeof getApiIdIsAdmin>>>
-export type GetApiIdIsAdminQueryError = unknown
-
-
-export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getApiIdIsAdmin>>,
-          TError,
-          Awaited<ReturnType<typeof getApiIdIsAdmin>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getApiIdIsAdmin>>,
-          TError,
-          Awaited<ReturnType<typeof getApiIdIsAdmin>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetApiIdIsAdminQueryOptions(id,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-
-
 
 export type getApiCheckTokenResponse200 = {
   data: UserInfoDto
@@ -403,7 +300,82 @@ export function useGetApiCheckToken<TData = Awaited<ReturnType<typeof getApiChec
 
 
 
-export type getApiGetUsersRankingResponse200 = {
+export type postApiLogoutResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+    
+export type postApiLogoutResponseSuccess = (postApiLogoutResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiLogoutResponse = (postApiLogoutResponseSuccess)
+
+export const getPostApiLogoutUrl = () => {
+
+
+  
+
+  return `/api/logout`
+}
+
+export const postApiLogout = async ( options?: RequestInit): Promise<postApiLogoutResponse> => {
+  
+  return customInstance<postApiLogoutResponse>(getPostApiLogoutUrl(),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostApiLogoutMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiLogout>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiLogout>>, TError,void, TContext> => {
+
+const mutationKey = ['postApiLogout'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiLogout>>, void> = () => {
+          
+
+          return  postApiLogout(requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiLogoutMutationResult = NonNullable<Awaited<ReturnType<typeof postApiLogout>>>
+    
+    export type PostApiLogoutMutationError = unknown
+
+    export const usePostApiLogout = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiLogout>>, TError,void, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiLogout>>,
+        TError,
+        void,
+        TContext
+      > => {
+      return useMutation(getPostApiLogoutMutationOptions(options), queryClient);
+    }
+    export type getApiGetUsersRankingResponse200 = {
   data: UserBaseInfoDto[]
   status: 200
 }

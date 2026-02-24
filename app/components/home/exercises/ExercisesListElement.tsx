@@ -8,6 +8,7 @@ import { useHomeContext } from "../HomeContext";
 import { useAppContext } from "../../../AppContext";
 import Checkbox from "../../elements/Checkbox";
 import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
+import { isAdminUser } from "../../../../utils/authorization";
 
 interface ExercisesListElementProps {
   exercise: ExerciseResponseDto;
@@ -29,6 +30,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
   exercisesList
 }) => {
   const { userInfo } = useAppContext();
+  const isAdmin = isAdminUser(userInfo);
   
 
   return (
@@ -56,7 +58,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
         </View>
       ) : (
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
-          {((isGlobal && userInfo && userInfo.admin) || !isGlobal) && (
+          {((isGlobal && isAdmin) || !isGlobal) && (
             <Pressable onPress={() => editExercise(exercise)}>
               <EditIcon fill={"white"} width={24} height={24} />
             </Pressable>

@@ -72,13 +72,20 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
 
   const clearBeforeLogout = async () => {
-    const keys = await AsyncStorage.getAllKeys();
-    await Promise.all(keys.map((key) => deleteFromStorage(key)));
+    let keys: readonly string[] = [];
+
+    try {
+      keys = await AsyncStorage.getAllKeys();
+    } catch (error) {
+      console.error("Error reading storage keys during logout", error);
+    }
+
+    await Promise.allSettled(keys.map((key) => deleteFromStorage(key)));
     setUserInfo(null);
     setToken(undefined);
     setIsTokenChecked(false);
     useAuthStore.getState().logout();
-    queryClient.removeQueries();
+    queryClient.clear();
   };
 
   const deleteFromStorage = async (key: string): Promise<void> => {

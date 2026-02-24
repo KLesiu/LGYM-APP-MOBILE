@@ -32,6 +32,11 @@ export type postApiExerciseScoresIdGetExerciseScoresChartDataResponse200 = {
   status: 200
 }
 
+export type postApiExerciseScoresIdGetExerciseScoresChartDataResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
 export type postApiExerciseScoresIdGetExerciseScoresChartDataResponse404 = {
   data: ResponseMessageDto
   status: 404
@@ -40,7 +45,7 @@ export type postApiExerciseScoresIdGetExerciseScoresChartDataResponse404 = {
 export type postApiExerciseScoresIdGetExerciseScoresChartDataResponseSuccess = (postApiExerciseScoresIdGetExerciseScoresChartDataResponse200) & {
   headers: Headers;
 };
-export type postApiExerciseScoresIdGetExerciseScoresChartDataResponseError = (postApiExerciseScoresIdGetExerciseScoresChartDataResponse404) & {
+export type postApiExerciseScoresIdGetExerciseScoresChartDataResponseError = (postApiExerciseScoresIdGetExerciseScoresChartDataResponse403 | postApiExerciseScoresIdGetExerciseScoresChartDataResponse404) & {
   headers: Headers;
 };
 
