@@ -1,4 +1,4 @@
-import { Alert, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useEffect, useState } from "react";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
 import { BodyParts } from "../../../../../enums/BodyParts";
@@ -24,6 +24,7 @@ import { TrainingSummary } from "../../../../../types/models";
 import { ExerciseForm } from "../../../../../types/models";
 import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
+import ValidationView from "../../../elements/ValidationView";
 import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";
 import {
   getGetApiIdGetLastTrainingQueryKey,
@@ -34,11 +35,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiGetUsersRankingQueryKey } from "../../../../../api/generated/user/user";
 import {
   ExerciseResponseDto,
+  ExerciseScoresTrainingFormDtoUnit,
   EnumLookupDto,
   ExerciseScoresTrainingFormDto,
   RankDto,
   TrainingFormDto,
-  WeightUnits,
 } from "../../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../../../stores/useAuthStore";
@@ -169,6 +170,9 @@ const mapTrainingSummary = (
   };
 };
 
+const getKilogramsUnit = (): ExerciseScoresTrainingFormDtoUnit =>
+  ExerciseScoresTrainingFormDtoUnit.Kilograms;
+
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const { t } = useTranslation();
   const { changeHeaderVisibility, userId } = useHomeContext();
@@ -194,6 +198,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setIsTrainingPlanDayExerciseFormShow,
   ] = useState<boolean>(false);
   const [isPlanShow, setIsPlanShow] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [bodyPart, setBodyPart] = useState<BodyParts | undefined>();
   const [exerciseWhichBeingSwitched, setExerciseWhichBeingSwitched] = useState<
     string | undefined
@@ -211,6 +216,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   /// Submit training and delete training session from localStorage then show summary.
   const addTraining = async (exercises: TrainingSessionScores[]) => {
     const type = props.dayId;
+    const gymId = gym?._id;
+
+    if (!userId || !type || !gymId) {
+      setValidationErrors([t("training.failedToAdd")]);
+      return;
+    }
+
     const createdAt = new Date().toISOString();
     const training: ExerciseScoresTrainingFormDto[] = exercises.map((ele: TrainingSessionScores) => {
       const exerciseScoresTrainingForm: ExerciseScoresTrainingFormDto = {
@@ -218,21 +230,22 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         reps: parseFloat(ele.reps),
         series: ele.series,
         weight: parseFloat(ele.weight),
-        unit:WeightUnits.Kilograms,
+        unit: getKilogramsUnit(),
       };
       return exerciseScoresTrainingForm;
     });
 
     const body: TrainingFormDto = {
-      type: type!,
+      type,
       createdAt: createdAt,
       exercises: training,
-      gym: gym?._id!,
+      gym: gymId,
     };
 
     try {
         const result = await addTrainingMutation({ id: userId, data: body });
         if (result && result.data) {
+             setValidationErrors([]);
              await props.hideAndDeleteTrainingSession();
              props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
              const trainingSummaryData = result.data as Record<string, unknown>;
@@ -290,7 +303,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
         }
     } catch (e) {
         console.error(e);
-        Alert.alert(t('training.error'), t('training.failedToAdd'));
+        setValidationErrors([t('training.failedToAdd')]);
     }
   };
 
@@ -435,7 +448,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       const parsedReps = parseFloat(repsWithDot);
       const parsedWeight = parseFloat(weightWithDot);
 
-      if (isNaN(parsedReps) || isNaN(parsedWeight)) {
+      if (!Number.isFinite(parsedReps) || !Number.isFinite(parsedWeight)) {
         return null;
       }
 
@@ -453,11 +466,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   const sendTraining = async (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
-    if (!result)
-      return Alert.alert(
-        t('training.invalidScores'),
-        t('training.invalidScoresMessage')
-      );
+    if (!result) {
+      setValidationErrors([t('training.invalidScoresMessage')]);
+      return;
+    }
+
+    setValidationErrors([]);
     await addTraining(result);
   };
 
@@ -473,6 +487,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           className=" h-full flex flex-col justify-between pb-4"
         >
           <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
+          <ValidationView errors={validationErrors} />
 
           <ScrollView
             ref={scrollViewRef}
