@@ -43,7 +43,7 @@ const TrainingPlanDayExerciseForm: React.FC<
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
 
-  const { data: allExercisesData, isLoading: isLoadingAll } =
+  const { data: allExercisesData, isLoading: isLoadingAll, refetch: refetchAllExercises } =
     useGetApiExerciseIdGetAllExercises(userId, {
       query: { enabled: !props.bodyPart },
     });
@@ -60,8 +60,13 @@ const TrainingPlanDayExerciseForm: React.FC<
         id: userId,
         data: { bodyPart: props.bodyPart },
       });
+      return;
     }
-  }, [props.bodyPart]);
+
+    if (userId) {
+      void refetchAllExercises();
+    }
+  }, [props.bodyPart, userId, getExercisesByBodyPart, refetchAllExercises]);
 
   const exercisesToSelect = useMemo(() => {
     let data: ExerciseForm[] = [];
