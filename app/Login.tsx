@@ -74,7 +74,12 @@ const Login: React.FC = () => {
               return;
             }
 
-            const userInfo: UserInfoDto = loginResponse.req;
+            const userInfo: UserInfoDto = {
+              ...loginResponse.req,
+              permissionClaims:
+                loginResponse.permissionClaims ??
+                loginResponse.req.permissionClaims,
+            };
 
             await AsyncStorage.setItem("token", loginResponse.token);
             await AsyncStorage.setItem("username", userInfo.name || "");
