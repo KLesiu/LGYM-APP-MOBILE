@@ -20,7 +20,7 @@ const isLoopbackHost = (host: string): boolean => host === 'localhost' || host =
 
 const getAndroidEmulatorHost = (): string | null => {
   const configuredHost = process.env.REACT_APP_ANDROID_EMULATOR_HOST?.trim();
-  return configuredHost ? configuredHost : null;
+  return configuredHost ?? null;
 };
 
 const getMetroHostName = (): string | null => {
@@ -120,7 +120,7 @@ export const customInstance = <T>(
   const axiosConfig: AxiosRequestConfig = {
     url,
     method: options?.method,
-    data: body || options?.data,
+    data: body ?? options?.data,
     cancelToken: source.token,
   };
 
