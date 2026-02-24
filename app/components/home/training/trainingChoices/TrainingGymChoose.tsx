@@ -28,10 +28,9 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
   const { data, isLoading } = useGetApiGymIdGetGyms(userId, { query: { enabled: !!userId } });
 
   const gyms = useMemo(() => {
-    if (data?.data) {
-        return data.data as GymChoiceInfoDto[];
-    }
-    return [];
+    return Array.isArray(data?.data)
+      ? (data.data as GymChoiceInfoDto[])
+      : [];
   }, [data]);
   
   if(isLoading){

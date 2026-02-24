@@ -12,10 +12,13 @@ import { useHomeContext } from "../HomeContext";
 import ViewLoading from "../../elements/ViewLoading";
 import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../../api/generated/gym/gym";
 import type { GymChoiceInfoDto } from "../../../../api/generated/model";
+import { getErrorMessage } from "../../../../utils/errorHandler";
+import { useAppContext } from "../../../AppContext";
 
 const Gym: React.FC = () => {
   const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
+  const { setErrors } = useAppContext();
 
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
@@ -30,7 +33,9 @@ const Gym: React.FC = () => {
   );
   
   const gyms = useMemo(() => {
-    return (gymsResponse?.data as GymChoiceInfoDto[]) || [];
+    return Array.isArray(gymsResponse?.data)
+      ? (gymsResponse.data as GymChoiceInfoDto[])
+      : [];
   }, [gymsResponse]);
 
   const deleteGymMutation = usePostApiGymIdDeleteGym();
@@ -77,6 +82,9 @@ const Gym: React.FC = () => {
         id: currentChosenGym._id,
       });
       await refetch();
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, t("common.error"));
+      setErrors([errorMessage]);
     } finally {
       setIsDeleteConfirmationDialogVisible(false);
     }
@@ -113,7 +121,7 @@ const Gym: React.FC = () => {
             <View style={{ gap: 8 }} className="flex flex-col pb-12">
               {gyms.map((gym, index) => (
                 <GymPlace
-                  key={index}
+                  key={gym._id ?? `${index}`}
                   gym={gym}
                   editGym={editGym}
                   deleteGym={() => deleteDialogVisible(true, gym)}
