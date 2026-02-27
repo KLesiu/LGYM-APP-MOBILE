@@ -147,13 +147,17 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   ) => {
     const exercises = mapExercisesListToSend(exercisesArg);
     if (props.planId) {
+      const planId = props.planId;
       createPlanDayMutation(
         {
-          id: props.planId,
+          id: planId,
           data: { name: planNameArg, exercises: exercises },
         },
         {
           onSuccess: () => {
+            queryClient.invalidateQueries({
+              queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(planId),
+            });
             closeForm();
           },
         }
@@ -180,9 +184,11 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             queryClient.invalidateQueries({
               queryKey: getGetApiPlanDayIdGetPlanDayQueryKey(props.planDayId!),
             });
-            queryClient.invalidateQueries({
-              queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(props.planDayId!),
-            });
+            if (props.planId) {
+              queryClient.invalidateQueries({
+                queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(props.planId),
+              });
+            }
             closeForm();
           },
         }

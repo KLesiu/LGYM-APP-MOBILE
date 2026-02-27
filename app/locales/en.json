@@ -63,6 +63,8 @@
     "createPlan": "Create new",
     "back": "Back",
     "createPlanCta": "Create plan",
+    "emptyPlanTitle": "You don't have a plan yet",
+    "emptyPlanSubtitle": "Create a new plan or copy an existing one with a code.",
     "currentTrainingPlan": "Current training plan:",
     "addTrainingDay": "Add training day",
     "deleteConfirmTitle": "Delete: {{name}}",

@@ -63,6 +63,8 @@
     "createPlan": "Utwórz nowy",
     "back": "Wróć",
     "createPlanCta": "Utwórz plan",
+    "emptyPlanTitle": "Nie masz jeszcze planu",
+    "emptyPlanSubtitle": "Utwórz nowy plan albo skopiuj istniejący kodem.",
     "currentTrainingPlan": "Aktualny plan treningowy:",
     "addTrainingDay": "Dodaj dzień treningowy",
     "deleteConfirmTitle": "Usuń: {{name}}",

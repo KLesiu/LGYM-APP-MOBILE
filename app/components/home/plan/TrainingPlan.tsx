@@ -28,14 +28,18 @@ import {
   usePostApiIdSetNewActivePlan,
   usePostApiIdDeletePlan,
   getGetApiIdGetPlansListQueryKey,
+  getGetApiIdCheckIsUserHavePlanQueryKey,
 } from "../../../../api/generated/plan/plan";
 import {
   useGetApiPlanDayIdGetPlanDaysInfo,
   useGetApiPlanDayIdDeletePlanDay,
+  getGetApiPlanDayIdGetPlanDaysInfoQueryKey,
+  getGetApiPlanDayIdGetPlanDaysTypesQueryKey,
 } from "../../../../api/generated/plan-day/plan-day";
 import { useAppContext } from "../../../AppContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiIdGetPlanConfigQueryKey } from "../../../../api/generated/plan/plan";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Toast from "react-native-toast-message";
 import { toastConfig } from "../../../../helpers/toastConfig";
@@ -101,9 +105,13 @@ const TrainingPlan: React.FC = () => {
 
   const refetchAll = async () => {
     await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlanConfigQueryKey(userId) });
+    await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlansListQueryKey(userId) });
+    await queryClient.invalidateQueries({ queryKey: getGetApiIdCheckIsUserHavePlanQueryKey(userId) });
+    await queryClient.invalidateQueries({ queryKey: getGetApiPlanDayIdGetPlanDaysTypesQueryKey(userId) });
     if (planConfig?._id) {
-        // We rely on React Query dependency to fetch plan days, but we can invalidate to be sure
-        // The key for plan days depends on planConfig._id
+      await queryClient.invalidateQueries({
+        queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(planConfig._id),
+      });
     }
   };
 
@@ -223,8 +231,12 @@ const TrainingPlan: React.FC = () => {
     try {
         if(newPlanConfig._id){
             setIsSwitchingPlan(true);
-            await setNewActivePlanMutation({ id: userId, data: { _id: newPlanConfig._id } as any });
+            await setNewActivePlanMutation({ id: userId, data: { _id: newPlanConfig._id } });
             await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlanConfigQueryKey(userId) });
+            await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlansListQueryKey(userId) });
+            await queryClient.invalidateQueries({ queryKey: getGetApiIdCheckIsUserHavePlanQueryKey(userId) });
+            await queryClient.invalidateQueries({ queryKey: getGetApiPlanDayIdGetPlanDaysTypesQueryKey(userId) });
+            await AsyncStorage.multiRemove(["planDay", "trainingSessionScores"]);
         }
     } catch (e: unknown) {
       console.error(e);
@@ -262,11 +274,28 @@ const TrainingPlan: React.FC = () => {
         {isLoading ? (
           <ViewLoading />
         ) : !planConfig ? (
-          <View className="flex flex-row w-full justify-center items-center h-full">
+          <View className="flex flex-col w-full justify-center items-center h-full px-5" style={{ gap: 16 }}>
+            <View className="w-full" style={{ gap: 4 }}>
+              <Text
+                className="text-base smallPhone:text-sm text-fifthColor"
+                style={{
+                  fontFamily: "OpenSans_400Regular",
+                }}
+              >
+                {t("plans.emptyPlanSubtitle")}
+              </Text>
+            </View>
             <CustomButton
               onPress={() => togglePlanConfigPopUp(true)}
               text={t('plans.createPlanCta')}
               buttonStyleType={ButtonStyle.success}
+              width="w-full"
+            />
+            <CustomButton
+              onPress={showCopyPlanDialog}
+              text={t('plans.copyPlan')}
+              buttonStyleType={ButtonStyle.default}
+              width="w-full"
             />
           </View>
         ) : (

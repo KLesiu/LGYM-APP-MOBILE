@@ -37,12 +37,12 @@ const PlanDayProvider: React.FC<PlanDayProviderProps> = ({
   const [currentStep, setCurrentStep] = useState<number>(-2);
 
   const goToNext = useCallback(() => {
-    setCurrentStep(currentStep + 1);
-  }, [currentStep]);
+    setCurrentStep((prevCurrentStep) => prevCurrentStep + 1);
+  }, []);
 
   const goBack = useCallback(() => {
-    setCurrentStep(currentStep - 1);
-  }, [currentStep]);
+    setCurrentStep((prevCurrentStep) => prevCurrentStep - 1);
+  }, []);
 
   return (
     <PlanDayContext.Provider
