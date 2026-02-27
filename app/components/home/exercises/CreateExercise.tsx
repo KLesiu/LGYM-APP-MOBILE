@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { useTranslation } from "react-i18next";
-import { Message } from "./../../../../enums/Message";
 import CustomDropdown from "../../elements/Dropdown";
 import { ExerciseForm } from "./../../../../types/models";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
@@ -23,14 +22,22 @@ import {
 } from "../../../../api/generated/exercise/exercise";
 import {
   ExerciseFormDto,
+  ExerciseFormDtoBodyPart,
   EnumLookupDto,
   EnumLookupResponseDto,
-  BodyParts as ApiBodyParts,
 } from "../../../../api/generated/model";
-import type { BodyParts as BodyPartValue } from "../../../../api/generated/model";
+import type { ExerciseFormDtoBodyPart as ExerciseBodyPartValue } from "../../../../api/generated/model";
 import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
 import { useQueryClient } from "@tanstack/react-query";
 
+const toBodyPartValue = (value?: string | null): ExerciseBodyPartValue => {
+  const allowed = Object.values(ExerciseFormDtoBodyPart);
+  if (value && allowed.includes(value as ExerciseBodyPartValue)) {
+    return value as ExerciseBodyPartValue;
+  }
+
+  return ExerciseFormDtoBodyPart.Unknown;
+};
 
 interface CreateExerciseProps {
   closeForm: () => void;
@@ -331,10 +338,3 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
 };
 
 export default CreateExercise;
-  const toBodyPartValue = (value?: string | null): BodyPartValue => {
-    const allowed = Object.values(ApiBodyParts);
-    if (value && allowed.includes(value as BodyPartValue)) {
-      return value as BodyPartValue;
-    }
-    return ApiBodyParts.Unknown;
-  };

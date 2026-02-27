@@ -22,7 +22,6 @@ import {
   ExerciseTrainingHistoryItemDto,
   PossibleRecordForExerciseDto,
 } from "../../../../api/generated/model";
-import { BodyParts } from "../../../../enums/BodyParts";
 
 interface ExerciseDetailsProps {
   exercise: ExerciseForm;
@@ -129,7 +128,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
         <ScrollView>
           <View className="flex flex-col">
             <View className="flex flex-row justify-center">
-              <BodyPartImage bodyPart={exercise.bodyPart?.name as BodyParts} showBig={true} />
+              <BodyPartImage bodyPart={exercise.bodyPart?.name} showBig={true} />
             </View>
             <View className="flex flex-col w-full" style={{ gap: 8 }}>
               <View className="flex flex-row justify-between flex-wrap">
