@@ -1,4 +1,5 @@
 import type { UserInfoDto } from "../api/generated/model";
+import { Roles } from "../enums/Roles";
 
 const normalize = (value: string): string => value.trim().toLowerCase();
 
@@ -24,5 +25,5 @@ export const hasPermissionClaim = (
 };
 
 export const isAdminUser = (user: UserInfoDto | null | undefined): boolean => {
-  return hasPermissionClaim(user, "admin.access");
+  return hasRole(user, Roles.Admin) || hasPermissionClaim(user, "admin.access");
 };
