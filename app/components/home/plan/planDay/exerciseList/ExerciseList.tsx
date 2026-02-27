@@ -20,7 +20,7 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
 
   return (
     <View className="flex flex-col flex-1 " style={{ gap: 8 }}>
-      <View className="flex flex-row justify-between">
+      <View className="flex flex-row justify-between w-full">
         <Text
           style={{ fontFamily: "OpenSans_700Bold" }}
           className="text-textColor text-base smallPhone:text-sm"
