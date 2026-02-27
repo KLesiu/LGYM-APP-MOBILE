@@ -1,6 +1,5 @@
 import React from "react";
-import { BodyParts } from "../../../../enums/BodyParts";
-import { Text,Image} from "react-native";
+import { Text } from "react-native";
 import Card from "../../elements/Card";
 import BodyPartImage from "../../elements/BodyPartImage";
 import { EnumLookupDto } from "../../../../api/generated/model";
@@ -14,7 +13,7 @@ const BodyPartsListElement:React.FC<BodyPartsListElementProps> =({bodyPart, onSe
    return(
     <Card customClasses="flex items-center mb-2" onPress={()=>onSelectBodyPart(bodyPart)}>
         <Text className="font-bold text-xl  text-textColor" style={{fontFamily: "OpenSans_700Bold"}}>{  bodyPart.displayName}</Text>
-        <BodyPartImage bodyPart={bodyPart.name as BodyParts} />
+        <BodyPartImage bodyPart={bodyPart.name} />
     </Card>
    )
 
