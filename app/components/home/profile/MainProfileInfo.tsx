@@ -10,6 +10,7 @@ import Checkbox from "../../elements/Checkbox";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../../elements/LanguageSwitcher";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuthStore } from "../../../../stores/useAuthStore";
 import {
   getGetApiGetUsersRankingQueryKey,
   getApiDeleteAccount,
@@ -31,6 +32,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
     clearBeforeLogout,
     changeIsVisibleInRanking,
   } = useAppContext();
+  const { user, setUser } = useAuthStore();
   const [
     isDeleteConfirmationDialogVisible,
     setIsDeleteConfirmationDialogVisible,
@@ -62,13 +64,22 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   const deleteAccount = async (): Promise<void> => {
     await getApiDeleteAccount();
     setIsDeleteConfirmationDialogVisible(false);
-    await logout();
+    await clearBeforeLogout();
+    router.push("/");
   };
 
   const changeVisibility = async (newValue: boolean): Promise<void> => {
     const previousValue = isVisibleInRankingState;
+    const previousUser = user;
+
     setIsVisibleInRankingState(newValue);
     changeIsVisibleInRanking(newValue);
+    if (user) {
+      setUser({
+        ...user,
+        isVisibleInRanking: newValue,
+      });
+    }
 
     try {
       await changeVisibilityMutation({
@@ -85,6 +96,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
     } catch {
       setIsVisibleInRankingState(previousValue);
       changeIsVisibleInRanking(previousValue);
+      setUser(previousUser);
     }
   };
 

@@ -25,7 +25,7 @@ import {
 import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../../stores/useAuthStore";
-import { hasPermissionClaim } from "../../../../utils/authorization";
+import { isAdminUser } from "../../../../utils/authorization";
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -90,7 +90,7 @@ const Exercises: React.FC<ExercisesProps> = ({
   }, [userExercisesData]);
 
 
-  const isAdmin = hasPermissionClaim(user, "admin.access");
+  const isAdmin = isAdminUser(user);
 
   const filteredGlobalExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart
