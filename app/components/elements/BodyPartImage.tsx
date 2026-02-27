@@ -39,37 +39,40 @@ const resolveBodyPart = (value?: string | null): ExerciseBodyPartValue => {
   return ExerciseFormDtoBodyPart.Unknown;
 };
 
-const BodyPartImage: React.FC<BodyPartImageProps> = ({ bodyPart, showBig = false }) => {
-  const getImageSource = (part: ExerciseBodyPartValue): ImageSourcePropType | null => {
-    switch (part) {
-      case ExerciseFormDtoBodyPart.Chest:
-        return showBig ? ChestBig : Chest;
-      case ExerciseFormDtoBodyPart.Back:
-        return showBig ? BackBig : Back;
-      case ExerciseFormDtoBodyPart.Shoulders:
-        return showBig ? ShouldersBig : Shoulders;
-      case ExerciseFormDtoBodyPart.Abs:
-        return showBig ? AbsBig : Abs;
-      case ExerciseFormDtoBodyPart.Biceps:
-        return showBig ? BicepsBig : Biceps;
-      case ExerciseFormDtoBodyPart.Triceps:
-        return showBig ? TricepsBig : Triceps;
-      case ExerciseFormDtoBodyPart.Forearms:
-        return showBig ? ForearmsBig : Forearms;
-      case ExerciseFormDtoBodyPart.Quads:
-        return showBig ? QuadsBig : Quads;
-      case ExerciseFormDtoBodyPart.Hamstrings:
-        return showBig ? HamstringsBig : Hamstrings;
-      case ExerciseFormDtoBodyPart.Calves:
-        return showBig ? CalvesBig : Calves;
-      case ExerciseFormDtoBodyPart.Glutes:
-        return showBig ? GlutesBig : Glutes;
-      default:
-        return null;
-    }
-  };
+const REGULAR_IMAGES: Partial<Record<ExerciseBodyPartValue, ImageSourcePropType>> = {
+  [ExerciseFormDtoBodyPart.Chest]: Chest,
+  [ExerciseFormDtoBodyPart.Back]: Back,
+  [ExerciseFormDtoBodyPart.Shoulders]: Shoulders,
+  [ExerciseFormDtoBodyPart.Abs]: Abs,
+  [ExerciseFormDtoBodyPart.Biceps]: Biceps,
+  [ExerciseFormDtoBodyPart.Triceps]: Triceps,
+  [ExerciseFormDtoBodyPart.Forearms]: Forearms,
+  [ExerciseFormDtoBodyPart.Quads]: Quads,
+  [ExerciseFormDtoBodyPart.Hamstrings]: Hamstrings,
+  [ExerciseFormDtoBodyPart.Calves]: Calves,
+  [ExerciseFormDtoBodyPart.Glutes]: Glutes,
+};
 
-  const imageSource = getImageSource(resolveBodyPart(bodyPart));
+const BIG_IMAGES: Partial<Record<ExerciseBodyPartValue, ImageSourcePropType>> = {
+  [ExerciseFormDtoBodyPart.Chest]: ChestBig,
+  [ExerciseFormDtoBodyPart.Back]: BackBig,
+  [ExerciseFormDtoBodyPart.Shoulders]: ShouldersBig,
+  [ExerciseFormDtoBodyPart.Abs]: AbsBig,
+  [ExerciseFormDtoBodyPart.Biceps]: BicepsBig,
+  [ExerciseFormDtoBodyPart.Triceps]: TricepsBig,
+  [ExerciseFormDtoBodyPart.Forearms]: ForearmsBig,
+  [ExerciseFormDtoBodyPart.Quads]: QuadsBig,
+  [ExerciseFormDtoBodyPart.Hamstrings]: HamstringsBig,
+  [ExerciseFormDtoBodyPart.Calves]: CalvesBig,
+  [ExerciseFormDtoBodyPart.Glutes]: GlutesBig,
+};
+
+const BodyPartImage: React.FC<BodyPartImageProps> = ({ bodyPart, showBig = false }) => {
+  const resolvedBodyPart = resolveBodyPart(bodyPart);
+  const imageSource = showBig
+    ? BIG_IMAGES[resolvedBodyPart]
+    : REGULAR_IMAGES[resolvedBodyPart];
+
   if (!imageSource) {
     return null;
   }
