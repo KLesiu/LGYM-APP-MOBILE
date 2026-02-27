@@ -42,12 +42,13 @@ const Login: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       setErrors([]);
-      setAppErrors([]);
     }, [])
   );
 
   const login = async (): Promise<void> => {
-    if (!username || !password) {
+    const normalizedUsername = username?.trim();
+
+    if (!normalizedUsername || !password) {
       setErrors([t('auth.usernameAndPasswordRequired')]);
       return;
     }
@@ -55,7 +56,7 @@ const Login: React.FC = () => {
     mutate(
       {
         data: {
-          name: username,
+          name: normalizedUsername,
           password: password,
         },
       },
@@ -91,10 +92,13 @@ const Login: React.FC = () => {
             setToken(loginResponse.token);
             setUser(userInfo);
             setUserInfo(userInfo);
+            setAppErrors([]);
             router.push("/Home");
           } catch (error) {
             console.error("Error storing credentials:", error);
-            setErrors([t('auth.failedToStoreCredentials')]);
+            const message = t('auth.failedToStoreCredentials');
+            setErrors([message]);
+            setAppErrors([message]);
           }
         },
         onError: (error: any) => {

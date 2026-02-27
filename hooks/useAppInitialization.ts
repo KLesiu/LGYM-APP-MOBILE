@@ -13,11 +13,13 @@ import { usePostApiAppConfigGetAppVersion, postApiAppConfigGetAppVersionResponse
 import { getApiCheckToken } from "../api/generated/user/user";
 import { UserInfoDto } from "../api/generated/model";
 
+const SESSION_KEYS_TO_CLEAR = ["token", "username", "id", "email", "userInfo", "gym"] as const;
+
 export const useAppInitialization = () => {
   const router = useRouter();
   const [appConfig, setAppConfig] = useState<AppConfigInfoDto | null>(null);
   const [canValidateToken, setCanValidateToken] = useState<boolean>(false);
-  const { setIsTokenChecked, isTokenChecked, setUserInfo, setToken, token } = useAppContext();
+  const { setErrors, setIsTokenChecked, isTokenChecked, setUserInfo, setToken, token } = useAppContext();
   
   const { mutate: checkVersion } = usePostApiAppConfigGetAppVersion({});
 
@@ -55,6 +57,7 @@ export const useAppInitialization = () => {
     const tokenToValidate = token ?? (await AsyncStorage.getItem("token"));
 
     if (!tokenToValidate) {
+      useAuthStore.getState().logout();
       setIsTokenChecked(true);
       return;
     }
@@ -68,22 +71,13 @@ export const useAppInitialization = () => {
       const response = await getApiCheckToken();
       if (response?.data && "name" in response.data) {
         const userInfo = response.data as UserInfoDto;
-        await setSession(userInfo);
+        await setSession(userInfo, tokenToValidate);
         return;
       }
-      setToken(undefined);
-      setUserInfo(null);
-      useAuthStore.getState().setUser(null);
-      useAuthStore.getState().setToken(null);
-      setIsTokenChecked(true);
+      await resetSessionState("Authentication failed. Please log in again.");
     } catch (error) {
       console.error("Token check failed:", error);
-      await AsyncStorage.multiRemove(["token", "userInfo", "gym"]);
-      setToken(undefined);
-      setUserInfo(null);
-      useAuthStore.getState().setUser(null);
-      useAuthStore.getState().setToken(null);
-      setIsTokenChecked(true);
+      await resetSessionState("Session expired. Please log in again.");
     }
   };
 
@@ -100,16 +94,32 @@ export const useAppInitialization = () => {
     }
   };
 
-  const setSession = async (userInfo: UserInfoDto): Promise<void> => {
+  const setSession = async (userInfo: UserInfoDto, sessionToken: string): Promise<void> => {
     await AsyncStorage.setItem("username", userInfo.name ?? "");
     await AsyncStorage.setItem("id", userInfo._id ?? "");
     if (userInfo.email) {
       await AsyncStorage.setItem("email", userInfo.email);
     }
+    setErrors([]);
+    setToken(sessionToken);
+    useAuthStore.getState().setToken(sessionToken);
     setIsTokenChecked(true);
     setUserInfo(userInfo);
     useAuthStore.getState().setUser(userInfo);
     router.replace("/Home");
+  };
+
+  const resetSessionState = async (errorMessage?: string): Promise<void> => {
+    await AsyncStorage.multiRemove([...SESSION_KEYS_TO_CLEAR]);
+    setToken(undefined);
+    setUserInfo(null);
+    useAuthStore.getState().logout();
+    setIsTokenChecked(true);
+
+    if (errorMessage) {
+      setErrors([errorMessage]);
+      router.replace("/Login");
+    }
   };
 
   const getAppVersion = () => {
