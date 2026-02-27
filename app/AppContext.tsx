@@ -83,7 +83,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     await Promise.allSettled(keys.map((key) => deleteFromStorage(key)));
     setUserInfo(null);
     setToken(undefined);
-    setIsTokenChecked(false);
+    setIsTokenChecked(true);
     useAuthStore.getState().logout();
     queryClient.clear();
   };
