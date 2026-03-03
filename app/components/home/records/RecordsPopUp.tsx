@@ -87,7 +87,30 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     }
 
     const normalizedInput = input.replace(",", ".");
-    const isPartialFloat = /^-?\d*\.?\d*$/.test(normalizedInput);
+    const isPartialFloat = (() => {
+      let dotsCount = 0;
+
+      for (let i = 0; i < normalizedInput.length; i += 1) {
+        const char = normalizedInput[i];
+
+        if (char === "-") {
+          if (i !== 0) return false;
+          continue;
+        }
+
+        if (char === ".") {
+          dotsCount += 1;
+          if (dotsCount > 1) return false;
+          continue;
+        }
+
+        if (char < "0" || char > "9") {
+          return false;
+        }
+      }
+
+      return true;
+    })();
 
     if (isPartialFloat) {
       setWeight(input);
