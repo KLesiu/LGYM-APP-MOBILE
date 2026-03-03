@@ -3,8 +3,8 @@ import AutoComplete from "./../../elements/Autocomplete";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "./../../../../types/models";
-import { isIntValidator } from "./../../../../helpers/numberValidator";
-import { WeightUnits } from "../../../../api/generated/model";
+import { isFloatValidator } from "./../../../../helpers/numberValidator";
+import { MainRecordsFormDtoUnit } from "../../../../api/generated/model";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "./../../../../interfaces/Dropdown";
 import Dialog from "../../elements/Dialog";
@@ -15,10 +15,15 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
 import { useGetApiExerciseIdGetAllExercises } from "../../../../api/generated/exercise/exercise";
-import { usePostApiMainRecordsIdAddNewRecord } from "../../../../api/generated/main-records/main-records";
+import {
+  getGetApiMainRecordsIdGetLastMainRecordsQueryKey,
+  getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey,
+  usePostApiMainRecordsIdAddNewRecord,
+} from "../../../../api/generated/main-records/main-records";
 
 import { ExerciseResponseDto } from "../../../../api/generated/model";
 import { BodyParts } from "../../../../enums/BodyParts";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RecordsPopUpProps {
   offPopUp: () => void;
@@ -26,6 +31,7 @@ interface RecordsPopUpProps {
 }
 const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
     []
@@ -75,24 +81,77 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const clearAutoCompleteQuery = () => setClearQuery(false);
 
   const validator = (input: string): void => {
-    if (!input) return setWeight(input);
-    const result = isIntValidator(input);
-    if (result) setWeight(input);
+    if (!input) {
+      setWeight(input);
+      return;
+    }
+
+    const normalizedInput = input.replace(",", ".");
+    const isPartialFloat = (() => {
+      let dotsCount = 0;
+
+      for (let i = 0; i < normalizedInput.length; i += 1) {
+        const char = normalizedInput[i];
+
+        if (char === "-") {
+          if (i !== 0) return false;
+          continue;
+        }
+
+        if (char === ".") {
+          dotsCount += 1;
+          if (dotsCount > 1) return false;
+          continue;
+        }
+
+        if (char < "0" || char > "9") {
+          return false;
+        }
+      }
+
+      return true;
+    })();
+
+    if (isPartialFloat) {
+      setWeight(input);
+    }
   };
 
   const createNewRecord = async () => {
-    if (!weight || !selectedExercise) return setErrors([t('common.fieldRequired')]);
-    
+    if (!weight || !selectedExercise || !userId) {
+      return setErrors([t('common.fieldRequired')]);
+    }
+
+    const normalizedWeight = weight.replace(",", ".").trim();
+    if (!isFloatValidator(normalizedWeight)) {
+      return setErrors([t('common.fieldRequired')]);
+    }
+
     try {
-      await addNewRecordMutation({
+      const response = await addNewRecordMutation({
         id: userId,
         data: {
-          weight: parseFloat(weight),
+          weight: Number.parseFloat(normalizedWeight),
           exercise: selectedExercise.value,
-          unit: WeightUnits.Kilograms,
+          unit: MainRecordsFormDtoUnit.Kilograms,
           date: new Date().toISOString(),
         },
       });
+
+      if (response.status !== 200) {
+        setErrors([t("common.tryAgain")]);
+        return;
+      }
+
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: getGetApiMainRecordsIdGetLastMainRecordsQueryKey(userId),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey(userId),
+        }),
+      ]);
+
       props.offPopUp();
     } catch (error) {
       console.error("Error creating new record:", error);
@@ -157,7 +216,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-textColor "
               onChangeText={validator}
               value={weight}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
             />
           </View>
         </View>
