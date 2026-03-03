@@ -1,5 +1,5 @@
-import { Text, View, ScrollView, Pressable, Image } from "react-native";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { Text, View, ScrollView } from "react-native";
+import { useCallback, useEffect, useState } from "react";
 import RecordsPopUp from "./RecordsPopUp";
 import ViewLoading from "../../elements/ViewLoading";
 
@@ -9,7 +9,6 @@ import CustomButton, {
 } from "../../elements/CustomButton";
 import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
-import { useAppContext } from "../../../AppContext";
 import { useHomeContext } from "../HomeContext";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import RecordsItem from "./RecordsItem";
@@ -17,14 +16,20 @@ import { FontWeights } from "../../../../enums/FontsProperties";
 import {
   useGetApiMainRecordsIdGetLastMainRecords,
   getApiMainRecordsIdDeleteMainRecord,
+  getGetApiMainRecordsIdGetLastMainRecordsQueryKey,
+  getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey,
 } from "../../../../api/generated/main-records/main-records";
 import { MainRecordsLastDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
+import { useIsFocused } from "@react-navigation/native";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface RecordsProps {}
 
 const Records: React.FC<RecordsProps> = () => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
+  const isFocused = useIsFocused();
   const [popUp, setPopUp] = useState<boolean>(false);
   const [exercise, setExercise] = useState<string | undefined>();
   const [choosenRecord, setChoosenRecord] = useState<
@@ -44,10 +49,30 @@ const Records: React.FC<RecordsProps> = () => {
     query: { enabled: !!userId },
   });
 
+  const refreshRecords = useCallback(async (): Promise<void> => {
+    if (!userId) return;
+
+    await Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: getGetApiMainRecordsIdGetLastMainRecordsQueryKey(userId),
+      }),
+      queryClient.invalidateQueries({
+        queryKey: getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey(userId),
+      }),
+    ]);
+
+    await refetchRecords();
+  }, [queryClient, refetchRecords, userId]);
+
+  useEffect(() => {
+    if (!isFocused || !userId) return;
+    void refreshRecords();
+  }, [isFocused, refreshRecords, userId]);
+
   const changePopUpValue: VoidFunction = useCallback((): void => {
     setPopUp(false);
-    refetchRecords();
-  }, [refetchRecords]);
+    void refreshRecords();
+  }, [refreshRecords]);
 
   const showPopUp = useCallback(() => {
     setPopUp(true);
@@ -66,7 +91,7 @@ const Records: React.FC<RecordsProps> = () => {
     if (!choosenRecord || !choosenRecord._id) return;
     try {
       await getApiMainRecordsIdDeleteMainRecord(choosenRecord._id);
-      await refetchRecords();
+      await refreshRecords();
     } finally {
       deleteDialogVisible(false);
     }
