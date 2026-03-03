@@ -1,14 +1,11 @@
 import { Text, View } from "react-native";
-import { useState, useEffect, useRef, useMemo } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import ReactNativeCalendarStrip from "react-native-calendar-strip";
 import TrainingSession from "./TrainingSession";
 import ViewLoading from "../../elements/ViewLoading";
 import { TrainingByDateDetails } from "./../../../../types/models";
-import { Message } from "./../../../../enums/Message";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
 import React from "react";
 import {
   usePostApiIdGetTrainingByDate,
@@ -18,27 +15,32 @@ import {
   TrainingByDateDetailsDto,
   WeightUnits,
 } from "../../../../api/generated/model";
-import { BodyParts } from "../../../../enums/BodyParts";
 import { useTranslation } from "react-i18next";
+import { useIsFocused } from "@react-navigation/native";
 import "moment/locale/pl";
 
 const History: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { userId } = useHomeContext();
+  const isFocused = useIsFocused();
   const calendar = useRef(null);
   const [trainings, setTrainings] = useState<TrainingByDateDetails[]>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
   const { mutateAsync: getTrainingByDateMutation } =
     usePostApiIdGetTrainingByDate();
-  const { data: trainingDatesData } = useGetApiIdGetTrainingDates(userId, {
+  const { data: trainingDatesData, refetch: refetchTrainingDates } = useGetApiIdGetTrainingDates(userId, {
     query: { enabled: !!userId },
   });
 
   const trainingDates = useMemo(() => {
-    if (!trainingDatesData?.data) return [];
-    return (trainingDatesData.data as any[]).map((date: any) => ({
-      date: date,
+    const dates = trainingDatesData?.data;
+    if (!Array.isArray(dates)) return [];
+
+    return dates
+      .filter((date): date is string => typeof date === "string" && !Number.isNaN(Date.parse(date)))
+      .map((date) => ({
+      date: new Date(date),
       dots: [{ color: "#94e798" }],
     }));
   }, [trainingDatesData]);
@@ -57,30 +59,48 @@ const History: React.FC = () => {
     };
   }, [i18n.language, t]);
 
-  useEffect(() => {
-    init();
-  }, []);
+  const resolveDateFromSelection = (dateValue: unknown): Date | null => {
+    const toValidDate = (value: unknown): Date | null => {
+      if (value instanceof Date && !Number.isNaN(value.getTime())) return value;
+      if (typeof value === "string" || typeof value === "number") {
+        const parsedDate = new Date(value);
+        if (!Number.isNaN(parsedDate.getTime())) return parsedDate;
+      }
+      return null;
+    };
 
-  const init = async () => {
-    setViewLoading(true);
-    const initialDateObj = { _d: new Date() };
-    await getTrainingByDate(initialDateObj);
-    setViewLoading(false);
+    const directDate = toValidDate(dateValue);
+    if (directDate) return directDate;
+
+    if (dateValue && typeof dateValue === "object" && "_d" in dateValue) {
+      return toValidDate((dateValue as { _d?: unknown })._d);
+    }
+
+    return null;
   };
 
-  const getTrainingByDate = async (dateObject: any): Promise<void> => {
-    const date: Date = new Date(dateObject._d);
-    if (!date) return;
+  const getTrainingByDate = useCallback(async (dateValue: unknown): Promise<void> => {
+    if (!userId) return;
+
+    const date = resolveDateFromSelection(dateValue);
+    if (!date) {
+      setTrainings([]);
+      return;
+    }
+
     setViewLoading(true);
+
     try {
       const result = await getTrainingByDateMutation({
         id: userId,
         data: { createdAt: date.toISOString() },
       });
-      
-      const mappedTrainings: TrainingByDateDetails[] = (
-        result.data as TrainingByDateDetailsDto[]
-      ).map((dto) => ({
+
+      const rawTrainings = Array.isArray(result.data)
+        ? (result.data as TrainingByDateDetailsDto[])
+        : [];
+
+      const mappedTrainings: TrainingByDateDetails[] = rawTrainings.map((dto) => ({
         _id: dto._id || "",
         type: dto.type || "",
         createdAt: dto.createdAt ? new Date(dto.createdAt) : new Date(),
@@ -88,24 +108,26 @@ const History: React.FC = () => {
           name: dto.planDay?.name || "",
         },
         gym: dto.gym || "",
-        exercises:
-          dto.exercises?.map((exercise) => ({
+        exercises: Array.isArray(dto.exercises)
+          ? dto.exercises.map((exercise) => ({
             exerciseScoreId: exercise.exerciseScoreId || "",
-            scoresDetails:
-              exercise.scoresDetails?.map((score) => ({
+            scoresDetails: Array.isArray(exercise.scoresDetails)
+              ? exercise.scoresDetails.map((score) => ({
                 _id: score._id || undefined,
                 weight: score.weight || 0,
-                unit: (score.unit?.displayName as WeightUnits) || WeightUnits.Kilograms,
+                unit: score.unit?.displayName || WeightUnits.Kilograms,
                 reps: score.reps || 0,
                 exercise: score.exercise || "",
                 series: score.series || 0,
-              })) || [],
+              }))
+              : [],
             exerciseDetails: {
               _id: exercise.exerciseDetails?._id || "",
               name: exercise.exerciseDetails?.name || "",
-              bodyPart: (exercise.exerciseDetails?.bodyPart?.displayName as BodyParts) || BodyParts.Chest,
+              bodyPart: exercise.exerciseDetails?.bodyPart?.displayName || "",
             },
-          })) || [],
+          }))
+          : [],
       }));
 
       setTrainings(mappedTrainings);
@@ -114,7 +136,18 @@ const History: React.FC = () => {
     } finally {
       setViewLoading(false);
     }
-  };
+  }, [getTrainingByDateMutation, userId]);
+
+  useEffect(() => {
+    if (!isFocused || !userId) return;
+
+    const refreshHistory = async () => {
+      await refetchTrainingDates();
+      await getTrainingByDate(new Date());
+    };
+
+    void refreshHistory();
+  }, [getTrainingByDate, isFocused, refetchTrainingDates, userId]);
 
   return (
     <BackgroundMainSection>
