@@ -131,7 +131,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       const response = await addNewRecordMutation({
         id: userId,
         data: {
-          weight: parseFloat(normalizedWeight),
+          weight: Number.parseFloat(normalizedWeight),
           exercise: selectedExercise.value,
           unit: MainRecordsFormDtoUnit.Kilograms,
           date: new Date().toISOString(),
