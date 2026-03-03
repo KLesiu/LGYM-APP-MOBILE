@@ -103,7 +103,7 @@ const TrainingPlan: React.FC = () => {
 
   const isLoading = isPlanConfigLoading || isPlanDaysLoading || isSwitchingPlan;
 
-  const refetchAll = async () => {
+  const refetchAll = useCallback(async () => {
     await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlanConfigQueryKey(userId) });
     await queryClient.invalidateQueries({ queryKey: getGetApiIdGetPlansListQueryKey(userId) });
     await queryClient.invalidateQueries({ queryKey: getGetApiIdCheckIsUserHavePlanQueryKey(userId) });
@@ -113,7 +113,7 @@ const TrainingPlan: React.FC = () => {
         queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(planConfig._id),
       });
     }
-  };
+  }, [queryClient, userId, planConfig?._id]);
 
   const { refetch: triggerDeletePlanDay } = useGetApiPlanDayIdDeletePlanDay(
     currentPlanDay?._id || "",
@@ -176,7 +176,7 @@ const TrainingPlan: React.FC = () => {
     setShowPlanConfig(false);
     toggleMenuButton(false);
     await refetchAll();
-  }, [toggleMenuButton]);
+  }, [toggleMenuButton, refetchAll]);
 
 
   const copyPlan = async (code: string) => {
