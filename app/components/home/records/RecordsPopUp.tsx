@@ -3,7 +3,7 @@ import AutoComplete from "./../../elements/Autocomplete";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "./../../../../types/models";
-import { isIntValidator } from "./../../../../helpers/numberValidator";
+import { isFloatValidator } from "./../../../../helpers/numberValidator";
 import { MainRecordsFormDtoUnit } from "../../../../api/generated/model";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "./../../../../interfaces/Dropdown";
@@ -81,9 +81,17 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const clearAutoCompleteQuery = () => setClearQuery(false);
 
   const validator = (input: string): void => {
-    if (!input) return setWeight(input);
-    const result = isIntValidator(input);
-    if (result) setWeight(input);
+    if (!input) {
+      setWeight(input);
+      return;
+    }
+
+    const normalizedInput = input.replace(",", ".");
+    const isPartialFloat = /^-?\d*\.?\d*$/.test(normalizedInput);
+
+    if (isPartialFloat) {
+      setWeight(input);
+    }
   };
 
   const createNewRecord = async () => {
@@ -91,11 +99,16 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       return setErrors([t('common.fieldRequired')]);
     }
 
+    const normalizedWeight = weight.replace(",", ".").trim();
+    if (!isFloatValidator(normalizedWeight)) {
+      return setErrors([t('common.fieldRequired')]);
+    }
+
     try {
       const response = await addNewRecordMutation({
         id: userId,
         data: {
-          weight: parseFloat(weight),
+          weight: parseFloat(normalizedWeight),
           exercise: selectedExercise.value,
           unit: MainRecordsFormDtoUnit.Kilograms,
           date: new Date().toISOString(),
@@ -180,7 +193,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-textColor "
               onChangeText={validator}
               value={weight}
-              keyboardType="numeric"
+              keyboardType="decimal-pad"
             />
           </View>
         </View>
