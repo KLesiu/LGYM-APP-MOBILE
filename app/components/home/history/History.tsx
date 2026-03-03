@@ -19,6 +19,45 @@ import { useTranslation } from "react-i18next";
 import { useIsFocused } from "@react-navigation/native";
 import "moment/locale/pl";
 
+type TrainingExerciseDto = NonNullable<TrainingByDateDetailsDto["exercises"]>[number];
+type TrainingScoreDto = NonNullable<TrainingExerciseDto["scoresDetails"]>[number];
+
+const mapTrainingScore = (score: TrainingScoreDto) => ({
+  _id: score._id || undefined,
+  weight: score.weight || 0,
+  unit: score.unit?.displayName || WeightUnits.Kilograms,
+  reps: score.reps || 0,
+  exercise: score.exercise || "",
+  series: score.series || 0,
+});
+
+const mapTrainingExercise = (exercise: TrainingExerciseDto) => ({
+  exerciseScoreId: exercise.exerciseScoreId || "",
+  scoresDetails: Array.isArray(exercise.scoresDetails)
+    ? exercise.scoresDetails.map(mapTrainingScore)
+    : [],
+  exerciseDetails: {
+    _id: exercise.exerciseDetails?._id || "",
+    name: exercise.exerciseDetails?.name || "",
+    bodyPart: exercise.exerciseDetails?.bodyPart?.displayName || "",
+  },
+});
+
+const mapTrainingByDateDetails = (
+  dto: TrainingByDateDetailsDto
+): TrainingByDateDetails => ({
+  _id: dto._id || "",
+  type: dto.type || "",
+  createdAt: dto.createdAt ? new Date(dto.createdAt) : new Date(),
+  planDay: {
+    name: dto.planDay?.name || "",
+  },
+  gym: dto.gym || "",
+  exercises: Array.isArray(dto.exercises)
+    ? dto.exercises.map(mapTrainingExercise)
+    : [],
+});
+
 const History: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { userId } = useHomeContext();
@@ -96,39 +135,10 @@ const History: React.FC = () => {
         data: { createdAt: date.toISOString() },
       });
 
-      const rawTrainings = Array.isArray(result.data)
-        ? (result.data as TrainingByDateDetailsDto[])
-        : [];
-
-      const mappedTrainings: TrainingByDateDetails[] = rawTrainings.map((dto) => ({
-        _id: dto._id || "",
-        type: dto.type || "",
-        createdAt: dto.createdAt ? new Date(dto.createdAt) : new Date(),
-        planDay: {
-          name: dto.planDay?.name || "",
-        },
-        gym: dto.gym || "",
-        exercises: Array.isArray(dto.exercises)
-          ? dto.exercises.map((exercise) => ({
-            exerciseScoreId: exercise.exerciseScoreId || "",
-            scoresDetails: Array.isArray(exercise.scoresDetails)
-              ? exercise.scoresDetails.map((score) => ({
-                _id: score._id || undefined,
-                weight: score.weight || 0,
-                unit: score.unit?.displayName || WeightUnits.Kilograms,
-                reps: score.reps || 0,
-                exercise: score.exercise || "",
-                series: score.series || 0,
-              }))
-              : [],
-            exerciseDetails: {
-              _id: exercise.exerciseDetails?._id || "",
-              name: exercise.exerciseDetails?.name || "",
-              bodyPart: exercise.exerciseDetails?.bodyPart?.displayName || "",
-            },
-          }))
-          : [],
-      }));
+      const rawTrainings = Array.isArray(result.data) ? result.data : [];
+      const mappedTrainings: TrainingByDateDetails[] = rawTrainings.map(
+        mapTrainingByDateDetails
+      );
 
       setTrainings(mappedTrainings);
     } catch (error) {
