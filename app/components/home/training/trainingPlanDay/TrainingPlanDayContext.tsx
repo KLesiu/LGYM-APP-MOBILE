@@ -13,8 +13,7 @@ import { ScrollView } from "react-native";
 import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiPlanDayIdGetPlanDayQueryOptions } from "../../../../../api/generated/plan-day/plan-day";
-import { PlanDayVmDto } from "../../../../../api/generated/model";
-import { BodyParts } from "../../../../../enums/BodyParts";
+import { BodyParts, PlanDayVmDto } from "../../../../../api/generated/model";
 
 interface TrainingPlanDayContextType {
   setPlanDay: (planDay: PlanDayVm) => void;

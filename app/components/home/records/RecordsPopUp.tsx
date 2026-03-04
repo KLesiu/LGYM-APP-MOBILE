@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "./../../../../types/models";
 import { isFloatValidator } from "./../../../../helpers/numberValidator";
-import { MainRecordsFormDtoUnit } from "../../../../api/generated/model";
+import { BodyParts, MainRecordsFormDtoUnit } from "../../../../api/generated/model";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "./../../../../interfaces/Dropdown";
 import Dialog from "../../elements/Dialog";
@@ -22,7 +22,6 @@ import {
 } from "../../../../api/generated/main-records/main-records";
 
 import { ExerciseResponseDto } from "../../../../api/generated/model";
-import { BodyParts } from "../../../../enums/BodyParts";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface RecordsPopUpProps {
