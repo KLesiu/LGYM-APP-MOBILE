@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { isIntValidator } from "../../../../../helpers/numberValidator";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ExerciseForm } from "../../../../../types/models";
-import { BodyParts } from "../../../../../enums/BodyParts";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import { DropdownItem } from "../../../../../interfaces/Dropdown";
 import Dialog from "../../../elements/Dialog";
@@ -19,7 +18,7 @@ import {
   usePostApiExerciseIdGetExerciseByBodyPart,
 } from "../../../../../api/generated/exercise/exercise";
 
-import { ExerciseResponseDto, EnumLookupDto } from "../../../../../api/generated/model";
+import { BodyParts, ExerciseResponseDto, EnumLookupDto } from "../../../../../api/generated/model";
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;

@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Pressable, View, Text, Switch, ScrollView } from "react-native";
-import { BodyParts } from "../../../../enums/BodyParts";
+import { BodyParts } from "../../../../api/generated/model";
 import BackIcon from "./../../../../img/icons/backIcon.svg";
 import SearchBox from "../../elements/SearchBox";
 import TypeOfExercises from "../../../../enums/TypeOfExercises";

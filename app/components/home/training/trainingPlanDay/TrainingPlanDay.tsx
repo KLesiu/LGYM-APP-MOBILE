@@ -1,7 +1,6 @@
 import { ScrollView, View } from "react-native";
 import { useEffect, useState } from "react";
 import TrainingPlanDayExerciseForm from "./TrainingPlanDayExerciseForm";
-import { BodyParts } from "../../../../../enums/BodyParts";
 import {
   TrainingSessionScores,
 } from "../../../../../types/models";
@@ -34,6 +33,7 @@ import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/g
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiGetUsersRankingQueryKey } from "../../../../../api/generated/user/user";
 import {
+  BodyParts,
   ExerciseResponseDto,
   ExerciseScoresTrainingFormDtoUnit,
   EnumLookupDto,

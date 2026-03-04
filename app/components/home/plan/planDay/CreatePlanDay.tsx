@@ -22,8 +22,7 @@ import {
   getGetApiPlanDayIdGetPlanDayQueryKey,
   getGetApiPlanDayIdGetPlanDaysInfoQueryKey,
 } from "../../../../../api/generated/plan-day/plan-day";
-import { PlanDayVmDto } from "../../../../../api/generated/model";
-import { BodyParts } from "../../../../../enums/BodyParts";
+import { BodyParts, PlanDayVmDto } from "../../../../../api/generated/model";
 
 interface CreatePlanDayProps {
   planId?: string;
