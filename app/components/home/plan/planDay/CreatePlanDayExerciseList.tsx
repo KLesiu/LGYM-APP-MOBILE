@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { View, Text, ScrollView, Keyboard, Platform } from "react-native";
 import {
   ExerciseForm,
   ExerciseForPlanDay,
@@ -18,6 +18,33 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
   const [isAddExercisesListVisible, setIsAddExercisesListVisible] =
     useState<boolean>(false);
+  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const ensureInputsVisible = () => {
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 80);
+  };
+
+  useEffect(() => {
+    const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
+    const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+
+    const keyboardShowSubscription = Keyboard.addListener(showEvent, (event) => {
+      setKeyboardHeight(event.endCoordinates.height);
+      ensureInputsVisible();
+    });
+
+    const keyboardHideSubscription = Keyboard.addListener(hideEvent, () => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      keyboardShowSubscription.remove();
+      keyboardHideSubscription.remove();
+    };
+  }, []);
 
   const toggleAddExercisesList = () => {
     setIsAddExercisesListVisible(!isAddExercisesListVisible);
@@ -85,7 +112,11 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
   return (
     <View className="w-full h-full">
-      <ScrollView>
+      <ScrollView
+        ref={scrollViewRef}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 24 + keyboardHeight }}
+      >
         <View className="flex flex-col px-5 py-2" style={{ gap: 16 }}>
           <View>
             <Text
@@ -107,6 +138,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
             editExerciseFromList={editExerciseFromList}
             removeExerciseFromList={removeExerciseFromList}
             moveExercise={moveExerciseInList}
+            onInputFocus={ensureInputsVisible}
           />
         </View>
       </ScrollView>

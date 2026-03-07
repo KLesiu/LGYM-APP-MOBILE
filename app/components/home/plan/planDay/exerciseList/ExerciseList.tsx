@@ -9,6 +9,7 @@ interface ExerciseListProps {
   removeExerciseFromList?: (item: ExerciseForPlanDay) => void;
   editExerciseFromList?: (item: ExerciseForPlanDay) => void;
   moveExercise?:(exercise:ExerciseForPlanDay, direction: 'up' | 'down')=>void;
+  onInputFocus?: () => void;
 }
 
 const ExerciseList: React.FC<ExerciseListProps> = (props) => {
@@ -45,6 +46,7 @@ const ExerciseList: React.FC<ExerciseListProps> = (props) => {
                 editExerciseFromList={props.editExerciseFromList}
                 moveExerciseUp={props.moveExercise ? () => props.moveExercise!(item, 'up') : undefined}
                 moveExerciseDown={props.moveExercise ? () => props.moveExercise!(item, 'down') : undefined}
+                onInputFocus={props.onInputFocus}
               />
             ))
           ) : (

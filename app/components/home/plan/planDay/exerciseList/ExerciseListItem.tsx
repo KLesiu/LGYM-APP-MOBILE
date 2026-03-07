@@ -16,6 +16,7 @@ interface ExerciseListItemProps {
   exerciseListItemPosition?: number;
   moveExerciseUp?: (item: ExerciseForPlanDay) => void;
   moveExerciseDown?: (item: ExerciseForPlanDay) => void;
+  onInputFocus?: () => void;
 }
 
 const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
@@ -25,6 +26,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
   exerciseListItemPosition,
   moveExerciseUp,
   moveExerciseDown,
+  onInputFocus,
 }) => {
   const { t } = useTranslation();
   const [seriesNumber, setSeriesNumber] = useState<string>(
@@ -139,6 +141,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                 keyboardType="numeric"
                 value={seriesNumber}
                 onChangeText={validator}
+                onFocus={onInputFocus}
               />
             </View>
             <View style={{ gap: 4 }} className="flex flex-col flex-1">
@@ -159,6 +162,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                 className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-textColor "
                 value={exerciseListItem.reps}
                 onChangeText={setReps}
+                onFocus={onInputFocus}
               />
             </View>
           </View>
