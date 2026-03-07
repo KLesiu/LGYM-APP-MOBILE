@@ -34,7 +34,8 @@ interface TrainingPlanDayContextType {
   ) => void;
   sendPlanDayToLocalStorage: (planDay: PlanDayVm) => Promise<void>;
   addNewExerciseToTrainingSessionScores: (
-    exercise: PlanDayExercisesFormVm
+    exercise: PlanDayExercisesFormVm,
+    insertAtIndex?: number
   ) => void;
   incrementOrDecrementExerciseInTrainingSessionScores: (
     exerciseId: string,
@@ -134,7 +135,8 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
   };
 
   const addNewExerciseToTrainingSessionScores = (
-    exercise: PlanDayExercisesFormVm
+    exercise: PlanDayExercisesFormVm,
+    insertAtIndex?: number
   ) => {
     if (!exercise.series || !exercise.exercise) return;
 
@@ -146,7 +148,18 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
           (score) => score.exercise._id !== exercise.exercise?._id
         ) ?? [];
 
-      return [...filteredScores, ...newScores];
+      const nextScores = [...filteredScores];
+      const hasValidInsertIndex =
+        typeof insertAtIndex === "number" && insertAtIndex >= 0;
+
+      if (hasValidInsertIndex) {
+        const safeInsertIndex = Math.min(insertAtIndex, nextScores.length);
+        nextScores.splice(safeInsertIndex, 0, ...newScores);
+        return nextScores;
+      }
+
+      nextScores.push(...newScores);
+      return nextScores;
     });
   };
 
@@ -154,28 +167,49 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
     exerciseId: string,
     seriesChange: number
   ) => {
-    const currentTrainingSessionScoresWithThisExericse =
-      trainingSessionScores.filter(
+    setTrainingSessionScores((prevScores) => {
+      const currentScoresForExercise = prevScores.filter(
         (score) => score.exercise._id === exerciseId
       );
-    if (seriesChange < 0) {
-      currentTrainingSessionScoresWithThisExericse.pop();
-    } else {
-      currentTrainingSessionScoresWithThisExericse.push({
-        exercise: currentTrainingSessionScoresWithThisExericse[0].exercise,
-        series: currentTrainingSessionScoresWithThisExericse.length + 1,
-        reps: "",
-        weight: "",
-      });
-    }
 
-    const newTrainingSessionScores = trainingSessionScores.filter(
-      (x) => x.exercise._id !== exerciseId
-    );
-    setTrainingSessionScores([
-      ...newTrainingSessionScores,
-      ...currentTrainingSessionScoresWithThisExericse,
-    ]);
+      if (!currentScoresForExercise.length) {
+        return prevScores;
+      }
+
+      const firstExerciseScoreIndex = prevScores.findIndex(
+        (score) => score.exercise._id === exerciseId
+      );
+
+      const updatedScoresForExercise =
+        seriesChange < 0
+          ? currentScoresForExercise.slice(0, -1)
+          : [
+              ...currentScoresForExercise,
+              {
+                exercise: currentScoresForExercise[0].exercise,
+                series: currentScoresForExercise.length + 1,
+                reps: "",
+                weight: "",
+              },
+            ];
+
+      const scoresWithoutCurrentExercise = prevScores.filter(
+        (score) => score.exercise._id !== exerciseId
+      );
+
+      if (firstExerciseScoreIndex === -1 || !updatedScoresForExercise.length) {
+        return scoresWithoutCurrentExercise;
+      }
+
+      const nextScores = [...scoresWithoutCurrentExercise];
+      const safeInsertIndex = Math.min(
+        firstExerciseScoreIndex,
+        nextScores.length
+      );
+
+      nextScores.splice(safeInsertIndex, 0, ...updatedScoresForExercise);
+      return nextScores;
+    });
   };
 
   const toggleGymFilter = () => {
