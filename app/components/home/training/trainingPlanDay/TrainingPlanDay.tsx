@@ -398,11 +398,21 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const response = await getExercise(exerciseId);
     let newPlanDay: PlanDayVm = planDay;
     let exerciseIndex = -1;
+    let exerciseScoreInsertIndex: number | undefined;
 
     if (exerciseWhichBeingSwitched || isIncrementDecrement) {
       const idExercise = isIncrementDecrement
         ? exerciseId
         : exerciseWhichBeingSwitched;
+
+      if (idExercise) {
+        const foundScoreIndex = trainingSessionScores.findIndex(
+          (score) => score.exercise._id === idExercise
+        );
+        if (foundScoreIndex !== -1) {
+          exerciseScoreInsertIndex = foundScoreIndex;
+        }
+      }
 
       exerciseIndex = newPlanDay.exercises.findIndex(
         (e) => e.exercise._id === idExercise
@@ -427,7 +437,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
 
     if (!newPlanDay) return;
-    addNewExerciseToTrainingSessionScores(newExercise);
+    addNewExerciseToTrainingSessionScores(newExercise, exerciseScoreInsertIndex);
     setCurrentExercise(newExercise);
     await addExerciseToPlanDay(newPlanDay);
     setIsTrainingPlanDayExerciseFormShow(false);
