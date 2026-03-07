@@ -15,17 +15,26 @@ import { useHomeContext } from "../HomeContext";
 import BodyPartsList from "./BodyPartsList";
 import ExercisesList from "./ExercisesList";
 import ExerciseDetails from "./ExerciseDetails";
+import ExerciseTranslationDialog from "./ExerciseTranslationDialog";
 import BackIcon from "./../../../../img/icons/backIcon.svg";
 import {
   getGetApiExerciseGetAllGlobalExercisesQueryKey,
+  getGetApiExerciseIdGetAllExercisesQueryKey,
   getGetApiExerciseIdGetAllUserExercisesQueryKey,
   useGetApiExerciseGetAllGlobalExercises,
   useGetApiExerciseIdGetAllUserExercises,
+  usePostApiExerciseIdAddGlobalTranslation,
 } from "../../../../api/generated/exercise/exercise";
-import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
+import {
+  EnumLookupDto,
+  ExerciseResponseDto,
+  ExerciseTranslationDto,
+} from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../../stores/useAuthStore";
 import { isAdminUser } from "../../../../utils/authorization";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAppContext } from "../../../AppContext";
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -42,7 +51,9 @@ const Exercises: React.FC<ExercisesProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
+  const { setErrors } = useAppContext();
   const { user } = useAuthStore();
+  const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [selectedBodyPart, setSelectedBodyPart] = useState<EnumLookupDto | null>(
     null
@@ -53,6 +64,10 @@ const Exercises: React.FC<ExercisesProps> = ({
   );
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
   const [isExerciseFormVisible, setIsExerciseFormVisible] = useState(false);
+  const [exerciseToTranslate, setExerciseToTranslate] =
+    useState<ExerciseResponseDto | null>(null);
+
+  const addGlobalTranslationMutation = usePostApiExerciseIdAddGlobalTranslation();
 
   const {
     data: globalExercisesData,
@@ -112,6 +127,64 @@ const Exercises: React.FC<ExercisesProps> = ({
     setSelectedExercise(null);
   };
 
+  const closeTranslationForm = () => {
+    setExerciseToTranslate(null);
+    setErrors([]);
+  };
+
+  const refreshExerciseQueries = useCallback(async () => {
+    const invalidatePromises: Promise<unknown>[] = [
+      queryClient.invalidateQueries({
+        queryKey: getGetApiExerciseGetAllGlobalExercisesQueryKey(),
+      }),
+      ...(userId
+        ? [
+            queryClient.invalidateQueries({
+              queryKey: getGetApiExerciseIdGetAllExercisesQueryKey(userId),
+            }),
+            queryClient.invalidateQueries({
+              queryKey: getGetApiExerciseIdGetAllUserExercisesQueryKey(userId),
+            }),
+          ]
+        : []),
+    ];
+
+    await Promise.all(invalidatePromises);
+  }, [queryClient, userId]);
+
+  const addTranslation = async (data: {
+    culture: string;
+    name: string;
+  }): Promise<void> => {
+    if (!exerciseToTranslate?._id || !userId) {
+      setErrors([t("common.tryAgain")]);
+      return;
+    }
+
+    if (!isAdmin || exerciseToTranslate.user) {
+      setErrors([t("common.tryAgain")]);
+      return;
+    }
+
+    const payload: ExerciseTranslationDto = {
+      exerciseId: exerciseToTranslate._id,
+      culture: data.culture,
+      name: data.name,
+    };
+
+    try {
+      await addGlobalTranslationMutation.mutateAsync({
+        id: userId,
+        data: payload,
+      });
+      await refreshExerciseQueries();
+      await Promise.all([refetchUser(), refetchGlobal()]);
+      closeTranslationForm();
+    } catch (error) {
+      setErrors([t("common.tryAgain")]);
+    }
+  };
+
   const openExerciseForm = useCallback(
     (global = false) => {
       setIsGlobal(global);
@@ -162,6 +235,7 @@ const Exercises: React.FC<ExercisesProps> = ({
             bodyPart={selectedBodyPart!}
             goBack={goBack}
             selectExercise={selectExercise}
+            addTranslation={setExerciseToTranslate}
             userExercises={filteredUserExercisesByBodyPart}
             globalExercises={filteredGlobalExercisesByBodyPart}
             isCreatePlanDayMode={isCreatePlanDayMode}
@@ -227,6 +301,14 @@ const Exercises: React.FC<ExercisesProps> = ({
           isAdmin={isAdmin}
           isGlobal={isGlobal}
           form={selectedExercise ?? undefined}
+        />
+      )}
+      {exerciseToTranslate && (
+        <ExerciseTranslationDialog
+          exercise={exerciseToTranslate}
+          isSaving={addGlobalTranslationMutation.isPending}
+          onCancel={closeTranslationForm}
+          onSubmit={addTranslation}
         />
       )}
     </BackgroundMainSection>

@@ -18,6 +18,7 @@ interface ExercisesListProps {
   userExercises: ExerciseResponseDto[];
   globalExercises: ExerciseResponseDto[];
   selectExercise: (exercise: ExerciseResponseDto, isEditing: boolean) => void;
+  addTranslation: (exercise: ExerciseResponseDto) => void;
   isCreatePlanDayMode?: boolean;
   addExerciseToList?: (exercise: ExerciseResponseDto) => void;
   exercisesList?: ExerciseForPlanDay[];
@@ -29,6 +30,7 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
   userExercises,
   globalExercises,
   selectExercise,
+  addTranslation,
   isCreatePlanDayMode,
   addExerciseToList,
   exercisesList,
@@ -106,6 +108,7 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
                 addExerciseToList={addExerciseToList}
                 exercisesList={exercisesList}
                 editExercise={() => selectExercise(exercise, true)}
+                addTranslation={addTranslation}
               />
             ))
           : filteredUserExercises.map((exercise) => (
@@ -117,6 +120,7 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
                 addExerciseToList={addExerciseToList}
                 exercisesList={exercisesList}
                 editExercise={() => selectExercise(exercise, true)}
+                addTranslation={addTranslation}
               />
             ))}
       </ScrollView>

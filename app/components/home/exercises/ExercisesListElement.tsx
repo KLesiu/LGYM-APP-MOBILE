@@ -15,6 +15,7 @@ interface ExercisesListElementProps {
   onPress: (exercise: ExerciseResponseDto) => void;
   isGlobal?: boolean;
   editExercise: (exercise: ExerciseResponseDto) => void;
+  addTranslation?: (exercise: ExerciseResponseDto) => void;
   isCreatePlanDayMode?: boolean;
   addExerciseToList?: (exercise: ExerciseResponseDto) => void;
   exercisesList?: ExerciseForPlanDay[];
@@ -25,6 +26,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
   onPress,
   isGlobal = false,
   editExercise,
+  addTranslation,
   isCreatePlanDayMode,
   addExerciseToList,
   exercisesList
@@ -58,6 +60,11 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
         </View>
       ) : (
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
+          {isGlobal && isAdmin && addTranslation && (
+            <Pressable onPress={() => addTranslation(exercise)}>
+              <Ionicons name="language-outline" size={24} color="white" />
+            </Pressable>
+          )}
           {((isGlobal && isAdmin) || !isGlobal) && (
             <Pressable onPress={() => editExercise(exercise)}>
               <EditIcon fill={"white"} width={24} height={24} />

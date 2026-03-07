@@ -104,6 +104,9 @@
     "new": "Nowe",
     "search": "Szukaj",
     "addExercise": "Dodaj Ćwiczenie",
+    "addTranslation": "Dodaj tłumaczenie",
+    "translationLanguage": "Język",
+    "translationName": "Przetłumaczona nazwa",
     "history": "Historia",
     "noHistoryAvailable": "Brak historii"
   },
