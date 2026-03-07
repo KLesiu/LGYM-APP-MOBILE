@@ -31,7 +31,10 @@ import {
 } from "../../../../../api/generated/training/training";
 import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
-import { getGetApiGetUsersRankingQueryKey } from "../../../../../api/generated/user/user";
+import {
+  getApiCheckToken,
+  getGetApiGetUsersRankingQueryKey,
+} from "../../../../../api/generated/user/user";
 import {
   BodyParts,
   ExerciseResponseDto,
@@ -44,7 +47,6 @@ import {
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../../../stores/useAuthStore";
 import { useAppContext } from "../../../../AppContext";
-import { getApiCheckToken } from "../../../../../api/generated/user/user";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
