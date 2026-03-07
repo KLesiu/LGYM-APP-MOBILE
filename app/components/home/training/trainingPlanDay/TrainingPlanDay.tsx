@@ -29,6 +29,10 @@ import {
   getGetApiIdGetLastTrainingQueryKey,
   usePostApiIdAddTraining,
 } from "../../../../../api/generated/training/training";
+import {
+  getGetApiMainRecordsIdGetLastMainRecordsQueryKey,
+  getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey,
+} from "../../../../../api/generated/main-records/main-records";
 import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -323,6 +327,12 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                invalidatePromises.push(
                  queryClient.invalidateQueries({
                    queryKey: getGetApiIdGetLastTrainingQueryKey(userId),
+                 }),
+                 queryClient.invalidateQueries({
+                   queryKey: getGetApiMainRecordsIdGetLastMainRecordsQueryKey(userId),
+                 }),
+                 queryClient.invalidateQueries({
+                   queryKey: getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey(userId),
                  })
                );
              }
@@ -337,6 +347,14 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                  ? [
                      queryClient.refetchQueries({
                        queryKey: getGetApiIdGetLastTrainingQueryKey(userId),
+                       type: "all",
+                     }),
+                     queryClient.refetchQueries({
+                       queryKey: getGetApiMainRecordsIdGetLastMainRecordsQueryKey(userId),
+                       type: "all",
+                     }),
+                     queryClient.refetchQueries({
+                       queryKey: getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey(userId),
                        type: "all",
                      }),
                    ]

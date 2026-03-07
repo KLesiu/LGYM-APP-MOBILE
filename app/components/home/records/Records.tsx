@@ -21,7 +21,6 @@ import {
 } from "../../../../api/generated/main-records/main-records";
 import { MainRecordsLastDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
-import { useIsFocused } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface RecordsProps {}
@@ -29,7 +28,6 @@ interface RecordsProps {}
 const Records: React.FC<RecordsProps> = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const isFocused = useIsFocused();
   const [popUp, setPopUp] = useState<boolean>(false);
   const [exercise, setExercise] = useState<string | undefined>();
   const [choosenRecord, setChoosenRecord] = useState<
@@ -46,7 +44,10 @@ const Records: React.FC<RecordsProps> = () => {
     isLoading: isRecordsLoading,
     refetch: refetchRecords,
   } = useGetApiMainRecordsIdGetLastMainRecords(userId, {
-    query: { enabled: !!userId },
+    query: {
+      enabled: !!userId,
+      refetchOnMount: "always",
+    },
   });
 
   const refreshRecords = useCallback(async (): Promise<void> => {
@@ -65,9 +66,9 @@ const Records: React.FC<RecordsProps> = () => {
   }, [queryClient, refetchRecords, userId]);
 
   useEffect(() => {
-    if (!isFocused || !userId) return;
+    if (!userId) return;
     void refreshRecords();
-  }, [isFocused, refreshRecords, userId]);
+  }, [refreshRecords, userId]);
 
   const changePopUpValue: VoidFunction = useCallback((): void => {
     setPopUp(false);
