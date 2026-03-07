@@ -31,7 +31,10 @@ import {
 } from "../../../../../api/generated/training/training";
 import { getGetApiExerciseIdGetExerciseQueryOptions } from "../../../../../api/generated/exercise/exercise";
 import { useQueryClient } from "@tanstack/react-query";
-import { getGetApiGetUsersRankingQueryKey } from "../../../../../api/generated/user/user";
+import {
+  getApiCheckToken,
+  getGetApiGetUsersRankingQueryKey,
+} from "../../../../../api/generated/user/user";
 import {
   BodyParts,
   ExerciseResponseDto,
@@ -43,6 +46,7 @@ import {
 } from "../../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../../../stores/useAuthStore";
+import { useAppContext } from "../../../../AppContext";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -176,6 +180,7 @@ const getKilogramsUnit = (): ExerciseScoresTrainingFormDtoUnit =>
 const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const { t } = useTranslation();
   const { changeHeaderVisibility, userId } = useHomeContext();
+  const { setUserInfo } = useAppContext();
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
@@ -212,6 +217,50 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       changeHeaderVisibility(true);
     };
   }, []);
+
+  const syncCurrentUserAfterTraining = async (
+    fallbackSummary: TrainingSummary,
+    trainingSummaryData: Record<string, unknown>,
+    hasUserOldEloFromApi: boolean
+  ) => {
+    try {
+      const response = await getApiCheckToken();
+      if (response?.data && "name" in response.data) {
+        const freshUser = response.data;
+        setUser(freshUser);
+        setUserInfo(freshUser);
+        return;
+      }
+    } catch (error) {
+      console.error("Failed to refresh user after training", error);
+    }
+
+    if (!user) {
+      return;
+    }
+
+    const currentElo = hasUserOldEloFromApi
+      ? Number(trainingSummaryData.userOldElo)
+      : Number(user.elo ?? 0);
+    const gainElo = Number(fallbackSummary.gainElo ?? 0);
+    const updatedElo = currentElo + gainElo;
+    const hasProfileRankFromApi = hasRankName(trainingSummaryData.profileRank);
+    const hasNextRankFromApi = Object.hasOwn(trainingSummaryData, "nextRank");
+
+    const fallbackUser = {
+      ...user,
+      elo: updatedElo,
+      profileRank: hasProfileRankFromApi
+        ? fallbackSummary.profileRank?.name
+        : user.profileRank,
+      nextRank: hasNextRankFromApi
+        ? (fallbackSummary.nextRank ?? undefined)
+        : user.nextRank,
+    };
+
+    setUser(fallbackUser);
+    setUserInfo(fallbackUser);
+  };
 
   /// Submit training and delete training session from localStorage then show summary.
   const addTraining = async (exercises: TrainingSessionScores[]) => {
@@ -264,27 +313,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
              };
              props.setTrainingSummary(normalizedSummary);
 
-             if (user) {
-                const currentElo = hasUserOldEloFromApi
-                  ? Number(trainingSummaryData.userOldElo)
-                  : Number(user.elo ?? 0);
-                const gainElo = Number(normalizedSummary.gainElo ?? 0);
-                const updatedElo = currentElo + gainElo;
-                const hasProfileRankFromApi = hasRankName(trainingSummaryData.profileRank);
-                const hasNextRankFromApi = Object.hasOwn(trainingSummaryData, "nextRank");
-
-                 setUser({
-                   ...user,
-                   elo: updatedElo,
-                   profileRank: hasProfileRankFromApi
-                    ? normalizedSummary.profileRank?.name
-                    : user.profileRank,
-                   nextRank: hasNextRankFromApi
-                    ? (normalizedSummary.nextRank ?? undefined)
-                    : user.nextRank,
-                 });
-               }
-
              const invalidatePromises = [
                queryClient.invalidateQueries({
                  queryKey: getGetApiGetUsersRankingQueryKey(),
@@ -300,6 +328,26 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
              }
 
              await Promise.all(invalidatePromises);
+             await Promise.all([
+               queryClient.refetchQueries({
+                 queryKey: getGetApiGetUsersRankingQueryKey(),
+                 type: "all",
+               }),
+               ...(userId
+                 ? [
+                     queryClient.refetchQueries({
+                       queryKey: getGetApiIdGetLastTrainingQueryKey(userId),
+                       type: "all",
+                     }),
+                   ]
+                 : []),
+             ]);
+
+             await syncCurrentUserAfterTraining(
+               normalizedSummary,
+               trainingSummaryData,
+               hasUserOldEloFromApi
+             );
         }
     } catch (e) {
         console.error(e);
