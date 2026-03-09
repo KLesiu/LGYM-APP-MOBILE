@@ -27,24 +27,24 @@ const CreatePlanDayName: React.FC = () => {
   }, [planDayName]);
 
   return (
-    <View className="w-full h-full">
-      <View className="px-5 py-2">
-        <Text
-          className="text-3xl smallPhone:text-xl text-textColor"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          {t('plans.newPlanDay')}
-        </Text>
-      </View>
-      <View className="px-5" style={{ gap: 16 }}>
+    <View className="w-full flex-1">
+      <View className="flex-1 px-5 py-2" style={{ gap: 16 }}>
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
           <PlanNameIcon />
-          <Text
-            className="text-xl smallPhone:text-base text-textColor"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            {t('plans.setPlanName')}
-          </Text>
+          <View style={{ gap: 2 }}>
+            <Text
+              className="text-xl smallPhone:text-base text-textColor"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              {t('plans.setPlanName')}
+            </Text>
+            <Text
+              className="text-sm text-fifthColor"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              {t('plans.nameStepDescription')}
+            </Text>
+          </View>
         </View>
         <View style={{ gap: 4 }} className="flex flex-col">
           <View className="flex flex-row gap-1">
@@ -69,7 +69,7 @@ const CreatePlanDayName: React.FC = () => {
           />
         </View>
       </View>
-      <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
+      <View className="w-full p-5 flex flex-row justify-between" style={{ gap: 20 }}>
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
           onPress={goBack}

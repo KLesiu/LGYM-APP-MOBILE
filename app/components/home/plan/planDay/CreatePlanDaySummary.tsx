@@ -25,14 +25,22 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
   };
 
   return (
-    <View className="w-full h-full">
-      <View className="px-5 py-2">
-        <Text
-          className="text-3xl smallPhone:text-xl  text-textColor"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          {t('plans.summary')}
-        </Text>
+    <View className="w-full flex-1">
+      <View className="px-5 py-2" style={{ gap: 12 }}>
+        <View>
+          <Text
+            className="text-xl smallPhone:text-base text-textColor"
+            style={{ fontFamily: "OpenSans_700Bold" }}
+          >
+            {t('plans.summary')}
+          </Text>
+          <Text
+            className="text-sm text-fifthColor"
+            style={{ fontFamily: "OpenSans_400Regular" }}
+          >
+            {t('plans.summaryDescription')}
+          </Text>
+        </View>
         <View className="flex flex-row" style={{ gap: 8 }}>
           <PlanNameIcon />
           <Text
@@ -43,11 +51,11 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
           </Text>
         </View>
       </View>
-      <ScrollView className="px-5">
+      <ScrollView className="flex-1 w-full px-5">
         <ExerciseList exerciseList={exercisesList} />
       </ScrollView>
 
-      <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
+      <View className="w-full p-5 flex flex-row justify-between" style={{ gap: 20 }}>
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
           onPress={props.isPreview ? closeForm : goBack}
