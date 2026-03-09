@@ -1,12 +1,5 @@
 import React, { useEffect, useMemo } from "react";
 import { View, TouchableOpacity, Text, Animated, useWindowDimensions } from "react-native";
-import TrainingPlan from "../home/plan/TrainingPlan";
-import History from "../home/history/History";
-import AddTraining from "../home/training/Training";
-import Profile from "../home/profile/Profile";
-import Start from "../home/start/Start";
-import Exercises from "../home/exercises/Exercises";
-import Gym from "../home/gym/Gym";
 import HomeIcon from "./../../../img/icons/homeIcon.svg";
 import ProfileIcon from "./../../../img/icons/profileIcon.svg";
 import HistoryIcon from "./../../../img/icons/calendarIcon.svg";
@@ -17,8 +10,8 @@ import GymIcon from "./../../../img/icons/gymIcon.svg";
 import RecordIcon from "./../../../img/icons/recordsIcon.svg";
 import MenuIcon from "./../../../img/icons/menuIcon.svg";
 import { useHomeContext } from "../home/HomeContext";
-import Records from "../home/records/Records";
 import { useTranslation } from "react-i18next";
+import { DEFAULT_HOME_SCREEN, type HomeScreenId } from "../home/homeScreens";
 
 const Menu: React.FC = () => {
   const { t } = useTranslation();
@@ -26,14 +19,14 @@ const Menu: React.FC = () => {
     isExpanded,
     isMenuButtonVisible,
     animation,
-    changeView,
+    navigateToScreen,
     toggleMenu,
   } = useHomeContext();
   const { width } = useWindowDimensions();
 
   useEffect(() => {
-    changeView(<Start />);
-  }, []);
+    navigateToScreen(DEFAULT_HOME_SCREEN);
+  }, [navigateToScreen]);
 
   const animatedScale = animation.interpolate({
     inputRange: [0, 1],
@@ -50,36 +43,27 @@ const Menu: React.FC = () => {
     return { xMultiplier: 160, yMultiplier: 180 };
   }, [width]);
 
-  const startComponent = useMemo(() => <Start />, []);
-  const exercisesComponent = useMemo(() => <Exercises addExerciseToList={() => {}} />, []);
-  const gymComponent = useMemo(() => <Gym />, []);
-  const addTrainingComponent = useMemo(() => <AddTraining />, []);
-  const trainingPlanComponent = useMemo(() => <TrainingPlan />, []);
-  const historyComponent = useMemo(() => <History />, []);
-  const recordsComponent = useMemo(() => <Records />, []);
-  const profileComponent = useMemo(() => <Profile changeView={changeView} />, [changeView]);
-
   const menuItems = useMemo(() => {
     const items = [
-      { icon: <HomeIcon />, label: t("menu.home"), component: startComponent },
+      { icon: <HomeIcon />, label: t("menu.home"), screenId: DEFAULT_HOME_SCREEN },
       { 
         icon: <ExerciseIcon />, 
         label: t("menu.exercises"), 
-        component: exercisesComponent 
+        screenId: "EXERCISES" as HomeScreenId,
       },
-      { icon: <GymIcon />, label: t("menu.gym"), component: gymComponent },
+      { icon: <GymIcon />, label: t("menu.gym"), screenId: "GYM" as HomeScreenId },
       {
         icon: <AddTrainingIcon />,
         label: t("menu.training"),
-        component: addTrainingComponent,
+        screenId: "TRAINING" as HomeScreenId,
       },
-      { icon: <PlanIcon />, label: t("menu.plan"), component: trainingPlanComponent },
-      { icon: <HistoryIcon />, label: t("menu.history"), component: historyComponent },
-      { icon: <RecordIcon />, label: t("menu.records"), component: recordsComponent },
+      { icon: <PlanIcon />, label: t("menu.plan"), screenId: "PLAN" as HomeScreenId },
+      { icon: <HistoryIcon />, label: t("menu.history"), screenId: "HISTORY" as HomeScreenId },
+      { icon: <RecordIcon />, label: t("menu.records"), screenId: "RECORDS" as HomeScreenId },
       {
         icon: <ProfileIcon />,
         label: t("menu.profile"),
-        component: profileComponent,
+        screenId: "PROFILE" as HomeScreenId,
       },
     ];
 
@@ -92,7 +76,7 @@ const Menu: React.FC = () => {
       const y = Math.cos(angle) * yMultiplier;
       return { ...item, x, y };
     });
-  }, [menuConfig, t, startComponent, exercisesComponent, gymComponent, addTrainingComponent, trainingPlanComponent, historyComponent, recordsComponent, profileComponent]);
+  }, [menuConfig, t]);
 
   if (!isMenuButtonVisible) return null;
 
@@ -114,7 +98,7 @@ const Menu: React.FC = () => {
             {menuItems.map((item, index) => (
               <TouchableOpacity
                 key={index}
-                onPress={() => changeView(item.component)}
+                onPress={() => navigateToScreen(item.screenId)}
                 style={{
                   transform: [{ translateX: item.x }, { translateY: item.y }],
                   borderRadius: 10000,

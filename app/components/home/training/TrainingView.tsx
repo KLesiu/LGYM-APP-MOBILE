@@ -13,6 +13,8 @@ import TrainingPlanDayProvider from "./trainingPlanDay/TrainingPlanDayContext";
 import { TrainingViewSteps } from "../../../../enums/TrainingView";
 import React from "react";
 import { GymChoiceInfoDto } from "../../../../api/generated/model";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useOnboarding } from "../../../onboarding/OnboardingContext";
 
 interface TrainingViewProps {}
 
@@ -32,6 +34,7 @@ const isValidStoredGym = (gym: GymForm | null): gym is GymForm => {
 
 const TrainingView: React.FC<TrainingViewProps> = () => {
   const { toggleMenuButton } = useHomeContext();
+  const { openInfoForScreen, registerScreen, setStepAction } = useOnboarding();
 
   ///GYM
   const [gym, setGym] = useState<GymForm>();
@@ -44,6 +47,22 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     useState<TrainingSummaryInterface>();
 
   const [step, setStep] = useState<TrainingViewSteps>();
+
+  useEffect(() => {
+    registerScreen(
+      step === TrainingViewSteps.TRAINING_PLAN_DAY ? "TRAINING_VIEW" : "TRAINING"
+    );
+  }, [registerScreen, step]);
+
+  useEffect(() => {
+    setStepAction("TRAINING", () => {
+      getInformationAboutGyms();
+    });
+
+    return () => {
+      setStepAction("TRAINING", null);
+    };
+  }, [setStepAction]);
 
   useEffect(() => {
     init();
@@ -191,6 +210,17 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
 
   return (
     <View className="relative  flex flex-col justify-center items-center h-full w-full">
+      <View className="absolute right-5 top-5 z-20">
+        <Pressable
+          onPress={() =>
+            openInfoForScreen(
+              step === TrainingViewSteps.TRAINING_PLAN_DAY ? "TRAINING_VIEW" : "TRAINING"
+            )
+          }
+        >
+          <Ionicons name="book-outline" size={22} color="#e8e6e6" />
+        </Pressable>
+      </View>
       <StartTrainingControl
         isAddTrainingActive={isAddTrainingActive}
         getCurrentPlanDayTraining={getCurrentPlanDayTraining}

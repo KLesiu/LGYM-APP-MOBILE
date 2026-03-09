@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
 import { FontWeights } from "./../../../../enums/FontsProperties";
 import GymPlace from "./GymPlace";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import GymFormComponent from "./GymForm";
 import React from "react";
 import ConfirmDialog from "../../elements/ConfirmDialog";
@@ -14,6 +14,9 @@ import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../../api
 import type { GymChoiceInfoDto } from "../../../../api/generated/model";
 import { getErrorMessage } from "../../../../utils/errorHandler";
 import { useAppContext } from "../../../AppContext";
+import { useOnboarding } from "../../../onboarding/OnboardingContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { getGetApiGymIdGetGymsQueryKey } from "../../../../api/generated/gym/gym";
 
 const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
   if (!value || typeof value !== "object") return false;
@@ -28,8 +31,23 @@ const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
 
 const Gym: React.FC = () => {
   const { t } = useTranslation();
-  const { toggleMenuButton, hideMenu, userId } = useHomeContext();
+  const { toggleMenuButton, hideMenu, userId, navigateToScreen } = useHomeContext();
   const { setErrors } = useAppContext();
+  const { completeStep, currentStep, registerScreen, setStepAction } = useOnboarding();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    registerScreen("GYM");
+  }, [registerScreen]);
+
+  const handleGymFormSuccess = useCallback(async () => {
+    if (currentStep !== "GYM_CREATE") {
+      return;
+    }
+
+    await completeStep("GYM_CREATE");
+    navigateToScreen("PLAN");
+  }, [completeStep, currentStep, navigateToScreen]);
 
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
@@ -53,22 +71,35 @@ const Gym: React.FC = () => {
 
   const deleteGymMutation = usePostApiGymIdDeleteGym();
 
-  const addNewGym = useCallback(() => {
-    setCurrentChosenGym(undefined);
-    openForm();
-  }, []);
-
   const openForm = useCallback(() => {
     toggleMenuButton(true);
     setIsGymFormVisible(true);
   }, [toggleMenuButton]);
 
+  const addNewGym = useCallback(() => {
+    setCurrentChosenGym(undefined);
+    openForm();
+  }, [openForm]);
+
+  useEffect(() => {
+    setStepAction("GYM_CREATE", () => {
+      addNewGym();
+    });
+
+    return () => {
+      setStepAction("GYM_CREATE", null);
+    };
+  }, [addNewGym, setStepAction]);
+
   const closeForm = useCallback(async () => {
     await refetch();
+    await queryClient.invalidateQueries({
+      queryKey: getGetApiGymIdGetGymsQueryKey(userId),
+    });
     setIsGymFormVisible(false);
     toggleMenuButton(false);
     hideMenu();
-  }, [refetch, toggleMenuButton, hideMenu]);
+  }, [hideMenu, queryClient, refetch, toggleMenuButton, userId]);
 
   const deleteDialogVisible = useCallback(
     (visible: boolean, gym?: GymChoiceInfoDto) => {
@@ -146,7 +177,11 @@ const Gym: React.FC = () => {
         )}
       </View>
       {isGymFormVisible ? (
-        <GymFormComponent closeForm={closeForm} gym={currentChosenGym} />
+        <GymFormComponent
+          closeForm={closeForm}
+          gym={currentChosenGym}
+          onSubmitSuccess={!currentChosenGym ? handleGymFormSuccess : undefined}
+        />
       ) : (
         <></>
       )}

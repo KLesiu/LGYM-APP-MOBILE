@@ -184,6 +184,67 @@
     "deleteConfirmMessage": "Czy na pewno chcesz usunąć?",
     "lastTraining": "Ostatni trening:"
   },
+  "onboarding": {
+    "tutorial": {
+      "accentLabel": "Samouczek",
+      "steps": {
+        "gymIntro": {
+          "title": "Twoje Areny",
+          "description": "Każda siłownia jest inna. Dodaj ich wiele - domowa, sieciówka, czy plener. Dzięki temu Twój progres będzie przypisany do konkretnego miejsca i sprzętu.",
+          "primaryActionLabel": "Zdefiniuj Arenę"
+        },
+        "gymCreate": {
+          "title": "Baza Wypadowa",
+          "description": "Możesz dodać wiele miejsc: Dom, sieciówkę albo plener. To ważne, bo wyniki filtrujemy po konkretnej siłowni - różny sprzęt oznacza różne wyniki.",
+          "primaryActionLabel": "Dodaj Siłownię"
+        },
+        "planCreate": {
+          "title": "Fundament Formy",
+          "description": "Chaos nie sprzyja wynikom. Zbuduj konkretną rozpiskę (np. FBW, Split), która nada Twoim treningom strukturę.",
+          "primaryActionLabel": "Buduj Plan"
+        },
+        "planDayCreate": {
+          "title": "Podział Tygodnia",
+          "description": "Rozbij plan na dni treningowe (np. Klatka + Biceps). Dodaj pierwszy dzień i wybierz ćwiczenia, które będziesz w nim wykonywać.",
+          "primaryActionLabel": "Dodaj Dzień"
+        },
+        "training": {
+          "title": "Tryb Bojowy",
+          "description": "Wchodzisz na salę? Kliknij tutaj, wybierz dzień z planu i po prostu odhaczaj kolejne serie w trakcie treningu.",
+          "primaryActionLabel": "Zacznij Trening"
+        },
+        "trainingView": {
+          "title": "Kontekst Wyniku",
+          "description": "Wpisuj ciężar i powtórzenia. System zapamięta, że ten wynik zrobiłeś WŁAŚNIE NA TEJ siłowni, co pozwoli na miarodajne porównanie Twoich osiągów.",
+          "primaryActionLabel": "Jasne, działamy"
+        }
+      }
+    },
+    "help": {
+      "accentLabel": "Pomoc",
+      "primaryActionLabel": "Zamknij",
+      "gym": {
+        "title": "Zarządzanie Arenami",
+        "description": "Dodawaj i edytuj swoje siłownie. Pamiętaj, że wyniki ćwiczeń (np. rekordy w wyciskaniu) są przypisywane do konkretnej lokalizacji. Różne maszyny ważą różnie!"
+      },
+      "plan": {
+        "title": "Centrum Dowodzenia",
+        "description": "Tutaj trzymasz wszystkie swoje plany treningowe. Aktywny plan to ten, z którego domyślnie będziesz korzystać po wejściu na siłownię."
+      },
+      "planDay": {
+        "title": "Konstrukcja Dnia",
+        "description": "Skonfiguruj ten dzień treningowy: ustaw nazwę, dodaj odpowiednie ćwiczenia z bazy i zdefiniuj zakładaną ilość serii."
+      },
+      "training": {
+        "title": "Panel Startowy",
+        "description": "Przed startem zawsze podaj kontekst: Gdzie trenujesz? Co trenujesz (jaki dzień z planu)? Możesz też wejść bez planu, dodając ćwiczenia na bieżąco."
+      },
+      "trainingView": {
+        "title": "Dziennik Boju",
+        "description": "Zapisuj ciężar i powtórzenia dla każdej wykonanej serii. Zakończ trening dolnym przyciskiem, aby dane wpadły do Twoich statystyk i rekordów."
+      }
+    }
+  },
   "history": {
     "noSessionForDay": "Nie masz sesji treningowej w tym dniu!",
     "trainingWithPlan": "Trening {{planName}}",

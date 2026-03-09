@@ -2,8 +2,9 @@ import { View, Text, Pressable } from "react-native";
 import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import GymIcon from "./../../../../../../img/icons/gymIcon.svg";
 import BackIcon from "./../../../../../../img/icons/backIcon.svg"
-import Header from "../../../../layout/Header";
 import React from "react";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useOnboarding } from "../../../../../onboarding/OnboardingContext";
 
 interface TrainingPlanDayHeaderProps {
   hideDaySection: () => void;
@@ -13,11 +14,19 @@ const TrainingPlanDayHeader: React.FC<TrainingPlanDayHeaderProps> = ({
   hideDaySection,
 }) => {
   const { gym, planDayName } = useTrainingPlanDay();
+  const { openInfoForScreen } = useOnboarding();
   return (
     <View className="flex flex-row items-center w-full justify-between h-16 px-5 relative">
-       <Pressable onPress={hideDaySection}  style={{ borderRadius: 10000, zIndex: 50 }}
-         className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor ">
+      <Pressable onPress={hideDaySection}  style={{ borderRadius: 10000, zIndex: 50 }}
+        className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor ">
         <BackIcon />
+      </Pressable>
+      <Pressable
+        onPress={() => openInfoForScreen("TRAINING_VIEW")}
+        style={{ borderRadius: 10000, zIndex: 50 }}
+        className="absolute flex items-center right-4 justify-center w-8 h-8 bg-secondaryColor"
+      >
+        <Ionicons name="book-outline" size={16} color="#e8e6e6" />
       </Pressable>
       <View className="flex flex-col items-center w-full" style={{ gap: 4 }}>
         <Text

@@ -45,10 +45,13 @@ import Toast from "react-native-toast-message";
 import { toastConfig } from "../../../../helpers/toastConfig";
 import { PlanDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import { useOnboarding } from "../../../onboarding/OnboardingContext";
 
 const TrainingPlan: React.FC = () => {
   const { t } = useTranslation();
-  const { toggleMenuButton, hideMenu, userId, changeHeaderVisibility } = useHomeContext();
+  const { toggleMenuButton, hideMenu, userId, changeHeaderVisibility, navigateToScreen } = useHomeContext();
+  const { completeStep, currentStep, registerScreen, setStepAction } = useOnboarding();
   const queryClient = useQueryClient();
 
   const [isSwitchingPlan, setIsSwitchingPlan] = useState<boolean>(false);
@@ -150,6 +153,47 @@ const TrainingPlan: React.FC = () => {
     setIsPlansListVisible(true);
     toggleMenuButton(true);
   }, [toggleMenuButton]);
+
+  useEffect(() => {
+    registerScreen("PLAN");
+  }, [registerScreen]);
+
+  useEffect(() => {
+    setStepAction("PLAN_CREATE", () => {
+      togglePlanConfigPopUp(true);
+    });
+
+    return () => {
+      setStepAction("PLAN_CREATE", null);
+    };
+  }, [setStepAction, togglePlanConfigPopUp]);
+
+  useEffect(() => {
+    setStepAction("PLAN_DAY_CREATE", () => {
+      showPlanDayForm(undefined);
+    });
+
+    return () => {
+      setStepAction("PLAN_DAY_CREATE", null);
+    };
+  }, [setStepAction, showPlanDayForm]);
+
+  const handlePlanCreated = useCallback(async () => {
+    if (currentStep !== "PLAN_CREATE") {
+      return;
+    }
+
+    await completeStep("PLAN_CREATE");
+  }, [completeStep, currentStep]);
+
+  const handlePlanDayCreated = useCallback(async () => {
+    if (currentStep !== "PLAN_DAY_CREATE") {
+      return;
+    }
+
+    await completeStep("PLAN_DAY_CREATE");
+    navigateToScreen("TRAINING");
+  }, [completeStep, currentStep, navigateToScreen]);
 
   const hidePlansList = useCallback((): void => {
     setIsPlansListVisible(false);
@@ -380,6 +424,7 @@ const TrainingPlan: React.FC = () => {
         <CreatePlanConfig
           reloadSection={reloadSection}
           hidePlanConfig={() => togglePlanConfigPopUp(false)}
+          onSubmitSuccess={handlePlanCreated}
         />
       )}
       {isPlanDayFormVisible && planConfig && (
@@ -388,6 +433,7 @@ const TrainingPlan: React.FC = () => {
             isPreview={isPreviewPlanDay}
             planId={planConfig._id}
             planDayId={currentPlanDay?._id ?? ""}
+            onSaveSuccess={handlePlanDayCreated}
           />
         </PlanDayProvider>
       )}

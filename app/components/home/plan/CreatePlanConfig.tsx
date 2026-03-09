@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 interface CreatePlanConfigProps {
   reloadSection: VoidFunction;
   hidePlanConfig: VoidFunction;
+  onSubmitSuccess?: () => Promise<void> | void;
 }
 
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
@@ -38,6 +39,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
       {
         onSuccess: async () => {
           await props.reloadSection();
+          await props.onSubmitSuccess?.();
         },
         onError: (error) => {
           console.error("Failed to create plan:", error);

@@ -1,4 +1,4 @@
-import { View, Image, Text } from "react-native";
+import { View, Image, Text, Pressable } from "react-native";
 import { JSX, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LGYMLogo from "./../../../assets/logoLGYMNewX.png";
@@ -7,6 +7,8 @@ import ProfileRank from "../elements/ProfileRank";
 import { useAppContext } from "../../AppContext";
 import { useAuthStore } from "../../../stores/useAuthStore";
 import { useTranslation } from "react-i18next";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useOnboarding } from "../../onboarding/OnboardingContext";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -23,6 +25,7 @@ const Header: React.FC<HeaderProps> = ({
   const { userInfo, getRankColor } = useAppContext();
   const { user } = useAuthStore();
   const { t } = useTranslation();
+  const { canShowHelp, openInfoForScreen } = useOnboarding();
   
   const [name, setName] = useState<string>("");
 
@@ -67,6 +70,11 @@ const Header: React.FC<HeaderProps> = ({
 
       {children}
       <View className="flex flex-row items-center" style={{ gap: 8 }}>
+        {canShowHelp ? (
+          <Pressable onPress={() => openInfoForScreen()}>
+            <Ionicons name="book-outline" size={22} color="#e8e6e6" />
+          </Pressable>
+        ) : null}
         {userRank && <ProfileRank rank={userRank} customClasses="h-6 w-6" />}
 
         <View className="flex flex-row items-center gap-2">

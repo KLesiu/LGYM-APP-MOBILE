@@ -14,8 +14,9 @@ import type { GymFormDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 
 interface GymFormProps {
-  closeForm: () => void;
+  closeForm: () => Promise<void> | void;
   gym?: GymFormDto;
+  onSubmitSuccess?: () => Promise<void> | void;
 }
 
 const GymForm: React.FC<GymFormProps> = (props) => {
@@ -41,8 +42,9 @@ const GymForm: React.FC<GymFormProps> = (props) => {
     editGymMutation.mutate({
       data: payload,
     }, {
-      onSuccess: () => {
-        props.closeForm();
+      onSuccess: async () => {
+        await props.closeForm();
+        await props.onSubmitSuccess?.();
       },
       onError: (error: any) => {
         console.error("Error updating gym:", error);
@@ -60,8 +62,9 @@ const GymForm: React.FC<GymFormProps> = (props) => {
       id: userId,
       data: payload,
     }, {
-      onSuccess: () => {
-        props.closeForm();
+      onSuccess: async () => {
+        await props.closeForm();
+        await props.onSubmitSuccess?.();
       },
       onError: (error: any) => {
         console.error("Error creating gym:", error);

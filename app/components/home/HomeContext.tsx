@@ -10,6 +10,7 @@ import React, {
 import { createContext } from "react";
 import { Animated, BackHandler } from "react-native";
 import { useAuthStore } from "../../../stores/useAuthStore";
+import { DEFAULT_HOME_SCREEN, type HomeScreenId } from "./homeScreens";
 
 interface HomeContextProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -19,6 +20,8 @@ interface HomeContextProps {
   toggleMenu: () => void;
   hideMenu: () => void;
   changeView: (component?: JSX.Element) => void;
+  navigateToScreen: (screenId: HomeScreenId) => void;
+  currentScreen: HomeScreenId;
   userId: string;
   changeHeaderVisibility: (isVisible: boolean) => void;
 }
@@ -36,13 +39,17 @@ export const useHomeContext = (): HomeContextProps => {
 interface HomeProviderProps {
   children: React.ReactNode;
   viewChange: (view?: JSX.Element) => void;
+  navigateToScreen: (screenId: HomeScreenId) => void;
   changeHeaderVisibility: (isVisible: boolean) => void;
+  currentScreen: HomeScreenId;
 }
 
 const HomeProvider: React.FC<HomeProviderProps> = ({
   children,
   viewChange,
+  navigateToScreen,
   changeHeaderVisibility,
+  currentScreen,
 }) => {
   const { user } = useAuthStore();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -50,22 +57,6 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
   const userId = user?._id || "";
   const animation = useRef(new Animated.Value(0)).current;
 
-
-  useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      handleBackButton
-    );
-    return () => {
-      backHandler.remove();
-    };
-  }, []);
-
-  const handleBackButton = useCallback(() => {
-    changeView();
-    toggleMenuButton(false);
-    return true;
-  }, []);
 
   const toggleMenu = useCallback(() => {
     setIsExpanded((prev) => {
@@ -87,6 +78,22 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
     setIsMenuButtonVisible(!hide);
   }, []);
 
+  const handleBackButton = useCallback(() => {
+    navigateToScreen(DEFAULT_HOME_SCREEN);
+    toggleMenuButton(false);
+    return true;
+  }, [navigateToScreen, toggleMenuButton]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      handleBackButton
+    );
+    return () => {
+      backHandler.remove();
+    };
+  }, [handleBackButton]);
+
   const changeView = useCallback(
     (component?: React.JSX.Element) => {
       if (isExpanded) toggleMenu();
@@ -102,6 +109,8 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
       toggleMenuButton,
       isMenuButtonVisible,
       changeView,
+      navigateToScreen,
+      currentScreen,
       hideMenu,
       userId,
       changeHeaderVisibility,
@@ -113,6 +122,8 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
       toggleMenuButton,
       isMenuButtonVisible,
       changeView,
+      navigateToScreen,
+      currentScreen,
       hideMenu,
       userId,
       changeHeaderVisibility,

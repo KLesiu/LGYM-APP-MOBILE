@@ -12,6 +12,7 @@ import AppProvider from "./AppContext";
 import Toast from "react-native-toast-message";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import './i18n';
+import OnboardingProvider from "./onboarding/OnboardingContext";
 
 NativeWindStyleSheet.setOutput({ default: "native" });
 
@@ -52,8 +53,10 @@ const Layout: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
-        <Stack screenOptions={{ headerShown: false ,gestureEnabled:false,headerBackButtonMenuEnabled:false}} />
-        <Toast />
+        <OnboardingProvider>
+          <Stack screenOptions={{ headerShown: false ,gestureEnabled:false,headerBackButtonMenuEnabled:false}} />
+          <Toast />
+        </OnboardingProvider>
       </AppProvider>
     </QueryClientProvider>
   );

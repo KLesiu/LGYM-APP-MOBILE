@@ -14,7 +14,7 @@ import {
   PlanDayExercisesFormVm,
   PlanDayVm,
 } from "./../../../../../types/models";
-import { BackHandler } from "react-native";
+import { BackHandler, Pressable, View } from "react-native";
 import { usePlanDay } from "./CreatePlanDayContext";
 import React from "react";
 import {
@@ -27,16 +27,20 @@ import {
 } from "../../../../../api/generated/plan-day/plan-day";
 import { PlanDayVmDto } from "../../../../../api/generated/model";
 import { useHomeContext } from "../../HomeContext";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { useOnboarding } from "../../../../onboarding/OnboardingContext";
 
 interface CreatePlanDayProps {
   planId?: string;
   planDayId?: string;
   isPreview?: boolean;
+  onSaveSuccess?: () => Promise<void> | void;
 }
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const queryClient = useQueryClient();
   const { userId } = useHomeContext();
+  const { registerScreen, openInfoForScreen } = useOnboarding();
   const {
     planDayName,
     setPlanDayName,
@@ -105,6 +109,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
     else setCurrentStep(0);
   };
 
+  useEffect(() => {
+    registerScreen("PLAN_DAY");
+  }, [registerScreen]);
+
   const handleBackButton = useCallback(() => {
     if (props.isPreview) closeForm();
     else setCurrentStep(currentStepRef.current - 1);
@@ -165,6 +173,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             queryClient.invalidateQueries({
               queryKey: getGetApiPlanDayIdGetPlanDaysTypesQueryKey(userId),
             });
+            void props.onSaveSuccess?.();
             closeForm();
           },
         }
@@ -199,6 +208,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             queryClient.invalidateQueries({
               queryKey: getGetApiPlanDayIdGetPlanDaysTypesQueryKey(userId),
             });
+            void props.onSaveSuccess?.();
             closeForm();
           },
         }
@@ -245,7 +255,12 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   return (
     <>
-      <Dialog scrollable={false}>
+      <Dialog scrollable={currentStep === 0}>
+        <View className="w-full flex flex-row justify-end px-5 pt-5">
+          <Pressable onPress={() => openInfoForScreen("PLAN_DAY")}>
+            <Ionicons name="book-outline" size={22} color="#e8e6e6" />
+          </Pressable>
+        </View>
         <CreatePlanDayStepper currentStep={currentStep} />
         {renderStep()}
       </Dialog>

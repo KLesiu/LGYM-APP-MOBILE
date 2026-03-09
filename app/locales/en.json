@@ -184,6 +184,67 @@
     "deleteConfirmMessage": "Are you sure you want to delete?",
     "lastTraining": "Last training:"
   },
+  "onboarding": {
+    "tutorial": {
+      "accentLabel": "Tutorial",
+      "steps": {
+        "gymIntro": {
+          "title": "Your Arenas",
+          "description": "Every gym is different. Add many of them - home gym, chain gym, or outdoor spot. This way your progress is tied to the exact place and equipment.",
+          "primaryActionLabel": "Define Arena"
+        },
+        "gymCreate": {
+          "title": "Base Setup",
+          "description": "You can add multiple places: Home, chain gym, or outdoor. It matters because results are filtered by the selected gym - different equipment means different results.",
+          "primaryActionLabel": "Add Gym"
+        },
+        "planCreate": {
+          "title": "Foundation of Form",
+          "description": "Chaos does not support results. Build a specific split (e.g. FBW, Split) to give your training structure.",
+          "primaryActionLabel": "Build Plan"
+        },
+        "planDayCreate": {
+          "title": "Weekly Split",
+          "description": "Break your plan into training days (e.g. Chest + Biceps). Add your first day and choose the exercises you will run in that session.",
+          "primaryActionLabel": "Add Day"
+        },
+        "training": {
+          "title": "Battle Mode",
+          "description": "Ready to train? Tap here, choose a day from your plan, and simply tick off your sets while you go.",
+          "primaryActionLabel": "Start Training"
+        },
+        "trainingView": {
+          "title": "Performance Context",
+          "description": "Log weight and reps. The app remembers this result was done IN THIS EXACT GYM, so your strength comparisons stay fair and meaningful.",
+          "primaryActionLabel": "Got it, let's go"
+        }
+      }
+    },
+    "help": {
+      "accentLabel": "Help",
+      "primaryActionLabel": "Close",
+      "gym": {
+        "title": "Arena Management",
+        "description": "Add and edit your gyms. Keep in mind exercise results (e.g. bench records) are tied to a specific location. Machines and setups vary across gyms."
+      },
+      "plan": {
+        "title": "Command Center",
+        "description": "This is where you keep all your training plans. The active plan is the one used by default when you enter training."
+      },
+      "planDay": {
+        "title": "Day Builder",
+        "description": "Configure this training day: set a name, add exercises from your catalog, and define target sets."
+      },
+      "training": {
+        "title": "Launch Panel",
+        "description": "Before start, always set context: Where are you training? What are you training (which plan day)? You can also start without a plan and add exercises on the fly."
+      },
+      "trainingView": {
+        "title": "Session Log",
+        "description": "Save weight and reps for each completed set. Finish the workout with the bottom button to push data into your stats and records."
+      }
+    }
+  },
   "history": {
     "noSessionForDay": "You dont have training session this day!",
     "trainingWithPlan": "Training {{planName}}",

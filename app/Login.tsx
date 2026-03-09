@@ -26,6 +26,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 import { getErrorMessage } from "../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import type { UserInfoDto } from "../api/generated/model";
+import { useOnboarding } from "./onboarding/OnboardingContext";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -36,6 +37,7 @@ const Login: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
 
   const { setErrors: setAppErrors, setUserInfo } = useAppContext();
+  const { resetTutorial } = useOnboarding();
   const { mutate, isPending } = usePostApiLogin();
   const { setToken, setUser } = useAuthStore();
 
@@ -93,6 +95,7 @@ const Login: React.FC = () => {
             setUser(userInfo);
             setUserInfo(userInfo);
             setAppErrors([]);
+            await resetTutorial();
             router.push("/Home");
           } catch (error) {
             console.error("Error storing credentials:", error);
