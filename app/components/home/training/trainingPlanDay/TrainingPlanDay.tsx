@@ -433,11 +433,28 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     exerciseId: string,
     seriesChange: number
   ) => {
+    if (!planDay?.exercises?.length) {
+      return;
+    }
+
+    const targetExercise = planDay.exercises.find(
+      (exercise) => exercise.exercise._id === exerciseId
+    );
+
+    if (!targetExercise) {
+      return;
+    }
+
+    const nextSeries = targetExercise.series + seriesChange;
+    if (nextSeries < 1) {
+      return;
+    }
+
     const newPlanDayExercises = planDay?.exercises.map((exercise) => {
       if (exercise.exercise._id === exerciseId) {
         const newCurrentExercise = {
           ...exercise,
-          series: exercise.series + seriesChange,
+          series: nextSeries,
         };
         setCurrentExercise(newCurrentExercise);
         return newCurrentExercise;

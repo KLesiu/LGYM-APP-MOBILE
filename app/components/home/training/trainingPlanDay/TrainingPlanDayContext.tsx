@@ -176,6 +176,10 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
         return prevScores;
       }
 
+      if (seriesChange < 0 && currentScoresForExercise.length <= 1) {
+        return prevScores;
+      }
+
       const firstExerciseScoreIndex = prevScores.findIndex(
         (score) => score.exercise._id === exerciseId
       );
