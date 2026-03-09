@@ -1,5 +1,5 @@
 import { Image, View, ImageBackground, Modal } from "react-native";
-import logoLGYM from "./../assets/logoLGYMNew.png";
+import logoLGYM from "./../assets/logoLGYMNewX.png";
 import backgroundLGYM from "./../img/backgroundLGYMApp500.png";
 import { useRouter } from "expo-router";
 import CustomButton, {

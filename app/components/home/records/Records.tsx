@@ -1,7 +1,8 @@
 import { Text, View, ScrollView } from "react-native";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import RecordsPopUp from "./RecordsPopUp";
 import ViewLoading from "../../elements/ViewLoading";
+import SearchBox from "../../elements/SearchBox";
 
 import CustomButton, {
   ButtonSize,
@@ -30,6 +31,7 @@ const Records: React.FC<RecordsProps> = () => {
   const queryClient = useQueryClient();
   const [popUp, setPopUp] = useState<boolean>(false);
   const [exercise, setExercise] = useState<string | undefined>();
+  const [searchText, setSearchText] = useState<string>("");
   const [choosenRecord, setChoosenRecord] = useState<
     MainRecordsLastDto | undefined
   >();
@@ -69,6 +71,22 @@ const Records: React.FC<RecordsProps> = () => {
     if (!userId) return;
     void refreshRecords();
   }, [refreshRecords, userId]);
+
+  const filteredRecords = useMemo(() => {
+    const records = recordsData?.data;
+    if (!Array.isArray(records)) {
+      return [];
+    }
+
+    const normalizedSearch = searchText.trim().toLowerCase();
+    if (!normalizedSearch) {
+      return records;
+    }
+
+    return records.filter((record) =>
+      (record.exerciseDetails?.name || "").toLowerCase().includes(normalizedSearch)
+    );
+  }, [recordsData, searchText]);
 
   const changePopUpValue: VoidFunction = useCallback((): void => {
     setPopUp(false);
@@ -132,13 +150,14 @@ const Records: React.FC<RecordsProps> = () => {
                 buttonStyleSize={ButtonSize.long}
               />
             </View>
+            <SearchBox value={searchText} onChangeText={setSearchText} />
             <ScrollView
               className="w-full h-full"
               contentContainerStyle={{ padding: 8 }}
             >
-              {recordsData && recordsData.data && Array.isArray(recordsData.data) ? (
+              {filteredRecords.length ? (
                 <View className="flex flex-col w-full" style={{ gap: 8 }}>
-                  {recordsData.data.map((record) => (
+                  {filteredRecords.map((record) => (
                     <RecordsItem
                       key={record._id}
                       record={record}
@@ -148,7 +167,16 @@ const Records: React.FC<RecordsProps> = () => {
                   ))}
                 </View>
               ) : (
-                <></>
+                <View className="w-full py-6">
+                  <Text
+                    className="text-sm text-fifthColor text-center"
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                  >
+                    {searchText.trim().length > 0
+                      ? t('records.noSearchResults')
+                      : t('records.noRecordsYet')}
+                  </Text>
+                </View>
               )}
             </ScrollView>
           </View>

@@ -1,7 +1,7 @@
 import { View, Image, Text } from "react-native";
 import { JSX, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import LGYMLogo from "./../../../assets/logoLGYMNew.png";
+import LGYMLogo from "./../../../assets/logoLGYMNewX.png";
 import React from "react";
 import ProfileRank from "../elements/ProfileRank";
 import { useAppContext } from "../../AppContext";

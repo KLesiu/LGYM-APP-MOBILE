@@ -9,7 +9,7 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import logoLGYM from "./../assets/logoLGYMNew.png";
+import logoLGYM from "./../assets/logoLGYMNewX.png";
 import { useRouter, useFocusEffect } from "expo-router";
 import MiniLoading from "./components/elements/MiniLoading";
 import CustomButton, {

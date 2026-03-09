@@ -33,10 +33,11 @@
     "passwordRequired": "Hasło jest wymagane",
     "passwordLength": "Hasło musi mieć co najmniej 6 znaków",
     "passwordsMismatch": "Hasła nie pasują do siebie",
-    "registrationFailed": "Rejestracja nieudana"
+    "registrationFailed": "Rejestracja nieudana",
+    "noAccountQuestion": "Nie masz jeszcze konta?"
   },
   "start": {
-    "rankingTitle": "Ranking Winter Arc 2025",
+    "rankingTitle": "Ranking",
     "progress": "Postęp",
     "currentRank": "Obecna Ranga:",
     "elo": "ELO:",
@@ -256,7 +257,16 @@
     "newRecord": "Nowy rekord",
     "setRecord": "Ustaw rekord",
     "exercise": "Ćwiczenie",
-    "weight": "Ciężar"
+    "weight": "Ciężar",
+    "noSearchResults": "Brak rekordów pasujących do wyszukiwania.",
+    "noRecordsYet": "Nie masz jeszcze zapisanych rekordów."
+  },
+  "updateDialog": {
+    "title": "Wymagana aktualizacja",
+    "description": "Nowa wersja ({{version}}) jest wymagana, aby dalej korzystac z aplikacji.",
+    "whatsNew": "Co nowego:",
+    "updateNow": "Aktualizuj teraz",
+    "openLinkError": "Nie mozna otworzyc linku do aktualizacji."
   },
     "profile": {
       "settings": "Ustawienia",

@@ -1,4 +1,4 @@
-import logoLGYM from "./../../../assets/logoLGYMNew.png";
+import logoLGYM from "./../../../assets/logoLGYMNewX.png";
 import { Text, Image, View } from "react-native";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../../AppContext";

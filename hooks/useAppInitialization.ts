@@ -15,6 +15,38 @@ import { UserInfoDto } from "../api/generated/model";
 
 const SESSION_KEYS_TO_CLEAR = ["token", "username", "id", "email", "userInfo", "gym"] as const;
 
+const parseVersionParts = (version?: string | null): number[] => {
+  if (!version) {
+    return [];
+  }
+
+  return version
+    .split(".")
+    .map((part) => Number.parseInt(part.replace(/[^0-9]/g, ""), 10))
+    .map((part) => (Number.isNaN(part) ? 0 : part));
+};
+
+const compareVersions = (currentVersion?: string | null, requiredVersion?: string | null): number => {
+  const currentParts = parseVersionParts(currentVersion);
+  const requiredParts = parseVersionParts(requiredVersion);
+  const maxLength = Math.max(currentParts.length, requiredParts.length);
+
+  for (let index = 0; index < maxLength; index += 1) {
+    const currentPart = currentParts[index] ?? 0;
+    const requiredPart = requiredParts[index] ?? 0;
+
+    if (currentPart > requiredPart) {
+      return 1;
+    }
+
+    if (currentPart < requiredPart) {
+      return -1;
+    }
+  }
+
+  return 0;
+};
+
 export const useAppInitialization = () => {
   const router = useRouter();
   const [appConfig, setAppConfig] = useState<AppConfigInfoDto | null>(null);
@@ -83,10 +115,11 @@ export const useAppInitialization = () => {
 
   const checkIsUpdateRequired = async (appVersionConfig: AppConfigInfoDto) => {
     const appVersion = getAppVersion();
+    console.log(appVersion)
 
     if (
       !appVersionConfig.minRequiredVersion ||
-      (appVersion && appVersion >= appVersionConfig.minRequiredVersion)
+      compareVersions(appVersion, appVersionConfig.minRequiredVersion) >= 0
     ) {
       setCanValidateToken(true);
     } else {
@@ -122,14 +155,14 @@ export const useAppInitialization = () => {
     }
   };
 
-  const getAppVersion = () => {
+ const getAppVersion = () => {
     if (Constants.default.expoConfig?.version) {
       return Constants.default.expoConfig.version;
     }
     if (Updates.runtimeVersion) {
       return Updates.runtimeVersion;
     }
-    return Application.nativeApplicationVersion;
+    return Application.nativeApplicationVersion?.trim();
   };
 
   return {

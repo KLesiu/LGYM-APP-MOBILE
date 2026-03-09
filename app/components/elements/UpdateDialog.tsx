@@ -1,43 +1,56 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Linking, Image } from "react-native";
+import { View, Text, Linking, Image, useWindowDimensions } from "react-native";
 import { AppConfigInfoDto } from "../../../api/generated/model";
 import CustomButton, { ButtonSize, ButtonStyle } from "./CustomButton";
-import logoLGYM from "./../../../assets/logoLGYMNew.png";
+import logoLGYM from "./../../../assets/logoLGYMNewX.png";
+import { useTranslation } from "react-i18next";
 
 interface UpdateDialogProps {
   config: AppConfigInfoDto;
 }
 
 const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
+  const { t } = useTranslation();
+  const { width, height } = useWindowDimensions();
+  const logoSize = Math.max(120, Math.min(width * 0.55, height * 0.24, 220));
+
   const handleUpdatePress = () => {
     if (!config.updateUrl) {
-      alert("Could not open the update link.");
+      alert(t("updateDialog.openLinkError"));
       return;
     }
     Linking.openURL(config.updateUrl).catch(() =>
-      alert("Could not open the update link.")
+      alert(t("updateDialog.openLinkError"))
     );
   };
 
   return (
     <View className="flex-1  items-center justify-center  bg-bgColor rounded-lg shadow-lg px-4 py-4" style={{ gap: 32 }}>
-      <View className="w-72 h-72 flex items-center justify-center">
-        <Image source={logoLGYM} className="w-full h-full" />
+      <View
+        className="items-center justify-center"
+        style={{ width: logoSize, height: logoSize }}
+      >
+        <Image
+          source={logoLGYM}
+          resizeMode="contain"
+          style={{ width: "100%", height: "100%" }}
+        />
       </View>
       <View className="flex flex-col items-center justify-center">
         <Text
           className="text-textColor text-xl"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
-          Update Required
+          {t("updateDialog.title")}
         </Text>
 
         <Text
           className="text-textColor text-base text-center"
           style={{ fontFamily: "OpenSans_300Light" }}
         >
-          A new version ({config.latestVersion}) is available and required to
-          continue using the app.
+          {t("updateDialog.description", {
+            version: config.latestVersion || config.minRequiredVersion || "-",
+          })}
         </Text>
       </View>
 
@@ -47,7 +60,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
             className="text-textColor text-base text-center"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
-            What's new:
+            {t("updateDialog.whatsNew")}
           </Text>
           <Text
             className="text-textColor text-sm text-center"
@@ -61,7 +74,7 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
         onPress={handleUpdatePress}
         buttonStyleSize={ButtonSize.long}
         buttonStyleType={ButtonStyle.success}
-        text="Update now"
+        text={t("updateDialog.updateNow")}
       ></CustomButton>
     </View>
   );

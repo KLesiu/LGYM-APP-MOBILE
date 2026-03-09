@@ -33,10 +33,11 @@
     "passwordRequired": "Password is required",
     "passwordLength": "Password must be at least 6 characters",
     "passwordsMismatch": "Passwords do not match",
-    "registrationFailed": "Registration failed"
+    "registrationFailed": "Registration failed",
+    "noAccountQuestion": "Don't have an account yet?"
   },
   "start": {
-    "rankingTitle": "Winter Arc 2025 Ranking",
+    "rankingTitle": "Ranking",
     "progress": "Progress",
     "currentRank": "Current Rank:",
     "elo": "ELO:",
@@ -256,7 +257,16 @@
     "newRecord": "New record",
     "setRecord": "Set a record",
     "exercise": "Exercise",
-    "weight": "Weight"
+    "weight": "Weight",
+    "noSearchResults": "No records match your search.",
+    "noRecordsYet": "You don't have any saved records yet."
+  },
+  "updateDialog": {
+    "title": "Update required",
+    "description": "A new version ({{version}}) is required to keep using the app.",
+    "whatsNew": "What's new:",
+    "updateNow": "Update now",
+    "openLinkError": "Could not open the update link."
   },
   "profile": {
     "settings": "Settings",

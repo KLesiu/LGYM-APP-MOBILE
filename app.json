@@ -5,12 +5,12 @@
     "scheme": "lgymappmobile",
     "version": "4.0.10",
     "orientation": "portrait",
-    "icon": "./assets/logoLGYMNew.png",
+    "icon": "./assets/logoLGYMNewX.png",
     "newArchEnabled": true,
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#0A0A0A",
-      "image": "./assets/logoLGYMNew.png"
+      "image": "./assets/logoLGYMNewX.png"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -23,7 +23,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logoLGYMNew.png",
+        "foregroundImage": "./assets/logoLGYMNewX.png",
         "backgroundColor": "#0A0A0A"
       },
       "buildToolsVersion": "36.0.0",

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, ListRenderItem } from "react-native";
 import Card from "../../elements/Card";
 import * as Animatable from 'react-native-animatable';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { LinearGradient } from 'expo-linear-gradient';
 import { UserBaseInfoDto } from "../../../../api/generated/model";
 import { useGetApiGetUsersRanking } from "../../../../api/generated/user/user";
 import { useAuthStore } from "../../../../stores/useAuthStore";
@@ -109,24 +107,12 @@ const UsersRanking: React.FC = () => {
       <View className="h-full w-full flex flex-col" style={{ gap: 4 }}>
         {/* --- Nagłówek --- */}
         <View className="flex flex-row justify-between items-center" style={{ gap: 2 }}>
-          <MaskedView
-            maskElement={
-              <Text className="text-lg smallPhone:text-base" style={{ fontFamily: "OpenSans_700Bold", backgroundColor: 'transparent' }}>
-                {t('start.rankingTitle')}
-              </Text>
-            }
+          <Text
+            className="text-lg smallPhone:text-base text-primaryColor"
+            style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            <LinearGradient
-              colors={[RANK_COLORS.cyanLight, RANK_COLORS.cyan]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            >
-              <Text className="text-lg smallPhone:text-base opacity-0" style={{ fontFamily: "OpenSans_700Bold" }}>
-                {t('start.rankingTitle')}
-              </Text>
-            </LinearGradient>
-          </MaskedView>
-          <Text style={{ fontSize: 24, color: RANK_COLORS.cyan }}>❄️</Text>
+            {t('start.rankingTitle')}
+          </Text>
         </View>
 
         {/* --- Lista rankingu --- */}

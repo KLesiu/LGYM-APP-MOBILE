@@ -9,7 +9,7 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import logoLGYM from "./../assets/logoLGYMNew.png";
+import logoLGYM from "./../assets/logoLGYMNewX.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MiniLoading from "./components/elements/MiniLoading";
 import ShowIcon from "./../img/icons/showIcon.svg";
@@ -114,6 +114,11 @@ const Login: React.FC = () => {
   const goToPreload = () => {
     router.push("/");
   };
+
+  const goToRegister = () => {
+    router.push("/Register");
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -194,6 +199,22 @@ const Login: React.FC = () => {
             text={t('auth.login')}
             buttonStyleSize={ButtonSize.xl}
           />
+          <View className="flex flex-row items-center justify-center" style={{ gap: 6 }}>
+            <Text
+              className="text-sm text-fifthColor"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              {t('auth.noAccountQuestion')}
+            </Text>
+            <Pressable onPress={goToRegister}>
+              <Text
+                className="text-sm text-primaryColor"
+                style={{ fontFamily: "OpenSans_700Bold" }}
+              >
+                {t('auth.register')}
+              </Text>
+            </Pressable>
+          </View>
           <MiniLoading />
           <ValidationView errors={errors} />
         </View>
