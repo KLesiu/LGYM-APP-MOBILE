@@ -48,7 +48,7 @@ import { useTranslation } from "react-i18next";
 
 const TrainingPlan: React.FC = () => {
   const { t } = useTranslation();
-  const { toggleMenuButton, hideMenu, userId } = useHomeContext();
+  const { toggleMenuButton, hideMenu, userId, changeHeaderVisibility } = useHomeContext();
   const queryClient = useQueryClient();
 
   const [isSwitchingPlan, setIsSwitchingPlan] = useState<boolean>(false);
@@ -140,9 +140,10 @@ const TrainingPlan: React.FC = () => {
       setCurrentPlanDay(planDay);
       setIsPreviewPlanDay(isPreview);
       toggleMenuButton(true);
+      changeHeaderVisibility(false);
       setIsPlanDayFormVisible(true);
     },
-    [toggleMenuButton]
+    [changeHeaderVisibility, toggleMenuButton]
   );
 
   const showPlansList = useCallback((): void => {
@@ -168,9 +169,10 @@ const TrainingPlan: React.FC = () => {
   const hidePlanDayForm = useCallback(async (): Promise<void> => {
     setIsPlanDayFormVisible(false);
     toggleMenuButton(false);
+    changeHeaderVisibility(true);
     hideMenu();
     await refetchPlanDays();
-  }, [toggleMenuButton, hideMenu, refetchPlanDays]);
+  }, [changeHeaderVisibility, toggleMenuButton, hideMenu, refetchPlanDays]);
 
   const reloadSection = useCallback(async (): Promise<void> => {
     setShowPlanConfig(false);
@@ -300,61 +302,63 @@ const TrainingPlan: React.FC = () => {
           </View>
         ) : (
           <View className="flex flex-col h-full">
-            <View className="p-5" style={{ gap: 16 }}>
-              <View>
-                <Text
-                  className="text-base smallPhone:text-sm text-primaryColor  font-bold"
-                  style={{
-                    fontFamily: "OpenSans_700Bold",
-                  }}
-                >
-                  {t('plans.currentTrainingPlan')}
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: "OpenSans_700Bold",
-                  }}
-                  className="text-3xl smallPhone:text-xl text-textColor font-bold"
-                >
-                  {planConfig.name}
-                </Text>
-              </View>
+            {!isPlanDayFormVisible && (
+              <View className="p-5" style={{ gap: 16 }}>
+                <View>
+                  <Text
+                    className="text-base smallPhone:text-sm text-primaryColor font-bold"
+                    style={{
+                      fontFamily: "OpenSans_700Bold",
+                    }}
+                  >
+                    {t('plans.currentTrainingPlan')}
+                  </Text>
+                  <Text
+                    style={{
+                      fontFamily: "OpenSans_700Bold",
+                    }}
+                    className="text-3xl smallPhone:text-xl text-textColor font-bold"
+                  >
+                    {planConfig.name}
+                  </Text>
+                </View>
 
-              <View className="flex flex-row" style={{ gap: 16 }}>
-                <CustomButton
-                  text={t('plans.addTrainingDay')}
-                  onPress={() => showPlanDayForm(undefined)}
-                  buttonStyleType={ButtonStyle.success}
-                  textWeight={FontWeights.bold}
-                  buttonStyleSize={ButtonSize.long}
-                  customClasses="flex-1"
-                />
-                <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                <View className="flex flex-row" style={{ gap: 16 }}>
                   <CustomButton
-                    onPress={showPlansList}
-                    buttonStyleSize={ButtonSize.small}
-                    customSlots={[<PlanIcon />]}
+                    text={t('plans.addTrainingDay')}
+                    onPress={() => showPlanDayForm(undefined)}
+                    buttonStyleType={ButtonStyle.success}
+                    textWeight={FontWeights.bold}
+                    buttonStyleSize={ButtonSize.long}
+                    customClasses="flex-1"
                   />
-                </View>
-                <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
-                  <CustomButton
-                    onPress={()=> setIsDeletePlanConfirmationDialogVisible(true)}
-                    buttonStyleSize={ButtonSize.small}
-                    customSlots={[<DeleteIcon />]}
-                  />
-                </View>
-                <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
-                  <CustomButton
-                    onPress={showShareCodeDialog}
-                    buttonStyleSize={ButtonSize.small}
-                    customSlots={[<ShareIcon />]}
-                  />
+                  <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                    <CustomButton
+                      onPress={showPlansList}
+                      buttonStyleSize={ButtonSize.small}
+                      customSlots={[<PlanIcon />]}
+                    />
+                  </View>
+                  <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                    <CustomButton
+                      onPress={() => setIsDeletePlanConfirmationDialogVisible(true)}
+                      buttonStyleSize={ButtonSize.small}
+                      customSlots={[<DeleteIcon />]}
+                    />
+                  </View>
+                  <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
+                    <CustomButton
+                      onPress={showShareCodeDialog}
+                      buttonStyleSize={ButtonSize.small}
+                      customSlots={[<ShareIcon />]}
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
+            )}
 
             {planDaysBaseInfo ? (
-              <ScrollView className="w-full">
+              <ScrollView className="w-full" contentContainerStyle={{ paddingTop: isPlanDayFormVisible ? 20 : 0 }}>
                 <View style={{ gap: 16 }} className="flex flex-col p-5 pb-12">
                   {planDaysBaseInfo.map((planDay) => (
                     <TrainingPlanItem

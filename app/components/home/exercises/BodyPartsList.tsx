@@ -53,9 +53,14 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
   }
 
   return (
-    <View className="flex flex-col p-4 flex-1" style={{ gap: 16 }}>
+    <View className="flex flex-col p-4 flex-1 w-full" style={{ gap: 16 }}>
       <SearchBox onChangeText={setSearchText} value={searchText} />
-      <ScrollView className="mb-10 flex-1">
+      <ScrollView
+        className="mb-10 flex-1 w-full"
+        nestedScrollEnabled={true}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: 24 }}
+      >
         {filteredBodyParts.map((bodyPart) => (
           <BodyPartsListElement
             key={bodyPart.name}

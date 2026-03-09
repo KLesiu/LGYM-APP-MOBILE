@@ -8,6 +8,8 @@ import Dialog from "../../../elements/Dialog";
 import CreatePlanDayExerciseList from "./CreatePlanDayExerciseList";
 import ViewLoading from "../../../elements/ViewLoading";
 import CreatePlanDaySummary from "./CreatePlanDaySummary";
+import CreatePlanDayExerciseConfig from "./CreatePlanDayExerciseConfig";
+import CreatePlanDayStepper from "./CreatePlanDayStepper";
 import {
   PlanDayExercisesFormVm,
   PlanDayVm,
@@ -21,8 +23,10 @@ import {
   useGetApiPlanDayIdGetPlanDay,
   getGetApiPlanDayIdGetPlanDayQueryKey,
   getGetApiPlanDayIdGetPlanDaysInfoQueryKey,
+  getGetApiPlanDayIdGetPlanDaysTypesQueryKey,
 } from "../../../../../api/generated/plan-day/plan-day";
-import { BodyParts, PlanDayVmDto } from "../../../../../api/generated/model";
+import { PlanDayVmDto } from "../../../../../api/generated/model";
+import { useHomeContext } from "../../HomeContext";
 
 interface CreatePlanDayProps {
   planId?: string;
@@ -32,6 +36,7 @@ interface CreatePlanDayProps {
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const queryClient = useQueryClient();
+  const { userId } = useHomeContext();
   const {
     planDayName,
     setPlanDayName,
@@ -96,7 +101,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   }, []);
 
   const init = async () => {
-    if (props.isPreview) setCurrentStep(2);
+    if (props.isPreview) setCurrentStep(3);
     else setCurrentStep(0);
   };
 
@@ -157,6 +162,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             queryClient.invalidateQueries({
               queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(planId),
             });
+            queryClient.invalidateQueries({
+              queryKey: getGetApiPlanDayIdGetPlanDaysTypesQueryKey(userId),
+            });
             closeForm();
           },
         }
@@ -188,6 +196,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
                 queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(props.planId),
               });
             }
+            queryClient.invalidateQueries({
+              queryKey: getGetApiPlanDayIdGetPlanDaysTypesQueryKey(userId),
+            });
             closeForm();
           },
         }
@@ -210,6 +221,8 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
       case 1:
         return <CreatePlanDayExerciseList />;
       case 2:
+        return <CreatePlanDayExerciseConfig />;
+      case 3:
         return (
           <CreatePlanDaySummary
             isPreview={props.isPreview}
@@ -232,7 +245,10 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   return (
     <>
-      <Dialog>{renderStep()}</Dialog>
+      <Dialog scrollable={false}>
+        <CreatePlanDayStepper currentStep={currentStep} />
+        {renderStep()}
+      </Dialog>
       {isLoading ? <ViewLoading /> : <></>}
     </>
   );
