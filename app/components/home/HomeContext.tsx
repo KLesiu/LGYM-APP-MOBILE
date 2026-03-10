@@ -70,9 +70,14 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
     });
   }, [animation]);
 
-  const hideMenu =() => {
+  const hideMenu = useCallback(() => {
+    Animated.timing(animation, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
     setIsExpanded(false);
-  };
+  }, [animation]);
 
   const toggleMenuButton = useCallback((hide: boolean) => {
     setIsMenuButtonVisible(!hide);

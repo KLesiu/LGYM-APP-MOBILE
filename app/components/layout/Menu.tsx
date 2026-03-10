@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { View, TouchableOpacity, Text, Animated, useWindowDimensions } from "react-native";
 import HomeIcon from "./../../../img/icons/homeIcon.svg";
 import ProfileIcon from "./../../../img/icons/profileIcon.svg";
@@ -21,6 +21,7 @@ const Menu: React.FC = () => {
     animation,
     navigateToScreen,
     toggleMenu,
+    hideMenu,
   } = useHomeContext();
   const { width } = useWindowDimensions();
 
@@ -78,6 +79,14 @@ const Menu: React.FC = () => {
     });
   }, [menuConfig, t]);
 
+  const handleMenuItemPress = useCallback(
+    (screenId: HomeScreenId) => {
+      hideMenu();
+      navigateToScreen(screenId);
+    },
+    [hideMenu, navigateToScreen]
+  );
+
   if (!isMenuButtonVisible) return null;
 
   return (
@@ -98,7 +107,7 @@ const Menu: React.FC = () => {
             {menuItems.map((item, index) => (
               <TouchableOpacity
                 key={index}
-                onPress={() => navigateToScreen(item.screenId)}
+                onPress={() => handleMenuItemPress(item.screenId)}
                 style={{
                   transform: [{ translateX: item.x }, { translateY: item.y }],
                   borderRadius: 10000,
