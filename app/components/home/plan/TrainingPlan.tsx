@@ -47,10 +47,11 @@ import { PlanDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useOnboarding } from "../../../onboarding/OnboardingContext";
+import { TutorialStep } from "../../../onboarding/tutorialBackend";
 
 const TrainingPlan: React.FC = () => {
   const { t } = useTranslation();
-  const { toggleMenuButton, hideMenu, userId, changeHeaderVisibility, navigateToScreen } = useHomeContext();
+  const { toggleMenuButton, hideMenu, userId, changeHeaderVisibility } = useHomeContext();
   const { completeStep, currentStep, registerScreen, setStepAction } = useOnboarding();
   const queryClient = useQueryClient();
 
@@ -159,41 +160,40 @@ const TrainingPlan: React.FC = () => {
   }, [registerScreen]);
 
   useEffect(() => {
-    setStepAction("PLAN_CREATE", () => {
+    setStepAction(TutorialStep.CreatePlan, () => {
       togglePlanConfigPopUp(true);
     });
 
     return () => {
-      setStepAction("PLAN_CREATE", null);
+      setStepAction(TutorialStep.CreatePlan, null);
     };
   }, [setStepAction, togglePlanConfigPopUp]);
 
   useEffect(() => {
-    setStepAction("PLAN_DAY_CREATE", () => {
+    setStepAction(TutorialStep.CreatePlanDay, () => {
       showPlanDayForm(undefined);
     });
 
     return () => {
-      setStepAction("PLAN_DAY_CREATE", null);
+      setStepAction(TutorialStep.CreatePlanDay, null);
     };
   }, [setStepAction, showPlanDayForm]);
 
   const handlePlanCreated = useCallback(async () => {
-    if (currentStep !== "PLAN_CREATE") {
+    if (currentStep !== TutorialStep.CreatePlan) {
       return;
     }
 
-    await completeStep("PLAN_CREATE");
+    await completeStep(TutorialStep.CreatePlan);
   }, [completeStep, currentStep]);
 
   const handlePlanDayCreated = useCallback(async () => {
-    if (currentStep !== "PLAN_DAY_CREATE") {
+    if (currentStep !== TutorialStep.CreatePlanDay) {
       return;
     }
 
-    await completeStep("PLAN_DAY_CREATE");
-    navigateToScreen("TRAINING");
-  }, [completeStep, currentStep, navigateToScreen]);
+    await completeStep(TutorialStep.CreatePlanDay);
+  }, [completeStep, currentStep]);
 
   const hidePlansList = useCallback((): void => {
     setIsPlansListVisible(false);

@@ -14,7 +14,7 @@ import {
   PlanDayExercisesFormVm,
   PlanDayVm,
 } from "./../../../../../types/models";
-import { BackHandler, Pressable, View } from "react-native";
+import { BackHandler, View } from "react-native";
 import { usePlanDay } from "./CreatePlanDayContext";
 import React from "react";
 import {
@@ -27,7 +27,6 @@ import {
 } from "../../../../../api/generated/plan-day/plan-day";
 import { PlanDayVmDto } from "../../../../../api/generated/model";
 import { useHomeContext } from "../../HomeContext";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { useOnboarding } from "../../../../onboarding/OnboardingContext";
 
 interface CreatePlanDayProps {
@@ -40,7 +39,7 @@ interface CreatePlanDayProps {
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const queryClient = useQueryClient();
   const { userId } = useHomeContext();
-  const { registerScreen, openInfoForScreen } = useOnboarding();
+  const { registerScreen } = useOnboarding();
   const {
     planDayName,
     setPlanDayName,
@@ -256,11 +255,6 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   return (
     <>
       <Dialog scrollable={currentStep === 0}>
-        <View className="w-full flex flex-row justify-end px-5 pt-5">
-          <Pressable onPress={() => openInfoForScreen("PLAN_DAY")}>
-            <Ionicons name="book-outline" size={22} color="#e8e6e6" />
-          </Pressable>
-        </View>
         <CreatePlanDayStepper currentStep={currentStep} />
         {renderStep()}
       </Dialog>

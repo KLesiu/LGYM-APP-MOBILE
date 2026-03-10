@@ -15,6 +15,7 @@ import type { GymChoiceInfoDto } from "../../../../api/generated/model";
 import { getErrorMessage } from "../../../../utils/errorHandler";
 import { useAppContext } from "../../../AppContext";
 import { useOnboarding } from "../../../onboarding/OnboardingContext";
+import { TutorialStep } from "../../../onboarding/tutorialBackend";
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiGymIdGetGymsQueryKey } from "../../../../api/generated/gym/gym";
 
@@ -31,7 +32,7 @@ const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
 
 const Gym: React.FC = () => {
   const { t } = useTranslation();
-  const { toggleMenuButton, hideMenu, userId, navigateToScreen } = useHomeContext();
+  const { toggleMenuButton, hideMenu, userId } = useHomeContext();
   const { setErrors } = useAppContext();
   const { completeStep, currentStep, registerScreen, setStepAction } = useOnboarding();
   const queryClient = useQueryClient();
@@ -41,13 +42,12 @@ const Gym: React.FC = () => {
   }, [registerScreen]);
 
   const handleGymFormSuccess = useCallback(async () => {
-    if (currentStep !== "GYM_CREATE") {
+    if (currentStep !== TutorialStep.CreateGym) {
       return;
     }
 
-    await completeStep("GYM_CREATE");
-    navigateToScreen("PLAN");
-  }, [completeStep, currentStep, navigateToScreen]);
+    await completeStep(TutorialStep.CreateGym);
+  }, [completeStep, currentStep]);
 
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
@@ -82,12 +82,12 @@ const Gym: React.FC = () => {
   }, [openForm]);
 
   useEffect(() => {
-    setStepAction("GYM_CREATE", () => {
+    setStepAction(TutorialStep.CreateGym, () => {
       addNewGym();
     });
 
     return () => {
-      setStepAction("GYM_CREATE", null);
+      setStepAction(TutorialStep.CreateGym, null);
     };
   }, [addNewGym, setStepAction]);
 
