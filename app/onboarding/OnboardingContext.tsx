@@ -1,43 +1,47 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
+import type { TutorialProgressDto } from "../../api/generated/model";
+import {
+  getApiTutorialsActive,
+  postApiTutorialsComplete,
+  postApiTutorialsCompleteStep,
+} from "../../api/generated/tutorial/tutorial";
 import type { HomeScreenId } from "../components/home/homeScreens";
 import ContextualHelpModal, {
   type ContextualHelpMode,
 } from "../components/onboarding/ContextualHelpModal";
 import {
+  tutorialStepOrder,
   getScreenHelpConfig,
   getTutorialStepsConfig,
-  ONBOARDING_STORAGE_KEY,
   type ContextualHelpContent,
   type OnboardingScreenId,
-  type OnboardingStepId,
 } from "./tutorialStepsConfig";
-
-interface StoredOnboardingState {
-  currentStep: OnboardingStepId;
-  isTutorialActive: boolean;
-  completedTutorial: boolean;
-}
+import {
+  buildCompleteStepRequest,
+  buildCompleteTutorialRequest,
+  getNextOnboardingStep,
+  isOnboardingTutorial,
+  resolveOnboardingCurrentStep,
+  type OnboardingStepId,
+} from "./tutorialBackend";
 
 interface OnboardingContextValue {
-  currentStep: OnboardingStepId;
+  currentStep: OnboardingStepId | null;
   isTutorialActive: boolean;
   completedTutorial: boolean;
   isReady: boolean;
   currentScreen: OnboardingScreenId | null;
   canShowHelp: boolean;
   completeStep: (stepId: OnboardingStepId) => Promise<void>;
-  skipTutorial: () => Promise<void>;
-  resetTutorial: () => Promise<void>;
+  syncTutorialState: (hasActiveTutorials?: boolean | null) => Promise<void>;
   registerScreen: (screenId: OnboardingScreenId) => void;
   openInfoForScreen: (screenId?: OnboardingScreenId) => void;
   closeModal: () => void;
@@ -46,7 +50,7 @@ interface OnboardingContextValue {
   setStepAction: (stepId: OnboardingStepId, action: (() => void | Promise<void>) | null) => void;
 }
 
-const INITIAL_STEP: OnboardingStepId = "GYM_INTRO";
+const INITIAL_STEP: OnboardingStepId = tutorialStepOrder[0];
 
 const OnboardingContext = createContext<OnboardingContextValue | null>(null);
 
@@ -69,123 +73,149 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
   const tutorialStepsConfig = useMemo(() => getTutorialStepsConfig(t), [t, i18n.language]);
   const screenHelpConfig = useMemo(() => getScreenHelpConfig(t), [t, i18n.language]);
 
-  const [currentStep, setCurrentStep] = useState<OnboardingStepId>(INITIAL_STEP);
+  const [currentStep, setCurrentStep] = useState<OnboardingStepId | null>(null);
   const [isTutorialActive, setIsTutorialActive] = useState<boolean>(false);
   const [completedTutorial, setCompletedTutorial] = useState<boolean>(false);
-  const [isReady, setIsReady] = useState<boolean>(false);
+  const [isReady, setIsReady] = useState<boolean>(true);
   const [currentScreen, setCurrentScreen] = useState<OnboardingScreenId | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<ContextualHelpMode>("TUTORIAL");
+  const [stepActionVersion, setStepActionVersion] = useState<number>(0);
   const [modalContent, setModalContent] = useState<ContextualHelpContent | null>(
     tutorialStepsConfig[INITIAL_STEP].content
   );
   const screenNavigatorRef = useRef<((screenId: HomeScreenId) => void) | null>(null);
+  const resumedStepRef = useRef<OnboardingStepId | null>(null);
   const stepActionsRef = useRef<
     Partial<Record<OnboardingStepId, () => void | Promise<void>>>
   >({});
 
-  const persistState = useCallback(async (nextState: StoredOnboardingState) => {
-    await AsyncStorage.setItem(ONBOARDING_STORAGE_KEY, JSON.stringify(nextState));
-  }, []);
+  const clearTutorialState = useCallback(() => {
+    setCurrentStep(null);
+    setIsTutorialActive(false);
+    setCompletedTutorial(false);
+    setModalVisible(false);
+    setModalMode("TUTORIAL");
+    setModalContent(tutorialStepsConfig[INITIAL_STEP].content);
+    resumedStepRef.current = null;
+  }, [tutorialStepsConfig]);
 
-  useEffect(() => {
-    const bootstrap = async () => {
+  const applyTutorialProgress = useCallback(
+    (progress?: TutorialProgressDto | null) => {
+      const resolvedStep = resolveOnboardingCurrentStep(progress);
+
+      if (!progress || progress.isCompleted || !resolvedStep) {
+        setCurrentStep(null);
+        setIsTutorialActive(false);
+        setCompletedTutorial(Boolean(progress?.isCompleted));
+        setModalVisible(false);
+        return;
+      }
+
+      setCurrentStep(resolvedStep);
+      setIsTutorialActive(true);
+      setCompletedTutorial(false);
+      setModalMode("TUTORIAL");
+      setModalContent(tutorialStepsConfig[resolvedStep].content);
+      resumedStepRef.current = null;
+    },
+    [tutorialStepsConfig]
+  );
+
+  const resumeTutorialNavigation = useCallback(
+    (stepId: OnboardingStepId) => {
+      const resumeScreen = tutorialStepsConfig[stepId].resumeScreen;
+
+      if (!screenNavigatorRef.current) {
+        return;
+      }
+
+      if (currentScreen === resumeScreen && resumedStepRef.current === stepId) {
+        return;
+      }
+
+      resumedStepRef.current = stepId;
+      screenNavigatorRef.current(resumeScreen);
+    },
+    [currentScreen, tutorialStepsConfig]
+  );
+
+  React.useEffect(() => {
+    if (!isReady || !isTutorialActive || !currentStep) {
+      return;
+    }
+
+    resumeTutorialNavigation(currentStep);
+  }, [currentStep, isReady, isTutorialActive, resumeTutorialNavigation]);
+
+  const syncTutorialState = useCallback(
+    async (hasActiveTutorials?: boolean | null) => {
+      if (!hasActiveTutorials) {
+        clearTutorialState();
+        setIsReady(true);
+        return;
+      }
+
+      setIsReady(false);
+
       try {
-        const storedValue = await AsyncStorage.getItem(ONBOARDING_STORAGE_KEY);
+        const response = await getApiTutorialsActive();
+        const tutorials = Array.isArray(response.data) ? response.data : [];
+        const onboardingProgress = tutorials.find(isOnboardingTutorial);
 
-        if (storedValue) {
-          const parsedState = JSON.parse(storedValue) as Partial<StoredOnboardingState>;
-          setCurrentStep(parsedState.currentStep ?? INITIAL_STEP);
-          setCompletedTutorial(parsedState.completedTutorial ?? false);
-          setIsTutorialActive(parsedState.isTutorialActive ?? true);
-        } else {
-          const initialState: StoredOnboardingState = {
-            currentStep: INITIAL_STEP,
-            isTutorialActive: true,
-            completedTutorial: false,
-          };
-
-          setCurrentStep(initialState.currentStep);
-          setCompletedTutorial(initialState.completedTutorial);
-          setIsTutorialActive(initialState.isTutorialActive);
-          await persistState(initialState);
-        }
-      } catch {
-        setCurrentStep(INITIAL_STEP);
-        setCompletedTutorial(false);
-        setIsTutorialActive(true);
+        applyTutorialProgress(onboardingProgress ?? null);
+      } catch (error) {
+        console.error("Failed to synchronize tutorial state:", error);
+        clearTutorialState();
       } finally {
         setIsReady(true);
       }
-    };
+    },
+    [applyTutorialProgress, clearTutorialState]
+  );
 
-    void bootstrap();
-  }, [persistState]);
-
-  useEffect(() => {
-    if (!isReady || !isTutorialActive || !currentScreen) {
+  React.useEffect(() => {
+    if (!isReady || !isTutorialActive || !currentScreen || !currentStep) {
       return;
     }
 
     const stepConfig = tutorialStepsConfig[currentStep];
+    const needsRegisteredAction = stepConfig.completeOnNext === false;
+
+    if (needsRegisteredAction && !stepActionsRef.current[currentStep]) {
+      return;
+    }
 
     if (stepConfig.triggerScreen === currentScreen) {
       setModalContent(stepConfig.content);
       setModalMode("TUTORIAL");
       setModalVisible(true);
     }
-  }, [currentScreen, currentStep, isReady, isTutorialActive, tutorialStepsConfig]);
+  }, [currentScreen, currentStep, isReady, isTutorialActive, stepActionVersion, tutorialStepsConfig]);
 
   const completeStep = useCallback(
     async (stepId: OnboardingStepId) => {
-      const stepConfig = tutorialStepsConfig[stepId];
-      const nextStep = stepConfig.nextStep;
+      await postApiTutorialsCompleteStep(buildCompleteStepRequest(stepId));
+
+      const nextStep = getNextOnboardingStep(stepId);
 
       if (!nextStep) {
+        await postApiTutorialsComplete(buildCompleteTutorialRequest());
+        setCurrentStep(null);
         setCompletedTutorial(true);
         setIsTutorialActive(false);
-        await persistState({
-          currentStep: stepId,
-          isTutorialActive: false,
-          completedTutorial: true,
-        });
+        setModalVisible(false);
         return;
       }
 
       setCurrentStep(nextStep);
-      await persistState({
-        currentStep: nextStep,
-        isTutorialActive: true,
-        completedTutorial: false,
-      });
+      setIsTutorialActive(true);
+      setCompletedTutorial(false);
+      setModalContent(tutorialStepsConfig[nextStep].content);
+      resumedStepRef.current = null;
     },
-    [persistState, tutorialStepsConfig]
+    [tutorialStepsConfig]
   );
-
-  const skipTutorial = useCallback(async () => {
-    setModalVisible(false);
-    setIsTutorialActive(false);
-    await persistState({
-      currentStep,
-      isTutorialActive: false,
-      completedTutorial,
-    });
-  }, [completedTutorial, currentStep, persistState]);
-
-  const resetTutorial = useCallback(async () => {
-    setCurrentStep(INITIAL_STEP);
-    setCurrentScreen(null);
-    setCompletedTutorial(false);
-    setIsTutorialActive(true);
-    setModalMode("TUTORIAL");
-    setModalContent(tutorialStepsConfig[INITIAL_STEP].content);
-    setModalVisible(false);
-    await persistState({
-      currentStep: INITIAL_STEP,
-      isTutorialActive: true,
-      completedTutorial: false,
-    });
-  }, [persistState, tutorialStepsConfig]);
 
   const registerScreen = useCallback((screenId: OnboardingScreenId) => {
     setCurrentScreen(screenId);
@@ -219,16 +249,22 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
 
   const setScreenNavigator = useCallback((navigator: (screenId: HomeScreenId) => void) => {
     screenNavigatorRef.current = navigator;
-  }, []);
+
+    if (currentStep && isTutorialActive) {
+      resumeTutorialNavigation(currentStep);
+    }
+  }, [currentStep, isTutorialActive, resumeTutorialNavigation]);
 
   const setStepAction = useCallback(
     (stepId: OnboardingStepId, action: (() => void | Promise<void>) | null) => {
       if (!action) {
         delete stepActionsRef.current[stepId];
+        setStepActionVersion((currentVersion) => currentVersion + 1);
         return;
       }
 
       stepActionsRef.current[stepId] = action;
+      setStepActionVersion((currentVersion) => currentVersion + 1);
     },
     []
   );
@@ -239,20 +275,26 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
       return;
     }
 
+    if (!currentStep) {
+      setModalVisible(false);
+      return;
+    }
+
     const stepId = currentStep;
     const stepConfig = tutorialStepsConfig[stepId];
     const stepAction = stepActionsRef.current[stepId];
 
     setModalVisible(false);
 
+    if (stepConfig.completeOnNext !== false) {
+      await completeStep(stepId);
+      return;
+    }
+
     if (stepAction) {
       await stepAction();
     } else if (stepConfig.targetScreen && screenNavigatorRef.current) {
       screenNavigatorRef.current(stepConfig.targetScreen);
-    }
-
-    if (stepConfig.completeOnNext !== false) {
-      await completeStep(stepId);
     }
   }, [completeStep, currentStep, modalMode, tutorialStepsConfig]);
 
@@ -267,8 +309,7 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
       currentScreen,
       canShowHelp,
       completeStep,
-      skipTutorial,
-      resetTutorial,
+      syncTutorialState,
       registerScreen,
       openInfoForScreen,
       closeModal,
@@ -288,10 +329,9 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
       isTutorialActive,
       openInfoForScreen,
       registerScreen,
-      resetTutorial,
       setScreenNavigator,
       setStepAction,
-      skipTutorial,
+      syncTutorialState,
     ]
   );
 

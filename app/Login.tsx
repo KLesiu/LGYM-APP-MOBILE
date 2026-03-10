@@ -37,7 +37,7 @@ const Login: React.FC = () => {
   const [errors, setErrors] = useState<string[]>([]);
 
   const { setErrors: setAppErrors, setUserInfo } = useAppContext();
-  const { resetTutorial } = useOnboarding();
+  const { syncTutorialState } = useOnboarding();
   const { mutate, isPending } = usePostApiLogin();
   const { setToken, setUser } = useAuthStore();
 
@@ -95,7 +95,7 @@ const Login: React.FC = () => {
             setUser(userInfo);
             setUserInfo(userInfo);
             setAppErrors([]);
-            await resetTutorial();
+            await syncTutorialState(Boolean(userInfo.hasActiveTutorials));
             router.push("/Home");
           } catch (error) {
             console.error("Error storing credentials:", error);

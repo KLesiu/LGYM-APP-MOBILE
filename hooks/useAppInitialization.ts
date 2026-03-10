@@ -6,6 +6,7 @@ import * as Constants from "expo-constants";
 import * as Updates from "expo-updates";
 import * as Application from "expo-application";
 import { useAppContext } from "../app/AppContext";
+import { useOnboarding } from "../app/onboarding/OnboardingContext";
 import { useAuthStore } from "../stores/useAuthStore";
 import { Platforms } from "../api/generated/model";
 import { AppConfigInfoDto } from "../api/generated/model";
@@ -52,6 +53,7 @@ export const useAppInitialization = () => {
   const [appConfig, setAppConfig] = useState<AppConfigInfoDto | null>(null);
   const [canValidateToken, setCanValidateToken] = useState<boolean>(false);
   const { setErrors, setIsTokenChecked, isTokenChecked, setUserInfo, setToken, token } = useAppContext();
+  const { syncTutorialState } = useOnboarding();
   
   const { mutate: checkVersion } = usePostApiAppConfigGetAppVersion({});
 
@@ -139,6 +141,7 @@ export const useAppInitialization = () => {
     setIsTokenChecked(true);
     setUserInfo(userInfo);
     useAuthStore.getState().setUser(userInfo);
+    await syncTutorialState(Boolean(userInfo.hasActiveTutorials));
     router.replace("/Home");
   };
 

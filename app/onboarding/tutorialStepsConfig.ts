@@ -1,13 +1,10 @@
 import type { HomeScreenId } from "../components/home/homeScreens";
 import type { TFunction } from "i18next";
-
-export type OnboardingStepId =
-  | "GYM_INTRO"
-  | "GYM_CREATE"
-  | "PLAN_CREATE"
-  | "PLAN_DAY_CREATE"
-  | "TRAINING"
-  | "TRAINING_VIEW";
+import {
+  ONBOARDING_STEP_ORDER,
+  TutorialStep,
+  type OnboardingStepId,
+} from "./tutorialBackend";
 
 export type OnboardingScreenId = HomeScreenId | "PLAN_DAY" | "TRAINING_VIEW";
 
@@ -22,32 +19,24 @@ export interface ContextualHelpContent {
 export interface TutorialStepConfig {
   id: OnboardingStepId;
   triggerScreen: OnboardingScreenId;
+  resumeScreen: HomeScreenId;
   targetScreen?: HomeScreenId;
   nextStep?: OnboardingStepId;
   completeOnNext?: boolean;
   content: ContextualHelpContent;
 }
 
-export const ONBOARDING_STORAGE_KEY = "onboarding-state";
-export const ONBOARDING_PENDING_SYNC_KEY = "onboarding-pending-sync";
-
-export const tutorialStepOrder: OnboardingStepId[] = [
-  "GYM_INTRO",
-  "GYM_CREATE",
-  "PLAN_CREATE",
-  "PLAN_DAY_CREATE",
-  "TRAINING",
-  "TRAINING_VIEW",
-];
+export const tutorialStepOrder: OnboardingStepId[] = [...ONBOARDING_STEP_ORDER];
 
 export const getTutorialStepsConfig = (
   t: TFunction
 ): Record<OnboardingStepId, TutorialStepConfig> => ({
-  GYM_INTRO: {
-    id: "GYM_INTRO",
+  [TutorialStep.CreateArea]: {
+    id: TutorialStep.CreateArea,
     triggerScreen: "START",
+    resumeScreen: "START",
     targetScreen: "GYM",
-    nextStep: "GYM_CREATE",
+    nextStep: TutorialStep.CreateGym,
     content: {
       title: t("onboarding.tutorial.steps.gymIntro.title"),
       description: t("onboarding.tutorial.steps.gymIntro.description"),
@@ -56,10 +45,11 @@ export const getTutorialStepsConfig = (
       primaryActionLabel: t("onboarding.tutorial.steps.gymIntro.primaryActionLabel"),
     },
   },
-  GYM_CREATE: {
-    id: "GYM_CREATE",
+  [TutorialStep.CreateGym]: {
+    id: TutorialStep.CreateGym,
     triggerScreen: "GYM",
-    nextStep: "PLAN_CREATE",
+    resumeScreen: "GYM",
+    nextStep: TutorialStep.CreatePlan,
     completeOnNext: false,
     content: {
       title: t("onboarding.tutorial.steps.gymCreate.title"),
@@ -69,10 +59,11 @@ export const getTutorialStepsConfig = (
       primaryActionLabel: t("onboarding.tutorial.steps.gymCreate.primaryActionLabel"),
     },
   },
-  PLAN_CREATE: {
-    id: "PLAN_CREATE",
+  [TutorialStep.CreatePlan]: {
+    id: TutorialStep.CreatePlan,
     triggerScreen: "PLAN",
-    nextStep: "PLAN_DAY_CREATE",
+    resumeScreen: "PLAN",
+    nextStep: TutorialStep.CreatePlanDay,
     completeOnNext: false,
     content: {
       title: t("onboarding.tutorial.steps.planCreate.title"),
@@ -82,10 +73,11 @@ export const getTutorialStepsConfig = (
       primaryActionLabel: t("onboarding.tutorial.steps.planCreate.primaryActionLabel"),
     },
   },
-  PLAN_DAY_CREATE: {
-    id: "PLAN_DAY_CREATE",
+  [TutorialStep.CreatePlanDay]: {
+    id: TutorialStep.CreatePlanDay,
     triggerScreen: "PLAN",
-    nextStep: "TRAINING",
+    resumeScreen: "PLAN",
+    nextStep: TutorialStep.CreateTraining,
     completeOnNext: false,
     content: {
       title: t("onboarding.tutorial.steps.planDayCreate.title"),
@@ -95,10 +87,11 @@ export const getTutorialStepsConfig = (
       primaryActionLabel: t("onboarding.tutorial.steps.planDayCreate.primaryActionLabel"),
     },
   },
-  TRAINING: {
-    id: "TRAINING",
+  [TutorialStep.CreateTraining]: {
+    id: TutorialStep.CreateTraining,
     triggerScreen: "TRAINING",
-    nextStep: "TRAINING_VIEW",
+    resumeScreen: "TRAINING",
+    nextStep: TutorialStep.LastTreningResult,
     content: {
       title: t("onboarding.tutorial.steps.training.title"),
       description: t("onboarding.tutorial.steps.training.description"),
@@ -107,9 +100,10 @@ export const getTutorialStepsConfig = (
       primaryActionLabel: t("onboarding.tutorial.steps.training.primaryActionLabel"),
     },
   },
-  TRAINING_VIEW: {
-    id: "TRAINING_VIEW",
+  [TutorialStep.LastTreningResult]: {
+    id: TutorialStep.LastTreningResult,
     triggerScreen: "TRAINING_VIEW",
+    resumeScreen: "TRAINING",
     content: {
       title: t("onboarding.tutorial.steps.trainingView.title"),
       description: t("onboarding.tutorial.steps.trainingView.description"),
