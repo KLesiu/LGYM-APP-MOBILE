@@ -17,6 +17,8 @@ export interface UserInfoDto {
   avatar?: string | null;
   /** @nullable */
   profileRank?: string | null;
+  /** @nullable */
+  preferredTimeZone?: string | null;
   createdAt?: string;
   updatedAt?: string;
   elo?: number;
@@ -27,4 +29,5 @@ export interface UserInfoDto {
   roles?: string[] | null;
   /** @nullable */
   permissionClaims?: string[] | null;
+  hasActiveTutorials?: boolean;
 }

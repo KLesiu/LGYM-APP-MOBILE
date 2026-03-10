@@ -31,6 +31,7 @@ import type {
   PostApiChangeVisibilityInRankingBodyTwo,
   RegisterUserRequest,
   ResponseMessageDto,
+  UpdateTimeZoneRequest,
   UserBaseInfoDto,
   UserEloDto,
   UserInfoDto
@@ -195,6 +196,109 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
       return useMutation(getPostApiLoginMutationOptions(options), queryClient);
     }
+    export type getApiIdIsAdminResponse200 = {
+  data: boolean
+  status: 200
+}
+    
+export type getApiIdIsAdminResponseSuccess = (getApiIdIsAdminResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getApiIdIsAdminResponse = (getApiIdIsAdminResponseSuccess)
+
+export const getGetApiIdIsAdminUrl = (id: string,) => {
+
+
+  
+
+  return `/api/${id}/isAdmin`
+}
+
+export const getApiIdIsAdmin = async (id: string, options?: RequestInit): Promise<getApiIdIsAdminResponse> => {
+  
+  return customInstance<getApiIdIsAdminResponse>(getGetApiIdIsAdminUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiIdIsAdminQueryKey = (id: string,) => {
+    return [
+    `/api/${id}/isAdmin`
+    ] as const;
+    }
+
+    
+export const getGetApiIdIsAdminQueryOptions = <TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiIdIsAdminQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiIdIsAdmin>>> = ({ signal }) => getApiIdIsAdmin(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiIdIsAdminQueryResult = NonNullable<Awaited<ReturnType<typeof getApiIdIsAdmin>>>
+export type GetApiIdIsAdminQueryError = unknown
+
+
+export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiIdIsAdmin>>,
+          TError,
+          Awaited<ReturnType<typeof getApiIdIsAdmin>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiIdIsAdmin>>,
+          TError,
+          Awaited<ReturnType<typeof getApiIdIsAdmin>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiIdIsAdmin<TData = Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError = unknown>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiIdIsAdmin>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiIdIsAdminQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
 
 export type getApiCheckTokenResponse200 = {
   data: UserInfoDto
@@ -762,5 +866,81 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiChangeVisibilityInRankingMutationOptions(options), queryClient);
+    }
+    export type postApiUpdateTimeZoneResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+    
+export type postApiUpdateTimeZoneResponseSuccess = (postApiUpdateTimeZoneResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiUpdateTimeZoneResponse = (postApiUpdateTimeZoneResponseSuccess)
+
+export const getPostApiUpdateTimeZoneUrl = () => {
+
+
+  
+
+  return `/api/updateTimeZone`
+}
+
+export const postApiUpdateTimeZone = async (updateTimeZoneRequest: UpdateTimeZoneRequest, options?: RequestInit): Promise<postApiUpdateTimeZoneResponse> => {
+  
+  return customInstance<postApiUpdateTimeZoneResponse>(getPostApiUpdateTimeZoneUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateTimeZoneRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiUpdateTimeZoneMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiUpdateTimeZone>>, TError,{data: UpdateTimeZoneRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiUpdateTimeZone>>, TError,{data: UpdateTimeZoneRequest}, TContext> => {
+
+const mutationKey = ['postApiUpdateTimeZone'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiUpdateTimeZone>>, {data: UpdateTimeZoneRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiUpdateTimeZone(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiUpdateTimeZoneMutationResult = NonNullable<Awaited<ReturnType<typeof postApiUpdateTimeZone>>>
+    export type PostApiUpdateTimeZoneMutationBody = UpdateTimeZoneRequest
+    export type PostApiUpdateTimeZoneMutationError = unknown
+
+    export const usePostApiUpdateTimeZone = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiUpdateTimeZone>>, TError,{data: UpdateTimeZoneRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiUpdateTimeZone>>,
+        TError,
+        {data: UpdateTimeZoneRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiUpdateTimeZoneMutationOptions(options), queryClient);
     }
     
