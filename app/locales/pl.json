@@ -187,6 +187,8 @@
   "onboarding": {
     "tutorial": {
       "accentLabel": "Samouczek",
+      "navigationLockedTitle": "Ukończ tutorial",
+      "navigationLockedDescription": "Przejdź krok po kroku, aby odblokować pozostałe widoki.",
       "steps": {
         "gymIntro": {
           "title": "Twoje Areny",
@@ -215,7 +217,7 @@
         },
         "trainingView": {
           "title": "Kontekst Wyniku",
-          "description": "Wpisuj ciężar i powtórzenia. System zapamięta, że ten wynik zrobiłeś WŁAŚNIE NA TEJ siłowni, co pozwoli na miarodajne porównanie Twoich osiągów.",
+          "description": "Wpisuj ciężar i powtórzenia. Ten trening jest pokazowy - kliknięcie \"Zakończ\" nie zapisze go do historii. Służy tylko do przejścia tutoriala.",
           "primaryActionLabel": "Jasne, działamy"
         }
       }

@@ -187,6 +187,8 @@
   "onboarding": {
     "tutorial": {
       "accentLabel": "Tutorial",
+      "navigationLockedTitle": "Finish the tutorial",
+      "navigationLockedDescription": "Complete it step by step to unlock the remaining views.",
       "steps": {
         "gymIntro": {
           "title": "Your Arenas",
@@ -215,7 +217,7 @@
         },
         "trainingView": {
           "title": "Performance Context",
-          "description": "Log weight and reps. The app remembers this result was done IN THIS EXACT GYM, so your strength comparisons stay fair and meaningful.",
+          "description": "Log weight and reps. This training is a demo - tapping \"Finish\" will not save it to history. It is only used to complete the tutorial.",
           "primaryActionLabel": "Got it, let's go"
         }
       }

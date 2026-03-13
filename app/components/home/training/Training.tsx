@@ -12,7 +12,12 @@ const Training: React.FC = () => {
 
   const { data: planCheckResponse, isLoading } = useGetApiIdCheckIsUserHavePlan(
     userId,
-    { query: { enabled: !!userId } }
+    {
+      query: {
+        enabled: !!userId,
+        refetchOnMount: "always",
+      },
+    }
   );
 
   const isUserHavePlan = useMemo(

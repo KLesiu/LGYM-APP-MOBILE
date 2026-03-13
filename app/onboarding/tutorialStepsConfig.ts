@@ -23,6 +23,7 @@ export interface TutorialStepConfig {
   targetScreen?: HomeScreenId;
   nextStep?: OnboardingStepId;
   completeOnNext?: boolean;
+  requiresStepAction?: boolean;
   content: ContextualHelpContent;
 }
 
@@ -51,6 +52,7 @@ export const getTutorialStepsConfig = (
     resumeScreen: "GYM",
     nextStep: TutorialStep.CreatePlan,
     completeOnNext: false,
+    requiresStepAction: true,
     content: {
       title: t("onboarding.tutorial.steps.gymCreate.title"),
       description: t("onboarding.tutorial.steps.gymCreate.description"),
@@ -65,6 +67,7 @@ export const getTutorialStepsConfig = (
     resumeScreen: "PLAN",
     nextStep: TutorialStep.CreatePlanDay,
     completeOnNext: false,
+    requiresStepAction: true,
     content: {
       title: t("onboarding.tutorial.steps.planCreate.title"),
       description: t("onboarding.tutorial.steps.planCreate.description"),
@@ -79,6 +82,7 @@ export const getTutorialStepsConfig = (
     resumeScreen: "PLAN",
     nextStep: TutorialStep.CreateTraining,
     completeOnNext: false,
+    requiresStepAction: true,
     content: {
       title: t("onboarding.tutorial.steps.planDayCreate.title"),
       description: t("onboarding.tutorial.steps.planDayCreate.description"),
@@ -104,6 +108,7 @@ export const getTutorialStepsConfig = (
     id: TutorialStep.LastTreningResult,
     triggerScreen: "TRAINING_VIEW",
     resumeScreen: "TRAINING",
+    completeOnNext: false,
     content: {
       title: t("onboarding.tutorial.steps.trainingView.title"),
       description: t("onboarding.tutorial.steps.trainingView.description"),

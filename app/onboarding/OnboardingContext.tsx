@@ -46,7 +46,9 @@ interface OnboardingContextValue {
   openInfoForScreen: (screenId?: OnboardingScreenId) => void;
   closeModal: () => void;
   handleModalNext: () => Promise<void>;
+  showTutorialModalForCurrentStep: () => void;
   setScreenNavigator: (navigator: (screenId: HomeScreenId) => void) => void;
+  canUserNavigateToScreen: (screenId: HomeScreenId) => boolean;
   setStepAction: (stepId: OnboardingStepId, action: (() => void | Promise<void>) | null) => void;
 }
 
@@ -180,7 +182,7 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
     }
 
     const stepConfig = tutorialStepsConfig[currentStep];
-    const needsRegisteredAction = stepConfig.completeOnNext === false;
+    const needsRegisteredAction = stepConfig.requiresStepAction === true;
 
     if (needsRegisteredAction && !stepActionsRef.current[currentStep]) {
       return;
@@ -244,8 +246,23 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
   );
 
   const closeModal = useCallback(() => {
+    if (modalMode === "TUTORIAL" && isTutorialActive) {
+      return;
+    }
+
     setModalVisible(false);
-  }, []);
+  }, [isTutorialActive, modalMode]);
+
+  const canUserNavigateToScreen = useCallback(
+    (screenId: HomeScreenId): boolean => {
+      if (!isTutorialActive || !currentStep) {
+        return true;
+      }
+
+      return tutorialStepsConfig[currentStep].resumeScreen === screenId;
+    },
+    [currentStep, isTutorialActive, tutorialStepsConfig]
+  );
 
   const setScreenNavigator = useCallback((navigator: (screenId: HomeScreenId) => void) => {
     screenNavigatorRef.current = navigator;
@@ -298,6 +315,16 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
     }
   }, [completeStep, currentStep, modalMode, tutorialStepsConfig]);
 
+  const showTutorialModalForCurrentStep = useCallback(() => {
+    if (!isTutorialActive || !currentStep) {
+      return;
+    }
+
+    setModalMode("TUTORIAL");
+    setModalContent(tutorialStepsConfig[currentStep].content);
+    setModalVisible(true);
+  }, [currentStep, isTutorialActive, tutorialStepsConfig]);
+
   const canShowHelp = currentScreen ? Boolean(screenHelpConfig[currentScreen]) : false;
 
   const contextValue = useMemo(
@@ -308,17 +335,20 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
       isReady,
       currentScreen,
       canShowHelp,
+      canUserNavigateToScreen,
       completeStep,
       syncTutorialState,
       registerScreen,
       openInfoForScreen,
       closeModal,
       handleModalNext,
+      showTutorialModalForCurrentStep,
       setScreenNavigator,
       setStepAction,
     }),
     [
       canShowHelp,
+      canUserNavigateToScreen,
       closeModal,
       completeStep,
       completedTutorial,
@@ -331,6 +361,7 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
       registerScreen,
       setScreenNavigator,
       setStepAction,
+      showTutorialModalForCurrentStep,
       syncTutorialState,
     ]
   );
@@ -346,6 +377,7 @@ const OnboardingProvider: React.FC<OnboardingProviderProps> = ({ children }) => 
         }}
         mode={modalMode}
         content={modalContent}
+        canClose={modalMode !== "TUTORIAL" || !isTutorialActive}
       />
     </OnboardingContext.Provider>
   );

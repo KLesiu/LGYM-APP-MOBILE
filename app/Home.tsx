@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import React, { JSX, useCallback } from "react";
+import React, { JSX, useCallback, useRef } from "react";
 import { useState } from "react";
 import Menu from "./components/layout/Menu";
 import Header from "./components//layout/Header";
@@ -17,12 +17,17 @@ import Profile from "./components/home/profile/Profile";
 import { DEFAULT_HOME_SCREEN, type HomeScreenId } from "./components/home/homeScreens";
 import { useOnboarding } from "./onboarding/OnboardingContext";
 import { useEffect } from "react";
+import Toast from "react-native-toast-message";
+import { useTranslation } from "react-i18next";
 
 const Home: React.FC = () => {
-  const { setScreenNavigator } = useOnboarding();
+  const { t } = useTranslation();
+  const { setScreenNavigator, canUserNavigateToScreen } = useOnboarding();
   const [currentScreen, setCurrentScreen] = useState<HomeScreenId>(DEFAULT_HOME_SCREEN);
   const [view, setView] = useState<JSX.Element>();
   const [isHeaderShow, setIsHeaderShow] = useState<boolean>(true);
+  const lastBlockedToastAtRef = useRef<number>(0);
+  const hasInitializedHomeScreenRef = useRef<boolean>(false);
 
   const changeView = useCallback((nextView?: JSX.Element) => {
     setCurrentScreen(DEFAULT_HOME_SCREEN);
@@ -55,11 +60,27 @@ const Home: React.FC = () => {
   );
 
   const navigateToScreen = useCallback(
-    (screenId: HomeScreenId) => {
+    (screenId: HomeScreenId, options?: { force?: boolean; showBlockedToast?: boolean }) => {
+      if (!options?.force && !canUserNavigateToScreen(screenId)) {
+        if (options?.showBlockedToast) {
+          const now = Date.now();
+          if (now - lastBlockedToastAtRef.current > 1200) {
+            lastBlockedToastAtRef.current = now;
+            Toast.show({
+              type: "success",
+              text1: t("onboarding.tutorial.navigationLockedTitle"),
+              text2: t("onboarding.tutorial.navigationLockedDescription"),
+            });
+          }
+        }
+
+        return;
+      }
+
       setCurrentScreen(screenId);
       setView(buildScreen(screenId));
     },
-    [buildScreen]
+    [buildScreen, canUserNavigateToScreen, t]
   );
 
   const changeHeaderVisibility = useCallback((isVisible: boolean) => {
@@ -67,11 +88,18 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    navigateToScreen(DEFAULT_HOME_SCREEN);
+    if (hasInitializedHomeScreenRef.current) {
+      return;
+    }
+
+    hasInitializedHomeScreenRef.current = true;
+    navigateToScreen(DEFAULT_HOME_SCREEN, { force: true });
   }, [navigateToScreen]);
 
   useEffect(() => {
-    setScreenNavigator(navigateToScreen);
+    setScreenNavigator((screenId) => {
+      navigateToScreen(screenId, { force: true });
+    });
   }, [navigateToScreen, setScreenNavigator]);
 
   return (

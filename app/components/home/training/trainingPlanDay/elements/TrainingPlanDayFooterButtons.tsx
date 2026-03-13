@@ -9,7 +9,7 @@ import { TrainingSessionScores } from "../../../../../../types/models";
 import { useTranslation } from "react-i18next";
 
 interface TrainingPlanDayFooterButtonsProps {
-  hideAndDeleteTrainingSession: () => void;
+  hideAndDeleteTrainingSession: () => Promise<void>;
   sendTraining: (trainingSessionScores: any) => Promise<void>;
 }
 
@@ -36,7 +36,9 @@ const TrainingPlanDayFooterButtons: React.FC<
       style={{ gap: 8 }}
     >
       <CustomButton
-        onPress={hideAndDeleteTrainingSession}
+        onPress={() => {
+          void hideAndDeleteTrainingSession();
+        }}
         disabled={!isEnabled}
         buttonStyleSize={ButtonSize.regular}
         buttonStyleType={ButtonStyle.grey}

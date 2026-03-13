@@ -13,6 +13,7 @@ interface ContextualHelpModalProps {
   content: ContextualHelpContent | null;
   onClose: () => void;
   onNext: () => void;
+  canClose?: boolean;
 }
 
 const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
@@ -21,6 +22,7 @@ const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
   content,
   onClose,
   onNext,
+  canClose = true,
 }) => {
   if (!content) {
     return null;
@@ -36,7 +38,11 @@ const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
       animationType="fade"
       transparent
       visible={visible}
-      onRequestClose={onClose}
+      onRequestClose={() => {
+        if (canClose) {
+          onClose();
+        }
+      }}
     >
       <View className="flex-1 items-center justify-center bg-black/75 px-5">
         <View
@@ -65,13 +71,17 @@ const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
                   </Text>
                 </View>
 
-                <Pressable
-                  onPress={onClose}
-                  hitSlop={12}
-                  className="h-10 w-10 items-center justify-center rounded-full bg-white/5"
-                >
-                  <Icon name="close" size={20} color="#F4F4F5" />
-                </Pressable>
+                {canClose ? (
+                  <Pressable
+                    onPress={onClose}
+                    hitSlop={12}
+                    className="h-10 w-10 items-center justify-center rounded-full bg-white/5"
+                  >
+                    <Icon name="close" size={20} color="#F4F4F5" />
+                  </Pressable>
+                ) : (
+                  <View className="h-10 w-10" />
+                )}
               </View>
 
               <View

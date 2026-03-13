@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { View, TouchableOpacity, Text, Animated, useWindowDimensions } from "react-native";
 import HomeIcon from "./../../../img/icons/homeIcon.svg";
 import ProfileIcon from "./../../../img/icons/profileIcon.svg";
@@ -24,10 +24,6 @@ const Menu: React.FC = () => {
     hideMenu,
   } = useHomeContext();
   const { width } = useWindowDimensions();
-
-  useEffect(() => {
-    navigateToScreen(DEFAULT_HOME_SCREEN);
-  }, [navigateToScreen]);
 
   const animatedScale = animation.interpolate({
     inputRange: [0, 1],
@@ -82,7 +78,7 @@ const Menu: React.FC = () => {
   const handleMenuItemPress = useCallback(
     (screenId: HomeScreenId) => {
       hideMenu();
-      navigateToScreen(screenId);
+      navigateToScreen(screenId, { showBlockedToast: true });
     },
     [hideMenu, navigateToScreen]
   );

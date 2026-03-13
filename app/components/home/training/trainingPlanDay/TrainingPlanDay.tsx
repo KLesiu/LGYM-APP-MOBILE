@@ -51,6 +51,10 @@ import {
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../../../stores/useAuthStore";
 import { useAppContext } from "../../../../AppContext";
+import { useOnboarding } from "../../../../onboarding/OnboardingContext";
+import { TutorialStep } from "../../../../onboarding/tutorialBackend";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Message } from "../../../../../enums/Message";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -185,6 +189,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   const { t } = useTranslation();
   const { changeHeaderVisibility, userId } = useHomeContext();
   const { setUserInfo } = useAppContext();
+  const { currentStep, isTutorialActive, completeStep } = useOnboarding();
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
@@ -214,6 +219,8 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   >();
 
   const { mutateAsync: addTrainingMutation, isPending: isAddingTraining } = usePostApiIdAddTraining();
+  const isTutorialTrainingSession =
+    isTutorialActive && currentStep === TutorialStep.LastTreningResult;
 
   useEffect(() => {
     changeHeaderVisibility(false);
@@ -268,6 +275,32 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
   /// Submit training and delete training session from localStorage then show summary.
   const addTraining = async (exercises: TrainingSessionScores[]) => {
+    if (isTutorialTrainingSession) {
+      const tutorialSummary: TrainingSummary = {
+        comparison: [],
+        gainElo: 0,
+        userOldElo: typeof user?.elo === "number" ? user.elo : 0,
+        profileRank: {
+          name: getRankName(user?.profileRank, t("common.unknown")),
+          needElo: getRankNeedElo(user?.profileRank),
+        },
+        nextRank: user?.nextRank
+          ? {
+              name: getRankName(user.nextRank, t("common.unknown")),
+              needElo: getRankNeedElo(user.nextRank),
+            }
+          : null,
+        msg: Message.Created,
+      };
+
+      await AsyncStorage.multiRemove(["planDay", "trainingSessionScores", "gym"]);
+      setValidationErrors([]);
+      props.setTrainingSummary(tutorialSummary);
+      props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
+      await completeStep(TutorialStep.LastTreningResult);
+      return;
+    }
+
     const type = props.dayId;
     const gymId = gym?._id;
 
@@ -572,6 +605,14 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setIsPlanShow(!isPlanShow);
   };
 
+  const handleDeleteTrainingSession = async () => {
+    await props.hideAndDeleteTrainingSession();
+
+    if (isTutorialTrainingSession) {
+      await completeStep(TutorialStep.LastTreningResult);
+    }
+  };
+
   return (
     <View className="absolute w-full h-full text-textColor bg-bgColor flex flex-col">
       {planDay && Object.keys(planDay).length ? (
@@ -613,7 +654,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           </ScrollView>
           <TrainingPlanDayFooterButtons
             sendTraining={sendTraining}
-            hideAndDeleteTrainingSession={props.hideAndDeleteTrainingSession}
+            hideAndDeleteTrainingSession={handleDeleteTrainingSession}
           />
         </View>
       ) : (

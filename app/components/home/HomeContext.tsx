@@ -20,7 +20,10 @@ interface HomeContextProps {
   toggleMenu: () => void;
   hideMenu: () => void;
   changeView: (component?: JSX.Element) => void;
-  navigateToScreen: (screenId: HomeScreenId) => void;
+  navigateToScreen: (
+    screenId: HomeScreenId,
+    options?: { force?: boolean; showBlockedToast?: boolean }
+  ) => void;
   currentScreen: HomeScreenId;
   userId: string;
   changeHeaderVisibility: (isVisible: boolean) => void;
@@ -39,7 +42,10 @@ export const useHomeContext = (): HomeContextProps => {
 interface HomeProviderProps {
   children: React.ReactNode;
   viewChange: (view?: JSX.Element) => void;
-  navigateToScreen: (screenId: HomeScreenId) => void;
+  navigateToScreen: (
+    screenId: HomeScreenId,
+    options?: { force?: boolean; showBlockedToast?: boolean }
+  ) => void;
   changeHeaderVisibility: (isVisible: boolean) => void;
   currentScreen: HomeScreenId;
 }

@@ -455,7 +455,7 @@ const TrainingPlan: React.FC = () => {
       {isCopyPlanDialogShowed && (
         <PlanCopyDialog
           visible={isCopyPlanDialogShowed}
-          onCancel={() => setIsCopyPlanDialogShowed(false)}
+          onCancel={hideCopyPlanDialog}
           copyPlan={copyPlan}
         />
       )}
