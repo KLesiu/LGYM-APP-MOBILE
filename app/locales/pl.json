@@ -251,6 +251,7 @@
     "noSessionForDay": "Nie masz sesji treningowej w tym dniu!",
     "trainingWithPlan": "Trening {{planName}}",
     "seriesWithValue": "Serie: {{series}}",
+    "closeCalendar": "Zamknij kalendarz",
     "calendar": {
       "months": [
         "Styczeń",

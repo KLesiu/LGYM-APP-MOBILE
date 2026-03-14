@@ -18,6 +18,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { useIsFocused } from "@react-navigation/native";
 import "moment/locale/pl";
+import HistoryMonthPickerButton from "./HistoryMonthPickerButton";
+import HistoryMonthPickerModal from "./HistoryMonthPickerModal";
 
 type TrainingExerciseDto = NonNullable<TrainingByDateDetailsDto["exercises"]>[number];
 type TrainingScoreDto = NonNullable<TrainingExerciseDto["scoresDetails"]>[number];
@@ -58,11 +60,27 @@ const mapTrainingByDateDetails = (
     : [],
 });
 
+const toDateKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const toMonthStart = (date: Date): Date =>
+  new Date(date.getFullYear(), date.getMonth(), 1);
+
+const addMonth = (date: Date, offset: number): Date =>
+  new Date(date.getFullYear(), date.getMonth() + offset, 1);
+
 const History: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { userId } = useHomeContext();
   const isFocused = useIsFocused();
   const calendar = useRef(null);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [isMonthPickerOpen, setMonthPickerOpen] = useState<boolean>(false);
+  const [visibleMonth, setVisibleMonth] = useState<Date>(toMonthStart(new Date()));
   const [trainings, setTrainings] = useState<TrainingByDateDetails[]>();
   const [viewLoading, setViewLoading] = useState<boolean>(false);
 
@@ -79,9 +97,23 @@ const History: React.FC = () => {
     return dates
       .filter((date): date is string => typeof date === "string" && !Number.isNaN(Date.parse(date)))
       .map((date) => ({
-      date: new Date(date),
-      dots: [{ color: "#94e798" }],
-    }));
+        date: new Date(date),
+        dots: [{ color: "#94e798" }],
+      }));
+  }, [trainingDatesData]);
+
+  const trainingDateKeys = useMemo(() => {
+    const dates = trainingDatesData?.data;
+    if (!Array.isArray(dates)) return new Set<string>();
+
+    const keys = dates
+      .filter(
+        (date): date is string =>
+          typeof date === "string" && !Number.isNaN(Date.parse(date))
+      )
+      .map((date) => toDateKey(new Date(date)));
+
+    return new Set(keys);
   }, [trainingDatesData]);
 
   const calendarLocale = useMemo(() => {
@@ -127,6 +159,9 @@ const History: React.FC = () => {
       return;
     }
 
+    setSelectedDate(date);
+    setVisibleMonth(toMonthStart(date));
+
     setViewLoading(true);
 
     try {
@@ -148,6 +183,50 @@ const History: React.FC = () => {
     }
   }, [getTrainingByDateMutation, userId]);
 
+  const monthGridDays = useMemo(() => {
+    const year = visibleMonth.getFullYear();
+    const month = visibleMonth.getMonth();
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+    const days: Array<Date | null> = [];
+
+    for (let index = 0; index < firstWeekday; index += 1) {
+      days.push(null);
+    }
+
+    for (let day = 1; day <= totalDaysInMonth; day += 1) {
+      days.push(new Date(year, month, day));
+    }
+
+    return days;
+  }, [visibleMonth]);
+
+  const monthTitle = useMemo(() => {
+    const monthName =
+      calendarLocale.config.months[visibleMonth.getMonth()] || "";
+    return `${monthName} ${visibleMonth.getFullYear()}`;
+  }, [calendarLocale.config.months, visibleMonth]);
+
+  const weekdayLabels = useMemo(() => {
+    const labels = calendarLocale.config.weekdaysMin;
+    return Array.isArray(labels) ? labels : [];
+  }, [calendarLocale.config.weekdaysMin]);
+
+  const selectedDateKey = useMemo(() => toDateKey(selectedDate), [selectedDate]);
+
+  const openMonthPicker = useCallback(() => {
+    setVisibleMonth(toMonthStart(selectedDate));
+    setMonthPickerOpen(true);
+  }, [selectedDate]);
+
+  const handleDayPress = useCallback(
+    (date: Date) => {
+      setMonthPickerOpen(false);
+      void getTrainingByDate(date);
+    },
+    [getTrainingByDate]
+  );
+
   useEffect(() => {
     if (!isFocused || !userId) return;
 
@@ -162,10 +241,11 @@ const History: React.FC = () => {
   return (
     <BackgroundMainSection>
       <View className="flex flex-col h-full p-4">
+        <HistoryMonthPickerButton onPress={openMonthPicker} />
         <ReactNativeCalendarStrip
           onDateSelected={getTrainingByDate}
           ref={calendar}
-          selectedDate={new Date()}
+          selectedDate={selectedDate}
           iconLeftStyle={{
             height: 15,
             width: 15,
@@ -210,6 +290,20 @@ const History: React.FC = () => {
           numDaysInWeek={5}
           locale={calendarLocale}
         />
+        <HistoryMonthPickerModal
+          visible={isMonthPickerOpen}
+          visibleMonthTitle={monthTitle}
+          weekdayLabels={weekdayLabels}
+          monthGridDays={monthGridDays}
+          selectedDateKey={selectedDateKey}
+          trainingDateKeys={trainingDateKeys}
+          closeLabel={t("history.closeCalendar")}
+          onClose={() => setMonthPickerOpen(false)}
+          onPrevMonth={() => setVisibleMonth((current) => addMonth(current, -1))}
+          onNextMonth={() => setVisibleMonth((current) => addMonth(current, 1))}
+          onDaySelect={handleDayPress}
+          toDateKey={toDateKey}
+        />
         {viewLoading ? (
           <ViewLoading />
         ) : trainings && trainings.length ? (
@@ -220,7 +314,7 @@ const History: React.FC = () => {
               style={{ fontFamily: "OpenSans_700Bold" }}
               className="text-textColor text-xl text-center"
             >
-              {t('history.noSessionForDay')}
+              {t("history.noSessionForDay")}
             </Text>
           </View>
         )}
