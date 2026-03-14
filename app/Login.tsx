@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -18,7 +18,6 @@ import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "./components/elements/CustomButton";
-import ValidationView from "./components/elements/ValidationView";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useAppContext } from "./AppContext";
 import { usePostApiLogin, postApiLoginResponse } from "../api/generated/user/user";
@@ -27,6 +26,7 @@ import { getErrorMessage } from "../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import type { UserInfoDto } from "../api/generated/model";
 import { useOnboarding } from "./onboarding/OnboardingContext";
+import toastService from "./services/toastService";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -34,7 +34,6 @@ const Login: React.FC = () => {
   const [username, setUsername] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
-  const [errors, setErrors] = useState<string[]>([]);
 
   const { setErrors: setAppErrors, setUserInfo } = useAppContext();
   const { syncTutorialState } = useOnboarding();
@@ -43,15 +42,20 @@ const Login: React.FC = () => {
 
   useFocusEffect(
     useCallback(() => {
-      setErrors([]);
-    }, [])
+      setAppErrors([]);
+      toastService.hide();
+
+      return () => {
+        toastService.hide();
+      };
+    }, [setAppErrors])
   );
 
   const login = async (): Promise<void> => {
     const normalizedUsername = username?.trim();
 
     if (!normalizedUsername || !password) {
-      setErrors([t('auth.usernameAndPasswordRequired')]);
+      toastService.showValidationError(t("auth.usernameAndPasswordRequired"));
       return;
     }
 
@@ -68,12 +72,12 @@ const Login: React.FC = () => {
             const loginResponse = response.data;
 
             if (!("token" in loginResponse) || !loginResponse.token) {
-              setErrors([t('auth.invalidResponse')]);
+              toastService.showError(t("auth.invalidResponse"), t("auth.loginFailed"));
               return;
             }
 
             if (!("req" in loginResponse) || !loginResponse.req) {
-              setErrors([t('auth.invalidResponse')]);
+              toastService.showError(t("auth.invalidResponse"), t("auth.loginFailed"));
               return;
             }
 
@@ -99,16 +103,16 @@ const Login: React.FC = () => {
             router.push("/Home");
           } catch (error) {
             console.error("Error storing credentials:", error);
-            const message = t('auth.failedToStoreCredentials');
-            setErrors([message]);
-            setAppErrors([message]);
+            toastService.showError(
+              t("auth.failedToStoreCredentials"),
+              t("auth.loginFailed")
+            );
           }
         },
         onError: (error: any) => {
           console.error("Login error:", error);
-          const errorMessage = getErrorMessage(error, t('auth.loginFailed'));
-          setErrors([errorMessage]);
-          setAppErrors([errorMessage]);
+          const errorMessage = getErrorMessage(error, t("auth.loginFailed"));
+          toastService.showError(errorMessage, t("auth.loginFailed"));
         },
       }
     );
@@ -219,7 +223,6 @@ const Login: React.FC = () => {
             </Pressable>
           </View>
           <MiniLoading />
-          <ValidationView errors={errors} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

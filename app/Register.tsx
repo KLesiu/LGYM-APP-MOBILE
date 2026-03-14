@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -16,12 +16,12 @@ import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "./components/elements/CustomButton";
-import ValidationView from "./components/elements/ValidationView";
 import { useAppContext } from "./AppContext";
 import Checkbox from "./components/elements/Checkbox";
 import { usePostApiRegister, postApiRegisterResponse } from "../api/generated/user/user";
 import { getErrorMessage } from "../utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import toastService from "./services/toastService";
 
 const Register: React.FC = () => {
   const { t } = useTranslation();
@@ -30,7 +30,6 @@ const Register: React.FC = () => {
   const [rpassword, setRPassword] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [isVisibleInRanking, setIsVisibleInRanking] = useState<boolean>(true);
-  const [errors, setErrors] = useState<string[]>([]);
 
   const router = useRouter();
   const { setErrors: setAppErrors } = useAppContext();
@@ -39,8 +38,12 @@ const Register: React.FC = () => {
   useFocusEffect(
     useCallback(() => {
       setAppErrors([]);
-      setErrors([]);
-    }, [])
+      toastService.hide();
+
+      return () => {
+        toastService.hide();
+      };
+    }, [setAppErrors])
   );
 
   const validate = (): boolean => {
@@ -64,7 +67,10 @@ const Register: React.FC = () => {
       newErrors.push(t("auth.passwordsMismatch"));
     }
 
-    setErrors(newErrors);
+    if (newErrors.length > 0) {
+      toastService.showValidationError(newErrors);
+    }
+
     return newErrors.length === 0;
   };
 
@@ -88,7 +94,7 @@ const Register: React.FC = () => {
         onError: (error: any) => {
           console.error("Registration error:", error);
           const errorMessage = getErrorMessage(error, t("auth.registrationFailed"));
-          setErrors([errorMessage]);
+          toastService.showError(errorMessage, t("auth.registrationFailed"));
         },
       }
     );
@@ -217,7 +223,6 @@ const Register: React.FC = () => {
             disabled={isPending}
           />
           <MiniLoading />
-          <ValidationView errors={errors} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
