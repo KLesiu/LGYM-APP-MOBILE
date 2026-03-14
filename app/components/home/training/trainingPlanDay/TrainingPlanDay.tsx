@@ -23,7 +23,6 @@ import { TrainingSummary } from "../../../../../types/models";
 import { ExerciseForm } from "../../../../../types/models";
 import { TrainingViewSteps } from "../../../../../enums/TrainingView";
 import ViewLoading from "../../../elements/ViewLoading";
-import ValidationView from "../../../elements/ValidationView";
 import TrainingPlanDayTimer from "./elements/TrainingPlanDayTimer";
 import {
   getGetApiIdGetLastTrainingQueryKey,
@@ -55,6 +54,8 @@ import { useOnboarding } from "../../../../onboarding/OnboardingContext";
 import { TutorialStep } from "../../../../onboarding/tutorialBackend";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Message } from "../../../../../enums/Message";
+import toastService from "../../../../services/toastService";
+import { getErrorMessage } from "../../../../../utils/errorHandler";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -64,6 +65,10 @@ interface TrainingPlanDayProps {
   setStep: (step: number) => void;
   setTrainingSummary: (trainingSummary: TrainingSummary) => void;
 }
+
+type ScoreValidationResult =
+  | { parsedScores: TrainingSessionScores[]; errorMessage?: never }
+  | { parsedScores?: never; errorMessage: string };
 
 const getRankName = (rank: unknown, unknownLabel: string): string => {
   if (typeof rank === "string") {
@@ -212,7 +217,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     setIsTrainingPlanDayExerciseFormShow,
   ] = useState<boolean>(false);
   const [isPlanShow, setIsPlanShow] = useState<boolean>(false);
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [bodyPart, setBodyPart] = useState<BodyParts | undefined>();
   const [exerciseWhichBeingSwitched, setExerciseWhichBeingSwitched] = useState<
     string | undefined
@@ -225,6 +229,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   useEffect(() => {
     changeHeaderVisibility(false);
     return () => {
+      toastService.hide();
       changeHeaderVisibility(true);
     };
   }, []);
@@ -291,13 +296,13 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
             }
           : null,
         msg: Message.Created,
-      };
+        };
 
-      await AsyncStorage.multiRemove(["planDay", "trainingSessionScores", "gym"]);
-      setValidationErrors([]);
-      props.setTrainingSummary(tutorialSummary);
-      props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
-      await completeStep(TutorialStep.LastTreningResult);
+        await AsyncStorage.multiRemove(["planDay", "trainingSessionScores", "gym"]);
+        toastService.hide();
+        props.setTrainingSummary(tutorialSummary);
+        props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
+        await completeStep(TutorialStep.LastTreningResult);
       return;
     }
 
@@ -305,7 +310,10 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const gymId = gym?._id;
 
     if (!userId || !type || !gymId) {
-      setValidationErrors([t("training.failedToAdd")]);
+      toastService.showError(
+        t("training.missingTrainingContext"),
+        t("training.failedToAdd")
+      );
       return;
     }
 
@@ -331,9 +339,9 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     try {
         const result = await addTrainingMutation({ id: userId, data: body });
         if (result && result.data) {
-             setValidationErrors([]);
-             await props.hideAndDeleteTrainingSession();
-             props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
+              toastService.hide();
+              await props.hideAndDeleteTrainingSession();
+              props.setStep(TrainingViewSteps.TRAINING_SUMMARY);
              const trainingSummaryData = result.data as Record<string, unknown>;
              const hasUserOldEloFromApi =
                Object.hasOwn(trainingSummaryData, "userOldElo") &&
@@ -394,15 +402,16 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
                  : []),
              ]);
 
-             await syncCurrentUserAfterTraining(
-               normalizedSummary,
-               trainingSummaryData,
-               hasUserOldEloFromApi
-             );
-        }
-    } catch (e) {
-        console.error(e);
-        setValidationErrors([t('training.failedToAdd')]);
+              await syncCurrentUserAfterTraining(
+                normalizedSummary,
+                trainingSummaryData,
+                hasUserOldEloFromApi
+              );
+         }
+    } catch (error) {
+        console.error(error);
+        const errorReason = getErrorMessage(error, t("common.tryAgain"));
+        toastService.showError(errorReason, t("training.failedToAdd"));
     }
   };
 
@@ -564,18 +573,75 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     await sendPlanDayToLocalStorage(newPlanDay);
   };
 
+  const formatScoreValidationError = (
+    exerciseName: string,
+    series: number,
+    missingFields: string[],
+    invalidFields: string[]
+  ): string => {
+    const details: string[] = [];
+
+    if (missingFields.length > 0) {
+      details.push(
+        t("training.missingFieldList", {
+          fields: missingFields.join(", "),
+        })
+      );
+    }
+
+    if (invalidFields.length > 0) {
+      details.push(
+        t("training.invalidFieldList", {
+          fields: invalidFields.join(", "),
+        })
+      );
+    }
+
+    return t("training.scoreValidationDetails", {
+      exercise: exerciseName,
+      series,
+      details: details.join("; "),
+    });
+  };
+
   const parseScoresIfValid = (
     scores: TrainingSessionScores[]
-  ): TrainingSessionScores[] | null => {
+  ): ScoreValidationResult => {
     const parsedScores = scores.map((score) => {
-      const repsWithDot = score.reps.toString().replace(",", ".");
-      const weightWithDot = score.weight.toString().replace(",", ".");
+      const repsValue = score.reps.toString().trim();
+      const weightValue = score.weight.toString().trim();
+      const repsWithDot = repsValue.replace(",", ".");
+      const weightWithDot = weightValue.replace(",", ".");
+
+      const missingFields: string[] = [];
+      const invalidFields: string[] = [];
+
+      if (!repsValue) {
+        missingFields.push(t("training.reps"));
+      }
 
       const parsedReps = parseFloat(repsWithDot);
       const parsedWeight = parseFloat(weightWithDot);
 
-      if (!Number.isFinite(parsedReps) || !Number.isFinite(parsedWeight)) {
-        return null;
+      if (!weightValue) {
+        missingFields.push(t("training.weightKg"));
+      }
+
+      if (repsValue && !Number.isFinite(parsedReps)) {
+        invalidFields.push(t("training.reps"));
+      }
+
+      if (weightValue && !Number.isFinite(parsedWeight)) {
+        invalidFields.push(t("training.weightKg"));
+      }
+
+      if (missingFields.length > 0 || invalidFields.length > 0) {
+        return formatScoreValidationError(
+          score.exercise.name || t("common.unknown"),
+          score.series,
+          missingFields,
+          invalidFields
+        );
       }
 
       return {
@@ -585,20 +651,29 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
       };
     });
 
-    return parsedScores.includes(null)
-      ? null
-      : (parsedScores as TrainingSessionScores[]);
+    const firstError = parsedScores.find(
+      (score): score is string => typeof score === "string"
+    );
+
+    if (firstError) {
+      return { errorMessage: firstError };
+    }
+
+    return { parsedScores: parsedScores as TrainingSessionScores[] };
   };
 
   const sendTraining = async (exercises: TrainingSessionScores[]) => {
     const result = parseScoresIfValid(exercises);
-    if (!result) {
-      setValidationErrors([t('training.invalidScoresMessage')]);
+    if (!result.parsedScores) {
+      toastService.showError(
+        result.errorMessage,
+        t("training.invalidScores")
+      );
       return;
     }
 
-    setValidationErrors([]);
-    await addTraining(result);
+    toastService.hide();
+    await addTraining(result.parsedScores);
   };
 
   const togglePlanShow = () => {
@@ -621,7 +696,6 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
           className=" h-full flex flex-col justify-between pb-4"
         >
           <TrainingPlanDayHeader hideDaySection={props.hideDaySection} />
-          <ValidationView errors={validationErrors} />
 
           <ScrollView
             ref={scrollViewRef}

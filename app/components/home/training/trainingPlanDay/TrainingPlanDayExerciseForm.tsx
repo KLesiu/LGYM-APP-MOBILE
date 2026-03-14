@@ -8,15 +8,13 @@ import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import { DropdownItem } from "../../../../../interfaces/Dropdown";
 import Dialog from "../../../elements/Dialog";
 import { useHomeContext } from "../../HomeContext";
-import { useAppContext } from "../../../../AppContext";
-import ValidationView from "../../../elements/ValidationView";
-import { Message } from "../../../../../enums/Message";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   useGetApiExerciseIdGetAllExercises,
   usePostApiExerciseIdGetExerciseByBodyPart,
 } from "../../../../../api/generated/exercise/exercise";
+import toastService from "../../../../services/toastService";
 
 import { BodyParts, ExerciseResponseDto, EnumLookupDto } from "../../../../../api/generated/model";
 
@@ -35,7 +33,6 @@ const TrainingPlanDayExerciseForm: React.FC<
 > = (props) => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
-  const { setErrors } = useAppContext();
 
   const [numberOfSeries, setNumberOfSeries] = useState<string>("");
   const [exerciseReps, setExerciseReps] = useState<string>("");
@@ -113,8 +110,11 @@ const TrainingPlanDayExerciseForm: React.FC<
     if (result) setNumberOfSeries(input);
   };
   const sendNewExercise = () => {
-    if (!selectedExercise || !numberOfSeries || !exerciseReps)
-      return setErrors([Message.FieldRequired]);
+    if (!selectedExercise || !numberOfSeries || !exerciseReps) {
+      toastService.showValidationError(t("common.fieldRequired"));
+      return;
+    }
+
     props.addExerciseToPlanDay(
       selectedExercise.value,
       parseInt(numberOfSeries),
@@ -221,7 +221,6 @@ const TrainingPlanDayExerciseForm: React.FC<
             text={t('common.add')}
           />
         </View>
-        <ValidationView />
       </View>
     </Dialog>
   );

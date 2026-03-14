@@ -3,7 +3,6 @@ import CustomButton, {
   ButtonSize,
   ButtonStyle,
 } from "../../../../elements/CustomButton";
-import ValidationView from "../../../../elements/ValidationView";
 import React from "react";
 import { useTranslation } from "react-i18next";
 
@@ -27,7 +26,6 @@ const NoTrainingDaysInfo: React.FC<NoTrainingDaysInfoProps> = (props) => {
         buttonStyleType={ButtonStyle.cancel}
         onPress={props.goBack}
       />
-      <ValidationView />
     </View>
   );
 };
