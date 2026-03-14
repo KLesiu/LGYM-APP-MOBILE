@@ -1,19 +1,21 @@
 {
   "build": {
     "preview": {
+      "node": "22.18.0",
       "android": {
         "buildType": "app-bundle",
         "env": {
-        
+
         }
       },
       "ios": {
         "env": {
-         
+
         }
       }
     },
     "preview2": {
+      "node": "22.18.0",
       "android": {
         "gradleCommand": ":app:assembleRelease",
         "env": {
@@ -22,14 +24,16 @@
       }
     },
     "preview3": {
+      "node": "22.18.0",
       "developmentClient": true
     },
-    "production": {},
+    "production": {
+      "node": "22.18.0"
+    }
   },
   "submit":{
     "production": {
       "ios": {
-       
 
       }
     }

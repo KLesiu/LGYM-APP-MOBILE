@@ -1,6 +1,6 @@
 {
   "name": "lgym-app-mobile",
-  "version": "4.0.10",
+  "version": "4.1.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "npx expo start --clear",
@@ -79,6 +79,9 @@
     "rimraf": "^6.0.1",
     "tailwindcss": "3.3.2",
     "typescript": "~5.9.2"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   },
   "private": true
 }
