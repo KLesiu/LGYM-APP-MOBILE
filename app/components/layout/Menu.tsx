@@ -55,7 +55,11 @@ const Menu: React.FC = () => {
         screenId: "TRAINING" as HomeScreenId,
       },
       { icon: <PlanIcon />, label: t("menu.plan"), screenId: "PLAN" as HomeScreenId },
-      { icon: <HistoryIcon />, label: t("menu.history"), screenId: "HISTORY" as HomeScreenId },
+      {
+        icon: <HistoryIcon color="white" />,
+        label: t("menu.history"),
+        screenId: "HISTORY" as HomeScreenId,
+      },
       { icon: <RecordIcon />, label: t("menu.records"), screenId: "RECORDS" as HomeScreenId },
       {
         icon: <ProfileIcon />,
