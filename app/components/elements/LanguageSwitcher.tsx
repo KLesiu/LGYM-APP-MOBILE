@@ -3,13 +3,20 @@ import { View, Text, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ButtonStyle } from './CustomButton';
 import CustomButton from './CustomButton';
+import { useAppContext } from '../../AppContext';
 
 const LanguageSwitcher: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const { refreshLocalizedCaches } = useAppContext();
 
   const changeLanguage = async (lng: string) => {
+    if (i18n.language === lng) {
+      return;
+    }
+
     try {
       await i18n.changeLanguage(lng);
+      await refreshLocalizedCaches();
     } catch (error) {
       console.error('Failed to change language', error);
     }

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { Message } from "../enums/Message";
@@ -21,6 +21,7 @@ interface AppContextProps {
   setUserInfo: (userInfo: UserInfo | null) => void;
   getRankColor?: "#CACACA" | "#A733DD" | "#FC2C44" | "#E8CC79";
   changeIsVisibleInRanking: (newValue: boolean) => void;
+  refreshLocalizedCaches: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextProps | null>(null);
@@ -92,6 +93,33 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     await AsyncStorage.removeItem(key);
   };
 
+  const refreshLocalizedCaches = useCallback(async (): Promise<void> => {
+    const isLocalizedQuery = (queryKey: readonly unknown[]): boolean => {
+      return queryKey.some((part) => {
+        if (typeof part !== "string") {
+          return false;
+        }
+
+        return (
+          part.includes("/getPlanConfig") ||
+          part.includes("/getPlansList") ||
+          part.includes("/checkIsUserHavePlan") ||
+          part.includes("/api/planDay/") ||
+          part.includes("/api/exercise/")
+        );
+      });
+    };
+
+    await queryClient.invalidateQueries({
+      predicate: (query) => isLocalizedQuery(query.queryKey),
+    });
+
+    await queryClient.refetchQueries({
+      predicate: (query) => isLocalizedQuery(query.queryKey),
+      type: "active",
+    });
+  }, [queryClient]);
+
   const changeIsVisibleInRanking = (newValue: boolean): void => {
     setUserInfo((prevUserInfo: UserInfo | null) => {
       if (!prevUserInfo) return prevUserInfo;
@@ -134,6 +162,7 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         getRankColor,
         setToken,
         changeIsVisibleInRanking,
+        refreshLocalizedCaches,
       }}
     >
       {canAppStart && children}
