@@ -1,28 +1,26 @@
 import { View, Text, TextInput } from "react-native";
 import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
 import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
-import ValidationView from "../../../elements/ValidationView";
 import { useMemo } from "react";
-import { Message } from "./../../../../../enums/Message";
 import { usePlanDay } from "./CreatePlanDayContext";
-import { useAppContext } from "../../../../AppContext";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import toastService from "../../../../services/toastService";
 
 const CreatePlanDayName: React.FC = () => {
   const { t } = useTranslation();
   const { planDayName, setPlanDayName, goBack, goToNext } = usePlanDay();
-  const { setErrors } = useAppContext();
 
   const goNextSection = () => {
     if (validateForm) {
       return goToNext();
     }
-    setErrors([Message.FieldRequired]);
+
+    toastService.showValidationError(t("plans.planDayNameRequired"));
   };
 
   const validateForm = useMemo(() => {
-    if (!planDayName.length) return false;
+    if (!planDayName.trim().length) return false;
     return true;
   }, [planDayName]);
 
@@ -83,7 +81,6 @@ const CreatePlanDayName: React.FC = () => {
           width="flex-1"
         />
       </View>
-      <ValidationView />
     </View>
   );
 };

@@ -7,7 +7,6 @@ import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";
 import Dialog from "../../../elements/Dialog";
 import Exercises from "../../exercises/Exercises";
-import { useAppContext } from "../../../../AppContext";
 import Card from "../../../elements/Card";
 import Checkbox from "../../../elements/Checkbox";
 import { useHomeContext } from "../../HomeContext";
@@ -18,11 +17,11 @@ import {
   useGetApiExerciseGetAllGlobalExercises,
   useGetApiExerciseIdGetAllUserExercises,
 } from "../../../../../api/generated/exercise/exercise";
+import toastService from "../../../../services/toastService";
 
 const CreatePlanDayExerciseList: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { exercisesList, setExercisesList, goBack, goToNext } = usePlanDay();
-  const { setErrors } = useAppContext();
   const { userId } = useHomeContext();
 
   const [isCatalogVisible, setIsCatalogVisible] = useState<boolean>(false);
@@ -133,7 +132,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
   const handleContinue = () => {
     if (!exercisesList.length) {
-      setErrors([t("plans.noExercisesSelected")]);
+      toastService.showValidationError(t("plans.noExercisesSelected"));
       return;
     }
 

@@ -28,6 +28,9 @@ import {
 import { PlanDayVmDto } from "../../../../../api/generated/model";
 import { useHomeContext } from "../../HomeContext";
 import { useOnboarding } from "../../../../onboarding/OnboardingContext";
+import toastService from "../../../../services/toastService";
+import { getErrorMessage } from "../../../../../utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 interface CreatePlanDayProps {
   planId?: string;
@@ -38,6 +41,7 @@ interface CreatePlanDayProps {
 
 const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { registerScreen } = useOnboarding();
   const {
@@ -62,6 +66,9 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
 
   useEffect(() => {
     init();
+    return () => {
+      toastService.hide();
+    };
   }, []);
 
   useEffect(() => {
@@ -166,6 +173,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         },
         {
           onSuccess: () => {
+            toastService.hide();
             queryClient.invalidateQueries({
               queryKey: getGetApiPlanDayIdGetPlanDaysInfoQueryKey(planId),
             });
@@ -174,6 +182,11 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             });
             void props.onSaveSuccess?.();
             closeForm();
+          },
+          onError: (error) => {
+            console.error("Failed to create plan day:", error);
+            const errorMessage = getErrorMessage(error, t("common.tryAgain"));
+            toastService.showError(errorMessage, t("common.error"));
           },
         }
       );
@@ -196,6 +209,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
         },
         {
           onSuccess: () => {
+            toastService.hide();
             queryClient.invalidateQueries({
               queryKey: getGetApiPlanDayIdGetPlanDayQueryKey(props.planDayId!),
             });
@@ -209,6 +223,11 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             });
             void props.onSaveSuccess?.();
             closeForm();
+          },
+          onError: (error) => {
+            console.error("Failed to update plan day:", error);
+            const errorMessage = getErrorMessage(error, t("common.tryAgain"));
+            toastService.showError(errorMessage, t("common.error"));
           },
         }
       );

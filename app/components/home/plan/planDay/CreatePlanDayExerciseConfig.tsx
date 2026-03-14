@@ -5,12 +5,11 @@ import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
 import ExerciseList from "./exerciseList/ExerciseList";
 import { usePlanDay } from "./CreatePlanDayContext";
 import { ExerciseForPlanDay } from "../../../../../types/models";
-import { useAppContext } from "../../../../AppContext";
+import toastService from "../../../../services/toastService";
 
 const CreatePlanDayExerciseConfig: React.FC = () => {
   const { t } = useTranslation();
   const { exercisesList, setExercisesList, goBack, goToNext } = usePlanDay();
-  const { setErrors } = useAppContext();
 
   const editExerciseFromList = (exercise: ExerciseForPlanDay) => {
     const newExercisesList = exercisesList.map((item) =>
@@ -65,7 +64,7 @@ const CreatePlanDayExerciseConfig: React.FC = () => {
 
   const handleContinue = () => {
     if (!isConfigurationValid) {
-      setErrors([t("plans.invalidExerciseConfig")]);
+      toastService.showValidationError(t("plans.invalidExerciseConfig"));
       return;
     }
 
