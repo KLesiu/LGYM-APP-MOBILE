@@ -25,6 +25,7 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
   const initialCulture = i18n.language?.startsWith("pl") ? "pl" : "en";
   const [culture, setCulture] = useState(initialCulture);
   const [translatedName, setTranslatedName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const languageOptions = useMemo<DropdownItem[]>(
     () => [
@@ -38,15 +39,23 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
     return culture.trim().length > 0 && translatedName.trim().length > 0;
   }, [culture, translatedName]);
 
+  const isSubmitBlocked = isSaving || isSubmitting;
+
   const submit = async () => {
-    if (!canSubmit) {
+    if (!canSubmit || isSubmitBlocked) {
       return;
     }
 
-    await onSubmit({
-      culture: culture.trim(),
-      name: translatedName.trim(),
-    });
+    setIsSubmitting(true);
+
+    try {
+      await onSubmit({
+        culture: culture.trim(),
+        name: translatedName.trim(),
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -118,14 +127,15 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
             text={t("common.cancel")}
             buttonStyleType={ButtonStyle.outlineBlack}
             width="flex-1"
-            disabled={isSaving}
+            disabled={isSubmitBlocked}
           />
           <CustomButton
             onPress={submit}
             text={t("common.add")}
             buttonStyleType={ButtonStyle.success}
             width="flex-1"
-            disabled={isSaving || !canSubmit}
+            disabled={isSubmitBlocked || !canSubmit}
+            isLoading={isSubmitBlocked}
           />
         </View>
         <ValidationView />
