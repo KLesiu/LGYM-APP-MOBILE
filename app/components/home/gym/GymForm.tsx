@@ -4,14 +4,13 @@ import { GymForm as GymFormVm } from "./../../../../types/models";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import Dialog from "../../elements/Dialog";
 import GymIcon from "./../../../../img/icons/gymIcon.svg";
-import ValidationView from "../../elements/ValidationView";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
 import { getErrorMessage } from "../../../../utils/errorHandler";
 import React from "react";
 import { usePostApiGymIdAddGym, usePostApiGymEditGym } from "../../../../api/generated/gym/gym";
 import type { GymFormDto } from "../../../../api/generated/model";
 import { useTranslation } from "react-i18next";
+import toastService from "../../../services/toastService";
 
 interface GymFormProps {
   closeForm: () => Promise<void> | void;
@@ -22,7 +21,6 @@ interface GymFormProps {
 const GymForm: React.FC<GymFormProps> = (props) => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
-  const { setErrors } = useAppContext();
   const [gymName, setGymName] = useState<string>("");
 
   const addGymMutation = usePostApiGymIdAddGym();
@@ -34,9 +32,28 @@ const GymForm: React.FC<GymFormProps> = (props) => {
     if (props.gym && props.gym.name) setGymName(props.gym.name);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      toastService.hide();
+    };
+  }, []);
+
+  const validateForm = (): boolean => {
+    if (!gymName.trim()) {
+      toastService.showValidationError(t("gym.nameRequired"));
+      return false;
+    }
+
+    return true;
+  };
+
   const updateGym = () => {
+    if (!validateForm()) {
+      return;
+    }
+
     const payload: GymFormDto = {
-      name: gymName,
+      name: gymName.trim(),
       _id: props.gym?._id,
     };
     editGymMutation.mutate({
@@ -49,14 +66,18 @@ const GymForm: React.FC<GymFormProps> = (props) => {
       onError: (error: any) => {
         console.error("Error updating gym:", error);
         const errorMessage = getErrorMessage(error, t('common.error'));
-        setErrors([errorMessage]);
+        toastService.showError(errorMessage);
       }
     });
   };
 
   const createGym = () => {
+    if (!validateForm()) {
+      return;
+    }
+
     const payload: GymFormDto = {
-      name: gymName,
+      name: gymName.trim(),
     };
     addGymMutation.mutate({
       id: userId,
@@ -69,7 +90,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
       onError: (error: any) => {
         console.error("Error creating gym:", error);
         const errorMessage = getErrorMessage(error, t('common.error'));
-        setErrors([errorMessage]);
+        toastService.showError(errorMessage);
       }
     });
   };
@@ -138,7 +159,6 @@ const GymForm: React.FC<GymFormProps> = (props) => {
             width="flex-1"
           />
         </View>
-        <ValidationView />
       </View>
     </Dialog>
   );

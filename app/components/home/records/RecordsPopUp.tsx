@@ -9,8 +9,6 @@ import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import { DropdownItem } from "./../../../../interfaces/Dropdown";
 import Dialog from "../../elements/Dialog";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
-import ValidationView from "../../elements/ValidationView";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
@@ -23,6 +21,8 @@ import {
 
 import { ExerciseResponseDto } from "../../../../api/generated/model";
 import { useQueryClient } from "@tanstack/react-query";
+import toastService from "../../../services/toastService";
+import { getErrorMessage } from "../../../../utils/errorHandler";
 
 interface RecordsPopUpProps {
   offPopUp: () => void;
@@ -38,7 +38,6 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const [weight, setWeight] = useState<string>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
   const { userId } = useHomeContext();
-  const { setErrors } = useAppContext();
 
   const { data: exercisesData } = useGetApiExerciseIdGetAllExercises(userId, {
     query: { enabled: !!userId },
@@ -76,6 +75,12 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       setExercisesToSelect(helpExercisesToSelect);
     }
   }, [exercisesData, props.exerciseId]);
+
+  useEffect(() => {
+    return () => {
+      toastService.hide();
+    };
+  }, []);
 
   const clearAutoCompleteQuery = () => setClearQuery(false);
 
@@ -117,13 +122,25 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   };
 
   const createNewRecord = async () => {
-    if (!weight || !selectedExercise || !userId) {
-      return setErrors([t('common.fieldRequired')]);
+    if (!selectedExercise) {
+      toastService.showValidationError(t("records.exerciseRequired"));
+      return;
+    }
+
+    if (!weight?.trim()) {
+      toastService.showValidationError(t("records.weightRequired"));
+      return;
+    }
+
+    if (!userId) {
+      toastService.showError(t("common.tryAgain"), t("common.error"));
+      return;
     }
 
     const normalizedWeight = weight.replace(",", ".").trim();
     if (!isFloatValidator(normalizedWeight)) {
-      return setErrors([t('common.fieldRequired')]);
+      toastService.showValidationError(t("records.invalidWeight"));
+      return;
     }
 
     try {
@@ -138,7 +155,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       });
 
       if (response.status !== 200) {
-        setErrors([t("common.tryAgain")]);
+        toastService.showError(t("common.tryAgain"), t("common.error"));
         return;
       }
 
@@ -151,10 +168,12 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         }),
       ]);
 
+      toastService.hide();
       props.offPopUp();
     } catch (error) {
       console.error("Error creating new record:", error);
-      setErrors([t('common.tryAgain')]);
+      const errorMessage = getErrorMessage(error, t("common.tryAgain"));
+      toastService.showError(errorMessage, t("common.error"));
     }
   };
   return (
@@ -233,8 +252,6 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             width="flex-1"
           />
         </View>
-
-        <ValidationView />
       </View>
     </Dialog>
   );

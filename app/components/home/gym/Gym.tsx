@@ -13,11 +13,11 @@ import ViewLoading from "../../elements/ViewLoading";
 import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../../api/generated/gym/gym";
 import type { GymChoiceInfoDto } from "../../../../api/generated/model";
 import { getErrorMessage } from "../../../../utils/errorHandler";
-import { useAppContext } from "../../../AppContext";
 import { useOnboarding } from "../../../onboarding/OnboardingContext";
 import { TutorialStep } from "../../../onboarding/tutorialBackend";
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiGymIdGetGymsQueryKey } from "../../../../api/generated/gym/gym";
+import toastService from "../../../services/toastService";
 
 const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
   if (!value || typeof value !== "object") return false;
@@ -33,7 +33,6 @@ const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
 const Gym: React.FC = () => {
   const { t } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
-  const { setErrors } = useAppContext();
   const { completeStep, currentStep, registerScreen, setStepAction } = useOnboarding();
   const queryClient = useQueryClient();
 
@@ -128,7 +127,7 @@ const Gym: React.FC = () => {
       await refetch();
     } catch (error) {
       const errorMessage = getErrorMessage(error, t("common.error"));
-      setErrors([errorMessage]);
+      toastService.showError(errorMessage, t("common.error"));
     } finally {
       setIsDeleteConfirmationDialogVisible(false);
     }
