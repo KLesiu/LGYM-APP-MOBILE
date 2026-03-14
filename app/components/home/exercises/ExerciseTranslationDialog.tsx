@@ -3,10 +3,10 @@ import { Text, TextInput, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import Dialog from "../../elements/Dialog";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import ValidationView from "../../elements/ValidationView";
 import CustomDropdown from "../../elements/Dropdown";
 import { ExerciseResponseDto } from "../../../../api/generated/model";
 import { DropdownItem } from "../../../../interfaces/Dropdown";
+import toastService from "../../../services/toastService";
 
 interface ExerciseTranslationDialogProps {
   exercise: ExerciseResponseDto;
@@ -43,6 +43,7 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
 
   const submit = async () => {
     if (!canSubmit || isSubmitBlocked) {
+      toastService.showValidationError(t("common.fieldRequired"));
       return;
     }
 
@@ -138,7 +139,6 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
             isLoading={isSubmitBlocked}
           />
         </View>
-        <ValidationView />
       </View>
     </Dialog>
   );

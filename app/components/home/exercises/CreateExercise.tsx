@@ -8,8 +8,6 @@ import { DropdownItem } from "./../../../../interfaces/Dropdown";
 import React from "react";
 import Dialog from "../../elements/Dialog";
 import ExerciseIcon from "./../../../../img/icons/exercisesIcon.svg";
-import ValidationView from "../../elements/ValidationView";
-import { useAppContext } from "../../../AppContext";
 import { useHomeContext } from "../HomeContext";
 import {
   getGetApiExerciseGetAllGlobalExercisesQueryKey,
@@ -29,6 +27,7 @@ import {
 import type { ExerciseFormDtoBodyPart as ExerciseBodyPartValue } from "../../../../api/generated/model";
 import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
 import { useQueryClient } from "@tanstack/react-query";
+import toastService from "../../../services/toastService";
 
 const toBodyPartValue = (value?: string | null): ExerciseBodyPartValue => {
   const allowed = Object.values(ExerciseFormDtoBodyPart);
@@ -52,7 +51,6 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const [bodyPart, setBodyPart] = useState<EnumLookupDto | undefined>();
   const [description, setDescription] = useState<string | undefined>("");
   const [isBlocked, setIsBlocked] = useState<boolean>(false);
-  const { setErrors } = useAppContext();
   const { userId } = useHomeContext();
   const queryClient = useQueryClient();
 
@@ -79,13 +77,19 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    return () => {
+      toastService.hide();
+    };
+  }, []);
+
   const validateForm = useCallback((): boolean => {
     if (!exerciseName || !bodyPart) {
-      setErrors([t("createExercise.nameAndBodyPartRequired")]);
+      toastService.showValidationError(t("createExercise.nameAndBodyPartRequired"));
       return false;
     }
     return true;
-  }, [exerciseName, bodyPart, setErrors, t]);
+  }, [exerciseName, bodyPart, t]);
 
   const refreshExerciseQueries = useCallback(async () => {
     const invalidatePromises: Promise<unknown>[] = [
@@ -122,7 +126,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       await refreshExerciseQueries();
       props.closeForm();
     } catch (error) {
-      setErrors([t("common.tryAgain")]);
+      toastService.showError(t("common.tryAgain"));
     }
   };
 
@@ -140,13 +144,16 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       await refreshExerciseQueries();
       props.closeForm();
     } catch (error) {
-      setErrors([t("common.tryAgain")]);
+      toastService.showError(t("common.tryAgain"));
     }
   };
 
   const updateExercise = async (): Promise<void> => {
-    if (!exerciseName || !bodyPart)
-      return setErrors([t("createExercise.nameAndBodyPartRequired")]);
+    if (!exerciseName || !bodyPart) {
+      toastService.showValidationError(t("createExercise.nameAndBodyPartRequired"));
+      return;
+    }
+
     try {
       const payload: ExerciseFormDto = {
         _id: props.form?._id,
@@ -160,7 +167,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       await refreshExerciseQueries();
       props.closeForm();
     } catch (error) {
-      setErrors([t("common.tryAgain")]);
+      toastService.showError(t("common.tryAgain"));
     }
   };
 
@@ -176,7 +183,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       await refreshExerciseQueries();
       props.closeForm();
     } catch (error) {
-      setErrors([t("common.tryAgain")]);
+      toastService.showError(t("common.tryAgain"));
     }
   };
 
@@ -331,7 +338,6 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
             </>
           )}
         </View>
-        <ValidationView />
       </View>
     </Dialog>
   );

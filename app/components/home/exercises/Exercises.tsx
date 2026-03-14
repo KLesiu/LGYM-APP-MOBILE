@@ -34,7 +34,7 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../../../../stores/useAuthStore";
 import { isAdminUser } from "../../../../utils/authorization";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAppContext } from "../../../AppContext";
+import toastService from "../../../services/toastService";
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -51,7 +51,6 @@ const Exercises: React.FC<ExercisesProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
-  const { setErrors } = useAppContext();
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -129,7 +128,7 @@ const Exercises: React.FC<ExercisesProps> = ({
 
   const closeTranslationForm = () => {
     setExerciseToTranslate(null);
-    setErrors([]);
+    toastService.hide();
   };
 
   const refreshExerciseQueries = useCallback(async () => {
@@ -157,12 +156,12 @@ const Exercises: React.FC<ExercisesProps> = ({
     name: string;
   }): Promise<void> => {
     if (!exerciseToTranslate?._id || !userId) {
-      setErrors([t("common.tryAgain")]);
+      toastService.showError(t("common.tryAgain"), t("common.error"));
       return;
     }
 
     if (!isAdmin || exerciseToTranslate.user) {
-      setErrors([t("common.tryAgain")]);
+      toastService.showError(t("common.tryAgain"), t("common.error"));
       return;
     }
 
@@ -181,7 +180,7 @@ const Exercises: React.FC<ExercisesProps> = ({
       await Promise.all([refetchUser(), refetchGlobal()]);
       closeTranslationForm();
     } catch (error) {
-      setErrors([t("common.tryAgain")]);
+      toastService.showError(t("common.tryAgain"), t("common.error"));
     }
   };
 
