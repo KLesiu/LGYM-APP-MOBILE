@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { View, Text, TextInput } from "react-native";
-import { Message } from "./../../../../enums/Message";
 import ViewLoading from "../../elements/ViewLoading";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
 import Dialog from "../../elements/Dialog";
 import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
-import ValidationView from "../../elements/ValidationView";
 import React from "react";
 import { usePostApiIdCreatePlan } from "../../../../api/generated/plan/plan";
 import { useTranslation } from "react-i18next";
+import toastService from "../../../services/toastService";
+import { getErrorMessage } from "../../../../utils/errorHandler";
 
 interface CreatePlanConfigProps {
   reloadSection: VoidFunction;
@@ -20,13 +19,16 @@ interface CreatePlanConfigProps {
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
-  const { setErrors } = useAppContext();
   const [planName, setPlanName] = useState<string>("");
 
   const { mutate: createPlan, isPending } = usePostApiIdCreatePlan();
 
   const sendConfig = () => {
-    if (!planName) return setErrors([Message.FieldRequired]);
+    if (!planName.trim()) {
+      toastService.showValidationError(t("plans.planNameRequired"));
+      return;
+    }
+
     submitPlanConfig();
   };
 
@@ -34,16 +36,18 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
     createPlan(
       {
         id: userId,
-        data: { name: planName },
+        data: { name: planName.trim() },
       },
       {
         onSuccess: async () => {
+          toastService.hide();
           await props.reloadSection();
           await props.onSubmitSuccess?.();
         },
         onError: (error) => {
           console.error("Failed to create plan:", error);
-          setErrors([t('common.tryAgain')]);
+          const errorMessage = getErrorMessage(error, t("common.tryAgain"));
+          toastService.showError(errorMessage, t("common.error"));
         },
       }
     );
@@ -98,7 +102,6 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             width="flex-1"
           />
         </View>
-        <ValidationView />
       </View>
       {isPending && <ViewLoading />}
     </Dialog>
