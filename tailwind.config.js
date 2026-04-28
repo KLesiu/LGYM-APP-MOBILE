@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const myColors = require("./constants/colors");
+// FROZEN at NativeWind v2 — see .sisyphus/evidence/task-2.4-freeze.md
 module.exports = {
   content: ["./app/*.{js,jsx,ts,tsx}", "./app/components/**/*.{js,jsx,ts,tsx}"],
   theme: {

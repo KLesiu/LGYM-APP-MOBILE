@@ -7,6 +7,11 @@ node_modules/
 .expo/
 dist/
 web-build/
+coverage/
+
+# Project tooling exclusions
+.sisyphus/
+api/generated/
 
 # Native
 *.orig.*
@@ -48,4 +53,7 @@ start.txt
 /android
 
 repomix-output.xml
+
+# Tool artifacts
+.playwright-mcp/
 
