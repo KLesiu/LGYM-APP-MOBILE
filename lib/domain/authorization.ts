@@ -1,5 +1,8 @@
-import type { UserInfoDto } from "../api/generated/model";
-import { Roles } from "../enums/Roles";
+import type { UserInfoDto } from '../../api/generated/model';
+import { ROLES } from '../constants';
+
+// mobile-observed risk / backend enforcement unverified.
+// Backend MUST enforce RBAC. See .sisyphus/backlog/backend-verification.md.
 
 const normalize = (value: string): string => value.trim().toLowerCase();
 
@@ -25,5 +28,5 @@ export const hasPermissionClaim = (
 };
 
 export const isAdminUser = (user: UserInfoDto | null | undefined): boolean => {
-  return hasRole(user, Roles.Admin) || hasPermissionClaim(user, "admin.access");
+  return hasRole(user, ROLES.admin) || hasPermissionClaim(user, 'admin.access');
 };

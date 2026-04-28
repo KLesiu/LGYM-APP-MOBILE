@@ -1,5 +1,5 @@
-import { useWindowDimensions } from "react-native";
-import { DeviceCategory } from "../../enums/DeviceCategory";
+import { useWindowDimensions } from 'react-native';
+import { DeviceCategory } from '../../enums/DeviceCategory';
 
 const useDeviceCategory = (): DeviceCategory | null => {
   const { width, height } = useWindowDimensions();
@@ -8,7 +8,7 @@ const useDeviceCategory = (): DeviceCategory | null => {
     case width <= 360 && height <= 1280:
       return DeviceCategory.SMALL;
     case width <= 400 && height > 1280 && height <= 1600:
-      return DeviceCategory.BUGDET;
+      return DeviceCategory.BUDGET;
     case width <= 430 && height > 1600 && height <= 2340:
       return DeviceCategory.MID;
     case width <= 450 && height > 2340 && height <= 2532:

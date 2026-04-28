@@ -1,6 +1,6 @@
-import React from "react";
-import { BaseToast, ErrorToast, ToastConfig } from "react-native-toast-message";
-import colors from "../constants/colors";
+import React from 'react';
+import { BaseToast, ErrorToast, ToastConfig } from 'react-native-toast-message';
+import colors from '../../constants/colors';
 
 export const toastConfig: ToastConfig = {
   success: (props) => (
@@ -10,7 +10,7 @@ export const toastConfig: ToastConfig = {
         borderLeftColor: colors.primaryColor,
         backgroundColor: colors.secondaryColor,
         borderLeftWidth: 6,
-        width: "90%",
+        width: '90%',
         minHeight: 70,
         borderRadius: 12,
       }}
@@ -18,12 +18,12 @@ export const toastConfig: ToastConfig = {
       text2NumberOfLines={4}
       text1Style={{
         fontSize: 16,
-        fontWeight: "bold",
+        fontWeight: 'bold',
         color: colors.textColor,
       }}
       text2Style={{
         fontSize: 14,
-        fontWeight: "400",
+        fontWeight: '400',
         color: colors.fifthColor,
         lineHeight: 20,
       }}
@@ -37,7 +37,7 @@ export const toastConfig: ToastConfig = {
         borderLeftColor: colors.redColor,
         backgroundColor: colors.secondaryColor,
         borderLeftWidth: 6,
-        width: "90%",
+        width: '90%',
         minHeight: 70,
         borderRadius: 12,
       }}
@@ -45,12 +45,12 @@ export const toastConfig: ToastConfig = {
       text2NumberOfLines={6}
       text1Style={{
         fontSize: 16,
-        fontWeight: "bold",
+        fontWeight: 'bold',
         color: colors.textColor,
       }}
       text2Style={{
         fontSize: 14,
-        fontWeight: "400",
+        fontWeight: '400',
         color: colors.fifthColor,
         lineHeight: 20,
       }}
