@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Modal, View, Pressable, Text, TextInput } from "react-native";
-import Toast from "react-native-toast-message";
-import { toastConfig } from "../../../../helpers/toastConfig";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { Modal, View, Text, TextInput } from 'react-native';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from '../../../../lib/format/toastConfig';
+import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
+import { useTranslation } from 'react-i18next';
 
 interface PlanCopyDialogProps {
   visible: boolean;
@@ -11,27 +11,18 @@ interface PlanCopyDialogProps {
   copyPlan: (code: string) => Promise<void>;
 }
 
-const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({
-  visible,
-  onCancel,
-  copyPlan,
-}) => {
+const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({ visible, onCancel, copyPlan }) => {
   const { t } = useTranslation();
-  const [code, setCode] = useState<string>("");
+  const [code, setCode] = useState<string>('');
   return (
-    <Modal
-      transparent={true}
-      animationType="fade"
-      visible={visible}
-      onRequestClose={onCancel}
-    >
+    <Modal transparent={true} animationType="fade" visible={visible} onRequestClose={onCancel}>
       <View className="flex flex-1  bg-black/50 items-center justify-center">
         <View
           className="flex flex-col bg-cardColor rounded-lg  w-full p-4 items-center"
           style={{ gap: 16 }}
         >
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
             className="text-2xl font-bold text-primaryColor"
           >
             {t('plans.copyDialogTitle')}
@@ -40,7 +31,7 @@ const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({
           <View style={{ gap: 4 }} className="flex w-full flex-col">
             <View className="flex flex-row gap-1">
               <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
                 className="  text-textColor  text-base smallPhone:text-sm"
               >
                 {t('plans.code')}:
@@ -49,8 +40,8 @@ const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({
             </View>
             <TextInput
               style={{
-                fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                fontFamily: 'OpenSans_400Regular',
+                backgroundColor: 'rgb(30, 30, 30)',
                 borderRadius: 8,
               }}
               className=" w-full  px-2 py-4 text-textColor  "
@@ -68,7 +59,7 @@ const PlanCopyDialog: React.FC<PlanCopyDialogProps> = ({
             <CustomButton
               text={t('plans.copyPlan')}
               buttonStyleType={ButtonStyle.success}
-              onPress={()=> copyPlan(code)}
+              onPress={() => copyPlan(code)}
               width="flex-1"
             />
           </View>

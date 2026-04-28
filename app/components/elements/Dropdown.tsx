@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from "react-native";
-import { useTranslation } from "react-i18next";
-import { DropdownItem } from "../../../interfaces/Dropdown";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { DropdownItem } from '../../../interfaces/Dropdown';
 
 interface CustomDropdownProps {
   data: DropdownItem[];
@@ -29,7 +29,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
 
   const handleSelect = (item: DropdownItem | null) => {
     setSelectedItem(item);
-    onSelect(item); 
+    onSelect(item);
     setIsVisible(false);
   };
 
@@ -43,7 +43,7 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
     <View>
       <TouchableOpacity style={styles.button} onPress={toggleDropdown}>
         <Text className=" text-md smallPhone:text-base">
-          {selectedItem ? selectedItem.label : t("common.chooseOption")}
+          {selectedItem ? selectedItem.label : t('common.chooseOption')}
         </Text>
       </TouchableOpacity>
 
@@ -51,11 +51,14 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
         <TouchableOpacity style={styles.overlay} onPress={toggleDropdown}>
           <View style={styles.dropdown}>
             <FlatList
-              data={[{ label: t("common.clearSelection"), value: "" }, ...data]} 
+              data={[{ label: t('common.clearSelection'), value: '' }, ...data]}
               renderItem={({ item }) =>
-                item.value === "" ? (
-                  <TouchableOpacity style={[styles.item, styles.clearItem]} onPress={() => handleSelect(null)}>
-                    <Text style={{ color: "black" }}>{t("common.clearSelection")}</Text>
+                item.value === '' ? (
+                  <TouchableOpacity
+                    style={[styles.item, styles.clearItem]}
+                    onPress={() => handleSelect(null)}
+                  >
+                    <Text style={{ color: 'black' }}>{t('common.clearSelection')}</Text>
                   </TouchableOpacity>
                 ) : (
                   renderItem({ item })
@@ -73,32 +76,33 @@ const CustomDropdown: React.FC<CustomDropdownProps> = ({ data, value, onSelect }
 const styles = StyleSheet.create({
   button: {
     padding: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 8,
-    alignItems: "center",
+    alignItems: 'center',
   },
   overlay: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   dropdown: {
     width: 200,
-    backgroundColor: "#20BC2D",
+    backgroundColor: '#20BC2D',
     borderRadius: 8,
     elevation: 5,
   },
   item: {
     padding: 16,
-    borderTopColor: "#ccc",
+    borderTopColor: '#ccc',
     borderTopWidth: 1,
   },
   clearItem: {
-    backgroundColor: "#f8d7da",
-    alignItems: "center",
+    backgroundColor: '#f8d7da',
+    alignItems: 'center',
     borderTopLeftRadius: 8,
-    borderTopRightRadius:8},
+    borderTopRightRadius: 8,
+  },
 });
 
 export default CustomDropdown;

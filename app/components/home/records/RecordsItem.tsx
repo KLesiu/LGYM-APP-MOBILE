@@ -1,11 +1,11 @@
-import React from "react";
-import { View, Text } from "react-native";
-import CustomButton, { ButtonSize } from "../../elements/CustomButton";
-import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
-import ProgressIcon from "./../../../../img/icons/progressIcon.svg";
-import Card from "../../elements/Card";
-  import { MainRecordsLastDto } from "../../../../api/generated/model";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { View, Text } from 'react-native';
+import CustomButton, { ButtonSize } from '../../elements/CustomButton';
+import RemoveIcon from './../../../../img/icons/deleteIcon.svg';
+import ProgressIcon from './../../../../img/icons/progressIcon.svg';
+import Card from '../../elements/Card';
+import { MainRecordsLastDto } from '../../../../api/generated/model';
+import { useTranslation } from 'react-i18next';
 
 interface RecordsItemProps {
   record: MainRecordsLastDto;
@@ -21,13 +21,11 @@ const RecordsItem: React.FC<RecordsItemProps> = ({
   const { t } = useTranslation();
   return (
     <Card>
-      <View
-        className="w-full"
-      >
+      <View className="w-full">
         <View className="flex flex-row justify-between">
           <Text
             style={{
-              fontFamily: "OpenSans_700Bold",
+              fontFamily: 'OpenSans_700Bold',
             }}
             className="text-xl smallPhone:text-base font-bold text-primaryColor"
           >
@@ -36,12 +34,8 @@ const RecordsItem: React.FC<RecordsItemProps> = ({
           <View style={{ gap: 16 }} className="flex flex-row">
             <CustomButton
               buttonStyleSize={ButtonSize.none}
-              onPress={() =>
-                updateSettedExerciseRecord(record.exerciseDetails?._id!)
-              }
-              customSlots={[
-                <ProgressIcon stroke={"white"} height={24} width={24} />,
-              ]}
+              onPress={() => updateSettedExerciseRecord(record.exerciseDetails?._id!)}
+              customSlots={[<ProgressIcon stroke={'white'} height={24} width={24} />]}
             />
             <CustomButton
               buttonStyleSize={ButtonSize.none}
@@ -52,20 +46,20 @@ const RecordsItem: React.FC<RecordsItemProps> = ({
         </View>
 
         <Text
-          style={{ fontFamily: "OpenSans_400Regular" }}
+          style={{ fontFamily: 'OpenSans_400Regular' }}
           className="text-base smallPhone:text-sm text-textColor"
         >
           {t('records.weightLabel', {
             weight: record.weight,
-            unit: record.unit?.displayName || ''
+            unit: record.unit?.displayName || '',
           })}
         </Text>
         <Text
-          style={{ fontFamily: "OpenSans_400Regular" }}
+          style={{ fontFamily: 'OpenSans_400Regular' }}
           className="text-base smallPhone:text-sm text-textColor"
         >
           {t('records.dateLabel', {
-            date: new Date(record.date!).toLocaleString()
+            date: new Date(record.date!).toLocaleString(),
           })}
         </Text>
       </View>

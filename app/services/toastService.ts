@@ -1,5 +1,5 @@
-import Toast from "react-native-toast-message";
-import i18n from "../i18n";
+import Toast from 'react-native-toast-message';
+import i18n from '../i18n';
 
 const DEFAULT_TOAST_TIME = 4500;
 
@@ -11,13 +11,13 @@ const normalizeMessages = (messages: string | string[]): string[] => {
 
 const mapMessagesToDescription = (messages: string[]): string => {
   if (messages.length === 1) {
-    return messages[0];
+    return messages[0] ?? '';
   }
 
-  return messages.map((message) => `- ${message}`).join("\n");
+  return messages.map((message) => `- ${message}`).join('\n');
 };
 
-const showError = (messages: string | string[], title = i18n.t("common.error")) => {
+const showError = (messages: string | string[], title = i18n.t('common.error')) => {
   const normalizedMessages = normalizeMessages(messages);
 
   if (!normalizedMessages.length) {
@@ -25,7 +25,7 @@ const showError = (messages: string | string[], title = i18n.t("common.error")) 
   }
 
   Toast.show({
-    type: "error",
+    type: 'error',
     text1: title,
     text2: mapMessagesToDescription(normalizedMessages),
     topOffset: 60,

@@ -1,11 +1,11 @@
-import { View, Text, Pressable } from "react-native";
-import CustomButton, { ButtonSize } from "../../elements/CustomButton";
-import { PlanDayBaseInfoVm } from "./../../../../types/models";
-import EditIcon from "./../../../../img/icons/editIcon.svg";
-import DeleteIcon from "./../../../../img/icons/deleteIcon.svg";
-import Card from "../../elements/Card";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import { View, Text } from 'react-native';
+import CustomButton, { ButtonSize } from '../../elements/CustomButton';
+import { PlanDayBaseInfoVm } from './../../../../types/models';
+import EditIcon from './../../../../img/icons/editIcon.svg';
+import DeleteIcon from './../../../../img/icons/deleteIcon.svg';
+import Card from '../../elements/Card';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface TrainingPlanItemProps {
   item: PlanDayBaseInfoVm;
@@ -21,18 +21,20 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
   return (
     <View key={item._id} className="w-full" style={{ gap: 10 }}>
       <Text
-        style={{ fontFamily: "OpenSans_400Regular" }}
+        style={{ fontFamily: 'OpenSans_400Regular' }}
         className="text-base smallPhone:text-sm text-textColor"
       >
         {t('plans.lastTraining', {
-          date: item.lastTrainingDate ? new Date(item.lastTrainingDate).toLocaleDateString() : t('plans.noTrainingYet')
+          date: item.lastTrainingDate
+            ? new Date(item.lastTrainingDate).toLocaleDateString()
+            : t('plans.noTrainingYet'),
         })}
       </Text>
       <Card onPress={() => showPlanDayForm(item, true)}>
         <View className="flex flex-col" style={{ gap: 4 }}>
           <Text
             style={{
-              fontFamily: "OpenSans_700Bold",
+              fontFamily: 'OpenSans_700Bold',
             }}
             className="text-xl smallPhone:text-lg font-bold text-textColor"
           >
@@ -40,20 +42,20 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
           </Text>
           <Text
             style={{
-              fontFamily: "OpenSans_400Regular",
+              fontFamily: 'OpenSans_400Regular',
             }}
             className=" text-base smallPhone:text-sm  text-fifthColor"
           >
-            {t('plans.exercisesCount', { count: item.totalNumberOfExercises })}
+            {t('plans.exercisesCount', { count: item.totalNumberOfExercises ?? 0 })}
           </Text>
           <View className="flex flex-row w-full " style={{ gap: 16 }}>
             <Text
               style={{
-                fontFamily: "OpenSans_400Regular",
+                fontFamily: 'OpenSans_400Regular',
               }}
               className=" text-base smallPhone:text-sm  text-fifthColor"
             >
-              {t('plans.totalSeries', { count: item.totalNumberOfSeries })}
+              {t('plans.totalSeries', { count: item.totalNumberOfSeries ?? 0 })}
             </Text>
           </View>
         </View>
@@ -62,7 +64,7 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             <CustomButton
               buttonStyleSize={ButtonSize.small}
               onPress={() => showPlanDayForm(item, undefined)}
-              customSlots={[<EditIcon fill={"white"} />]}
+              customSlots={[<EditIcon fill={'white'} />]}
             />
           </View>
           <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">

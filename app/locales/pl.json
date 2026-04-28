@@ -10,6 +10,15 @@
     "loading": "Ładowanie...",
     "fieldRequired": "Pole jest wymagane",
     "tryAgain": "Spróbuj ponownie",
+    "networkError": "Błąd sieci",
+    "serverError": "Błąd serwera",
+    "unauthorized": "Sesja wygasła. Zaloguj się ponownie.",
+    "forbidden": "Nie masz uprawnień do wykonania tej akcji.",
+    "notFound": "Nie znaleziono żądanego zasobu.",
+    "requestTimeout": "Przekroczono limit czasu żądania.",
+    "tooManyRequests": "Za dużo żądań. Spróbuj ponownie później.",
+    "conflict": "Wykryto konflikt zmian.",
+    "unprocessableEntity": "Nie można przetworzyć żądania.",
     "clearSelection": "Wyczyść wybór",
     "chooseOption": "Wybierz opcję",
     "addRecord": "Dodaj rekord",
@@ -288,33 +297,9 @@
         "Lis",
         "Gru"
       ],
-      "weekdays": [
-        "Niedziela",
-        "Poniedziałek",
-        "Wtorek",
-        "Środa",
-        "Czwartek",
-        "Piątek",
-        "Sobota"
-      ],
-      "weekdaysShort": [
-        "Ndz",
-        "Pon",
-        "Wt",
-        "Śr",
-        "Czw",
-        "Pt",
-        "Sob"
-      ],
-      "weekdaysMin": [
-        "Nd",
-        "Pn",
-        "Wt",
-        "Śr",
-        "Cz",
-        "Pt",
-        "Sb"
-      ]
+      "weekdays": ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"],
+      "weekdaysShort": ["Ndz", "Pon", "Wt", "Śr", "Czw", "Pt", "Sob"],
+      "weekdaysMin": ["Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "Sb"]
     }
   },
   "records": {
@@ -342,31 +327,31 @@
     "updateNow": "Aktualizuj teraz",
     "openLinkError": "Nie mozna otworzyc linku do aktualizacji."
   },
-    "profile": {
-      "settings": "Ustawienia",
-      "language": "Język",
-      "logout": "Wyloguj",
-      "changeLanguage": "Zmień Język",
-      "deleteAccount": "Usuń konto",
-      "visibleInRanking": "Bądź widoczny w rankingach",
-      "confirmDeleteTitle": "Usuń konto",
-      "confirmDeleteMessage": "Czy na pewno chcesz usunąć swoje konto?",
-      "memberSince": "Członkiem od:",
-      "elo": "Elo"
-    },
-    "createExercise": {
-      "newExercise": "Nowe Ćwiczenie",
-      "editExercise": "Edytuj Ćwiczenie",
-      "setExercise": "Ustaw ćwiczenie",
-      "exerciseName": "Nazwa",
-      "bodyPart": "Grupa Mięśniowa",
-      "description": "Opis",
-      "nameAndBodyPartRequired": "Nazwa i grupa mięśniowa są wymagane!",
-      "add": "Dodaj",
-      "save": "Zapisz",
-      "delete": "Usuń",
-      "deleteExercise": "Usuń Ćwiczenie",
-      "deleteExerciseMessage": "Czy na pewno chcesz usunąć to ćwiczenie?",
-      "createGlobalExercise": "Utwórz Globalne Ćwiczenie"
-    }
+  "profile": {
+    "settings": "Ustawienia",
+    "language": "Język",
+    "logout": "Wyloguj",
+    "changeLanguage": "Zmień Język",
+    "deleteAccount": "Usuń konto",
+    "visibleInRanking": "Bądź widoczny w rankingach",
+    "confirmDeleteTitle": "Usuń konto",
+    "confirmDeleteMessage": "Czy na pewno chcesz usunąć swoje konto?",
+    "memberSince": "Członkiem od:",
+    "elo": "Elo"
+  },
+  "createExercise": {
+    "newExercise": "Nowe Ćwiczenie",
+    "editExercise": "Edytuj Ćwiczenie",
+    "setExercise": "Ustaw ćwiczenie",
+    "exerciseName": "Nazwa",
+    "bodyPart": "Grupa Mięśniowa",
+    "description": "Opis",
+    "nameAndBodyPartRequired": "Nazwa i grupa mięśniowa są wymagane!",
+    "add": "Dodaj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "deleteExercise": "Usuń Ćwiczenie",
+    "deleteExerciseMessage": "Czy na pewno chcesz usunąć to ćwiczenie?",
+    "createGlobalExercise": "Utwórz Globalne Ćwiczenie"
+  }
 }

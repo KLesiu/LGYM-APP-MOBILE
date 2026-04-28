@@ -1,8 +1,8 @@
-import {Text, View} from "react-native";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { SeriesComparison } from "../../../../../types/models";
-import ProgressSummaryValue from "./ProgressSummaryValue";
+import { Text, View } from 'react-native';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { SeriesComparison } from '../../../../../types/models';
+import ProgressSummaryValue from './ProgressSummaryValue';
 
 interface SeriesSummaryRowProps {
   seriesComparison: SeriesComparison;
@@ -26,12 +26,12 @@ const SeriesSummaryRow: React.FC<SeriesSummaryRowProps> = ({ seriesComparison })
         </Text>
         <ProgressSummaryValue value={repsDiff} />
       </View>
-       <View className="flex-row items-baseline w-1/3">
-         <Text className="text-textColor text-base smallPhone:text-sm">
-           {currentResult.weight}kg
-         </Text>
-         <ProgressSummaryValue value={weightDiff} unit="kg" />
-       </View>
+      <View className="flex-row items-baseline w-1/3">
+        <Text className="text-textColor text-base smallPhone:text-sm">
+          {currentResult.weight}kg
+        </Text>
+        <ProgressSummaryValue value={weightDiff} unit="kg" />
+      </View>
     </View>
   );
 };

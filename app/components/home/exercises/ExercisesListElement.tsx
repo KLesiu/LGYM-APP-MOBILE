@@ -1,14 +1,13 @@
-import React from "react";
-import { ExerciseForm, ExerciseForPlanDay } from "../../../../types/models";
-import Card from "../../elements/Card";
-import { View, Text, Image, Pressable } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import EditIcon from "./../../../../img/icons/editIcon.svg";
-import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
-import Checkbox from "../../elements/Checkbox";
-import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
-import { isAdminUser } from "../../../../utils/authorization";
+import React from 'react';
+import { ExerciseForPlanDay } from '../../../../types/models';
+import Card from '../../elements/Card';
+import { View, Text, Pressable } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import EditIcon from './../../../../img/icons/editIcon.svg';
+import Checkbox from '../../elements/Checkbox';
+import { ExerciseResponseDto } from '../../../../api/generated/model';
+import { isAdminUser } from '../../../../lib/domain/authorization';
+import { useAuthStore } from '../../../../stores/useAuthStore';
 
 interface ExercisesListElementProps {
   exercise: ExerciseResponseDto;
@@ -29,11 +28,10 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
   addTranslation,
   isCreatePlanDayMode,
   addExerciseToList,
-  exercisesList
+  exercisesList,
 }) => {
-  const { userInfo } = useAppContext();
+  const userInfo = useAuthStore((state) => state.user);
   const isAdmin = isAdminUser(userInfo);
-  
 
   return (
     <Card customClasses="flex flex-row items-center mb-2">
@@ -41,14 +39,14 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
         <View className="flex flex-col flex-1">
           <Text
             className="font-bold text-xl text-textColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
           >
             {exercise.name}
           </Text>
 
           <Text
             className="font-light text-xs text-textColor"
-            style={{ fontFamily: "OpenSans_300Light" }}
+            style={{ fontFamily: 'OpenSans_300Light' }}
           >
             {exercise.bodyPart?.displayName}
           </Text>
@@ -56,7 +54,10 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
       </View>
       {isCreatePlanDayMode && addExerciseToList && exercisesList ? (
         <View>
-          <Checkbox value={exercisesList.some(x=>x.exercise.value === exercise._id)} setValue={() => addExerciseToList(exercise)} />
+          <Checkbox
+            value={exercisesList.some((x) => x.exercise.value === exercise._id)}
+            setValue={() => addExerciseToList(exercise)}
+          />
         </View>
       ) : (
         <View className="flex flex-row items-center" style={{ gap: 8 }}>
@@ -67,7 +68,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
           )}
           {((isGlobal && isAdmin) || !isGlobal) && (
             <Pressable onPress={() => editExercise(exercise)}>
-              <EditIcon fill={"white"} width={24} height={24} />
+              <EditIcon fill={'white'} width={24} height={24} />
             </Pressable>
           )}
 

@@ -1,48 +1,44 @@
-import { View, Text, TextInput, Pressable } from "react-native";
-import AutoComplete from "../../../elements/Autocomplete";
-import { useEffect, useMemo, useState } from "react";
-import { isIntValidator } from "../../../../../helpers/numberValidator";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ExerciseForm } from "../../../../../types/models";
-import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
-import { DropdownItem } from "../../../../../interfaces/Dropdown";
-import Dialog from "../../../elements/Dialog";
-import { useHomeContext } from "../../HomeContext";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import { View, Text, TextInput } from 'react-native';
+import AutoComplete from '../../../elements/Autocomplete';
+import { useEffect, useMemo, useState } from 'react';
+import { isIntValidator } from '../../../../../lib/validators/numberValidator';
+import { ExerciseForm } from '../../../../../types/models';
+import CustomButton, { ButtonStyle } from '../../../elements/CustomButton';
+import { DropdownItem } from '../../../../../interfaces/Dropdown';
+import Dialog from '../../../elements/Dialog';
+import { useHomeContext } from '../../HomeContext';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   useGetApiExerciseIdGetAllExercises,
   usePostApiExerciseIdGetExerciseByBodyPart,
-} from "../../../../../api/generated/exercise/exercise";
-import toastService from "../../../../services/toastService";
+} from '../../../../../api/generated/exercise/exercise';
+import toastService from '../../../../services/toastService';
 
-import { BodyParts, ExerciseResponseDto, EnumLookupDto } from "../../../../../api/generated/model";
+import { BodyParts, ExerciseResponseDto } from '../../../../../api/generated/model';
 
 interface TrainingPlanDayExerciseFormProps {
   cancel: () => void;
-  addExerciseToPlanDay: (
-    exerciseId: string,
-    series: number,
-    reps: string
-  ) => Promise<void>;
+  addExerciseToPlanDay: (exerciseId: string, series: number, reps: string) => Promise<void>;
   bodyPart?: BodyParts;
 }
 
-const TrainingPlanDayExerciseForm: React.FC<
-  TrainingPlanDayExerciseFormProps
-> = (props) => {
+const TrainingPlanDayExerciseForm: React.FC<TrainingPlanDayExerciseFormProps> = (props) => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
 
-  const [numberOfSeries, setNumberOfSeries] = useState<string>("");
-  const [exerciseReps, setExerciseReps] = useState<string>("");
+  const [numberOfSeries, setNumberOfSeries] = useState<string>('');
+  const [exerciseReps, setExerciseReps] = useState<string>('');
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
 
-  const { data: allExercisesData, isLoading: isLoadingAll, refetch: refetchAllExercises } =
-    useGetApiExerciseIdGetAllExercises(userId, {
-      query: { enabled: !props.bodyPart },
-    });
+  const {
+    data: allExercisesData,
+    isLoading: isLoadingAll,
+    refetch: refetchAllExercises,
+  } = useGetApiExerciseIdGetAllExercises(userId, {
+    query: { enabled: !props.bodyPart },
+  });
 
   const {
     mutate: getExercisesByBodyPart,
@@ -68,33 +64,29 @@ const TrainingPlanDayExerciseForm: React.FC<
     let data: ExerciseForm[] = [];
     if (props.bodyPart) {
       if (exercisesByBodyPartData?.data) {
-        data = (exercisesByBodyPartData.data as ExerciseResponseDto[]).map(
-          (dto) => ({
-            _id: dto._id || "",
-            name: dto.name || "",
-            user: dto.user || "",
-            bodyPart: dto.bodyPart || undefined,
-            description: dto.description || "",
-            image: dto.image || "",
-          })
-        );
+        data = (exercisesByBodyPartData.data as ExerciseResponseDto[]).map((dto) => ({
+          _id: dto._id || '',
+          name: dto.name || '',
+          user: dto.user || '',
+          bodyPart: dto.bodyPart || undefined,
+          description: dto.description || '',
+          image: dto.image || '',
+        }));
       }
     } else {
       if (allExercisesData?.data) {
-        data = (allExercisesData.data as ExerciseResponseDto[]).map(
-          (dto) => ({
-            _id: dto._id || "",
-            name: dto.name || "",
-            user: dto.user || "",
-            bodyPart: dto.bodyPart || undefined,
-            description: dto.description || "",
-            image: dto.image || "",
-          })
-        );
+        data = (allExercisesData.data as ExerciseResponseDto[]).map((dto) => ({
+          _id: dto._id || '',
+          name: dto.name || '',
+          user: dto.user || '',
+          bodyPart: dto.bodyPart || undefined,
+          description: dto.description || '',
+          image: dto.image || '',
+        }));
       }
     }
     return data.map((exercise: ExerciseForm) => ({
-      label: exercise.name || "",
+      label: exercise.name || '',
       value: exercise._id!,
     }));
   }, [exercisesByBodyPartData, allExercisesData, props.bodyPart]);
@@ -105,21 +97,20 @@ const TrainingPlanDayExerciseForm: React.FC<
     setClearQuery(false);
   };
   const validator = (input: string): void => {
-    if (!input) return setNumberOfSeries(input);
+    if (!input) {
+      setNumberOfSeries(input);
+      return;
+    }
     const result = isIntValidator(input);
     if (result) setNumberOfSeries(input);
   };
   const sendNewExercise = () => {
     if (!selectedExercise || !numberOfSeries || !exerciseReps) {
-      toastService.showValidationError(t("common.fieldRequired"));
+      toastService.showValidationError(t('common.fieldRequired'));
       return;
     }
 
-    props.addExerciseToPlanDay(
-      selectedExercise.value,
-      parseInt(numberOfSeries),
-      exerciseReps
-    );
+    props.addExerciseToPlanDay(selectedExercise.value, Number.parseInt(numberOfSeries, 10), exerciseReps);
   };
 
   return (
@@ -128,20 +119,17 @@ const TrainingPlanDayExerciseForm: React.FC<
         <View className="px-5 py-2">
           <Text
             className="text-3xl smallPhone:text-xl text-textColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
           >
             {t('training.addExerciseToCurrentTraining')}
           </Text>
         </View>
-        <View
-          style={{ gap: 16 }}
-          className="flex items-center flex-col justify-around w-full px-5"
-        >
+        <View style={{ gap: 16 }} className="flex items-center flex-col justify-around w-full px-5">
           <View className="flex flex-col w-full" style={{ gap: 8 }}>
             <View className="flex flex-row gap-1">
               <Text
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
               >
                 {t('training.exercise')}:
               </Text>
@@ -151,8 +139,8 @@ const TrainingPlanDayExerciseForm: React.FC<
             <AutoComplete
               data={exercisesToSelect}
               onSelect={(item) => setSelectedExercise(item)}
-              value={selectedExercise?.label || ""}
-              onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
+              value={selectedExercise?.label || ''}
+              {...(clearQuery ? { onClearQuery: clearAutoCompleteQuery } : {})}
             />
           </View>
 
@@ -160,7 +148,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             <View className="flex flex-row gap-1">
               <Text
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
               >
                 {t('training.series')}:
               </Text>
@@ -169,8 +157,8 @@ const TrainingPlanDayExerciseForm: React.FC<
 
             <TextInput
               style={{
-                fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                fontFamily: 'OpenSans_400Regular',
+                backgroundColor: 'rgb(30, 30, 30)',
                 borderRadius: 8,
               }}
               className="w-full px-2 py-4  text-textColor "
@@ -184,7 +172,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             <View className="flex flex-row gap-1">
               <Text
                 className="text-gray-200/80 font-light leading-4 text-base smallPhone:text-sm"
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
               >
                 {t('training.reps')}:
               </Text>
@@ -193,8 +181,8 @@ const TrainingPlanDayExerciseForm: React.FC<
 
             <TextInput
               style={{
-                fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                fontFamily: 'OpenSans_400Regular',
+                backgroundColor: 'rgb(30, 30, 30)',
                 borderRadius: 8,
               }}
               className="w-full px-2 py-4  text-textColor "
@@ -203,10 +191,7 @@ const TrainingPlanDayExerciseForm: React.FC<
             />
           </View>
         </View>
-        <View
-          className="w-full flex flex-row justify-between px-5"
-          style={{ gap: 16 }}
-        >
+        <View className="w-full flex flex-row justify-between px-5" style={{ gap: 16 }}>
           <CustomButton
             width="flex-1"
             onPress={props.cancel}

@@ -1,16 +1,8 @@
-import React, {
-  JSX,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { createContext } from "react";
-import { Animated, BackHandler } from "react-native";
-import { useAuthStore } from "../../../stores/useAuthStore";
-import { DEFAULT_HOME_SCREEN, type HomeScreenId } from "./homeScreens";
+import React, { JSX, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext } from 'react';
+import { Animated, BackHandler } from 'react-native';
+import { useAuthStore } from '../../../stores/useAuthStore';
+import { DEFAULT_HOME_SCREEN, type HomeScreenId } from './homeScreens';
 
 interface HomeContextProps {
   toggleMenuButton: (hide: boolean) => void;
@@ -22,7 +14,7 @@ interface HomeContextProps {
   changeView: (component?: JSX.Element) => void;
   navigateToScreen: (
     screenId: HomeScreenId,
-    options?: { force?: boolean; showBlockedToast?: boolean }
+    options?: { force?: boolean; showBlockedToast?: boolean },
   ) => void;
   currentScreen: HomeScreenId;
   userId: string;
@@ -34,7 +26,7 @@ const HomeContext = createContext<HomeContextProps | null>(null);
 export const useHomeContext = (): HomeContextProps => {
   const context = useContext(HomeContext);
   if (!context) {
-    throw new Error("useHomeContext must be used within HomeProvider");
+    throw new Error('useHomeContext must be used within HomeProvider');
   }
   return context;
 };
@@ -44,7 +36,7 @@ interface HomeProviderProps {
   viewChange: (view?: JSX.Element) => void;
   navigateToScreen: (
     screenId: HomeScreenId,
-    options?: { force?: boolean; showBlockedToast?: boolean }
+    options?: { force?: boolean; showBlockedToast?: boolean },
   ) => void;
   changeHeaderVisibility: (isVisible: boolean) => void;
   currentScreen: HomeScreenId;
@@ -57,21 +49,20 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
   changeHeaderVisibility,
   currentScreen,
 }) => {
-  const { user } = useAuthStore();
+  const user = useAuthStore((state) => state.user);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMenuButtonVisible, setIsMenuButtonVisible] = useState(true);
-  const userId = user?._id || "";
+  const userId = user?._id || '';
   const animation = useRef(new Animated.Value(0)).current;
-
 
   const toggleMenu = useCallback(() => {
     setIsExpanded((prev) => {
       const newState = !prev;
-      Animated.timing(animation, {
-        toValue: newState ? 1 : 0,
-        duration: 300,
-        useNativeDriver: false,
-      }).start();
+        Animated.timing(animation, {
+          toValue: newState ? 1 : 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
       return newState;
     });
   }, [animation]);
@@ -80,7 +71,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
     Animated.timing(animation, {
       toValue: 0,
       duration: 300,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
     setIsExpanded(false);
   }, [animation]);
@@ -96,10 +87,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
   }, [navigateToScreen, toggleMenuButton]);
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      handleBackButton
-    );
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackButton);
     return () => {
       backHandler.remove();
     };
@@ -110,7 +98,7 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
       if (isExpanded) toggleMenu();
       viewChange(component);
     },
-    [isExpanded, toggleMenu, viewChange]
+    [isExpanded, toggleMenu, viewChange],
   );
   const contextValue = useMemo(
     () => ({
@@ -138,14 +126,10 @@ const HomeProvider: React.FC<HomeProviderProps> = ({
       hideMenu,
       userId,
       changeHeaderVisibility,
-    ]
+    ],
   );
 
-  return (
-    <HomeContext.Provider value={contextValue}>
-      {children}
-    </HomeContext.Provider>
-  );
+  return <HomeContext.Provider value={contextValue}>{children}</HomeContext.Provider>;
 };
 
 export default HomeProvider;

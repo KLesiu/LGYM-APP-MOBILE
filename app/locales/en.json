@@ -10,6 +10,15 @@
     "loading": "Loading...",
     "fieldRequired": "Field is required",
     "tryAgain": "Try again",
+    "networkError": "Network error",
+    "serverError": "Server error",
+    "unauthorized": "Session expired. Please log in again.",
+    "forbidden": "You do not have permission to perform this action.",
+    "notFound": "Requested resource was not found.",
+    "requestTimeout": "The request timed out.",
+    "tooManyRequests": "Too many requests. Please try again later.",
+    "conflict": "A conflicting update was detected.",
+    "unprocessableEntity": "The request could not be processed.",
     "clearSelection": "Clear selection",
     "chooseOption": "Choose option",
     "addRecord": "Add record",
@@ -288,33 +297,9 @@
         "Nov",
         "Dec"
       ],
-      "weekdays": [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday"
-      ],
-      "weekdaysShort": [
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-        "Sat"
-      ],
-      "weekdaysMin": [
-        "Su",
-        "Mo",
-        "Tu",
-        "We",
-        "Th",
-        "Fr",
-        "Sa"
-      ]
+      "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "weekdaysShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+      "weekdaysMin": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
     }
   },
   "records": {

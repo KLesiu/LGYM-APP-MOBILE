@@ -1,33 +1,29 @@
-import { View, Text, ScrollView } from "react-native";
-import { useTranslation } from "react-i18next";
-import CustomButton, { ButtonSize, ButtonStyle } from "../../elements/CustomButton";
-import { FontWeights } from "./../../../../enums/FontsProperties";
-import GymPlace from "./GymPlace";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import GymFormComponent from "./GymForm";
-import React from "react";
-import ConfirmDialog from "../../elements/ConfirmDialog";
-import BackgroundMainSection from "../../elements/BackgroundMainSection";
-import { useHomeContext } from "../HomeContext";
-import ViewLoading from "../../elements/ViewLoading";
-import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from "../../../../api/generated/gym/gym";
-import type { GymChoiceInfoDto } from "../../../../api/generated/model";
-import { getErrorMessage } from "../../../../utils/errorHandler";
-import { useOnboarding } from "../../../onboarding/OnboardingContext";
-import { TutorialStep } from "../../../onboarding/tutorialBackend";
-import { useQueryClient } from "@tanstack/react-query";
-import { getGetApiGymIdGetGymsQueryKey } from "../../../../api/generated/gym/gym";
-import toastService from "../../../services/toastService";
+import { View, Text, ScrollView } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import CustomButton, { ButtonSize, ButtonStyle } from '../../elements/CustomButton';
+import { FontWeights } from './../../../../enums/FontsProperties';
+import GymPlace from './GymPlace';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import GymFormComponent from './GymForm';
+import React from 'react';
+import ConfirmDialog from '../../elements/ConfirmDialog';
+import BackgroundMainSection from '../../elements/BackgroundMainSection';
+import { useHomeContext } from '../HomeContext';
+import ViewLoading from '../../elements/ViewLoading';
+import { useGetApiGymIdGetGyms, usePostApiGymIdDeleteGym } from '../../../../api/generated/gym/gym';
+import type { GymChoiceInfoDto } from '../../../../api/generated/model';
+import { getErrorMessage } from '../../../../lib/domain/errorHandler';
+import { useOnboarding } from '../../../onboarding/OnboardingContext';
+import { TutorialStep } from '../../../onboarding/tutorialBackend';
+import { useQueryClient } from '@tanstack/react-query';
+import { getGetApiGymIdGetGymsQueryKey } from '../../../../api/generated/gym/gym';
+import toastService from '../../../services/toastService';
 
 const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
-  if (!value || typeof value !== "object") return false;
+  if (!value || typeof value !== 'object') return false;
 
   const gym = value as GymChoiceInfoDto;
-  return (
-    gym._id === undefined ||
-    gym._id === null ||
-    typeof gym._id === "string"
-  );
+  return gym._id === undefined || gym._id === null || typeof gym._id === 'string';
 };
 
 const Gym: React.FC = () => {
@@ -37,7 +33,7 @@ const Gym: React.FC = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    registerScreen("GYM");
+    registerScreen('GYM');
   }, [registerScreen]);
 
   const handleGymFormSuccess = useCallback(async () => {
@@ -50,16 +46,14 @@ const Gym: React.FC = () => {
 
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
-  const [
-    isDeleteGymConfirmationDialogVisible,
-    setIsDeleteConfirmationDialogVisible,
-  ] = useState<boolean>(false);
+  const [isDeleteGymConfirmationDialogVisible, setIsDeleteConfirmationDialogVisible] =
+    useState<boolean>(false);
 
-  const { data: gymsResponse, isLoading, refetch } = useGetApiGymIdGetGyms(
-    userId,
-    { query: { enabled: !!userId } }
-  );
-  
+  const {
+    data: gymsResponse,
+    isLoading,
+  } = useGetApiGymIdGetGyms(userId, { query: { enabled: !!userId } });
+
   const gyms = useMemo(() => {
     if (!Array.isArray(gymsResponse?.data)) {
       return [];
@@ -91,23 +85,19 @@ const Gym: React.FC = () => {
   }, [addNewGym, setStepAction]);
 
   const closeForm = useCallback(async () => {
-    await refetch();
     await queryClient.invalidateQueries({
       queryKey: getGetApiGymIdGetGymsQueryKey(userId),
     });
     setIsGymFormVisible(false);
     toggleMenuButton(false);
     hideMenu();
-  }, [hideMenu, queryClient, refetch, toggleMenuButton, userId]);
+  }, [hideMenu, queryClient, toggleMenuButton, userId]);
 
-  const deleteDialogVisible = useCallback(
-    (visible: boolean, gym?: GymChoiceInfoDto) => {
-      if (visible) setCurrentChosenGym(gym);
-      else setCurrentChosenGym(undefined);
-      setIsDeleteConfirmationDialogVisible(visible);
-    },
-    []
-  );
+  const deleteDialogVisible = useCallback((visible: boolean, gym?: GymChoiceInfoDto) => {
+    if (visible) setCurrentChosenGym(gym);
+    else setCurrentChosenGym(undefined);
+    setIsDeleteConfirmationDialogVisible(visible);
+  }, []);
 
   const editGym = useCallback(
     async (id: string) => {
@@ -115,7 +105,7 @@ const Gym: React.FC = () => {
       setCurrentChosenGym(currentGym);
       openForm();
     },
-    [gyms, openForm]
+    [gyms, openForm],
   );
 
   const deleteGym = async () => {
@@ -124,10 +114,12 @@ const Gym: React.FC = () => {
       await deleteGymMutation.mutateAsync({
         id: currentChosenGym._id,
       });
-      await refetch();
+      await queryClient.invalidateQueries({
+        queryKey: getGetApiGymIdGetGymsQueryKey(userId),
+      });
     } catch (error) {
-      const errorMessage = getErrorMessage(error, t("common.error"));
-      toastService.showError(errorMessage, t("common.error"));
+      const errorMessage = getErrorMessage(error, t('common.error'));
+      toastService.showError(errorMessage, t('common.error'));
     } finally {
       setIsDeleteConfirmationDialogVisible(false);
     }
@@ -141,10 +133,10 @@ const Gym: React.FC = () => {
             <Text
               className="text-base  text-textColor  font-bold "
               style={{
-                fontFamily: "OpenSans_700Bold",
+                fontFamily: 'OpenSans_700Bold',
               }}
             >
-              {t("gym.yourGyms")}
+              {t('gym.yourGyms')}
             </Text>
 
             <CustomButton
@@ -152,7 +144,7 @@ const Gym: React.FC = () => {
               buttonStyleType={ButtonStyle.success}
               buttonStyleSize={ButtonSize.long}
               textWeight={FontWeights.bold}
-              text={t("gym.addGym")}
+              text={t('gym.addGym')}
             />
           </View>
         </View>
@@ -178,16 +170,16 @@ const Gym: React.FC = () => {
       {isGymFormVisible ? (
         <GymFormComponent
           closeForm={closeForm}
-          gym={currentChosenGym}
-          onSubmitSuccess={!currentChosenGym ? handleGymFormSuccess : undefined}
+          {...(currentChosenGym ? { gym: currentChosenGym } : {})}
+          {...(!currentChosenGym ? { onSubmitSuccess: handleGymFormSuccess } : {})}
         />
       ) : (
         <></>
       )}
       <ConfirmDialog
         visible={isDeleteGymConfirmationDialogVisible}
-        title={t("gym.deleteConfirmTitle", { gymName: currentChosenGym?.name || "" })}
-        message={t("gym.deleteConfirmMessage")}
+        title={t('gym.deleteConfirmTitle', { gymName: currentChosenGym?.name || '' })}
+        message={t('gym.deleteConfirmMessage')}
         onConfirm={deleteGym}
         onCancel={() => deleteDialogVisible(false)}
       />

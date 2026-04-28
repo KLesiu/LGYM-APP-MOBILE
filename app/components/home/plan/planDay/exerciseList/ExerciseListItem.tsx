@@ -1,21 +1,18 @@
-import { View, Text, TextInput } from "react-native";
-import { ExerciseForPlanDay } from "./../../../../../../types/models";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "./../../../../elements/CustomButton";
-import React, { useEffect, useState } from "react";
-import { isIntValidator } from "../../../../../../helpers/numberValidator";
-import RemoveIcon from "./../../../../../../img/icons/deleteIcon.svg";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useTranslation } from "react-i18next";
+import { View, Text, TextInput } from 'react-native';
+import { ExerciseForPlanDay } from './../../../../../../types/models';
+import CustomButton, { ButtonSize, ButtonStyle } from './../../../../elements/CustomButton';
+import React, { useEffect, useState } from 'react';
+import { isIntValidator } from '../../../../../../lib/validators/numberValidator';
+import RemoveIcon from './../../../../../../img/icons/deleteIcon.svg';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 interface ExerciseListItemProps {
   exerciseListItem: ExerciseForPlanDay;
   removeExerciseFromList?: (item: ExerciseForPlanDay) => void;
   editExerciseFromList?: (item: ExerciseForPlanDay) => void;
   exerciseListItemPosition?: number;
-  moveExerciseUp?: (item: ExerciseForPlanDay) => void;
-  moveExerciseDown?: (item: ExerciseForPlanDay) => void;
+  moveExerciseUp?: (() => void) | undefined;
+  moveExerciseDown?: (() => void) | undefined;
   onInputFocus?: () => void;
 }
 
@@ -29,9 +26,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
   onInputFocus,
 }) => {
   const { t } = useTranslation();
-  const [seriesNumber, setSeriesNumber] = useState<string>(
-    exerciseListItem.series.toString()
-  );
+  const [seriesNumber, setSeriesNumber] = useState<string>(exerciseListItem.series.toString());
 
   useEffect(() => {
     if (exerciseListItem.series.toString() !== seriesNumber) {
@@ -52,8 +47,8 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
   }, [seriesNumber]);
 
   const validator = (input: string): void => {
-    if (input === "") {
-      setSeriesNumber("");
+    if (input === '') {
+      setSeriesNumber('');
       return;
     }
     const result = isIntValidator(input);
@@ -81,33 +76,29 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
         <View className="flex flex-row justify-between ">
           <Text
             style={{
-              fontFamily: "OpenSans_400Regular",
+              fontFamily: 'OpenSans_400Regular',
             }}
             className="text-base  text-textColor"
           >
             {exerciseListItem.exercise.label}
           </Text>
           <View className="flex flex-row" style={{ gap: 8 }}>
-            {(moveExerciseUp && exerciseListItemPosition !== undefined) && (
-              <CustomButton
-                onPress={() => moveExerciseUp(exerciseListItem)}
-                buttonStyleSize={ButtonSize.none}
-                buttonStyleType={ButtonStyle.none}
-                customSlots={[
-                  <Ionicons name="chevron-up" size={22} color={"white"} />
-                ]}
-              />
+            {moveExerciseUp && exerciseListItemPosition !== undefined && (
+                <CustomButton
+                  onPress={moveExerciseUp}
+                  buttonStyleSize={ButtonSize.none}
+                  buttonStyleType={ButtonStyle.none}
+                  customSlots={[<Ionicons name="chevron-up" size={22} color={'white'} />]}
+                />
             )}
 
             {moveExerciseDown && (
-              <CustomButton
-                onPress={() => moveExerciseDown(exerciseListItem)}
-                buttonStyleSize={ButtonSize.none}
-                buttonStyleType={ButtonStyle.none}
-                customSlots={[
-                  <Ionicons name="chevron-down" size={22} color={"white"} />
-                ]}
-              />
+                <CustomButton
+                  onPress={moveExerciseDown}
+                  buttonStyleSize={ButtonSize.none}
+                  buttonStyleType={ButtonStyle.none}
+                  customSlots={[<Ionicons name="chevron-down" size={22} color={'white'} />]}
+                />
             )}
             {removeExerciseFromList && (
               <CustomButton
@@ -125,7 +116,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
             <View style={{ gap: 4 }} className="flex flex-col flex-1">
               <View className="flex flex-row gap-1">
                 <Text
-                  style={{ fontFamily: "OpenSans_300Light" }}
+                  style={{ fontFamily: 'OpenSans_300Light' }}
                   className="  text-textColor text-sm "
                 >
                   {t('training.series')}:
@@ -135,7 +126,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
 
               <TextInput
                 style={{
-                  fontFamily: "OpenSans_400Regular",
+                  fontFamily: 'OpenSans_400Regular',
                 }}
                 className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-textColor "
                 keyboardType="numeric"
@@ -147,7 +138,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
             <View style={{ gap: 4 }} className="flex flex-col flex-1">
               <View className="flex flex-row gap-1">
                 <Text
-                  style={{ fontFamily: "OpenSans_300Light" }}
+                  style={{ fontFamily: 'OpenSans_300Light' }}
                   className="text-textColor text-sm"
                 >
                   {t('training.reps')}:
@@ -157,7 +148,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
 
               <TextInput
                 style={{
-                  fontFamily: "OpenSans_400Regular",
+                  fontFamily: 'OpenSans_400Regular',
                 }}
                 className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-textColor "
                 value={exerciseListItem.reps}
@@ -170,16 +161,16 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
           <View className="flex flex-row" style={{ gap: 4 }}>
             <Text
               style={{
-                fontFamily: "OpenSans_400Regular",
+                fontFamily: 'OpenSans_400Regular',
               }}
               className="text-sm smallPhone:text-xs  text-fifthColor"
-              >
-                {t('training.seriesWithValue', { series: exerciseListItem.series })}
-              </Text>
+            >
+              {t('training.seriesWithValue', { series: exerciseListItem.series })}
+            </Text>
             <View className="flex flex-row" style={{ gap: 16 }}>
               <Text
                 style={{
-                  fontFamily: "OpenSans_400Regular",
+                  fontFamily: 'OpenSans_400Regular',
                 }}
                 className="text-sm smallPhone:text-xs  text-fifthColor"
               >

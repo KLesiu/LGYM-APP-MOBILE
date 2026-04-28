@@ -1,6 +1,6 @@
-import { Pressable, View } from "react-native";
-import ViewLoading from "./ViewLoading";
-import React from "react";
+import { Pressable, View } from 'react-native';
+import ViewLoading from './ViewLoading';
+import React from 'react';
 
 interface CardProps {
   children: React.ReactNode;
@@ -9,7 +9,7 @@ interface CardProps {
   isLoading?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ children, onPress, customClasses = "" ,isLoading}) => {
+const Card: React.FC<CardProps> = ({ children, onPress, customClasses = '', isLoading }) => {
   const Container = onPress ? Pressable : View;
 
   return (

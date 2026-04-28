@@ -1,25 +1,37 @@
 import type {
   ExerciseResponseDto,
+  EnumLookupDto,
   GymFormDto,
   PlanDayBaseInfoDto,
   RankDto,
   UserInfoDto,
-} from "../api/generated/model";
-import type { DropdownItem } from "../interfaces/Dropdown";
-import { Message } from "../enums/Message";
+} from '../api/generated/model';
+import type { DropdownItem } from '../interfaces/Dropdown';
+import { Message } from '../enums/Message';
 
 export type UserInfo = UserInfoDto;
 
-export type ExerciseForm = ExerciseResponseDto;
+export type ExerciseForm = Omit<ExerciseResponseDto, 'name' | '_id' | 'user' | 'bodyPart' | 'description' | 'image'> & {
+  name?: string | null | undefined;
+  _id?: string | null | undefined;
+  user?: string | null | undefined;
+  bodyPart?: EnumLookupDto | undefined;
+  description?: string | null | undefined;
+  image?: string | null | undefined;
+};
 
-export type GymForm = GymFormDto;
+export type GymForm = Omit<GymFormDto, 'name' | 'address' | '_id'> & {
+  name?: string | null | undefined;
+  address?: string | null | undefined;
+  _id?: string | null | undefined;
+};
 
 export type PlanDayBaseInfoVm = PlanDayBaseInfoDto;
 export interface PlanForm {
-  _id?: string;
+  _id?: string | undefined;
   name: string;
-  isActive?: boolean;
-  shareCode?: string;
+  isActive?: boolean | undefined;
+  shareCode?: string | undefined;
 }
 
 export interface EnrichedExercise {

@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { View, Text, TextInput } from "react-native";
-import ViewLoading from "../../elements/ViewLoading";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import Dialog from "../../elements/Dialog";
-import { useHomeContext } from "../HomeContext";
-import React from "react";
-import { usePostApiIdCreatePlan } from "../../../../api/generated/plan/plan";
-import { useTranslation } from "react-i18next";
-import toastService from "../../../services/toastService";
-import { getErrorMessage } from "../../../../utils/errorHandler";
+import { useState } from 'react';
+import { View, Text, TextInput } from 'react-native';
+import ViewLoading from '../../elements/ViewLoading';
+import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
+import Dialog from '../../elements/Dialog';
+import { useHomeContext } from '../HomeContext';
+import React from 'react';
+import { usePostApiIdCreatePlan } from '../../../../api/generated/plan/plan';
+import { useTranslation } from 'react-i18next';
+import toastService from '../../../services/toastService';
+import { getErrorMessage, sanitize } from '../../../../lib/domain/errorHandler';
 
 interface CreatePlanConfigProps {
   reloadSection: VoidFunction;
@@ -19,13 +19,13 @@ interface CreatePlanConfigProps {
 const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
-  const [planName, setPlanName] = useState<string>("");
+  const [planName, setPlanName] = useState<string>('');
 
   const { mutate: createPlan, isPending } = usePostApiIdCreatePlan();
 
   const sendConfig = () => {
     if (!planName.trim()) {
-      toastService.showValidationError(t("plans.planNameRequired"));
+      toastService.showValidationError(t('plans.planNameRequired'));
       return;
     }
 
@@ -45,11 +45,14 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           await props.onSubmitSuccess?.();
         },
         onError: (error) => {
-          console.error("Failed to create plan:", error);
-          const errorMessage = getErrorMessage(error, t("common.tryAgain"));
-          toastService.showError(errorMessage, t("common.error"));
+          const sanitizedError = sanitize(error);
+          if (__DEV__ && sanitizedError.devDetails) {
+            console.warn('[CreatePlanConfig] failed to create plan', sanitizedError.devDetails);
+          }
+          const errorMessage = getErrorMessage(error, t('common.tryAgain'));
+          toastService.showError(errorMessage, t('common.error'));
         },
-      }
+      },
     );
   };
 
@@ -59,7 +62,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
         <View className="px-5 py-2">
           <Text
             className="text-3xl smallPhone:text-xl text-textColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
           >
             {t('plans.planConfig')}
           </Text>
@@ -68,7 +71,7 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <View className="flex flex-row gap-1">
               <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
                 className="  text-textColor  text-base smallPhone:text-sm"
               >
                 {t('plans.planName')}:
@@ -77,8 +80,8 @@ const CreatePlanConfig: React.FC<CreatePlanConfigProps> = (props) => {
             </View>
             <TextInput
               style={{
-                fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                fontFamily: 'OpenSans_400Regular',
+                backgroundColor: 'rgb(30, 30, 30)',
                 borderRadius: 8,
               }}
               className=" w-full  px-2 py-4 text-textColor  "

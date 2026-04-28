@@ -1,11 +1,11 @@
-import { View, Text, TextInput } from "react-native";
-import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
-import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
-import { useMemo } from "react";
-import { usePlanDay } from "./CreatePlanDayContext";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import toastService from "../../../../services/toastService";
+import { View, Text, TextInput } from 'react-native';
+import PlanNameIcon from './../../../../../img/icons/planIcon.svg';
+import CustomButton, { ButtonStyle } from '../../../elements/CustomButton';
+import { useMemo } from 'react';
+import { usePlanDay } from './CreatePlanDayContext';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import toastService from '../../../../services/toastService';
 
 const CreatePlanDayName: React.FC = () => {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ const CreatePlanDayName: React.FC = () => {
       return goToNext();
     }
 
-    toastService.showValidationError(t("plans.planDayNameRequired"));
+    toastService.showValidationError(t('plans.planDayNameRequired'));
   };
 
   const validateForm = useMemo(() => {
@@ -32,14 +32,11 @@ const CreatePlanDayName: React.FC = () => {
           <View style={{ gap: 2 }}>
             <Text
               className="text-xl smallPhone:text-base text-textColor"
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              style={{ fontFamily: 'OpenSans_700Bold' }}
             >
               {t('plans.setPlanName')}
             </Text>
-            <Text
-              className="text-sm text-fifthColor"
-              style={{ fontFamily: "OpenSans_400Regular" }}
-            >
+            <Text className="text-sm text-fifthColor" style={{ fontFamily: 'OpenSans_400Regular' }}>
               {t('plans.nameStepDescription')}
             </Text>
           </View>
@@ -47,7 +44,7 @@ const CreatePlanDayName: React.FC = () => {
         <View style={{ gap: 4 }} className="flex flex-col">
           <View className="flex flex-row gap-1">
             <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
+              style={{ fontFamily: 'OpenSans_300Light' }}
               className="  text-textColor  text-base smallPhone:text-sm"
             >
               {t('plans.name')}:
@@ -57,8 +54,8 @@ const CreatePlanDayName: React.FC = () => {
 
           <TextInput
             style={{
-              fontFamily: "OpenSans_400Regular",
-              backgroundColor: "rgb(30, 30, 30)",
+              fontFamily: 'OpenSans_400Regular',
+              backgroundColor: 'rgb(30, 30, 30)',
               borderRadius: 8,
             }}
             className=" w-full  px-2 py-4 text-textColor  "

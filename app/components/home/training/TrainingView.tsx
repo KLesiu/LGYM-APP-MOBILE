@@ -1,22 +1,24 @@
-import { View, Text } from "react-native";
-import TrainingDayChoose from "./trainingChoices/TrainingDayChoose";
-import TrainingGymChoose from "./trainingChoices/TrainingGymChoose";
-import TrainingPlanDay from "./trainingPlanDay/TrainingPlanDay";
-import TrainingSummary from "./TrainingSummary";
-import StartTrainingControl from "./elements/StartTrainingControl";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GymForm } from "../../../../types/models";
-import { TrainingSummary as TrainingSummaryInterface } from "./../../../../types/models";
-import { useHomeContext } from "../HomeContext";
-import TrainingPlanDayProvider from "./trainingPlanDay/TrainingPlanDayContext";
-import { TrainingViewSteps } from "../../../../enums/TrainingView";
-import React from "react";
-import { GymChoiceInfoDto } from "../../../../api/generated/model";
-import { useOnboarding } from "../../../onboarding/OnboardingContext";
-import { TutorialStep } from "../../../onboarding/tutorialBackend";
+import { View } from 'react-native';
+import TrainingDayChoose from './trainingChoices/TrainingDayChoose';
+import TrainingGymChoose from './trainingChoices/TrainingGymChoose';
+import TrainingPlanDay from './trainingPlanDay/TrainingPlanDay';
+import TrainingSummary from './TrainingSummary';
+import StartTrainingControl from './elements/StartTrainingControl';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type {
+  GymForm,
+  TrainingSummary as TrainingSummaryInterface,
+} from '../../../../types/models';
+import { useHomeContext } from '../HomeContext';
+import TrainingPlanDayProvider from './trainingPlanDay/TrainingPlanDayContext';
+import { TrainingViewSteps } from '../../../../enums/TrainingView';
+import React from 'react';
+import { GymChoiceInfoDto } from '../../../../api/generated/model';
+import { useOnboarding } from '../../../onboarding/OnboardingContext';
+import { TutorialStep } from '../../../onboarding/tutorialBackend';
+import { encryptedStorage } from '../../../../lib/encryptedStorage';
 
-interface TrainingViewProps {}
+type TrainingViewProps = Record<string, never>;
 
 const parseStoredValue = <T,>(value: string | null): T | null => {
   if (!value) return null;
@@ -29,7 +31,7 @@ const parseStoredValue = <T,>(value: string | null): T | null => {
 };
 
 const isValidStoredGym = (gym: GymForm | null): gym is GymForm => {
-  return !!gym && typeof gym._id === "string" && gym._id.length > 0;
+  return !!gym && typeof gym._id === 'string' && gym._id.length > 0;
 };
 
 const TrainingView: React.FC<TrainingViewProps> = () => {
@@ -43,41 +45,90 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
   const [dayId, setDayId] = useState<string>();
 
   ///TRAINING SUMMARY
-  const [trainingSummary, setTrainingSummary] =
-    useState<TrainingSummaryInterface>();
+  const [trainingSummary, setTrainingSummary] = useState<TrainingSummaryInterface>();
 
   const [step, setStep] = useState<TrainingViewSteps>();
 
-  useEffect(() => {
-    registerScreen(
-      step === TrainingViewSteps.TRAINING_PLAN_DAY ? "TRAINING_VIEW" : "TRAINING"
-    );
-  }, [registerScreen, step]);
+  const getInformationAboutGyms = useCallback(() => {
+    setStep(TrainingViewSteps.CHOOSE_GYM);
+    toggleMenuButton(true);
+  }, [toggleMenuButton]);
 
-  useEffect(() => {
-    setStepAction(TutorialStep.CreateTraining, () => {
-      getInformationAboutGyms();
-    });
+  const resetWithoutStep = useCallback(() => {
+    setGym(undefined);
+    setDayId('');
+    setTrainingSummary(undefined);
+    toggleMenuButton(false);
+  }, [toggleMenuButton]);
 
-    return () => {
-      setStepAction(TutorialStep.CreateTraining, null);
+  const resetTrainingView = useCallback(() => {
+    setStep(TrainingViewSteps.None);
+    resetWithoutStep();
+  }, [resetWithoutStep]);
+
+  const showDaySection = useCallback(
+    async (day: string): Promise<void> => {
+      setStep(TrainingViewSteps.TRAINING_PLAN_DAY);
+      setDayId(day);
+      toggleMenuButton(true);
+    },
+    [toggleMenuButton],
+  );
+
+  const hideAndDeleteTrainingSession = useCallback(async () => {
+    await encryptedStorage.removeItem('planDay');
+    await encryptedStorage.removeItem('trainingSessionScores');
+    await encryptedStorage.removeItem('gym');
+    resetTrainingView();
+  }, [resetTrainingView]);
+
+  const goBackFromTrainingPlanDay = useCallback(() => {
+    setStep(TrainingViewSteps.PLAN_DAY_TO_RESUME);
+    resetWithoutStep();
+  }, [resetWithoutStep]);
+
+  /// Set gym, hide gym choice popUp and show day choice popUp
+  const changeGym = useCallback(async (gymData: GymChoiceInfoDto) => {
+    const gymForm: GymForm = {
+      name: gymData.name || '',
+      ...(gymData.address ? { address: gymData.address } : {}),
+      ...(gymData._id ? { _id: gymData._id } : {}),
     };
-  }, [setStepAction]);
-
-  useEffect(() => {
-    init();
+    setGym(gymForm);
+    setStep(TrainingViewSteps.CHOOSE_DAY);
   }, []);
 
-  /// Init component
-  const init = async () => {
-    await checkIsUserHaveActivePlanDayTraining();
-  };
+  /// Get active plan day from localStorage, set gym and show TrainingPlanDay.
+  const getCurrentPlanDayTraining = useCallback(
+    async (storedDayId?: string) => {
+      const dayIdFromStorage =
+        storedDayId ??
+        parseStoredValue<{ _id?: string }>(await encryptedStorage.getItem('planDay'))?._id;
+
+      if (!dayIdFromStorage) {
+        await hideAndDeleteTrainingSession();
+        return;
+      }
+
+      const storedGym = parseStoredValue<GymForm>(await encryptedStorage.getItem('gym'));
+      if (!isValidStoredGym(storedGym)) {
+        await hideAndDeleteTrainingSession();
+        return;
+      }
+
+      setGym({
+        ...(storedGym._id ? { _id: storedGym._id } : {}),
+        name: storedGym.name ?? '',
+        ...(storedGym.address ? { address: storedGym.address } : {}),
+      });
+      showDaySection(dayIdFromStorage);
+    },
+    [hideAndDeleteTrainingSession, showDaySection],
+  );
 
   /// Check is user have active plan day training
-  const checkIsUserHaveActivePlanDayTraining = async () => {
-    const planDay = parseStoredValue<{ _id?: string }>(
-      await AsyncStorage.getItem("planDay")
-    );
+  const checkIsUserHaveActivePlanDayTraining = useCallback(async () => {
+    const planDay = parseStoredValue<{ _id?: string }>(await encryptedStorage.getItem('planDay'));
 
     if (planDay?._id) {
       await getCurrentPlanDayTraining(planDay._id);
@@ -85,111 +136,46 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
     }
 
     setStep(TrainingViewSteps.None);
-  };
+  }, [getCurrentPlanDayTraining]);
 
-  /// Show Gym choice popUp and hide menu button
-  const getInformationAboutGyms = () => {
-    setStep(TrainingViewSteps.CHOOSE_GYM);
-    toggleMenuButton(true);
-  };
+  /// Init component
+  const init = useCallback(async () => {
+    await checkIsUserHaveActivePlanDayTraining();
+  }, [checkIsUserHaveActivePlanDayTraining]);
 
-  /// Set gym, hide gym choice popUp and show day choice popUp
-  const changeGym = async (gymData: GymChoiceInfoDto) => {
-    const gymForm: GymForm = {
-        name: gymData.name || "",
-        address: gymData.address || undefined,
-        _id: gymData._id || undefined
+  useEffect(() => {
+    registerScreen(step === TrainingViewSteps.TRAINING_PLAN_DAY ? 'TRAINING_VIEW' : 'TRAINING');
+  }, [registerScreen, step]);
+
+  useEffect(() => {
+    setStepAction(TutorialStep.CreateTraining, getInformationAboutGyms);
+
+    return () => {
+      setStepAction(TutorialStep.CreateTraining, null);
     };
-    setGym(gymForm);
-    setStep(TrainingViewSteps.CHOOSE_DAY);
-  };
+  }, [getInformationAboutGyms, setStepAction]);
 
-  /// Reset training view to default state and hide menu button
-  const resetTrainingView = () => {
-    setStep(TrainingViewSteps.None);
-    resetWithoutStep();
-  };
+  useEffect(() => {
+    init();
+  }, [init]);
 
-  /// Reset training view to default state and hide menu button but without changing step
-  const resetWithoutStep = () => {
-    setGym(undefined);
-    setDayId("");
-    setTrainingSummary(undefined);
-    toggleMenuButton(false);
-  };
-
-  /// Go back from TrainingPlanDay and set step to PLAN_DAY_TO_RESUME
-  const goBackFromTrainingPlanDay = () => {
-    setStep(TrainingViewSteps.PLAN_DAY_TO_RESUME);
-    resetWithoutStep();
-  };
-
-  /// Get active plan day from localStorage, set gym and show TrainingPlanDay.
-  const getCurrentPlanDayTraining = async (storedDayId?: string) => {
-    const dayIdFromStorage =
-      storedDayId ??
-      parseStoredValue<{ _id?: string }>(await AsyncStorage.getItem("planDay"))
-        ?._id;
-
-    if (!dayIdFromStorage) {
-      await hideAndDeleteTrainingSession();
-      return;
-    }
-
-    const storedGym = parseStoredValue<GymForm>(await AsyncStorage.getItem("gym"));
-    if (!isValidStoredGym(storedGym)) {
-      await hideAndDeleteTrainingSession();
-      return;
-    }
-
-    setGym({
-      _id: storedGym._id,
-      name: storedGym.name ?? "",
-      address: storedGym.address ?? undefined,
-    });
-    showDaySection(dayIdFromStorage);
-  };
-
-  /// Show TrainingPlanDay and hide day choice popUp
-  const showDaySection = async (day: string): Promise<void> => {
-    setStep(TrainingViewSteps.TRAINING_PLAN_DAY);
-    setDayId(day);
-    toggleMenuButton(true);
-  };
-
-  /// Delete information about training session from localStorage and hide TrainingPlanDay
-  const hideAndDeleteTrainingSession = async () => {
-    await AsyncStorage.removeItem("planDay");
-    await AsyncStorage.removeItem("trainingSessionScores");
-    await AsyncStorage.removeItem("gym");
-    resetTrainingView();
-  };
-
-  const isAddTrainingActive = useMemo(
-    () => step === TrainingViewSteps.PLAN_DAY_TO_RESUME,
-    [step]
-  );
+  const isAddTrainingActive = useMemo(() => step === TrainingViewSteps.PLAN_DAY_TO_RESUME, [step]);
 
   const renderView = useCallback(() => {
     switch (step) {
       case TrainingViewSteps.CHOOSE_GYM:
-        return (
-          <TrainingGymChoose goBack={resetTrainingView} setGym={changeGym} />
-        );
+        return <TrainingGymChoose goBack={resetTrainingView} setGym={changeGym} />;
       case TrainingViewSteps.CHOOSE_DAY:
         return (
-          <TrainingDayChoose
-            goBack={getInformationAboutGyms}
-            showDaySection={showDaySection}
-          />
+          <TrainingDayChoose goBack={getInformationAboutGyms} showDaySection={showDaySection} />
         );
       case TrainingViewSteps.TRAINING_PLAN_DAY:
         return (
-          <TrainingPlanDayProvider gym={gym} dayId={dayId!}>
+          <TrainingPlanDayProvider gym={gym} dayId={dayId ?? ''}>
             <TrainingPlanDay
               hideDaySection={goBackFromTrainingPlanDay}
               hideAndDeleteTrainingSession={hideAndDeleteTrainingSession}
-              dayId={dayId as string}
+              dayId={dayId ?? ''}
               gym={gym}
               setStep={setStep}
               setTrainingSummary={setTrainingSummary}
@@ -204,9 +190,20 @@ const TrainingView: React.FC<TrainingViewProps> = () => {
           />
         );
       default:
-        return <></>;
+        return null;
     }
-  }, [step]);
+  }, [
+    changeGym,
+    dayId,
+    getInformationAboutGyms,
+    goBackFromTrainingPlanDay,
+    gym,
+    hideAndDeleteTrainingSession,
+    resetTrainingView,
+    showDaySection,
+    step,
+    trainingSummary,
+  ]);
 
   return (
     <View className="relative  flex flex-col justify-center items-center h-full w-full">

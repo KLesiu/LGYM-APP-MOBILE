@@ -1,7 +1,6 @@
-import React from "react";
-import { View,Text } from "react-native";
-import { useTranslation } from "react-i18next";
-
+import React from 'react';
+import { View, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 const NonTrainingView: React.FC = () => {
   const { t } = useTranslation();
@@ -10,7 +9,7 @@ const NonTrainingView: React.FC = () => {
       <Text
         className="text-textColor text-xl text-center"
         style={{
-          fontFamily: "OpenSans_400Regular",
+          fontFamily: 'OpenSans_400Regular',
         }}
       >
         {t('training.noTraining')}
@@ -18,6 +17,5 @@ const NonTrainingView: React.FC = () => {
     </View>
   );
 };
-
 
 export default NonTrainingView;

@@ -1,21 +1,20 @@
-import { View,Text, Pressable } from "react-native";
-import { PlanForm } from "../../../../types/models";
-import Card from "../../elements/Card";
-import React from "react";
+import { View, Text, Pressable } from 'react-native';
+import { PlanForm } from '../../../../types/models';
+import Card from '../../elements/Card';
+import React from 'react';
 
 interface PlansListItemProps {
   planListItem: PlanForm;
-      setNewPlanConfig: (planConfig: PlanForm) => Promise<void>
-
+  setNewPlanConfig: (planConfig: PlanForm) => Promise<void>;
 }
 
-const PlansListItem: React.FC<PlansListItemProps> = ({ planListItem,setNewPlanConfig }) => {
+const PlansListItem: React.FC<PlansListItemProps> = ({ planListItem, setNewPlanConfig }) => {
   return (
-    <Pressable onPress={()=>setNewPlanConfig(planListItem)}>
+    <Pressable onPress={() => setNewPlanConfig(planListItem)}>
       <Card>
         <View className="flex flex-col">
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
             className=" text-xl smallPhone:text-lg font-bold text-textColor"
           >
             {planListItem.name}
@@ -23,7 +22,6 @@ const PlansListItem: React.FC<PlansListItemProps> = ({ planListItem,setNewPlanCo
         </View>
       </Card>
     </Pressable>
-   
   );
 };
 

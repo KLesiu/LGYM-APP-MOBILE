@@ -1,24 +1,28 @@
-import { View } from "react-native";
-import UsersRanking from "./UsersRanking";
-import BackgroundMainSection from "../../elements/BackgroundMainSection";
-import LastTrainingStartInfo from "./LastTrainingStartInfo";
-import ProgressInfo from "./ProgressInfo";
-import { useHomeContext } from "../HomeContext";
-import ViewLoading from "../../elements/ViewLoading";
-import React from "react";
-import { useEffect } from "react";
-import { useOnboarding } from "../../../onboarding/OnboardingContext";
+import { View } from 'react-native';
+import UsersRanking from './UsersRanking';
+import BackgroundMainSection from '../../elements/BackgroundMainSection';
+import LastTrainingStartInfo from './LastTrainingStartInfo';
+import ProgressInfo from './ProgressInfo';
+import { useHomeContext } from '../HomeContext';
+import ViewLoading from '../../elements/ViewLoading';
+import React from 'react';
+import { useEffect } from 'react';
+import { useOnboarding } from '../../../onboarding/OnboardingContext';
 
 const Start: React.FC = () => {
-  const {userId} = useHomeContext()
+  const { userId } = useHomeContext();
   const { registerScreen } = useOnboarding();
 
   useEffect(() => {
-    registerScreen("START");
+    registerScreen('START');
   }, [registerScreen]);
 
-  if(!userId){
-    return <BackgroundMainSection><ViewLoading/></BackgroundMainSection>
+  if (!userId) {
+    return (
+      <BackgroundMainSection>
+        <ViewLoading />
+      </BackgroundMainSection>
+    );
   }
   return (
     <BackgroundMainSection>

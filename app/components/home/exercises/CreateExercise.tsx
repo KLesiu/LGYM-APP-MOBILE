@@ -1,42 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { View, Text, TextInput } from "react-native";
-import { useTranslation } from "react-i18next";
-import CustomDropdown from "../../elements/Dropdown";
-import { ExerciseForm } from "./../../../../types/models";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { DropdownItem } from "./../../../../interfaces/Dropdown";
-import React from "react";
-import Dialog from "../../elements/Dialog";
-import ExerciseIcon from "./../../../../img/icons/exercisesIcon.svg";
-import { useHomeContext } from "../HomeContext";
-import {
-  getGetApiExerciseGetAllGlobalExercisesQueryKey,
-  getGetApiExerciseIdGetAllExercisesQueryKey,
-  getGetApiExerciseIdGetAllUserExercisesQueryKey,
-  usePostApiExerciseIdAddUserExercise,
-  usePostApiExerciseAddExercise,
-  usePostApiExerciseUpdateExercise,
-  usePostApiExerciseIdDeleteExercise,
-} from "../../../../api/generated/exercise/exercise";
-import {
-  ExerciseFormDto,
-  ExerciseFormDtoBodyPart,
-  EnumLookupDto,
-  EnumLookupResponseDto,
-} from "../../../../api/generated/model";
-import type { ExerciseFormDtoBodyPart as ExerciseBodyPartValue } from "../../../../api/generated/model";
-import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
-import { useQueryClient } from "@tanstack/react-query";
-import toastService from "../../../services/toastService";
-
-const toBodyPartValue = (value?: string | null): ExerciseBodyPartValue => {
-  const allowed = Object.values(ExerciseFormDtoBodyPart);
-  if (value && allowed.includes(value as ExerciseBodyPartValue)) {
-    return value as ExerciseBodyPartValue;
-  }
-
-  return ExerciseFormDtoBodyPart.Unknown;
-};
+import React from 'react';
+import { View, Text, TextInput } from 'react-native';
+import CustomDropdown from '../../elements/Dropdown';
+import { ExerciseForm } from './../../../../types/models';
+import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
+import Dialog from '../../elements/Dialog';
+import ExerciseIcon from './../../../../img/icons/exercisesIcon.svg';
+import { useExerciseForm } from './hooks/useExerciseForm';
 
 interface CreateExerciseProps {
   closeForm: () => void;
@@ -46,295 +15,79 @@ interface CreateExerciseProps {
 }
 
 const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
-  const { t } = useTranslation();
-  const [exerciseName, setExerciseName] = useState<string>("");
-  const [bodyPart, setBodyPart] = useState<EnumLookupDto | undefined>();
-  const [description, setDescription] = useState<string | undefined>("");
-  const [isBlocked, setIsBlocked] = useState<boolean>(false);
-  const { userId } = useHomeContext();
-  const queryClient = useQueryClient();
-
-  const createUserExerciseMutation = usePostApiExerciseIdAddUserExercise();
-  const createGlobalExerciseMutation = usePostApiExerciseAddExercise();
-  const updateExerciseMutation = usePostApiExerciseUpdateExercise();
-  const deleteExerciseMutation = usePostApiExerciseIdDeleteExercise();
-
-  const { data: bodyPartsData, isLoading: isLoadingBodyParts } = useGetApiEnumsEnumType("BodyParts");
-
-  const isLoading = createUserExerciseMutation.isPending ||
-    createGlobalExerciseMutation.isPending ||
-    updateExerciseMutation.isPending ||
-    deleteExerciseMutation.isPending;
-
-  useEffect(() => {
-    if (props.form) {
-      if (!props.form.user) {
-        setIsBlocked(!props.isAdmin);
-      }
-      setExerciseName(props.form.name || "");
-      setBodyPart(props.form.bodyPart || undefined);
-      setDescription(props.form.description || "");
-    }
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      toastService.hide();
-    };
-  }, []);
-
-  const validateForm = useCallback((): boolean => {
-    if (!exerciseName || !bodyPart) {
-      toastService.showValidationError(t("createExercise.nameAndBodyPartRequired"));
-      return false;
-    }
-    return true;
-  }, [exerciseName, bodyPart, t]);
-
-  const refreshExerciseQueries = useCallback(async () => {
-    const invalidatePromises: Promise<unknown>[] = [
-      queryClient.invalidateQueries({
-        queryKey: getGetApiExerciseGetAllGlobalExercisesQueryKey(),
-      }),
-      ...(userId
-        ? [
-            queryClient.invalidateQueries({
-              queryKey: getGetApiExerciseIdGetAllExercisesQueryKey(userId),
-            }),
-            queryClient.invalidateQueries({
-              queryKey: getGetApiExerciseIdGetAllUserExercisesQueryKey(userId),
-            }),
-          ]
-        : []),
-    ];
-
-    await Promise.all(invalidatePromises);
-  }, [queryClient, userId]);
-
-  const createExercise = async (): Promise<void> => {
-    if (!validateForm()) return;
-    try {
-      const payload: ExerciseFormDto = {
-        name: exerciseName,
-        bodyPart: toBodyPartValue(bodyPart?.name),
-        description: description,
-      };
-      await createUserExerciseMutation.mutateAsync({
-        id: userId,
-        data: payload,
-      });
-      await refreshExerciseQueries();
-      props.closeForm();
-    } catch (error) {
-      toastService.showError(t("common.tryAgain"));
-    }
-  };
-
-  const createGlobalExercise = async (): Promise<void> => {
-    if (!validateForm()) return;
-    try {
-      const payload: ExerciseFormDto = {
-        name: exerciseName,
-        bodyPart: toBodyPartValue(bodyPart?.name),
-        description: description,
-      };
-      await createGlobalExerciseMutation.mutateAsync({
-        data: payload,
-      });
-      await refreshExerciseQueries();
-      props.closeForm();
-    } catch (error) {
-      toastService.showError(t("common.tryAgain"));
-    }
-  };
-
-  const updateExercise = async (): Promise<void> => {
-    if (!exerciseName || !bodyPart) {
-      toastService.showValidationError(t("createExercise.nameAndBodyPartRequired"));
-      return;
-    }
-
-    try {
-      const payload: ExerciseFormDto = {
-        _id: props.form?._id,
-        name: exerciseName,
-        bodyPart: toBodyPartValue(bodyPart?.name),
-        description: description,
-      };
-      await updateExerciseMutation.mutateAsync({
-        data: payload,
-      });
-      await refreshExerciseQueries();
-      props.closeForm();
-    } catch (error) {
-      toastService.showError(t("common.tryAgain"));
-    }
-  };
-
-  const deleteExercise = async (): Promise<void> => {
-    if (!props.form?._id) return;
-    try {
-      await deleteExerciseMutation.mutateAsync({
-        id: userId,
-        data: {
-          id: props.form._id,
-        },
-      });
-      await refreshExerciseQueries();
-      props.closeForm();
-    } catch (error) {
-      toastService.showError(t("common.tryAgain"));
-    }
-  };
-
-  const handleSubmit = () => {
-    if (props.isGlobal) createGlobalExercise();
-    else if (props.form) updateExercise();
-    else createExercise();
-  };
-
-  const bodyPartsToSelect = useMemo(() => {
-    const responseData = bodyPartsData?.data as EnumLookupResponseDto;
-    if (responseData && responseData.values) {
-      return responseData.values.map((item) => ({
-        label: item.displayName || item.name || "",
-        value: item.name || "",
-      }));
-    }
-    return [];
-  }, [bodyPartsData]);
+  const {
+    exerciseName,
+    setExerciseName,
+    bodyPart,
+    setBodyPart,
+    description,
+    setDescription,
+    isBlocked,
+    bodyPartsToSelect,
+    isLoading,
+    handleSubmit,
+    deleteExercise,
+  } = useExerciseForm({ ...props, closeForm: props.closeForm });
 
   return (
     <Dialog>
       <View className="w-full h-full">
         <View className="px-5 py-2">
-          <Text
-            className=" text-3xl smallPhone:text-2xl text-textColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
-          >
-            {props.form ? t("createExercise.editExercise") : t("createExercise.newExercise")}
+          <Text className=" text-3xl smallPhone:text-2xl text-textColor" style={{ fontFamily: 'OpenSans_700Bold' }}>
+            {props.form ? 'Edit exercise' : 'New exercise'}
           </Text>
         </View>
         <View className="px-5" style={{ gap: 16 }}>
           <View className="flex flex-row items-center" style={{ gap: 8 }}>
             <ExerciseIcon />
-            <Text
-              className=" text-xl smallPhone:text-lg text-textColor"
-              style={{ fontFamily: "OpenSans_400Regular" }}
-            >
-              {t("createExercise.setExercise")}
+            <Text className=" text-xl smallPhone:text-lg text-textColor" style={{ fontFamily: 'OpenSans_400Regular' }}>
+              Set exercise
             </Text>
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
             <View className="flex flex-row gap-1">
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="  text-textColor text-base smallPhone:text-sm"
-              >
-                {t("createExercise.exerciseName")}:
-              </Text>
+              <Text style={{ fontFamily: 'OpenSans_300Light' }} className="  text-textColor text-base smallPhone:text-sm">Name:</Text>
               <Text className="text-redColor">*</Text>
             </View>
-
-            <TextInput
-              style={{
-                fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
-                borderRadius: 8,
-              }}
-              className=" w-full  px-2 py-4 text-textColor  "
-              onChangeText={(text: string) => setExerciseName(text)}
-              value={exerciseName}
-              readOnly={isBlocked}
-            />
+            <TextInput style={{ fontFamily: 'OpenSans_400Regular', backgroundColor: 'rgb(30, 30, 30)', borderRadius: 8 }} className=" w-full  px-2 py-4 text-textColor  " onChangeText={setExerciseName} value={exerciseName} readOnly={isBlocked} />
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
             <View className="flex flex-row gap-1">
-              <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
-                className="  text-textColor text-base smallPhone:text-sm"
-              >
-                {t("createExercise.bodyPart")}:
-              </Text>
+              <Text style={{ fontFamily: 'OpenSans_300Light' }} className="  text-textColor text-base smallPhone:text-sm">Body part:</Text>
               <Text className="text-redColor">*</Text>
             </View>
-
-             <View>
+            <View>
               {isBlocked ? (
-                <Text
-                  style={{ fontFamily: "OpenSans_300Light" }}
-                  className="text-textColor text-base smallPhone:text-sm"
-                >
-                  {bodyPart?.displayName || ""}
+                <Text style={{ fontFamily: 'OpenSans_300Light' }} className="text-textColor text-base smallPhone:text-sm">
+                  {bodyPart?.displayName || ''}
                 </Text>
               ) : (
                 <CustomDropdown
-                  value={bodyPart?.name || ""}
+                  value={bodyPart?.name || ''}
                   data={bodyPartsToSelect}
                   onSelect={(item) => {
                     if (!item) {
                       setBodyPart(undefined);
                       return;
                     }
-                    const selected = (bodyPartsData?.data as EnumLookupResponseDto)?.values?.find(
-                      (bp) => bp.name === item.value
-                    );
-                    if (selected) {
-                      setBodyPart(selected);
-                    }
+                    const selected = bodyPartsToSelect.find((bp: { label: string; value: string }) => bp.value === item.value);
+                    setBodyPart(selected ? ({ name: selected.value, displayName: selected.label } as never) : undefined);
                   }}
                 />
               )}
             </View>
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
-            <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
-              className="  text-textColor text-base smallPhone:text-sm"
-            >
-              {t("createExercise.description")}:
-            </Text>
-            <TextInput
-              style={{
-                fontFamily: "OpenSans_300Light",
-                borderRadius: 8,
-                backgroundColor: "rgb(30, 30, 30)",
-              }}
-              className="w-full px-2 py-4  text-textColor "
-              multiline
-              onChangeText={(text: string) => setDescription(text)}
-              value={description}
-              readOnly={isBlocked}
-            />
+            <Text style={{ fontFamily: 'OpenSans_300Light' }} className="  text-textColor text-base smallPhone:text-sm">Description:</Text>
+            <TextInput style={{ fontFamily: 'OpenSans_300Light', borderRadius: 8, backgroundColor: 'rgb(30, 30, 30)' }} className="w-full px-2 py-4  text-textColor " multiline onChangeText={setDescription} value={description} readOnly={isBlocked} />
           </View>
         </View>
         <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
-          <CustomButton
-            onPress={props.closeForm}
-            text={t("common.cancel")}
-            buttonStyleType={ButtonStyle.outlineBlack}
-            width="flex-1"
-          />
-
+          <CustomButton onPress={props.closeForm} text="Cancel" buttonStyleType={ButtonStyle.outlineBlack} width="flex-1" />
           {!isBlocked && (
             <>
-              {props.form && props.form._id && (
-                <CustomButton
-                  onPress={deleteExercise}
-                  disabled={isLoading}
-                  text={t("createExercise.delete")}
-                  buttonStyleType={ButtonStyle.default}
-                  width="flex-1"
-                />
-              )}
-
-              <CustomButton
-                onPress={handleSubmit}
-                disabled={isLoading}
-                text={props.form ? t("common.update") : t("common.create")}
-                buttonStyleType={ButtonStyle.success}
-                width="flex-1"
-              />
+              {props.form && props.form._id && <CustomButton onPress={deleteExercise} disabled={isLoading} text="Delete" buttonStyleType={ButtonStyle.default} width="flex-1" />}
+              <CustomButton onPress={handleSubmit} disabled={isLoading} text={props.form ? 'Update' : 'Create'} buttonStyleType={ButtonStyle.success} width="flex-1" />
             </>
           )}
         </View>

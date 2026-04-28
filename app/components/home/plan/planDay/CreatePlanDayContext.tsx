@@ -1,5 +1,5 @@
-import React,{ createContext, useCallback, useContext, useState } from "react";
-import { ExerciseForPlanDay } from "../../../../../types/models";
+import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { ExerciseForPlanDay } from '../../../../../types/models';
 
 interface PlanDayContextType {
   planDayName: string;
@@ -18,7 +18,7 @@ const PlanDayContext = createContext<PlanDayContextType | null>(null);
 export const usePlanDay = () => {
   const context = useContext(PlanDayContext);
   if (!context) {
-    throw new Error("usePlanDay must be used within PlanDayProvider");
+    throw new Error('usePlanDay must be used within PlanDayProvider');
   }
   return context;
 };
@@ -28,11 +28,8 @@ interface PlanDayProviderProps {
   closeForm: () => void;
 }
 
-const PlanDayProvider: React.FC<PlanDayProviderProps> = ({
-  children,
-  closeForm,
-}) => {
-  const [planDayName, setPlanDayName] = useState<string>("");
+const PlanDayProvider: React.FC<PlanDayProviderProps> = ({ children, closeForm }) => {
+  const [planDayName, setPlanDayName] = useState<string>('');
   const [exercisesList, setExercisesList] = useState<ExerciseForPlanDay[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(-2);
 
@@ -44,20 +41,23 @@ const PlanDayProvider: React.FC<PlanDayProviderProps> = ({
     setCurrentStep((prevCurrentStep) => prevCurrentStep - 1);
   }, []);
 
+  const contextValue = useMemo(
+    () => ({
+      planDayName,
+      setPlanDayName,
+      exercisesList,
+      setExercisesList,
+      currentStep,
+      setCurrentStep,
+      goToNext,
+      goBack,
+      closeForm,
+    }),
+    [closeForm, currentStep, exercisesList, goBack, goToNext, planDayName],
+  );
+
   return (
-    <PlanDayContext.Provider
-      value={{
-        planDayName,
-        setPlanDayName,
-        exercisesList,
-        setExercisesList,
-        currentStep,
-        setCurrentStep,
-        goToNext,
-        goBack,
-        closeForm,
-      }}
-    >
+    <PlanDayContext.Provider value={contextValue}>
       {children}
     </PlanDayContext.Provider>
   );

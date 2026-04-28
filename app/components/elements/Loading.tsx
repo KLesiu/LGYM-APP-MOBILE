@@ -1,23 +1,21 @@
-import logoLGYM from "./../../../assets/logoLGYMNewX.png";
-import { Text, Image, View } from "react-native";
-import { useState, useEffect } from "react";
-import { useAppContext } from "../../AppContext";
-import React from "react";
-interface LoadingProps {}
-
-const Loading: React.FC<LoadingProps> = (props) => {
+import logoLGYM from './../../../assets/logoLGYMNewX.png';
+import { Image, View } from 'react-native';
+import { useState, useEffect, useCallback } from 'react';
+import { useAppContext } from '../../AppContext';
+import React from 'react';
+const Loading: React.FC = () => {
   const [width, setWidth] = useState<number>(0);
   const { isLoading } = useAppContext();
+
+  const changeWidth = useCallback((nextWidth: number) => {
+    if (nextWidth >= 100) return setWidth(0);
+    setWidth(nextWidth + 10);
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => changeWidth(width), 300);
     return () => clearTimeout(timeoutId);
-  }, [width]);
-
-  const changeWidth = (width: number) => {
-    if (width >= 100) return setWidth(0);
-    setWidth(width + 10);
-  };
+  }, [changeWidth, width]);
 
   return (
     isLoading && (

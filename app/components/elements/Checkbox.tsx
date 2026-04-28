@@ -1,6 +1,6 @@
-import { Pressable } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import { Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
 
 interface CheckboxProps {
   value: boolean;
@@ -8,20 +8,13 @@ interface CheckboxProps {
   customClasses?: string;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({
-  value,
-  setValue,
-  customClasses,
-}) => {
+const Checkbox: React.FC<CheckboxProps> = ({ value, setValue, customClasses }) => {
   return (
-    <Pressable
-      className={customClasses}
-      onPress={() => setValue && setValue(!value)}
-    >
+    <Pressable className={customClasses ?? ''} onPress={() => setValue && setValue(!value)}>
       <Ionicons
-        name={value ? "checkbox" : "square-outline"}
+        name={value ? 'checkbox' : 'square-outline'}
         size={28}
-        color={value ? "#20BC2D" : "#787878"}
+        color={value ? '#20BC2D' : '#787878'}
       />
     </Pressable>
   );

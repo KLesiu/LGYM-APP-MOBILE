@@ -1,8 +1,8 @@
 export enum DeviceCategory {
-    SMALL = "smallPhone",
-    BUGDET = "bugdetPhone",
-    MID = "midPhone",
-    LARGE = "largePhone",
-    MAX = "maxPhone",
-    ULTRA = "ultraPhone",
+  SMALL = 'smallPhone',
+  BUDGET = 'budgetPhone',
+  MID = 'midPhone',
+  LARGE = 'largePhone',
+  MAX = 'maxPhone',
+  ULTRA = 'ultraPhone',
 }

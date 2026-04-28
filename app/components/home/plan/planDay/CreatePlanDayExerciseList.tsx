@@ -1,23 +1,23 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { View, Text, ScrollView, Keyboard, Platform, TextInput } from "react-native";
-import { useTranslation } from "react-i18next";
-import { ExerciseForm, ExerciseForPlanDay } from "./../../../../../types/models";
-import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
-import ExerciseList from "./exerciseList/ExerciseList";
-import { usePlanDay } from "./CreatePlanDayContext";
-import Dialog from "../../../elements/Dialog";
-import Exercises from "../../exercises/Exercises";
-import Card from "../../../elements/Card";
-import Checkbox from "../../../elements/Checkbox";
-import { useHomeContext } from "../../HomeContext";
-import ViewLoading from "../../../elements/ViewLoading";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { View, Text, ScrollView, Keyboard, Platform, TextInput } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { ExerciseForm, ExerciseForPlanDay } from './../../../../../types/models';
+import CustomButton, { ButtonStyle } from '../../../elements/CustomButton';
+import ExerciseList from './exerciseList/ExerciseList';
+import { usePlanDay } from './CreatePlanDayContext';
+import Dialog from '../../../elements/Dialog';
+import Exercises from '../../exercises/Exercises';
+import Card from '../../../elements/Card';
+import Checkbox from '../../../elements/Checkbox';
+import { useHomeContext } from '../../HomeContext';
+import ViewLoading from '../../../elements/ViewLoading';
 import {
   getGetApiExerciseGetAllGlobalExercisesQueryKey,
   getGetApiExerciseIdGetAllUserExercisesQueryKey,
   useGetApiExerciseGetAllGlobalExercises,
   useGetApiExerciseIdGetAllUserExercises,
-} from "../../../../../api/generated/exercise/exercise";
-import toastService from "../../../../services/toastService";
+} from '../../../../../api/generated/exercise/exercise';
+import toastService from '../../../../services/toastService';
 
 const CreatePlanDayExerciseList: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -26,7 +26,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
   const [isCatalogVisible, setIsCatalogVisible] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>('');
   const scrollViewRef = useRef<ScrollView>(null);
 
   const { data: globalExercisesData, isLoading: isGlobalLoading } =
@@ -51,8 +51,8 @@ const CreatePlanDayExerciseList: React.FC = () => {
   };
 
   useEffect(() => {
-    const showEvent = Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow";
-    const hideEvent = Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide";
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
 
     const keyboardShowSubscription = Keyboard.addListener(showEvent, (event) => {
       setKeyboardHeight(event.endCoordinates.height);
@@ -76,17 +76,15 @@ const CreatePlanDayExerciseList: React.FC = () => {
   const addExerciseToList = (exercise: ExerciseForm) => {
     const newExerciseForPlanDay: ExerciseForPlanDay = {
       exercise: {
-        value: exercise._id || "",
-        label: exercise.name || "",
+        value: exercise._id || '',
+        label: exercise.name || '',
       },
       series: 1,
-      reps: "Max",
+      reps: 'Max',
     };
 
     if (exercisesList.some((item) => item.exercise.value === exercise._id)) {
-      const newExercisesList = exercisesList.filter(
-        (item) => item.exercise.value !== exercise._id
-      );
+      const newExercisesList = exercisesList.filter((item) => item.exercise.value !== exercise._id);
       setExercisesList(newExercisesList);
       return;
     }
@@ -96,7 +94,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
   const removeExerciseFromList = (exercise: ExerciseForPlanDay) => {
     const newExercisesList = exercisesList.filter(
-      (item) => item.exercise.value !== exercise.exercise.value
+      (item) => item.exercise.value !== exercise.exercise.value,
     );
 
     setExercisesList(newExercisesList);
@@ -119,20 +117,17 @@ const CreatePlanDayExerciseList: React.FC = () => {
     const mergedExercises = [...userExercises, ...globalExercises];
     const uniqueExercises = mergedExercises.filter(
       (exercise, index, array) =>
-        !!exercise._id &&
-        array.findIndex((item) => item._id === exercise._id) === index
+        !!exercise._id && array.findIndex((item) => item._id === exercise._id) === index,
     );
 
     return uniqueExercises
-      .filter((exercise) =>
-        (exercise.name || "").toLowerCase().includes(normalizedSearch)
-      )
+      .filter((exercise) => (exercise.name || '').toLowerCase().includes(normalizedSearch))
       .slice(0, 12);
   }, [globalExercises, searchText, userExercises]);
 
   const handleContinue = () => {
     if (!exercisesList.length) {
-      toastService.showValidationError(t("plans.noExercisesSelected"));
+      toastService.showValidationError(t('plans.noExercisesSelected'));
       return;
     }
 
@@ -153,41 +148,32 @@ const CreatePlanDayExerciseList: React.FC = () => {
           <View style={{ gap: 6 }}>
             <Text
               className="text-xl smallPhone:text-base text-textColor"
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              style={{ fontFamily: 'OpenSans_700Bold' }}
             >
-              {t("plans.selectExercisesTitle")}
+              {t('plans.selectExercisesTitle')}
             </Text>
-            <Text
-              className="text-sm text-fifthColor"
-              style={{ fontFamily: "OpenSans_400Regular" }}
-            >
-              {t("plans.selectExercisesDescription")}
+            <Text className="text-sm text-fifthColor" style={{ fontFamily: 'OpenSans_400Regular' }}>
+              {t('plans.selectExercisesDescription')}
             </Text>
           </View>
 
           <View style={{ gap: 8 }}>
-            <Text
-              className="text-sm text-textColor"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              {t("plans.searchByName")}
+            <Text className="text-sm text-textColor" style={{ fontFamily: 'OpenSans_700Bold' }}>
+              {t('plans.searchByName')}
             </Text>
             <View className="w-full flex-row items-center px-3 py-2 bg-cardColor rounded-lg">
-              <Text
-                className="text-fifthColor pr-2"
-                style={{ fontFamily: "OpenSans_400Regular" }}
-              >
-                {"\u2315"}
+              <Text className="text-fifthColor pr-2" style={{ fontFamily: 'OpenSans_400Regular' }}>
+                {'\u2315'}
               </Text>
               <TextInput
                 style={{
-                  fontFamily: "OpenSans_400Regular",
+                  fontFamily: 'OpenSans_400Regular',
                   flex: 1,
                 }}
                 className="text-textColor"
                 value={searchText}
                 onChangeText={setSearchText}
-                placeholder={t("plans.typeExerciseName")}
+                placeholder={t('plans.typeExerciseName')}
                 placeholderTextColor="gray"
               />
             </View>
@@ -195,7 +181,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
           <View className="flex justify-between flex-row w-full" style={{ gap: 12 }}>
             <CustomButton
-              text={t("plans.browseByBodyPart")}
+              text={t('plans.browseByBodyPart')}
               onPress={toggleCatalog}
               buttonStyleType={ButtonStyle.success}
               width="flex-1"
@@ -206,17 +192,17 @@ const CreatePlanDayExerciseList: React.FC = () => {
             <View className="flex flex-row items-start" style={{ gap: 12 }}>
               <Text
                 className="text-sm text-textColor flex-1"
-                style={{ fontFamily: "OpenSans_700Bold" }}
+                style={{ fontFamily: 'OpenSans_700Bold' }}
               >
-                {t("plans.searchResults")}
+                {t('plans.searchResults')}
               </Text>
               <Text
                 className="text-xs text-fifthColor flex-1 text-right"
-                style={{ fontFamily: "OpenSans_400Regular", flexShrink: 1 }}
+                style={{ fontFamily: 'OpenSans_400Regular', flexShrink: 1 }}
               >
                 {searchableExercises.length > 0
-                  ? t("plans.total", { count: searchableExercises.length })
-                  : t("plans.searchResultsHint")}
+                  ? t('plans.total', { count: searchableExercises.length })
+                  : t('plans.searchResultsHint')}
               </Text>
             </View>
 
@@ -228,15 +214,15 @@ const CreatePlanDayExerciseList: React.FC = () => {
                   <View className="flex-1" style={{ gap: 4 }}>
                     <Text
                       className="text-base text-textColor"
-                      style={{ fontFamily: "OpenSans_700Bold" }}
+                      style={{ fontFamily: 'OpenSans_700Bold' }}
                     >
                       {exercise.name}
                     </Text>
                     <Text
                       className="text-xs text-fifthColor"
-                      style={{ fontFamily: "OpenSans_400Regular" }}
+                      style={{ fontFamily: 'OpenSans_400Regular' }}
                     >
-                      {exercise.bodyPart?.displayName || t("common.unknown")}
+                      {exercise.bodyPart?.displayName || t('common.unknown')}
                     </Text>
                   </View>
                   <Checkbox
@@ -248,11 +234,11 @@ const CreatePlanDayExerciseList: React.FC = () => {
             ) : (
               <Text
                 className="text-sm text-fifthColor"
-                style={{ fontFamily: "OpenSans_400Regular" }}
+                style={{ fontFamily: 'OpenSans_400Regular' }}
               >
                 {searchText.trim().length > 0
-                  ? t("plans.noExercisesMatched")
-                  : t("plans.startTypingExercises")}
+                  ? t('plans.noExercisesMatched')
+                  : t('plans.startTypingExercises')}
               </Text>
             )}
           </View>
@@ -268,13 +254,13 @@ const CreatePlanDayExerciseList: React.FC = () => {
         <CustomButton
           buttonStyleType={ButtonStyle.outlineBlack}
           onPress={goBack}
-          text={t("plans.back")}
+          text={t('plans.back')}
           width="flex-1"
         />
         <CustomButton
           buttonStyleType={ButtonStyle.default}
           onPress={handleContinue}
-          text={t("training.continue")}
+          text={t('training.continue')}
           width="flex-1"
         />
       </View>

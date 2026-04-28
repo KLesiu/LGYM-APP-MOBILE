@@ -1,30 +1,37 @@
-import React, { useEffect } from "react";
-import { Stack } from "expo-router";
-import { NativeWindStyleSheet } from "nativewind";
-import * as SplashScreen from "expo-splash-screen";
+import * as React from 'react';
+import { Slot } from 'expo-router';
+import { NativeWindStyleSheet } from 'nativewind';
+import * as SplashScreen from 'expo-splash-screen';
 import {
   OpenSans_400Regular,
   OpenSans_700Bold,
   OpenSans_300Light,
   useFonts,
-} from "@expo-google-fonts/open-sans";
-import AppProvider from "./AppContext";
-import Toast from "react-native-toast-message";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+} from '@expo-google-fonts/open-sans';
+import AppProvider from './AppContext';
+import Toast from 'react-native-toast-message';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './i18n';
-import OnboardingProvider from "./onboarding/OnboardingContext";
-import { toastConfig } from "../helpers/toastConfig";
+import OnboardingProvider from './onboarding/OnboardingContext';
+import { toastConfig } from '../lib/format/toastConfig';
+import { useAppInitialization } from './useAppInitialization';
 
-NativeWindStyleSheet.setOutput({ default: "native" });
+const AppBootstrap: React.FC = () => {
+  useAppInitialization();
+  return null;
+};
+
+NativeWindStyleSheet.setOutput({ default: 'native' });
 
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity,
-      gcTime: Infinity,
-      retry: false,
+      staleTime: 30_000,
+      gcTime: 5 * 60_000,
+      retry: 1,
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -36,26 +43,14 @@ const Layout: React.FC = () => {
     OpenSans_300Light,
   });
 
-  useEffect(() => {
-    const hideSplash = async () => {
-      if (fontsLoaded) {
-        try {
-          await SplashScreen.hideAsync();
-        } catch (error) {
-          console.error("Błąd ukrywania splash:", error);
-        }
-      }
-    };
-    hideSplash();
-  }, [fontsLoaded]);
-
   if (!fontsLoaded) return null;
 
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <OnboardingProvider>
-          <Stack screenOptions={{ headerShown: false ,gestureEnabled:false,headerBackButtonMenuEnabled:false}} />
+          <AppBootstrap />
+          <Slot />
           <Toast config={toastConfig} />
         </OnboardingProvider>
       </AppProvider>

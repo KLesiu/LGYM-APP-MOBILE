@@ -1,39 +1,34 @@
-import React, { useMemo, useState } from "react";
-import { ScrollView, View } from "react-native";
-import BodyPartsListElement from "./BodyPartsListElement";
-import SearchBox from "../../elements/SearchBox";
+import React, { useMemo, useState } from 'react';
+import { ScrollView, View } from 'react-native';
+import BodyPartsListElement from './BodyPartsListElement';
+import SearchBox from '../../elements/SearchBox';
 import {
   getGetApiEnumsEnumTypeQueryKey,
   useGetApiEnumsEnumType,
-} from "../../../../api/generated/enum/enum";
-import ViewLoading from "../../elements/ViewLoading";
-import { useTranslation } from "react-i18next";
+} from '../../../../api/generated/enum/enum';
+import ViewLoading from '../../elements/ViewLoading';
+import { useTranslation } from 'react-i18next';
 
-import { EnumLookupDto, EnumLookupResponseDto } from "../../../../api/generated/model";
+import { EnumLookupDto, EnumLookupResponseDto } from '../../../../api/generated/model';
 
 interface BodyPartsListProps {
   onSelectBodyPart: (bodyPart: EnumLookupDto) => void;
 }
 
 const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>('');
   const { i18n } = useTranslation();
 
-  const { data, isLoading } = useGetApiEnumsEnumType("BodyParts", {
+  const { data, isLoading } = useGetApiEnumsEnumType('BodyParts', {
     query: {
-      queryKey: [
-        ...getGetApiEnumsEnumTypeQueryKey("BodyParts"),
-        i18n.language,
-      ],
+      queryKey: [...getGetApiEnumsEnumTypeQueryKey('BodyParts'), i18n.language],
     },
   });
 
   const allBodyParts = useMemo(() => {
     const responseData = data?.data as EnumLookupResponseDto;
     if (responseData && responseData.values) {
-      return responseData.values
-        .map((item) => item)
-       ;
+      return responseData.values.map((item) => item);
     }
     return [];
   }, [data]);
@@ -44,7 +39,7 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
     }
     const lowercasedSearchText = searchText.toLowerCase();
     return allBodyParts.filter((bodyPart) =>
-      bodyPart.displayName!.toLowerCase().includes(lowercasedSearchText)
+      bodyPart.displayName!.toLowerCase().includes(lowercasedSearchText),
     );
   }, [allBodyParts, searchText]);
 

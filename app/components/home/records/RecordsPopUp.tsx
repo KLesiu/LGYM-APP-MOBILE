@@ -1,28 +1,27 @@
-import { Text, View, TextInput, Pressable } from "react-native";
-import AutoComplete from "./../../elements/Autocomplete";
-import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ExerciseForm } from "./../../../../types/models";
-import { isFloatValidator } from "./../../../../helpers/numberValidator";
-import { BodyParts, MainRecordsFormDtoUnit } from "../../../../api/generated/model";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { DropdownItem } from "./../../../../interfaces/Dropdown";
-import Dialog from "../../elements/Dialog";
-import { useHomeContext } from "../HomeContext";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
-import { useGetApiExerciseIdGetAllExercises } from "../../../../api/generated/exercise/exercise";
+import { Text, View, TextInput } from 'react-native';
+import AutoComplete from './../../elements/Autocomplete';
+import { useEffect, useState } from 'react';
+import { ExerciseForm } from './../../../../types/models';
+import { isFloatValidator } from './../../../../lib/validators/numberValidator';
+import { MainRecordsFormDtoUnit } from '../../../../api/generated/model';
+import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
+import { DropdownItem } from './../../../../interfaces/Dropdown';
+import Dialog from '../../elements/Dialog';
+import { useHomeContext } from '../HomeContext';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import RecordIcon from './../../../../img/icons/recordsIcon.svg';
+import { useGetApiExerciseIdGetAllExercises } from '../../../../api/generated/exercise/exercise';
 import {
   getGetApiMainRecordsIdGetLastMainRecordsQueryKey,
   getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey,
   usePostApiMainRecordsIdAddNewRecord,
-} from "../../../../api/generated/main-records/main-records";
+} from '../../../../api/generated/main-records/main-records';
 
-import { ExerciseResponseDto } from "../../../../api/generated/model";
-import { useQueryClient } from "@tanstack/react-query";
-import toastService from "../../../services/toastService";
-import { getErrorMessage } from "../../../../utils/errorHandler";
+import { ExerciseResponseDto } from '../../../../api/generated/model';
+import { useQueryClient } from '@tanstack/react-query';
+import toastService from '../../../services/toastService';
+import { getErrorMessage, sanitize } from '../../../../lib/domain/errorHandler';
 
 interface RecordsPopUpProps {
   offPopUp: () => void;
@@ -32,9 +31,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [selectedExercise, setSelectedExercise] = useState<DropdownItem>();
-  const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>(
-    []
-  );
+  const [exercisesToSelect, setExercisesToSelect] = useState<DropdownItem[]>([]);
   const [weight, setWeight] = useState<string>();
   const [clearQuery, setClearQuery] = useState<boolean>(false);
   const { userId } = useHomeContext();
@@ -43,21 +40,18 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
     query: { enabled: !!userId },
   });
 
-  const { mutateAsync: addNewRecordMutation } =
-    usePostApiMainRecordsIdAddNewRecord();
+  const { mutateAsync: addNewRecordMutation } = usePostApiMainRecordsIdAddNewRecord();
 
   useEffect(() => {
     if (exercisesData?.data) {
-      const response = (exercisesData.data as ExerciseResponseDto[]).map(
-        (dto) => ({
-          _id: dto._id || "",
-          name: dto.name || "",
-          user: dto.user || "",
-          bodyPart: dto.bodyPart || undefined,
-          description: dto.description || "",
-          image: dto.image || "",
-        })
-      );
+      const response = (exercisesData.data as ExerciseResponseDto[]).map((dto) => ({
+        _id: dto._id || '',
+        name: dto.name || '',
+        user: dto.user || '',
+        ...(dto.bodyPart ? { bodyPart: dto.bodyPart } : {}),
+        description: dto.description || '',
+        image: dto.image || '',
+      }));
       const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
         return {
           label: exercise.name,
@@ -66,7 +60,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       });
       if (props.exerciseId) {
         const exercise = helpExercisesToSelect.find(
-          (exercise) => exercise.value === props.exerciseId
+          (exercise) => exercise.value === props.exerciseId,
         );
         if (exercise) {
           setSelectedExercise(exercise);
@@ -90,25 +84,25 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       return;
     }
 
-    const normalizedInput = input.replace(",", ".");
+    const normalizedInput = input.replace(',', '.');
     const isPartialFloat = (() => {
       let dotsCount = 0;
 
       for (let i = 0; i < normalizedInput.length; i += 1) {
         const char = normalizedInput[i];
 
-        if (char === "-") {
+        if ((char ?? '') === '-') {
           if (i !== 0) return false;
           continue;
         }
 
-        if (char === ".") {
+        if ((char ?? '') === '.') {
           dotsCount += 1;
           if (dotsCount > 1) return false;
           continue;
         }
 
-        if (char < "0" || char > "9") {
+        if ((char ?? '') < '0' || (char ?? '') > '9') {
           return false;
         }
       }
@@ -123,23 +117,23 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
 
   const createNewRecord = async () => {
     if (!selectedExercise) {
-      toastService.showValidationError(t("records.exerciseRequired"));
+      toastService.showValidationError(t('records.exerciseRequired'));
       return;
     }
 
     if (!weight?.trim()) {
-      toastService.showValidationError(t("records.weightRequired"));
+      toastService.showValidationError(t('records.weightRequired'));
       return;
     }
 
     if (!userId) {
-      toastService.showError(t("common.tryAgain"), t("common.error"));
+      toastService.showError(t('common.tryAgain'), t('common.error'));
       return;
     }
 
-    const normalizedWeight = weight.replace(",", ".").trim();
+    const normalizedWeight = weight.replace(',', '.').trim();
     if (!isFloatValidator(normalizedWeight)) {
-      toastService.showValidationError(t("records.invalidWeight"));
+      toastService.showValidationError(t('records.invalidWeight'));
       return;
     }
 
@@ -155,7 +149,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       });
 
       if (response.status !== 200) {
-        toastService.showError(t("common.tryAgain"), t("common.error"));
+        toastService.showError(t('common.tryAgain'), t('common.error'));
         return;
       }
 
@@ -171,9 +165,12 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       toastService.hide();
       props.offPopUp();
     } catch (error) {
-      console.error("Error creating new record:", error);
-      const errorMessage = getErrorMessage(error, t("common.tryAgain"));
-      toastService.showError(errorMessage, t("common.error"));
+      const sanitizedError = sanitize(error);
+      if (__DEV__ && sanitizedError.devDetails) {
+        console.warn('[RecordsPopUp] failed to create record', sanitizedError.devDetails);
+      }
+      const errorMessage = getErrorMessage(error, t('common.tryAgain'));
+      toastService.showError(errorMessage, t('common.error'));
     }
   };
   return (
@@ -182,7 +179,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
         <View className="px-5 py-2">
           <Text
             className=" text-3xl smallPhone:text-2xl text-textColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
           >
             {props.exerciseId && selectedExercise
               ? t('records.editRecord')
@@ -194,21 +191,21 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
             <RecordIcon />
             <Text
               className=" text-xl smallPhone:text-lg text-textColor"
-              style={{ fontFamily: "OpenSans_400Regular" }}
+              style={{ fontFamily: 'OpenSans_400Regular' }}
             >
               {t('records.setRecord')}
             </Text>
           </View>
           <View style={{ gap: 4 }} className="flex flex-col">
             <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
+              style={{ fontFamily: 'OpenSans_300Light' }}
               className="  text-textColor text-base smallPhone:text-sm"
             >
               {t('records.exercise')}:
             </Text>
             {props.exerciseId && selectedExercise ? (
               <TextInput
-                style={{ fontFamily: "OpenSans_400Regular" }}
+                style={{ fontFamily: 'OpenSans_400Regular' }}
                 className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-textColor "
                 readOnly={true}
                 value={selectedExercise.label}
@@ -217,20 +214,20 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
               <AutoComplete
                 data={exercisesToSelect}
                 onSelect={(item) => setSelectedExercise(item)}
-                value={selectedExercise?.label || ""}
-                onClearQuery={clearQuery ? clearAutoCompleteQuery : undefined}
+                value={selectedExercise?.label || ''}
+                {...(clearQuery ? { onClearQuery: clearAutoCompleteQuery } : {})}
               />
             )}
           </View>
           <View className="flex flex-col w-full" style={{ gap: 4 }}>
             <Text
               className="text-textColor  text-base smallPhone:text-sm"
-              style={{ fontFamily: "OpenSans_300Light" }}
+              style={{ fontFamily: 'OpenSans_300Light' }}
             >
               {t('records.weight')}:
             </Text>
             <TextInput
-              style={{ fontFamily: "OpenSans_400Regular" }}
+              style={{ fontFamily: 'OpenSans_400Regular' }}
               className="w-full  px-2 py-4 smallPhone:px-1 smallPhone:py-3 bg-secondaryColor rounded-lg  text-textColor "
               onChangeText={validator}
               value={weight}

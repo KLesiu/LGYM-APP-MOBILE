@@ -1,21 +1,19 @@
-import React from "react";
-import { PlanDayChooseDto } from "../../../../../../api/generated/model";
-import Card from "../../../../elements/Card";
-import { View, Text, Pressable } from "react-native";
+import React from 'react';
+import { PlanDayChooseDto } from '../../../../../../api/generated/model';
+import Card from '../../../../elements/Card';
+import { View, Text } from 'react-native';
 
 interface TrainingDayToChooseProps {
   trainingType: PlanDayChooseDto;
 }
 
-const TrainingDayToChoose: React.FC<TrainingDayToChooseProps> = ({
-  trainingType,
-}) => {
+const TrainingDayToChoose: React.FC<TrainingDayToChooseProps> = ({ trainingType }) => {
   return (
     <Card>
       <View className="flex flex-col">
         <View className="flex flex-row justify-between w-full">
           <Text
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
             className="text-base font-bold text-textColor"
           >
             {trainingType.name}

@@ -1,12 +1,6 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-import { DropdownItem } from "../../../interfaces/Dropdown";
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { DropdownItem } from '../../../interfaces/Dropdown';
 
 interface AutoCompleteProps {
   data: DropdownItem[];
@@ -23,11 +17,10 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
   onSelect,
   onClearQuery,
 }) => {
-  const [query, setQuery] = useState(value || "");
+  const [query, setQuery] = useState(value || '');
   const [filteredData, setFilteredData] = useState<DropdownItem[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
-
 
   useEffect(() => {
     if (value && valueId) {
@@ -42,7 +35,7 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
   useEffect(() => {
     if (query.length > 0 && !isSelected) {
       const filtered = data.filter((item) =>
-        item.label.toLowerCase().includes(query.toLowerCase())
+        item.label.toLowerCase().includes(query.toLowerCase()),
       );
       setFilteredData(filtered.length ? filtered : data);
       setShowDropdown(true);
@@ -54,21 +47,24 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
 
   useEffect(() => {
     if (onClearQuery) {
-      setQuery("");
+      setQuery('');
       onClearQuery();
       setShowDropdown(false);
     }
   }, [onClearQuery]);
 
   const handleSelect = (item: DropdownItem) => {
-    setIsSelected(true)
+    setIsSelected(true);
     onSelect(item);
     setQuery(item.label);
     setShowDropdown(false);
   };
 
   const renderItem = ({ item }: { item: DropdownItem }) => (
-    <TouchableOpacity className="p-4 border-b-[1px] border-b-[#ddd]" onPress={() => handleSelect(item)}>
+    <TouchableOpacity
+      className="p-4 border-b-[1px] border-b-[#ddd]"
+      onPress={() => handleSelect(item)}
+    >
       <Text>{item.label}</Text>
     </TouchableOpacity>
   );
@@ -77,8 +73,8 @@ const AutoComplete: React.FC<AutoCompleteProps> = ({
     <View>
       <TextInput
         style={{
-          fontFamily: "OpenSans_400Regular",
-          backgroundColor: "rgb(30, 30, 30)",
+          fontFamily: 'OpenSans_400Regular',
+          backgroundColor: 'rgb(30, 30, 30)',
           borderRadius: 8,
         }}
         className=" w-full  px-2 py-4 text-textColor  "

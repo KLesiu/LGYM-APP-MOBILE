@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import { View, Text } from "react-native";
-import ClockIcon from "./../../../../../../img/icons/clockIcon.svg";
-import CustomButton, { ButtonStyle } from "../../../../elements/CustomButton";
-import { useTranslation } from "react-i18next";
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text } from 'react-native';
+import ClockIcon from './../../../../../../img/icons/clockIcon.svg';
+import CustomButton, { ButtonStyle } from '../../../../elements/CustomButton';
+import { useTranslation } from 'react-i18next';
 
 const TrainingPlanDayTimer: React.FC = () => {
   const { t } = useTranslation();
   const [timerCount, setTimerCount] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number | null>(null);
 
@@ -29,16 +29,15 @@ const TrainingPlanDayTimer: React.FC = () => {
       setIsRunning(false);
       startTimeRef.current = null;
     } else {
-      
       startTimeRef.current = Date.now();
-      setTimerCount(0); 
-      
+      setTimerCount(0);
+
       intervalRef.current = setInterval(() => {
         if (!startTimeRef.current) return;
-        
+
         const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
         setTimerCount(elapsed);
-      }, 1000); 
+      }, 1000);
       setIsRunning(true);
     }
   };
@@ -46,10 +45,10 @@ const TrainingPlanDayTimer: React.FC = () => {
   const formatTime = (totalSeconds: number): string => {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
-    
+
     const formattedMinutes = String(minutes).padStart(2, '0');
     const formattedSeconds = String(seconds).padStart(2, '0');
-    
+
     return `${formattedMinutes}:${formattedSeconds}`;
   };
 
@@ -62,10 +61,7 @@ const TrainingPlanDayTimer: React.FC = () => {
       />
       <View className="flex flex-row items-end h-full" style={{ gap: 4 }}>
         <ClockIcon />
-        <Text
-          className="text-textColor"
-          style={{ fontFamily: "OpenSans_400Regular" }}
-        >
+        <Text className="text-textColor" style={{ fontFamily: 'OpenSans_400Regular' }}>
           {formatTime(timerCount)}
         </Text>
       </View>
