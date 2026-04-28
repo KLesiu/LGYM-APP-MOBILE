@@ -39,7 +39,7 @@ const Register: React.FC = () => {
 
   const validate = (): boolean => {
     const newErrors: string[] = [];
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/; // NOSONAR - safe linear regex
     if (!username.trim()) newErrors.push(t('auth.usernameRequired'));
     if (!email.trim()) newErrors.push(t('auth.emailRequired'));
     else if (!emailRegex.test(email)) newErrors.push(t('auth.invalidEmail'));

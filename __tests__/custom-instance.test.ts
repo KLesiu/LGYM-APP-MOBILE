@@ -27,7 +27,7 @@ describe('resolveBackendBaseUrl', () => {
       value: false,
     });
 
-    expect(() => resolveBackendBaseUrl('http://192.168.1.10:4000', { dev: false })).toThrow(
+    expect(() => resolveBackendBaseUrl('http://192.168.1.10:4000', { dev: false })).toThrow( // NOSONAR - intentional http for testing HTTPS enforcement
       'HTTPS required in release',
     );
   });
