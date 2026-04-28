@@ -1,26 +1,64 @@
 # LGYM Mobile
 
-## Local API setup (APIv3)
+## Installation
 
-The app reads backend base URL from `REACT_APP_BACKEND` in `.env`.
+```bash
+npm install
+```
 
-Example:
+Create a `.env` file with the backend URL:
 
 ```env
 REACT_APP_BACKEND=https://localhost:7025
-# Optional, mainly for Android emulator when localhost should map to emulator loopback:
-# REACT_APP_ANDROID_EMULATOR_HOST=10.0.2.2
+REACT_APP_ANDROID_EMULATOR_HOST=10.0.2.2
 ```
 
-### Which URL should I use?
+## Running locally
 
-- iOS simulator: `localhost` usually works.
-- Android emulator: if `localhost` is used, set `REACT_APP_ANDROID_EMULATOR_HOST` (usually `10.0.2.2`) so the app rewrites loopback to emulator-reachable host.
-- Physical device: runtime tries to replace localhost with Metro host IP when available; if your network blocks this, set `REACT_APP_BACKEND` to your machine LAN IP directly (for example `http://192.168.x.x:4000`).
+```bash
+npm run start
+```
 
-### Axios behavior
+Useful targets:
+
+- `npm run android`
+- `npm run ios`
+- `npm run web`
+
+## Building (EAS)
+
+```bash
+npm run build:android
+npm run build:androidDev
+npm run build:ios
+```
+
+## Testing
+
+```bash
+npm test -- --runInBand
+npx tsc --noEmit
+```
+
+## Architecture overview
+
+- `app/` contains expo-router screens, layouts, and feature UI.
+- `lib/` contains shared app logic, constants, storage, hooks, validators, and formatting helpers.
+- `api/generated/` contains generated backend clients and models.
+- `utils/` is reserved for legacy compatibility-free shared helpers during migration.
+
+## Environment variables
+
+- `REACT_APP_BACKEND`: backend base URL.
+- `REACT_APP_ANDROID_EMULATOR_HOST`: loopback override for Android emulator.
+
+## Local API setup
+
+The app resolves the backend base URL from `REACT_APP_BACKEND` and normalizes loopback handling in `lib/resolveBackendBaseUrl.ts`.
+
+## Axios behavior
 
 - Base URL is normalized and resolved in `api/custom-instance.ts`.
-- `Accept-Language` header is always attached from current i18n language.
+- `Accept-Language` follows the current i18n language.
 - `Authorization: Bearer <token>` is attached when token exists.
 - `X-Skip-Auth` can be set per request to skip auth header injection.
