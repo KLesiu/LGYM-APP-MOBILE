@@ -1,0 +1,17 @@
+appId: host.exp.exponent
+---
+- launchApp:
+    clearState: true
+- tapOn: "Login"
+- assertVisible: "Username"
+- tapOn:
+    text: "Username"
+- inputText: "maestro.t01@example.com"
+- tapOn:
+    text: "Password"
+- inputText: "Test123!"
+- tapOn: "Login"
+- assertVisible: "Home"
+- killApp
+- launchApp
+- assertVisible: "Home"
