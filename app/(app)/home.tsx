@@ -1,24 +1,22 @@
-import { View } from "react-native";
-import React, { JSX, useCallback, useRef } from "react";
-import { useState } from "react";
-import Menu from "./components/layout/Menu";
-import Header from "./components//layout/Header";
-import Loading from "./components/elements/Loading";
-import HomeProvider from "./components/home/HomeContext";
-import Start from "./components/home/start/Start";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Exercises from "./components/home/exercises/Exercises";
-import Gym from "./components/home/gym/Gym";
-import Training from "./components/home/training/Training";
-import TrainingPlan from "./components/home/plan/TrainingPlan";
-import History from "./components/home/history/History";
-import Records from "./components/home/records/Records";
-import Profile from "./components/home/profile/Profile";
-import { DEFAULT_HOME_SCREEN, type HomeScreenId } from "./components/home/homeScreens";
-import { useOnboarding } from "./onboarding/OnboardingContext";
-import { useEffect } from "react";
-import Toast from "react-native-toast-message";
-import { useTranslation } from "react-i18next";
+import { View } from 'react-native';
+import React, { JSX, useCallback, useRef, useState, useEffect } from 'react';
+import Menu from '../components/layout/Menu';
+import Header from '../components/layout/Header';
+import Loading from '../components/elements/Loading';
+import HomeProvider from '../components/home/HomeContext';
+import Start from '../components/home/start/Start';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Exercises from '../components/home/exercises/Exercises';
+import Gym from '../components/home/gym/Gym';
+import Training from '../components/home/training/Training';
+import TrainingPlan from '../components/home/plan/TrainingPlan';
+import History from '../components/home/history/History';
+import Records from '../components/home/records/Records';
+import Profile from '../components/home/profile/Profile';
+import { DEFAULT_HOME_SCREEN, type HomeScreenId } from '../components/home/homeScreens';
+import { useOnboarding } from '../onboarding/OnboardingContext';
+import Toast from 'react-native-toast-message';
+import { useTranslation } from 'react-i18next';
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
@@ -33,30 +31,29 @@ const Home: React.FC = () => {
     setCurrentScreen(DEFAULT_HOME_SCREEN);
     setView(nextView ?? <Start />);
   }, []);
-
   const buildScreen = useCallback(
     (screenId: HomeScreenId): JSX.Element => {
       switch (screenId) {
-        case "EXERCISES":
+        case 'EXERCISES':
           return <Exercises addExerciseToList={() => {}} />;
-        case "GYM":
+        case 'GYM':
           return <Gym />;
-        case "TRAINING":
+        case 'TRAINING':
           return <Training />;
-        case "PLAN":
+        case 'PLAN':
           return <TrainingPlan />;
-        case "HISTORY":
+        case 'HISTORY':
           return <History />;
-        case "RECORDS":
+        case 'RECORDS':
           return <Records />;
-        case "PROFILE":
+        case 'PROFILE':
           return <Profile changeView={changeView} />;
-        case "START":
+        case 'START':
         default:
           return <Start />;
       }
     },
-    [changeView]
+    [changeView],
   );
 
   const navigateToScreen = useCallback(
@@ -67,20 +64,18 @@ const Home: React.FC = () => {
           if (now - lastBlockedToastAtRef.current > 1200) {
             lastBlockedToastAtRef.current = now;
             Toast.show({
-              type: "success",
-              text1: t("onboarding.tutorial.navigationLockedTitle"),
-              text2: t("onboarding.tutorial.navigationLockedDescription"),
+              type: 'success',
+              text1: t('onboarding.tutorial.navigationLockedTitle'),
+              text2: t('onboarding.tutorial.navigationLockedDescription'),
             });
           }
         }
-
         return;
       }
-
       setCurrentScreen(screenId);
       setView(buildScreen(screenId));
     },
-    [buildScreen, canUserNavigateToScreen, t]
+    [buildScreen, canUserNavigateToScreen, t],
   );
 
   const changeHeaderVisibility = useCallback((isVisible: boolean) => {
@@ -88,14 +83,10 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (hasInitializedHomeScreenRef.current) {
-      return;
-    }
-
+    if (hasInitializedHomeScreenRef.current) return;
     hasInitializedHomeScreenRef.current = true;
     navigateToScreen(DEFAULT_HOME_SCREEN, { force: true });
   }, [navigateToScreen]);
-
   useEffect(() => {
     setScreenNavigator((screenId) => {
       navigateToScreen(screenId, { force: true });
@@ -120,4 +111,5 @@ const Home: React.FC = () => {
     </SafeAreaView>
   );
 };
+
 export default Home;
