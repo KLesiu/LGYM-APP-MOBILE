@@ -86,7 +86,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
           <CustomButton onPress={props.closeForm} text="Cancel" buttonStyleType={ButtonStyle.outlineBlack} width="flex-1" />
           {!isBlocked && (
             <>
-              {props.form && props.form._id && <CustomButton onPress={deleteExercise} disabled={isLoading} text="Delete" buttonStyleType={ButtonStyle.default} width="flex-1" />}
+              {props.form?._id && <CustomButton onPress={deleteExercise} disabled={isLoading} text="Delete" buttonStyleType={ButtonStyle.default} width="flex-1" />}
               <CustomButton onPress={handleSubmit} disabled={isLoading} text={props.form ? 'Update' : 'Create'} buttonStyleType={ButtonStyle.success} width="flex-1" />
             </>
           )}

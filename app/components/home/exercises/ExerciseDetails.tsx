@@ -50,7 +50,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({ exercise, goBack }) =
       { data: { exerciseId: exercise._id } },
       {
         onSuccess: (response) => {
-          if (response && response.data) {
+          if (response?.data) {
             const data = response.data as ExerciseTrainingHistoryItemDto[];
             setExerciseSeriesDetails(data);
           }
@@ -65,7 +65,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({ exercise, goBack }) =
       { data: { exerciseId: exercise._id } },
       {
         onSuccess: (response) => {
-          if (response && response.data) {
+          if (response?.data) {
             const data = response.data as PossibleRecordForExerciseDto;
             setExerciseRecord(data);
           }

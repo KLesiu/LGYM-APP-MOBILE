@@ -38,9 +38,10 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
       return allBodyParts;
     }
     const lowercasedSearchText = searchText.toLowerCase();
-    return allBodyParts.filter((bodyPart) =>
-      bodyPart.displayName!.toLowerCase().includes(lowercasedSearchText),
-    );
+    return allBodyParts.filter((bodyPart) => {
+      const displayName = bodyPart.displayName ?? '';
+      return displayName.toLowerCase().includes(lowercasedSearchText);
+    });
   }, [allBodyParts, searchText]);
 
   if (isLoading) {
