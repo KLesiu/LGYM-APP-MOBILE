@@ -43,6 +43,15 @@ describe('encryptedStorage', () => {
     expect(value).toBe(JSON.stringify({ _id: 'day-1' }));
   });
 
+  it('round-trips encrypted empty strings', async () => {
+    mockedSecureStore.getItemAsync.mockResolvedValue(null);
+    mockedSecureStore.setItemAsync.mockResolvedValue(undefined);
+
+    await encryptedStorage.setItem('notes', '');
+
+    await expect(encryptedStorage.getItem('notes')).resolves.toBe('');
+  });
+
   it('migrates legacy plaintext values on read', async () => {
     mockedSecureStore.getItemAsync.mockResolvedValue(null);
     mockedSecureStore.setItemAsync.mockResolvedValue(undefined);

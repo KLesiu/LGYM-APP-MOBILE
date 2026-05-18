@@ -5,33 +5,61 @@ import { STORAGE_KEYS } from './constants';
 
 const ENCRYPTION_KEY_STORAGE_KEY = STORAGE_KEYS.storageEncryptionKey;
 const ENCRYPTED_VALUE_PREFIX = 'enc:';
+// Prefix keeps valid encrypted empty strings distinguishable from corrupted ciphertext.
+const PLAINTEXT_VALUE_PREFIX = 'value:';
 let cachedEncryptionKey: string | null = null;
+
+const readEncryptionKey = async (): Promise<string | null> => {
+  try {
+    return await SecureStore.getItemAsync(ENCRYPTION_KEY_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+};
+
+const persistEncryptionKey = async (key: string): Promise<boolean> => {
+  try {
+    await SecureStore.setItemAsync(ENCRYPTION_KEY_STORAGE_KEY, key);
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const getOrCreateEncryptionKey = async (): Promise<string> => {
   if (cachedEncryptionKey) {
     return cachedEncryptionKey;
   }
 
-  const storedKey = await SecureStore.getItemAsync(ENCRYPTION_KEY_STORAGE_KEY);
+  const storedKey = await readEncryptionKey();
   if (storedKey) {
     cachedEncryptionKey = storedKey;
     return storedKey;
   }
 
   const newKey = CryptoJS.lib.WordArray.random(32).toString(CryptoJS.enc.Hex);
-  await SecureStore.setItemAsync(ENCRYPTION_KEY_STORAGE_KEY, newKey);
+  const persisted = await persistEncryptionKey(newKey);
+  if (!persisted) {
+    console.warn('[encryptedStorage] failed to persist encryption key');
+  }
   cachedEncryptionKey = newKey;
   return newKey;
 };
 
 const encryptValue = (value: string, key: string): string => {
-  return CryptoJS.AES.encrypt(value, key).toString();
+  return CryptoJS.AES.encrypt(`${PLAINTEXT_VALUE_PREFIX}${value}`, key).toString();
 };
 
 const decryptValue = (value: string, key: string): string | null => {
   try {
     const bytes = CryptoJS.AES.decrypt(value, key);
-    return bytes.toString(CryptoJS.enc.Utf8);
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+
+    if (decrypted.startsWith(PLAINTEXT_VALUE_PREFIX)) {
+      return decrypted.slice(PLAINTEXT_VALUE_PREFIX.length);
+    }
+
+    return decrypted.length > 0 ? decrypted : null;
   } catch {
     return null;
   }
@@ -60,7 +88,7 @@ export const encryptedStorage = {
     }
 
     const decrypted = decryptValue(storedValue.slice(ENCRYPTED_VALUE_PREFIX.length), encryptionKey);
-    if (!decrypted) {
+    if (decrypted === null) {
       warnOnCorruptedCiphertext(key);
       return null;
     }
