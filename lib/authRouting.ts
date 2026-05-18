@@ -6,6 +6,7 @@ export const APP_HOME_ROUTE = ROUTES.home;
 
 type AuthRoutingState = {
   isHydrated: boolean;
+  isTokenChecked: boolean;
   isAuthenticated: boolean;
 };
 
@@ -39,9 +40,10 @@ const getMessage = (error: unknown): string => {
 
 export const getBootstrapRoute = ({
   isHydrated,
+  isTokenChecked,
   isAuthenticated,
 }: AuthRoutingState): string | null => {
-  if (!isHydrated) return null;
+  if (!isHydrated || !isTokenChecked) return null;
   return isAuthenticated ? APP_HOME_ROUTE : AUTH_LOGIN_ROUTE;
 };
 

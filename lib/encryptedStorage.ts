@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as CryptoJS from 'crypto-js';
+import * as ExpoCrypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 import { STORAGE_KEYS } from './constants';
 
@@ -8,6 +9,17 @@ const ENCRYPTED_VALUE_PREFIX = 'enc:';
 // Prefix keeps valid encrypted empty strings distinguishable from corrupted ciphertext.
 const PLAINTEXT_VALUE_PREFIX = 'value:';
 let cachedEncryptionKey: string | null = null;
+
+const bytesToHex = (bytes: Uint8Array): string => {
+  return Array.from(bytes)
+    .map((byte) => byte.toString(16).padStart(2, '0'))
+    .join('');
+};
+
+const generateEncryptionKey = async (): Promise<string> => {
+  const randomBytes = await ExpoCrypto.getRandomBytesAsync(32);
+  return bytesToHex(randomBytes);
+};
 
 const readEncryptionKey = async (): Promise<string | null> => {
   try {
@@ -37,7 +49,7 @@ const getOrCreateEncryptionKey = async (): Promise<string> => {
     return storedKey;
   }
 
-  const newKey = CryptoJS.lib.WordArray.random(32).toString(CryptoJS.enc.Hex);
+  const newKey = await generateEncryptionKey();
   const persisted = await persistEncryptionKey(newKey);
   if (!persisted) {
     console.warn('[encryptedStorage] failed to persist encryption key');

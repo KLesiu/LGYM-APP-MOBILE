@@ -1,8 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 const myColors = require("./constants/colors");
+const nativewind = require("nativewind/tailwind/native");
 // FROZEN at NativeWind v2 — see .sisyphus/evidence/task-2.4-freeze.md
 module.exports = {
-  content: ["./app/*.{js,jsx,ts,tsx}", "./app/components/**/*.{js,jsx,ts,tsx}"],
+  content: ["./app/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors:myColors,
@@ -28,5 +29,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [nativewind],
 };

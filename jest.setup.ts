@@ -9,3 +9,10 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   setItem: jest.fn(),
   removeItem: jest.fn(),
 }));
+
+jest.mock('expo-crypto', () => ({
+  getRandomBytes: jest.fn(() => new Uint8Array(Array.from({ length: 32 }, (_, index) => index + 1))),
+  getRandomBytesAsync: jest.fn(async () =>
+    new Uint8Array(Array.from({ length: 32 }, (_, index) => index + 1))
+  ),
+}));
