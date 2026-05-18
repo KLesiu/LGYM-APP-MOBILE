@@ -1,22 +1,19 @@
-import { View, Text } from "react-native";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../../../elements/CustomButton";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import { View, Text } from 'react-native';
+import CustomButton, { ButtonSize, ButtonStyle } from '../../../../elements/CustomButton';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface NoGymsInfoProps {
-    goBack: () => void;
+  goBack: () => void;
 }
 
 const NoGymsInfo: React.FC<NoGymsInfoProps> = (props) => {
   const { t } = useTranslation();
   return (
-    <View className="w-full flex flex-col" style={{gap: 16}}>
+    <View className="w-full flex flex-col" style={{ gap: 16 }}>
       <Text
         className="text-textColor text-base text-center"
-        style={{ fontFamily: "OpenSans_400Regular" }}
+        style={{ fontFamily: 'OpenSans_400Regular' }}
       >
         {t('training.noGyms')}
       </Text>

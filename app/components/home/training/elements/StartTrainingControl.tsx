@@ -1,7 +1,7 @@
-import { Pressable } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import CustomButton from "../../../elements/CustomButton";
-import React from "react";
+import { Pressable } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import CustomButton from '../../../elements/CustomButton';
+import React from 'react';
 
 interface StartTrainingControlProps {
   isAddTrainingActive: boolean;
@@ -19,19 +19,11 @@ const StartTrainingControl: React.FC<StartTrainingControlProps> = ({
       {isAddTrainingActive ? (
         <CustomButton
           onPress={getCurrentPlanDayTraining}
-          customSlots={[
-            <Icon
-              style={{ fontSize: 140, color: "#20BC2D" }}
-              name="play-circle"
-            />,
-          ]}
+          customSlots={[<Icon key="start-training" style={{ fontSize: 140, color: '#20BC2D' }} name="play-circle" />]}
         />
       ) : (
         <Pressable onPress={getInformationAboutGyms}>
-          <Icon
-            style={{ fontSize: 140, color: "#20BC2D" }}
-            name="plus-circle"
-          />
+          <Icon style={{ fontSize: 140, color: '#20BC2D' }} name="plus-circle" />
         </Pressable>
       )}
     </>

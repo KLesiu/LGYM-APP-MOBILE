@@ -1,18 +1,15 @@
-import { View } from "react-native";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../../../elements/CustomButton";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import { View } from 'react-native';
+import CustomButton, { ButtonStyle } from '../../../../elements/CustomButton';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface TrainingPlanDayHeaderButtonsProps {
-    showExerciseForm: () => void
+  showExerciseForm: () => void;
 }
 
-const TrainingPlanDayHeaderButtons: React.FC<
-  TrainingPlanDayHeaderButtonsProps
-> = ({showExerciseForm}) => {
+const TrainingPlanDayHeaderButtons: React.FC<TrainingPlanDayHeaderButtonsProps> = ({
+  showExerciseForm,
+}) => {
   const { t } = useTranslation();
   return (
     <View className="flex flex-row justify-between">

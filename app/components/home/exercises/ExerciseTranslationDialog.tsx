@@ -1,12 +1,12 @@
-import React, { useMemo, useState } from "react";
-import { Text, TextInput, View } from "react-native";
-import { useTranslation } from "react-i18next";
-import Dialog from "../../elements/Dialog";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import CustomDropdown from "../../elements/Dropdown";
-import { ExerciseResponseDto } from "../../../../api/generated/model";
-import { DropdownItem } from "../../../../interfaces/Dropdown";
-import toastService from "../../../services/toastService";
+import React, { useMemo, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import Dialog from '../../elements/Dialog';
+import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
+import CustomDropdown from '../../elements/Dropdown';
+import { ExerciseResponseDto } from '../../../../api/generated/model';
+import { DropdownItem } from '../../../../interfaces/Dropdown';
+import toastService from '../../../services/toastService';
 
 interface ExerciseTranslationDialogProps {
   exercise: ExerciseResponseDto;
@@ -22,17 +22,17 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
   onSubmit,
 }) => {
   const { t, i18n } = useTranslation();
-  const initialCulture = i18n.language?.startsWith("pl") ? "pl" : "en";
+  const initialCulture = i18n.language?.startsWith('pl') ? 'pl' : 'en';
   const [culture, setCulture] = useState(initialCulture);
-  const [translatedName, setTranslatedName] = useState("");
+  const [translatedName, setTranslatedName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const languageOptions = useMemo<DropdownItem[]>(
     () => [
-      { label: "Polski (pl)", value: "pl" },
-      { label: "English (en)", value: "en" },
+      { label: 'Polski (pl)', value: 'pl' },
+      { label: 'English (en)', value: 'en' },
     ],
-    []
+    [],
   );
 
   const canSubmit = useMemo(() => {
@@ -43,7 +43,7 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
 
   const submit = async () => {
     if (!canSubmit || isSubmitBlocked) {
-      toastService.showValidationError(t("common.fieldRequired"));
+      toastService.showValidationError(t('common.fieldRequired'));
       return;
     }
 
@@ -65,14 +65,11 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
         <View className="px-5 py-2" style={{ gap: 4 }}>
           <Text
             className="text-3xl smallPhone:text-2xl text-textColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
           >
-            {t("exercises.addTranslation")}
+            {t('exercises.addTranslation')}
           </Text>
-          <Text
-            className="text-textColor"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
+          <Text className="text-textColor" style={{ fontFamily: 'OpenSans_300Light' }}>
             {exercise.name}
           </Text>
         </View>
@@ -81,10 +78,10 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
           <View style={{ gap: 4 }} className="flex flex-col">
             <View className="flex flex-row gap-1">
               <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
                 className="text-textColor text-base smallPhone:text-sm"
               >
-                {t("exercises.translationLanguage")}:
+                {t('exercises.translationLanguage')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
@@ -92,25 +89,25 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
             <CustomDropdown
               value={culture}
               data={languageOptions}
-              onSelect={(item) => setCulture(item?.value || "")}
+              onSelect={(item) => setCulture(item?.value || '')}
             />
           </View>
 
           <View style={{ gap: 4 }} className="flex flex-col">
             <View className="flex flex-row gap-1">
               <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
                 className="text-textColor text-base smallPhone:text-sm"
               >
-                {t("exercises.translationName")}:
+                {t('exercises.translationName')}:
               </Text>
               <Text className="text-redColor">*</Text>
             </View>
 
             <TextInput
               style={{
-                fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                fontFamily: 'OpenSans_400Regular',
+                backgroundColor: 'rgb(30, 30, 30)',
                 borderRadius: 8,
               }}
               className="w-full px-2 py-4 text-textColor"
@@ -125,14 +122,14 @@ const ExerciseTranslationDialog: React.FC<ExerciseTranslationDialogProps> = ({
         <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
           <CustomButton
             onPress={onCancel}
-            text={t("common.cancel")}
+            text={t('common.cancel')}
             buttonStyleType={ButtonStyle.outlineBlack}
             width="flex-1"
             disabled={isSubmitBlocked}
           />
           <CustomButton
             onPress={submit}
-            text={t("common.add")}
+            text={t('common.add')}
             buttonStyleType={ButtonStyle.success}
             width="flex-1"
             disabled={isSubmitBlocked || !canSubmit}

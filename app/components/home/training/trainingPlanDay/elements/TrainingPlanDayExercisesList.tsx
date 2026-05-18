@@ -1,10 +1,10 @@
-import { View, Text } from "react-native";
-import { useTrainingPlanDay } from "../TrainingPlanDayContext";
-import TrainingPlanDayExerciseListCard from "./TrainingPlanDayExerciseListCard";
-import { PlanDayExercisesFormVm } from "../../../../../../types/models";
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
+import { View, Text, FlatList } from 'react-native';
+import { useTrainingPlanDay } from '../TrainingPlanDayContext';
+import TrainingPlanDayExerciseListCard from './TrainingPlanDayExerciseListCard';
+import { PlanDayExercisesFormVm } from '../../../../../../types/models';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useMemo } from 'react';
 
 interface TrainingPlanDayExercisesListProps {
   deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
@@ -17,9 +17,9 @@ interface TrainingPlanDayExercisesListProps {
   >;
 }
 
-const TrainingPlanDayExercisesList: React.FC<
-  TrainingPlanDayExercisesListProps
-> = ({ deleteExerciseFromPlan }) => {
+const TrainingPlanDayExercisesList: React.FC<TrainingPlanDayExercisesListProps> = ({
+  deleteExerciseFromPlan,
+}) => {
   const { t } = useTranslation();
   const { exercisesInPlanList, trainingSessionScores } = useTrainingPlanDay();
 
@@ -30,16 +30,14 @@ const TrainingPlanDayExercisesList: React.FC<
 
     return exercisesInPlanList.filter((exercise) => {
       const scoresForExercise = trainingSessionScores.filter(
-        (score) => score.exercise._id === exercise.exercise._id
+        (score) => score.exercise._id === exercise.exercise._id,
       );
 
       if (!scoresForExercise.length) {
         return false;
       }
 
-      return scoresForExercise.every(
-        (score) => !!score.reps && !!score.weight
-      );
+      return scoresForExercise.every((score) => !!score.reps && !!score.weight);
     }).length;
   }, [exercisesInPlanList, trainingSessionScores]);
 
@@ -51,7 +49,7 @@ const TrainingPlanDayExercisesList: React.FC<
         <Text
           className=" text-sm smallPhone:text-xs text-textColor "
           style={{
-            fontFamily: "OpenSans_400Regular",
+            fontFamily: 'OpenSans_400Regular',
           }}
         >
           {t('training.exerciseList')}
@@ -59,21 +57,24 @@ const TrainingPlanDayExercisesList: React.FC<
         <Text
           className="text-sm smallPhone:text-xs text-primaryColor"
           style={{
-            fontFamily: "OpenSans_700Bold",
+            fontFamily: 'OpenSans_700Bold',
           }}
         >
           {completedExercisesCount}/{totalExercisesCount}
         </Text>
       </View>
-      <View className="w-full flex-1" style={{ gap: 8 }}>
-        {exercisesInPlanList?.map((exercise, index) => (
+      <FlatList
+        className="w-full flex-1"
+        data={exercisesInPlanList ?? []}
+        keyExtractor={(exercise, index) => exercise.exercise._id || `${exercise.exercise.name ?? 'exercise'}-${index}`}
+        contentContainerStyle={{ gap: 8 }}
+        renderItem={({ item: exercise }) => (
           <TrainingPlanDayExerciseListCard
-            key={index}
             exercise={exercise}
             deleteExerciseFromPlan={deleteExerciseFromPlan}
           />
-        ))}
-      </View>
+        )}
+      />
     </View>
   );
 };

@@ -1,14 +1,10 @@
- import { View, Text, Pressable, ScrollView } from "react-native";
-import { useEffect, useState } from "react";
-import ProfileRank from "../../elements/ProfileRank";
-import ProgressBar from "../../elements/ProgressBar";
-import {
-  TrainingSummary as TrainingSummaryInterface,
-} from "./../../../../types/models";
-import React from "react";
-import SeriesSummaryRow from "./elements/SeriesSummaryRow";
-import { useTranslation } from "react-i18next";
-
+import React, { useEffect, useMemo, useState } from 'react';
+import { View, Text, Pressable, ScrollView } from 'react-native';
+import ProfileRank from '../../elements/ProfileRank';
+import ProgressBar from '../../elements/ProgressBar';
+import { TrainingSummary as TrainingSummaryInterface } from './../../../../types/models';
+import SeriesSummaryRow from './elements/SeriesSummaryRow';
+import { useTranslation } from 'react-i18next';
 
 interface TrainingSummaryProps {
   closePopUp: () => void;
@@ -20,18 +16,28 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
   const [progress, setProgress] = useState<number>();
 
   useEffect(() => {
-    if (
-      props.trainingSummary.nextRank &&
-      props.trainingSummary.nextRank.needElo
-    ) {
+    if (props.trainingSummary.nextRank?.needElo) {
       setProgress(
         Math.floor(
           ((props.trainingSummary.gainElo + props.trainingSummary.userOldElo) /
-            props.trainingSummary.nextRank?.needElo) * 10000
-        ) / 100
+            props.trainingSummary.nextRank?.needElo) *
+            10000,
+        ) / 100,
       );
     }
   }, [props.trainingSummary]);
+
+  const nextRankLabel = useMemo(() => {
+    if (!props.trainingSummary.nextRank) {
+      return t('training.highestRank');
+    }
+
+    if (typeof props.trainingSummary.nextRank.name === 'string') {
+      return props.trainingSummary.nextRank.name;
+    }
+
+    return (props.trainingSummary.nextRank.name as { name?: string } | undefined)?.name ?? t('common.unknown');
+  }, [props.trainingSummary.nextRank, t]);
 
   return (
     <View
@@ -40,7 +46,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
     >
       <Text
         className="text-lg text-textColor border-b-[1px] border-primaryColor py-1 w-full"
-        style={{ fontFamily: "OpenSans_700Bold" }}
+        style={{ fontFamily: 'OpenSans_700Bold' }}
       >
         {t('training.summary')}
       </Text>
@@ -48,20 +54,18 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
       <ScrollView
         className="w-full flex-1"
         contentContainerStyle={{
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "column",
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
           gap: 16,
           paddingBottom: 80,
         }}
       >
-           <View
-          className="flex w-full flex-row justify-between rounded-lg bg-secondaryColor items-center p-4"
-        >
+        <View className="flex w-full flex-row justify-between rounded-lg bg-secondaryColor items-center p-4">
           <View className="flex flex-col">
             <Text
               className="text-primaryColor text-lg smallPhone:text-base"
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              style={{ fontFamily: 'OpenSans_700Bold' }}
             >
               {t('training.progress')}
             </Text>
@@ -69,48 +73,46 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
               <View className="flex flex-col gap-2">
                 <Text
                   className="text-textColor text-sm smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  style={{ fontFamily: 'OpenSans_400Regular' }}
                 >
                   {t('training.currentRank', { rank: props.trainingSummary.profileRank.name })}
                 </Text>
                 <Text
                   className="text-textColor text-sm smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  style={{ fontFamily: 'OpenSans_400Regular' }}
                 >
-                  {t('training.elo', { 
+                  {t('training.elo', {
                     elo: props.trainingSummary.userOldElo + props.trainingSummary.gainElo,
-                    gain: props.trainingSummary.gainElo >= 0 ? `+${props.trainingSummary.gainElo}` : props.trainingSummary.gainElo 
+                    gain:
+                      props.trainingSummary.gainElo >= 0
+                        ? `+${props.trainingSummary.gainElo}`
+                        : props.trainingSummary.gainElo,
                   })}
                 </Text>
                 <Text
                   className="text-textColor text-sm smallPhone:text-xs"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  style={{ fontFamily: 'OpenSans_400Regular' }}
                 >
-                   {t('training.nextRank')}
-                   {' '}
-                   {props.trainingSummary.nextRank
-                     ? (typeof props.trainingSummary.nextRank.name === 'string' ? props.trainingSummary.nextRank.name : (props.trainingSummary.nextRank.name as any)?.name || t('common.unknown'))
-                     : t('training.highestRank')}
+                  {t('training.nextRank')}{' '}
+                  {nextRankLabel}
                 </Text>
               </View>
               {props.trainingSummary.nextRank &&
                 props.trainingSummary.nextRank.needElo &&
-                progress &&
-                <ProgressBar width={progress} />
-              }
+                progress && <ProgressBar width={progress} />}
               <Text
                 className="text-textColor text-sm smallPhone:text-xs"
-                style={{ fontFamily: "OpenSans_400Regular" }}
+                style={{ fontFamily: 'OpenSans_400Regular' }}
               >
-                {t('training.completed', { percent: progress ? `${progress}%` : "0%" })}
+                {t('training.completed', { percent: progress ? `${progress}%` : '0%' })}
               </Text>
             </View>
           </View>
           <ProfileRank
             rank={
-              typeof props.trainingSummary.profileRank === "string"
+              typeof props.trainingSummary.profileRank === 'string'
                 ? props.trainingSummary.profileRank
-                : props.trainingSummary.profileRank?.name ?? ""
+                : (props.trainingSummary.profileRank?.name ?? '')
             }
           />
         </View>
@@ -118,17 +120,15 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
           <View key={exercise.exerciseId} className="bg-secondaryColor w-full rounded-lg p-4">
             <Text
               className="text-primaryColor text-lg smallPhone:text-base mb-2"
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              style={{ fontFamily: 'OpenSans_700Bold' }}
             >
               {exercise.exerciseName}
             </Text>
-            {(exercise.seriesComparisons ?? []).map((seriesData, index) => (
+            {(exercise.seriesComparisons ?? []).map((seriesData) => (
               <SeriesSummaryRow key={seriesData.series} seriesComparison={seriesData} />
             ))}
           </View>
         ))}
-
-     
       </ScrollView>
 
       <View className="flex w-full flex-row justify-end">
@@ -137,10 +137,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
           style={{ borderRadius: 8 }}
           className={` flex flex-row justify-center items-center w-28 h-14 bg-primaryColor`}
         >
-          <Text
-            className="text-base text-bgColor"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
+          <Text className="text-base text-bgColor" style={{ fontFamily: 'OpenSans_400Regular' }}>
             {t('training.continue')}
           </Text>
         </Pressable>

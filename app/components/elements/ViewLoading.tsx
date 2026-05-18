@@ -1,18 +1,20 @@
-import { View, ActivityIndicator, Text } from "react-native";
-import React from "react";
+import { View, ActivityIndicator, Text } from 'react-native';
+import React from 'react';
 
 interface ViewLoadingProps {
   customClasses?: string;
 }
 
-const ViewLoading: React.FC<ViewLoadingProps> = ({customClasses}) => {
+const ViewLoading: React.FC<ViewLoadingProps> = ({ customClasses }) => {
   return (
-    <View className={"w-full top-0 flex flex-row justify-center items-center z-[5] py-4 space-x-2" + ` ${customClasses}`}>
+    <View
+      className={
+        'w-full top-0 flex flex-row justify-center items-center z-[5] py-4 space-x-2' +
+        ` ${customClasses}`
+      }
+    >
       <ActivityIndicator size="small" color="#ffffff" />
-      <Text
-        className="text-textColor text-base"
-        style={{ fontFamily: "OpenSans_700Bold" }}
-      >
+      <Text className="text-textColor text-base" style={{ fontFamily: 'OpenSans_700Bold' }}>
         Loading...
       </Text>
     </View>

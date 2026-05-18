@@ -1,43 +1,33 @@
-import { View, Text } from "react-native";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { useState, useEffect } from "react";
-import React from "react";
-import { useAppContext } from "../../../AppContext";
-import { useRouter } from "expo-router";
-import ConfirmDialog from "../../elements/ConfirmDialog";
-import { FontWeights } from "../../../../enums/FontsProperties";
-import Checkbox from "../../elements/Checkbox";
-import { useTranslation } from "react-i18next";
-import LanguageSwitcher from "../../elements/LanguageSwitcher";
-import { useQueryClient } from "@tanstack/react-query";
-import { useAuthStore } from "../../../../stores/useAuthStore";
+import { View, Text } from 'react-native';
+import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
+import { useState, useEffect } from 'react';
+import React from 'react';
+import ConfirmDialog from '../../elements/ConfirmDialog';
+import { FontWeights } from '../../../../enums/FontsProperties';
+import Checkbox from '../../elements/Checkbox';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../elements/LanguageSwitcher';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '../../../../stores/useAuthStore';
+import { sanitize } from '../../../../lib/domain/errorHandler';
 import {
   getGetApiGetUsersRankingQueryKey,
   getApiDeleteAccount,
   usePostApiLogout,
   usePostApiChangeVisibilityInRanking,
-} from "../../../../api/generated/user/user";
+} from '../../../../api/generated/user/user';
 
 interface MainProfileInfoProps {
   email: string;
   isVisibleInRanking: boolean;
 }
 
-const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
-  email,
-  isVisibleInRanking,
-}) => {
+const MainProfileInfo: React.FC<MainProfileInfoProps> = ({ email, isVisibleInRanking }) => {
   const { t } = useTranslation();
-  const {
-    clearBeforeLogout,
-    changeIsVisibleInRanking,
-  } = useAppContext();
-  const { user, setUser } = useAuthStore();
-  const [
-    isDeleteConfirmationDialogVisible,
-    setIsDeleteConfirmationDialogVisible,
-  ] = useState(false);
-  const router = useRouter();
+  const clearSession = useAuthStore((state) => state.clearSession);
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+  const [isDeleteConfirmationDialogVisible, setIsDeleteConfirmationDialogVisible] = useState(false);
   const queryClient = useQueryClient();
   const [isVisibleInRankingState, setIsVisibleInRankingState] =
     useState<boolean>(isVisibleInRanking);
@@ -54,18 +44,19 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
     try {
       await logoutMutation();
     } catch (error) {
-      console.error("Logout API request failed, proceeding with local logout", error);
+      const sanitizedError = sanitize(error);
+      if (__DEV__ && sanitizedError.devDetails) {
+        console.warn('[MainProfileInfo] logout request failed', sanitizedError.devDetails);
+      }
     } finally {
-      await clearBeforeLogout();
-      router.push("/");
+      await clearSession();
     }
   };
 
   const deleteAccount = async (): Promise<void> => {
     await getApiDeleteAccount();
     setIsDeleteConfirmationDialogVisible(false);
-    await clearBeforeLogout();
-    router.push("/");
+    await clearSession();
   };
 
   const changeVisibility = async (newValue: boolean): Promise<void> => {
@@ -73,7 +64,6 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
     const previousUser = user;
 
     setIsVisibleInRankingState(newValue);
-    changeIsVisibleInRanking(newValue);
     if (user) {
       setUser({
         ...user,
@@ -89,13 +79,8 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
       await queryClient.invalidateQueries({
         queryKey: getGetApiGetUsersRankingQueryKey(),
       });
-      await queryClient.refetchQueries({
-        queryKey: getGetApiGetUsersRankingQueryKey(),
-        type: "all",
-      });
     } catch {
       setIsVisibleInRankingState(previousValue);
-      changeIsVisibleInRanking(previousValue);
       setUser(previousUser);
     }
   };
@@ -105,7 +90,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
       <View className="flex flex-col w-full" style={{ gap: 8 }}>
         <View style={{ gap: 4 }} className="flex flex-col w-full">
           <Text
-            style={{ fontFamily: "OpenSans_300Light" }}
+            style={{ fontFamily: 'OpenSans_300Light' }}
             className="text-gray-200/80 font-light text-xs"
           >
             {t('auth.email')}
@@ -115,7 +100,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
             className="bg-secondaryColor flex justify-center items-center h-14 smallPhone:h-10 py-4 smallPhone:py-2 px-6"
           >
             <Text
-              style={{ fontFamily: "OpenSans_300Light" }}
+              style={{ fontFamily: 'OpenSans_300Light' }}
               className="text-gray-200/80 font-light leading-4 text-sm smallPhone:text-xs"
             >
               {email}
@@ -132,17 +117,16 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
           />
           <Text
             className="text-textColor text-sm smallPhone:text-xs"
-            style={{ fontFamily: "OpenSans_300Light" }}
+            style={{ fontFamily: 'OpenSans_300Light' }}
           >
             {t('profile.visibleInRanking')}
           </Text>
         </View>
-        
-        <LanguageSwitcher />
 
+        <LanguageSwitcher />
       </View>
 
-      <View className="flex flex-row  w-full" style={{gap:16}}>
+      <View className="flex flex-row  w-full" style={{ gap: 16 }}>
         <CustomButton
           text={t('profile.logout')}
           customClasses="flex-1"

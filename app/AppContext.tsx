@@ -1,25 +1,14 @@
-import React, { useCallback, useMemo } from "react";
-import { createContext, useContext, useEffect, useState } from "react";
-
-import { Message } from "../enums/Message";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserInfo } from "../types/models";
-import { useAuthStore } from "../stores/useAuthStore";
-import { useQueryClient } from "@tanstack/react-query";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface AppContextProps {
-
   errors: string[];
   isLoading: boolean;
   setErrors: (errors: string[]) => void;
   clearBeforeLogout: () => Promise<void>;
-  token?: string;
   isTokenChecked: boolean;
   setIsTokenChecked: (value: boolean) => void;
-  setToken: (token?: string) => void;
-  userInfo: UserInfo | null;
-  setUserInfo: (userInfo: UserInfo | null) => void;
-  getRankColor?: "#CACACA" | "#A733DD" | "#FC2C44" | "#E8CC79";
   changeIsVisibleInRanking: (newValue: boolean) => void;
   refreshLocalizedCaches: () => Promise<void>;
 }
@@ -29,7 +18,7 @@ const AppContext = createContext<AppContextProps | null>(null);
 export const useAppContext = () => {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error("useAppContext must be used within AppProvider");
+    throw new Error('useAppContext must be used within AppProvider');
   }
   return context;
 };
@@ -38,74 +27,44 @@ interface AppProviderProps {
   children: React.ReactNode;
 }
 const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading] = useState<boolean>(false);
   const [canAppStart, setCanAppStart] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const [token, setToken] = useState<string>();
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [isTokenChecked, setIsTokenChecked] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
-  useEffect(() => {
-    getTokenFromLocalStorage();
+  const getTokenFromLocalStorage = useCallback(() => {
+    setCanAppStart(true);
   }, []);
 
-  const getTokenFromLocalStorage = async () => {
-    try {
-      const storedToken = await AsyncStorage.getItem("token");
-      if (storedToken) {
-        setToken(storedToken);
-        useAuthStore.getState().setToken(storedToken);
-      } else {
-        setToken(undefined);
-        useAuthStore.getState().setToken(null);
-      }
-    } catch (error) {
-      console.error("Error retrieving token from storage", error);
-      setToken(undefined);
-      setUserInfo(null);
-      useAuthStore.getState().setToken(null);
-    } finally {
-      setCanAppStart(true);
-    }
-  };
+  useEffect(() => {
+    getTokenFromLocalStorage();
+  }, [getTokenFromLocalStorage]);
 
-
-
-  const clearBeforeLogout = async () => {
-    let keys: readonly string[] = [];
-
-    try {
-      keys = await AsyncStorage.getAllKeys();
-    } catch (error) {
-      console.error("Error reading storage keys during logout", error);
-    }
-
-    await Promise.allSettled(keys.map((key) => deleteFromStorage(key)));
-    setUserInfo(null);
-    setToken(undefined);
+  const clearBeforeLogout = useCallback(async () => {
     setIsTokenChecked(true);
-    useAuthStore.getState().logout();
     queryClient.clear();
-  };
+  }, [queryClient]);
 
-  const deleteFromStorage = async (key: string): Promise<void> => {
-    await AsyncStorage.removeItem(key);
-  };
+  const changeIsVisibleInRanking = useCallback((newValue: boolean): void => {
+    if (newValue) {
+      return;
+    }
+  }, []);
 
   const refreshLocalizedCaches = useCallback(async (): Promise<void> => {
     const isLocalizedQuery = (queryKey: readonly unknown[]): boolean => {
       return queryKey.some((part) => {
-        if (typeof part !== "string") {
+        if (typeof part !== 'string') {
           return false;
         }
 
         return (
-          part.includes("/getPlanConfig") ||
-          part.includes("/getPlansList") ||
-          part.includes("/checkIsUserHavePlan") ||
-          part.includes("/api/planDay/") ||
-          part.includes("/api/exercise/")
+          part.includes('/getPlanConfig') ||
+          part.includes('/getPlansList') ||
+          part.includes('/checkIsUserHavePlan') ||
+          part.includes('/api/planDay/') ||
+          part.includes('/api/exercise/')
         );
       });
     };
@@ -113,58 +72,24 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     await queryClient.invalidateQueries({
       predicate: (query) => isLocalizedQuery(query.queryKey),
     });
-
-    await queryClient.refetchQueries({
-      predicate: (query) => isLocalizedQuery(query.queryKey),
-      type: "active",
-    });
   }, [queryClient]);
 
-  const changeIsVisibleInRanking = (newValue: boolean): void => {
-    setUserInfo((prevUserInfo: UserInfo | null) => {
-      if (!prevUserInfo) return prevUserInfo;
-      return { ...prevUserInfo, isVisibleInRanking: newValue };
-    });
-  };
-
-  const getRankColor = useMemo(() => {
-    switch (userInfo?.profileRank) {
-      case "Junior 1":
-      case "Junior 2":
-      case "Junior 3":
-        return "#CACACA";
-      case "Mid 1":
-      case "Mid 2":
-      case "Mid 3":
-        return "#A733DD";
-      case "Pro 1":
-      case "Pro 2":
-      case "Pro 3":
-        return "#FC2C44";
-      case "Champ":
-        return "#E8CC79";
-    }
-  }, [userInfo?.profileRank]);
+  const contextValue = useMemo(
+    () => ({
+      errors,
+      isLoading,
+      setErrors,
+      clearBeforeLogout,
+      setIsTokenChecked,
+      isTokenChecked,
+      changeIsVisibleInRanking,
+      refreshLocalizedCaches,
+    }),
+    [errors, isLoading, changeIsVisibleInRanking, clearBeforeLogout, isTokenChecked, refreshLocalizedCaches],
+  );
 
   return (
-    <AppContext.Provider
-      value={{
-
-        errors,
-        isLoading,
-        setErrors,
-        clearBeforeLogout,
-        setIsTokenChecked,
-        isTokenChecked,
-        token,
-        userInfo,
-        setUserInfo,
-        getRankColor,
-        setToken,
-        changeIsVisibleInRanking,
-        refreshLocalizedCaches,
-      }}
-    >
+    <AppContext.Provider value={contextValue}>
       {canAppStart && children}
     </AppContext.Provider>
   );

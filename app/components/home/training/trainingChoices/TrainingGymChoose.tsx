@@ -1,25 +1,21 @@
-import { useMemo } from "react";
-import { View, Text } from "react-native";
-import Dialog from "../../../elements/Dialog";
-import { useHomeContext } from "../../HomeContext";
-import NoGymsInfo from "./elements/NoGymsInfo";
-import GymsToChoose from "./elements/GymsToChoose";
-import { useAppContext } from "../../../../AppContext";
-import ViewLoading from "../../../elements/ViewLoading";
-import React from "react";
-import { useGetApiGymIdGetGyms } from "../../../../../api/generated/gym/gym";
-import { GymChoiceInfoDto } from "../../../../../api/generated/model";
-import { useTranslation } from "react-i18next";
+import { useMemo } from 'react';
+import { View, Text } from 'react-native';
+import Dialog from '../../../elements/Dialog';
+import { useHomeContext } from '../../HomeContext';
+import NoGymsInfo from './elements/NoGymsInfo';
+import GymsToChoose from './elements/GymsToChoose';
+import { useAppContext } from '../../../../AppContext';
+import ViewLoading from '../../../elements/ViewLoading';
+import React from 'react';
+import { useGetApiGymIdGetGyms } from '../../../../../api/generated/gym/gym';
+import { GymChoiceInfoDto } from '../../../../../api/generated/model';
+import { useTranslation } from 'react-i18next';
 
 const isGymChoiceInfoDto = (value: unknown): value is GymChoiceInfoDto => {
-  if (!value || typeof value !== "object") return false;
+  if (!value || typeof value !== 'object') return false;
 
   const gym = value as GymChoiceInfoDto;
-  return (
-    gym._id === undefined ||
-    gym._id === null ||
-    typeof gym._id === "string"
-  );
+  return gym._id === undefined || gym._id === null || typeof gym._id === 'string';
 };
 
 interface TrainingGymChooseProps {
@@ -27,14 +23,11 @@ interface TrainingGymChooseProps {
   goBack: () => void;
 }
 
-const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
-  setGym,
-  goBack,
-}) => {
+const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({ setGym, goBack }) => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { errors } = useAppContext();
-  
+
   const { data, isLoading } = useGetApiGymIdGetGyms(userId, { query: { enabled: !!userId } });
 
   const gyms = useMemo(() => {
@@ -44,25 +37,23 @@ const TrainingGymChoose: React.FC<TrainingGymChooseProps> = ({
 
     return data.data.filter(isGymChoiceInfoDto);
   }, [data]);
-  
-  if(isLoading){
-    return <Dialog><ViewLoading/></Dialog>
+
+  if (isLoading) {
+    return (
+      <Dialog>
+        <ViewLoading />
+      </Dialog>
+    );
   }
 
   return (
     <Dialog>
-      <View
-        className="flex flex-col items-start w-full h-full p-4"
-        style={{ gap: 8 }}
-      >
-        <Text
-          className="text-lg text-textColor"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
+      <View className="flex flex-col items-start w-full h-full p-4" style={{ gap: 8 }}>
+        <Text className="text-lg text-textColor" style={{ fontFamily: 'OpenSans_700Bold' }}>
           {t('training.chooseGym')}
         </Text>
         {errors.length || !gyms.length ? (
-          <NoGymsInfo  goBack={goBack} />
+          <NoGymsInfo goBack={goBack} />
         ) : (
           <GymsToChoose gyms={gyms} setGym={setGym} />
         )}

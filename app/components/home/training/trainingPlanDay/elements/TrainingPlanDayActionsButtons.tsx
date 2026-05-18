@@ -1,35 +1,26 @@
-import React, { useMemo, useState } from "react";
-import { View } from "react-native";
-import PlanIcon from "./../../../../../../img/icons/planIcon.svg";
-import GymIcon from "./../../../../../../img/icons/gymIcon.svg";
-import SwitchIcon from "./../../../../../../img/icons/switchIcon.svg";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import RemoveIcon from "./../../../../../../img/icons/deleteIcon.svg";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../../../elements/CustomButton";
-import { useTrainingPlanDay } from "../TrainingPlanDayContext";
-import { PlanDayExercisesFormVm } from "../../../../../../types/models";
-import { EnumLookupDto } from "../../../../../../api/generated/model";
-import useDeviceCategory from "../../../../../../helpers/hooks/useDeviceCategory";
+import React, { useMemo, useState } from 'react';
+import { View } from 'react-native';
+import PlanIcon from './../../../../../../img/icons/planIcon.svg';
+import GymIcon from './../../../../../../img/icons/gymIcon.svg';
+import SwitchIcon from './../../../../../../img/icons/switchIcon.svg';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import RemoveIcon from './../../../../../../img/icons/deleteIcon.svg';
+import CustomButton, { ButtonSize, ButtonStyle } from '../../../../elements/CustomButton';
+import { useTrainingPlanDay } from '../TrainingPlanDayContext';
+import { PlanDayExercisesFormVm } from '../../../../../../types/models';
+import { EnumLookupDto } from '../../../../../../api/generated/model';
+import useDeviceCategory from '../../../../../../lib/hooks/useDeviceCategory';
 
 enum ActionButtonsEnum {
-  PLAN = "PLAN",
-  GYM = "GYM",
-  SWITCH = "SWITCH",
-  INCREMENT = "INCREMENT",
-  DECREMENT = "DECREMENT",
-  REMOVE = "REMOVE",
+  PLAN = 'PLAN',
+  GYM = 'GYM',
+  SWITCH = 'SWITCH',
+  INCREMENT = 'INCREMENT',
+  DECREMENT = 'DECREMENT',
+  REMOVE = 'REMOVE',
 }
 
 interface TrainingPlanDayActionsButtonsProps {
-  getExerciseToAddFromForm: (
-    exerciseId: string,
-    series: number,
-    reps: string,
-    isIncrementDecrement?: boolean
-  ) => Promise<void>;
   deleteExerciseFromPlan: (exerciseId: string | undefined) => Promise<
     | {
         exercises: PlanDayExercisesFormVm[];
@@ -40,20 +31,13 @@ interface TrainingPlanDayActionsButtonsProps {
   >;
   showExerciseFormByBodyPart: (
     bodyPart: EnumLookupDto | undefined,
-    exerciseToSwitchId: string
+    exerciseToSwitchId: string,
   ) => void;
   togglePlanShow: () => void;
-  incrementOrDecrementExercise: (
-    exerciseId: string,
-    series: number,
-    reps: string,
-  ) => Promise<void>;
+  incrementOrDecrementExercise: (exerciseId: string, series: number, reps: string) => Promise<void>;
 }
 
-const TrainingPlanDayActionsButtons: React.FC<
-  TrainingPlanDayActionsButtonsProps
-> = ({
-  getExerciseToAddFromForm,
+const TrainingPlanDayActionsButtons: React.FC<TrainingPlanDayActionsButtonsProps> = ({
   deleteExerciseFromPlan,
   showExerciseFormByBodyPart,
   togglePlanShow,
@@ -66,22 +50,22 @@ const TrainingPlanDayActionsButtons: React.FC<
   const setIconsSize = useMemo(() => {
     let size = 24;
     switch (deviceCategory) {
-      case "smallPhone":
+      case 'smallPhone':
         size = 16;
         break;
-      case "bugdetPhone":
+      case 'budgetPhone':
         size = 18;
         break;
-      case "midPhone":
+      case 'midPhone':
         size = 24;
         break;
-      case "largePhone":
+      case 'largePhone':
         size = 24;
         break;
-      case "maxPhone":
+      case 'maxPhone':
         size = 24;
         break;
-      case "ultraPhone":
+      case 'ultraPhone':
         size = 24;
         break;
       default:
@@ -107,12 +91,12 @@ const TrainingPlanDayActionsButtons: React.FC<
       isActive: false,
     },
     {
-      icon: <Icon name="plus" size={setIconsSize} color={"#ffff"} />,
+      icon: <Icon name="plus" size={setIconsSize} color={'#ffff'} />,
       actionId: ActionButtonsEnum.INCREMENT,
       isActive: false,
     },
     {
-      icon: <Icon name="minus" size={setIconsSize} color={"#ffff"} />,
+      icon: <Icon name="minus" size={setIconsSize} color={'#ffff'} />,
       actionId: ActionButtonsEnum.DECREMENT,
       isActive: false,
     },
@@ -125,7 +109,7 @@ const TrainingPlanDayActionsButtons: React.FC<
 
   const toggleButtonActive = (id: ActionButtonsEnum) => {
     setButtons((prev) =>
-      prev.map((b) => (b.actionId === id ? { ...b, isActive: !b.isActive } : b))
+      prev.map((b) => (b.actionId === id ? { ...b, isActive: !b.isActive } : b)),
     );
   };
 
@@ -142,7 +126,7 @@ const TrainingPlanDayActionsButtons: React.FC<
         if (currentExercise)
           showExerciseFormByBodyPart(
             currentExercise.exercise.bodyPart || undefined,
-            currentExercise.exercise._id!
+            currentExercise.exercise._id!,
           );
         break;
       case ActionButtonsEnum.INCREMENT:
@@ -161,24 +145,19 @@ const TrainingPlanDayActionsButtons: React.FC<
             currentExercise.reps,
           );
         break;
-       case ActionButtonsEnum.REMOVE:
+      case ActionButtonsEnum.REMOVE:
         await deleteExerciseFromPlan(currentExercise?.exercise._id || undefined);
         break;
     }
   };
 
   return (
-    <View
-      className="flex flex-row justify-between px-5 w-full"
-      style={{ gap: 6 }}
-    >
-      {buttons.map((button, index) => (
+    <View className="flex flex-row justify-between px-5 w-full" style={{ gap: 6 }}>
+      {buttons.map((button) => (
         <CustomButton
-          key={index}
+          key={button.actionId}
           buttonStyleSize={ButtonSize.square}
-          buttonStyleType={
-            button.isActive ? ButtonStyle.outline : ButtonStyle.grey
-          }
+          buttonStyleType={button.isActive ? ButtonStyle.outline : ButtonStyle.grey}
           onPress={() => handleButtonPress(button.actionId)}
           customSlots={[button.icon]}
         />

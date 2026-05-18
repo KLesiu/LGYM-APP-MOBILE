@@ -17,6 +17,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.lesiuuu.lgymappmobile",
       "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false
+        },
         "ITSAppUsesNonExemptEncryption": false,
         "UIStatusBarStyle": "UIStatusBarStyleLightContent"
       }
@@ -28,7 +31,8 @@
       },
       "buildToolsVersion": "36.0.0",
       "versionCode": 30,
-      "package": "com.lesiuuu.lgymappmobile"
+      "package": "com.lesiuuu.lgymappmobile",
+      "usesCleartextTraffic": false
     },
     "web": {
       "favicon": "./assets/favicon.png"

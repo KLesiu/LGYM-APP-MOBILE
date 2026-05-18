@@ -1,16 +1,11 @@
-import { View, Text, Pressable } from "react-native";
-import { PlanDayExercisesFormVm } from "../../../../../../types/models";
-import Checkbox from "../../../../elements/Checkbox";
-import RemoveIcon from "./../../../../../../img/icons/deleteIcon.svg";
-import { useTrainingPlanDay } from "../TrainingPlanDayContext";
-import { useEffect, useState } from "react";
-import { TrainingSessionScores } from "../../../../../../types/models";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../../../elements/CustomButton";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { PlanDayExercisesFormVm, TrainingSessionScores } from '../../../../../../types/models';
+import Checkbox from '../../../../elements/Checkbox';
+import RemoveIcon from './../../../../../../img/icons/deleteIcon.svg';
+import { useTrainingPlanDay } from '../TrainingPlanDayContext';
+import CustomButton, { ButtonSize, ButtonStyle } from '../../../../elements/CustomButton';
+import { useTranslation } from 'react-i18next';
 
 interface TrainingPlanDayExerciseListCardProps {
   exercise: PlanDayExercisesFormVm;
@@ -24,11 +19,12 @@ interface TrainingPlanDayExerciseListCardProps {
   >;
 }
 
-const TrainingPlanDayExerciseListCard: React.FC<
-  TrainingPlanDayExerciseListCardProps
-> = ({ exercise, deleteExerciseFromPlan }) => {
+const TrainingPlanDayExerciseListCard: React.FC<TrainingPlanDayExerciseListCardProps> = ({
+  exercise,
+  deleteExerciseFromPlan,
+}) => {
   const { t } = useTranslation();
-  const { setCurrentExercise, trainingSessionScores,scrollToTop } = useTrainingPlanDay();
+  const { setCurrentExercise, trainingSessionScores, scrollToTop } = useTrainingPlanDay();
   const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
@@ -37,22 +33,19 @@ const TrainingPlanDayExerciseListCard: React.FC<
 
   const checkIsExerciseDone = () => {
     const foundExerciseSeries = trainingSessionScores.filter(
-      (exerciseInSession) =>
-        exerciseInSession.exercise._id === exercise.exercise._id
+      (exerciseInSession) => exerciseInSession.exercise._id === exercise.exercise._id,
     );
     let isExerciseDone = true;
     for (let index = 0; index < foundExerciseSeries.length; index++) {
       const exerciseInSession = foundExerciseSeries[index];
-      if (!checkIsExerciseHaveScore(exerciseInSession)) {
+      if (!exerciseInSession || !checkIsExerciseHaveScore(exerciseInSession)) {
         isExerciseDone = false;
       }
     }
     setIsDone(isExerciseDone);
   };
 
-  const checkIsExerciseHaveScore = (
-    trainingSessionScore: TrainingSessionScores
-  ) => {
+  const checkIsExerciseHaveScore = (trainingSessionScore: TrainingSessionScores) => {
     if (trainingSessionScore.reps && trainingSessionScore.weight) {
       return true;
     }
@@ -62,7 +55,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
   const changeCurrentExercise = () => {
     scrollToTop();
     setCurrentExercise(exercise);
-  }
+  };
 
   return (
     <Pressable
@@ -75,7 +68,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
           <Text
             className="text-base smallPhone:text-sm text-textColor "
             style={{
-              fontFamily: "OpenSans_400Regular",
+              fontFamily: 'OpenSans_400Regular',
             }}
           >
             {exercise.exercise.name}
@@ -83,7 +76,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
           <Text
             className="text-sm smallPhone:text-xs text-textColor "
             style={{
-              fontFamily: "OpenSans_300Light",
+              fontFamily: 'OpenSans_300Light',
             }}
           >
             {t('training.seriesRepsSummary', { series: exercise.series, reps: exercise.reps })}

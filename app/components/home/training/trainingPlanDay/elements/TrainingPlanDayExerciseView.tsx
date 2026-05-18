@@ -1,43 +1,42 @@
-import { View, Text, TextInput } from "react-native";
-import { useTrainingPlanDay } from "../TrainingPlanDayContext";
-import { ExerciseForm } from "../../../../../../types/models";
-import { TrainingSessionScores } from "../../../../../../types/models";
-import { useEffect, useState } from "react";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import { View, Text, TextInput } from 'react-native';
+import { useTrainingPlanDay } from '../TrainingPlanDayContext';
+import { ExerciseForm } from '../../../../../../types/models';
+import { TrainingSessionScores } from '../../../../../../types/models';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface TrainingPlanDayExerciseViewProps {}
 
-const TrainingPlanDayExerciseView: React.FC<
-  TrainingPlanDayExerciseViewProps
-> = () => {
+const TrainingPlanDayExerciseView: React.FC<TrainingPlanDayExerciseViewProps> = () => {
   const { t } = useTranslation();
-  const { currentExercise, setTrainingSessionScores, trainingSessionScores } =
-    useTrainingPlanDay();
+  const { currentExercise, setTrainingSessionScores, trainingSessionScores } = useTrainingPlanDay();
 
   const updateExerciseScore = async (
     exercise: ExerciseForm,
     series: number,
     value: string,
-    isWeight: boolean
+    isWeight: boolean,
   ) => {
     const scoreIndex = trainingSessionScores.findIndex(
-      (score) => score.exercise._id === exercise._id && score.series === series
+      (score) => score.exercise._id === exercise._id && score.series === series,
     );
 
-    const newScore: TrainingSessionScores = {
+    const newScore = {
       exercise,
       series,
-      reps: isWeight ? "" : value,
-      weight: isWeight ? value : "",
-    };
+      reps: isWeight ? '' : value,
+      weight: isWeight ? value : '',
+    } satisfies TrainingSessionScores;
 
     let updatedScores = [...trainingSessionScores];
 
     if (scoreIndex !== -1) {
+      const existingScore = updatedScores[scoreIndex]!;
       updatedScores[scoreIndex] = {
-        ...updatedScores[scoreIndex],
-        ...(isWeight ? { weight: value } : { reps: value }),
+        exercise: existingScore.exercise,
+        series: existingScore.series,
+        reps: isWeight ? existingScore.reps : value,
+        weight: isWeight ? value : existingScore.weight,
       };
     } else {
       updatedScores.push(newScore);
@@ -51,7 +50,7 @@ const TrainingPlanDayExerciseView: React.FC<
         <Text
           className=" text-sm smallPhone:text-xs text-textColor "
           style={{
-            fontFamily: "OpenSans_300Light",
+            fontFamily: 'OpenSans_300Light',
           }}
         >
           {t('training.series')}
@@ -59,7 +58,7 @@ const TrainingPlanDayExerciseView: React.FC<
         <Text
           className="text-sm smallPhone:text-xs  text-textColor  w-2/5"
           style={{
-            fontFamily: "OpenSans_300Light",
+            fontFamily: 'OpenSans_300Light',
           }}
         >
           {t('training.reps')}
@@ -67,7 +66,7 @@ const TrainingPlanDayExerciseView: React.FC<
         <Text
           className=" text-sm smallPhone:text-xs text-textColor  w-2/5 "
           style={{
-            fontFamily: "OpenSans_300Light",
+            fontFamily: 'OpenSans_300Light',
           }}
         >
           {t('training.weightKg')}
@@ -78,8 +77,7 @@ const TrainingPlanDayExerciseView: React.FC<
           {Array.from({ length: currentExercise!.series }).map((_, index) => {
             const savedScore = trainingSessionScores.find(
               (score) =>
-                score.exercise._id === currentExercise!.exercise._id &&
-                score.series === index + 1
+                score.exercise._id === currentExercise!.exercise._id && score.series === index + 1,
             );
             return (
               <View
@@ -92,31 +90,21 @@ const TrainingPlanDayExerciseView: React.FC<
                 </View>
                 <TextInput
                   onChangeText={(value) => {
-                    const normalized = value.replace(",", ".");
-                    updateExerciseScore(
-                      currentExercise!.exercise,
-                      index + 1,
-                      normalized,
-                      false
-                    );
+                    const normalized = value.replace(',', '.');
+                    updateExerciseScore(currentExercise!.exercise, index + 1, normalized, false);
                   }}
-                  value={savedScore?.reps.toString() ?? ""}
+                  value={savedScore?.reps.toString() ?? ''}
                   keyboardType="decimal-pad"
                   style={{ borderRadius: 8 }}
                   className=" text-sm smallPhone:text-[11px]  bg-secondaryColor w-2/5    px-4 py-3 smallPhone:px-3 smallPhone:py-2  text-textColor"
                 />
                 <TextInput
                   onChangeText={(value) => {
-                    const normalized = value.replace(",", ".");
-                    updateExerciseScore(
-                      currentExercise!.exercise,
-                      index + 1,
-                      normalized,
-                      true
-                    );
+                    const normalized = value.replace(',', '.');
+                    updateExerciseScore(currentExercise!.exercise, index + 1, normalized, true);
                   }}
                   style={{ borderRadius: 8 }}
-                  value={savedScore?.weight.toString() ?? ""}
+                  value={savedScore?.weight.toString() ?? ''}
                   keyboardType="decimal-pad"
                   className=" text-sm  smallPhone:text-xs  bg-secondaryColor  text-textColor    px-4 py-3 smallPhone:px-3 smallPhone:py-2 w-2/5 "
                 />

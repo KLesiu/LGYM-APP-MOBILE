@@ -1,68 +1,19 @@
-import { Image, View, ImageBackground, Modal } from "react-native";
-import logoLGYM from "./../assets/logoLGYMNewX.png";
-import backgroundLGYM from "./../img/backgroundLGYMApp500.png";
-import { useRouter } from "expo-router";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "./components/elements/CustomButton";
-import Loading from "./components/elements/Loading";
-import UpdateDialog from "./components/elements/UpdateDialog";
-import React from "react";
-import { useAppInitialization } from "../hooks/useAppInitialization";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { Redirect } from 'expo-router';
+import Loading from './components/elements/Loading';
+import { useAppContext } from './AppContext';
+import { useAuthStore } from '../stores/useAuthStore';
+import { getBootstrapRoute } from '../lib/authRouting';
 
 const Preload: React.FC = () => {
-  const router = useRouter();
-  const { appConfig } = useAppInitialization();
-    const { t } = useTranslation();
-  
+  const isHydrated = useAuthStore((state) => state.isHydrated);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const { isTokenChecked } = useAppContext();
+  const bootstrapRoute = getBootstrapRoute({ isHydrated, isTokenChecked, isAuthenticated });
 
-  const handleLoginPress: VoidFunction = (): void => {
-    router.push("/Login");
-  };
+  if (!bootstrapRoute) return <Loading />;
 
-  const handleRegisterPress: VoidFunction = (): void => {
-    router.push("/Register");
-  };
-
-  return (
-    <View className="h-full bg-bgColor">
-      <ImageBackground
-        resizeMode="cover"
-        className="h-full w-full"
-        source={backgroundLGYM}
-      >
-        <View className="bg-[#000000bd] h-full w-full">
-          <View
-            style={{ gap: 16 }}
-            className="flex-1 items-center flex bg-[#1b1b1bbd] justify-center h-full p-4"
-          >
-            <Image source={logoLGYM} className="w-[70%] h-2/5" />
-            <CustomButton
-              text={t('auth.login')}
-              onPress={handleLoginPress}
-              buttonStyleSize={ButtonSize.xl}
-              buttonStyleType={ButtonStyle.success}
-              width="w-full"
-            />
-            <CustomButton
-              text={t('auth.register')}
-              onPress={handleRegisterPress}
-              buttonStyleType={ButtonStyle.outline}
-              customClasses="bg-[#1b1b1bbd] "
-              width="w-full"
-              buttonStyleSize={ButtonSize.xl}
-            />
-          </View>
-        </View>
-      </ImageBackground>
-      <Loading />
-      <Modal visible={!!appConfig} transparent animationType="fade">
-          {appConfig && <UpdateDialog config={appConfig} />}
-      </Modal>
-    </View>
-  );
+  return <Redirect href={bootstrapRoute} />;
 };
 
 export default Preload;

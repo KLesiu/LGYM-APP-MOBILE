@@ -1,5 +1,5 @@
-enum TypeOfExercises{
-    GLOBAL = "Global",
-    USER = "User"
+enum TypeOfExercises {
+  GLOBAL = 'Global',
+  USER = 'User',
 }
 export default TypeOfExercises;

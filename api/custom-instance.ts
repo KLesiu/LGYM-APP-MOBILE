@@ -1,92 +1,12 @@
-import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios';
+import axios, { AxiosHeaders } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 import Constants from 'expo-constants';
-import { Platform } from 'react-native';
+import i18n from '../lib/i18n';
 import { useAuthStore } from '../stores/useAuthStore';
-import i18n from '../app/i18n';
+import { resolveBackendBaseUrl } from '../lib/resolveBackendBaseUrl';
+import { secureStorage } from '../lib/secureStorage';
 
 type CancelablePromise<T> = Promise<T> & { cancel: () => void };
-
-const trimTrailingSlash = (value: string): string => {
-  let end = value.length;
-
-  while (end > 0 && value[end - 1] === '/') {
-    end -= 1;
-  }
-
-  return value.slice(0, end);
-};
-
-const isLoopbackHost = (host: string): boolean => host === 'localhost' || host === '127.0.0.1';
-
-const getAndroidEmulatorHost = (): string | null => {
-  const configuredHost = process.env.REACT_APP_ANDROID_EMULATOR_HOST?.trim();
-  return configuredHost ?? null;
-};
-
-const getMetroHostName = (): string | null => {
-  const fromExpoConfig = Constants.expoConfig?.hostUri;
-  const fromManifest2 = (
-    Constants as unknown as {
-      manifest2?: { extra?: { expoClient?: { hostUri?: string } } };
-    }
-  ).manifest2?.extra?.expoClient?.hostUri;
-  const fromManifest = (Constants as unknown as { manifest?: { debuggerHost?: string } })
-    .manifest?.debuggerHost;
-  const hostUri = fromExpoConfig ?? fromManifest2 ?? fromManifest;
-
-  if (!hostUri) {
-    return null;
-  }
-
-  const hostName = hostUri.split(':')[0]?.trim();
-  if (!hostName || isLoopbackHost(hostName)) {
-    return null;
-  }
-
-  return hostName;
-};
-
-const resolveBackendBaseUrl = (rawUrl?: string): string | undefined => {
-  if (!rawUrl) {
-    return undefined;
-  }
-
-  const normalizedInput = trimTrailingSlash(rawUrl.trim());
-
-  try {
-    const parsed = new URL(normalizedInput);
-
-    if (!__DEV__ || !isLoopbackHost(parsed.hostname)) {
-      return normalizedInput;
-    }
-
-    const metroHost = getMetroHostName();
-    if (metroHost) {
-      parsed.hostname = metroHost;
-      return trimTrailingSlash(parsed.toString());
-    }
-
-    if (Platform.OS === 'android') {
-      const emulatorHost = getAndroidEmulatorHost();
-      if (emulatorHost) {
-        parsed.hostname = emulatorHost;
-        return trimTrailingSlash(parsed.toString());
-      }
-
-      if (__DEV__) {
-        console.warn(
-          '[custom-instance] Android loopback detected. Set REACT_APP_ANDROID_EMULATOR_HOST or use a LAN IP in REACT_APP_BACKEND.'
-        );
-      }
-
-      return normalizedInput;
-    }
-
-    return normalizedInput;
-  } catch {
-    return normalizedInput;
-  }
-};
 
 const toHeaderRecord = (headers?: HeadersInit): Record<string, string> => {
   if (!headers) {
@@ -101,14 +21,25 @@ const toHeaderRecord = (headers?: HeadersInit): Record<string, string> => {
     return Object.fromEntries(headers);
   }
 
-  return Object.fromEntries(
-    Object.entries(headers).map(([key, value]) => [key, String(value)])
-  );
+  return Object.fromEntries(Object.entries(headers).map(([key, value]) => [key, String(value)]));
 };
 
-export const AXIOS_INSTANCE = axios.create({
-  baseURL: resolveBackendBaseUrl(process.env.REACT_APP_BACKEND),
+const resolvedBaseURL = resolveBackendBaseUrl(process.env.REACT_APP_BACKEND, {
+  dev: __DEV__,
+  metroHostUri:
+    Constants.expoConfig?.hostUri ??
+    (
+      Constants as unknown as {
+        manifest2?: { extra?: { expoClient?: { hostUri?: string } } };
+      }
+    ).manifest2?.extra?.expoClient?.hostUri ??
+    (Constants as unknown as { manifest?: { debuggerHost?: string } }).manifest?.debuggerHost ??
+    null,
 });
+
+export const AXIOS_INSTANCE = axios.create(
+  resolvedBaseURL ? { baseURL: resolvedBaseURL } : {},
+);
 
 export const customInstance = <T>(
   url: string,
@@ -119,14 +50,17 @@ export const customInstance = <T>(
   const { body } = options ?? {};
   const axiosConfig: AxiosRequestConfig = {
     url,
-    method: options?.method,
     data: body ?? options?.data,
     cancelToken: source.token,
+    ...(options?.method ? { method: options.method } : {}),
   };
 
   // Set default Content-Type for POST/PUT/PATCH requests with body
   const headers: Record<string, string> = {};
-  if ((options?.method === 'POST' || options?.method === 'PUT' || options?.method === 'PATCH') && (body || options?.data)) {
+  if (
+    (options?.method === 'POST' || options?.method === 'PUT' || options?.method === 'PATCH') &&
+    (body || options?.data)
+  ) {
     headers['Content-Type'] = 'application/json';
   }
 
@@ -157,8 +91,8 @@ export const customInstance = <T>(
   return promise;
 };
 
-AXIOS_INSTANCE.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
+AXIOS_INSTANCE.interceptors.request.use(async (config) => {
+  const token = useAuthStore.getState().token ?? (await secureStorage.getItem('token'));
   const language = i18n.language ?? 'en';
 
   const requestHeaders = AxiosHeaders.from(config.headers);

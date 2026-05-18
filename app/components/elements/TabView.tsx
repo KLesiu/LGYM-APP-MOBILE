@@ -1,5 +1,5 @@
-import React, { JSX, useState } from "react";
-import { Pressable, View, Text } from "react-native";
+import React, { JSX, useState } from 'react';
+import { Pressable, View, Text } from 'react-native';
 
 interface Tab {
   label: string;
@@ -12,7 +12,7 @@ interface TabViewProps {
 }
 
 const TabView: React.FC<TabViewProps> = ({ tabs, onTabChange }) => {
-  const [currentTab, setCurrentTab] = useState<Tab>(tabs[0]);
+  const [currentTab, setCurrentTab] = useState<Tab>(() => tabs[0] ?? { label: '', component: <></> });
 
   const handleTabPress = (tab: Tab) => {
     setCurrentTab(tab);
@@ -22,16 +22,16 @@ const TabView: React.FC<TabViewProps> = ({ tabs, onTabChange }) => {
   return (
     <View className="w-full">
       <View className="h-12 smallPhone:h-10 flex flex-row pr-6 border-b border-fifthColor">
-        {tabs.map((tab, index) => {
+        {tabs.map((tab) => {
           const isActive = currentTab.label === tab.label;
           return (
             <Pressable
-              key={index}
-              className={`flex flex-row justify-center items-center flex-1 ${isActive? 'border-primaryColor'  :' border-secondaryColor'} border-b-2`}
+              key={tab.label}
+              className={`flex flex-row justify-center items-center flex-1 ${isActive ? 'border-primaryColor' : ' border-secondaryColor'} border-b-2`}
               onPress={() => handleTabPress(tab)}
             >
               <Text
-                className={`font-light text-sm smallPhone:text-xs text-center ${isActive? 'text-primaryColor'  :' text-fifthColor'}`}
+                className={`font-light text-sm smallPhone:text-xs text-center ${isActive ? 'text-primaryColor' : ' text-fifthColor'}`}
               >
                 {tab.label}
               </Text>

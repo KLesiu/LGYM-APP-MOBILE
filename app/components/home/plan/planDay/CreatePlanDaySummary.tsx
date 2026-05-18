@@ -1,18 +1,15 @@
-import { View, Text, ScrollView } from "react-native";
-import PlanNameIcon from "./../../../../../img/icons/planIcon.svg";
-import CustomButton, { ButtonStyle } from "../../../elements/CustomButton";
-import ExerciseList from "./exerciseList/ExerciseList";
-import { usePlanDay } from "./CreatePlanDayContext";
-import { ExerciseForPlanDay } from "../../../../../types/models";
-import React from "react";
-import { useTranslation } from "react-i18next";
+import { View, Text, ScrollView } from 'react-native';
+import PlanNameIcon from './../../../../../img/icons/planIcon.svg';
+import CustomButton, { ButtonStyle } from '../../../elements/CustomButton';
+import ExerciseList from './exerciseList/ExerciseList';
+import { usePlanDay } from './CreatePlanDayContext';
+import { ExerciseForPlanDay } from '../../../../../types/models';
+import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface CreatePlanDaySummaryProps {
-  saveCurrentPlan: (
-    planName: string,
-    exercisesArg: ExerciseForPlanDay[]
-  ) => Promise<void>;
-  isPreview?: boolean;
+  saveCurrentPlan: (planName: string, exercisesArg: ExerciseForPlanDay[]) => Promise<void>;
+  isPreview?: boolean | undefined;
   isLoading: boolean;
 }
 
@@ -30,14 +27,11 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
         <View>
           <Text
             className="text-xl smallPhone:text-base text-textColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
           >
             {t('plans.summary')}
           </Text>
-          <Text
-            className="text-sm text-fifthColor"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
+          <Text className="text-sm text-fifthColor" style={{ fontFamily: 'OpenSans_400Regular' }}>
             {t('plans.summaryDescription')}
           </Text>
         </View>
@@ -45,7 +39,7 @@ const CreatePlanDaySummary: React.FC<CreatePlanDaySummaryProps> = (props) => {
           <PlanNameIcon />
           <Text
             className="text-xl smallPhone:text-base text-textColor"
-            style={{ fontFamily: "OpenSans_400Regular" }}
+            style={{ fontFamily: 'OpenSans_400Regular' }}
           >
             {planDayName}
           </Text>

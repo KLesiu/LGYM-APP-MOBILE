@@ -1,85 +1,83 @@
-import { Pressable, Text, View } from "react-native";
-import { useState, useEffect, JSX } from "react";
-import ProfileRank from "../../elements/ProfileRank";
-import MainProfileInfo from "./MainProfileInfo";
-import BackgroundMainSection from "../../elements/BackgroundMainSection";
-import TabView from "../../elements/TabView";
-import { useHomeContext } from "../HomeContext";
-import { useAppContext } from "../../../AppContext";
-import ViewLoading from "../../elements/ViewLoading";
-import React from "react";
-import BackIcon from "./../../../../img/icons/backIcon.svg"
-import Start from "../start/Start";
-import { useTranslation } from "react-i18next";
+import React, { useEffect, JSX } from 'react';
+import { Pressable, Text, View } from 'react-native';
+import ProfileRank from '../../elements/ProfileRank';
+import MainProfileInfo from './MainProfileInfo';
+import BackgroundMainSection from '../../elements/BackgroundMainSection';
+import { useHomeContext } from '../HomeContext';
+import ViewLoading from '../../elements/ViewLoading';
+import BackIcon from './../../../../img/icons/backIcon.svg';
+import Start from '../start/Start';
+import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../../../stores/useAuthStore';
 
-interface ProfileProps{
-  changeView:(component?: React.JSX.Element | undefined) => void
+interface ProfileProps {
+  changeView: (component?: React.JSX.Element | undefined) => void;
 }
 
 const Profile: React.FC<ProfileProps> = ({ changeView }) => {
-  const { toggleMenuButton,hideMenu } = useHomeContext();
+  const { toggleMenuButton, hideMenu } = useHomeContext();
   const { t } = useTranslation();
-
-  const { userInfo } = useAppContext();
-
+  const userInfo = useAuthStore((state) => state.user);
 
   useEffect(() => {
     if (!userInfo) return;
     toggleMenuButton(true);
-  }, [userInfo]);
+  }, [toggleMenuButton, userInfo]);
 
-
-  const goBack = ()=>{
-    changeView(<Start/>)
-    hideMenu()
-    toggleMenuButton(false)
-  }
+  const goBack = () => {
+    changeView(<Start />);
+    hideMenu();
+    toggleMenuButton(false);
+  };
 
   return (
     <BackgroundMainSection>
-      { !userInfo || !changeView ? (
+      {!userInfo || !changeView ? (
         <ViewLoading />
       ) : (
         <View className="w-full h-full p-4 relative  flex flex-col flex-1 ">
-           <Pressable
-             onPress={goBack}
-             style={{ borderRadius: 10000, zIndex: 50 }}
-             className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor "
-           >
+          <Pressable
+            onPress={goBack}
+            style={{ borderRadius: 10000, zIndex: 50 }}
+            className="absolute flex items-center left-4 justify-center w-8 h-8  bg-secondaryColor "
+          >
             <BackIcon />
           </Pressable>
           <View style={{ gap: 8 }} className="flex items-center flex-col px-6">
             <View className="flex ">
-              <ProfileRank rank={userInfo.profileRank ?? ""} />
+              <ProfileRank rank={userInfo.profileRank ?? ''} />
             </View>
             <View className="flex flex-col items-center w-full">
               <Text
                 className="text-primaryColor font-bold w-full text-center text-2xl smallPhone:text-lg "
-                style={{ fontFamily: "OpenSans_700Bold" }}
+                style={{ fontFamily: 'OpenSans_700Bold' }}
               >
                 {userInfo.name}
               </Text>
               <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
                 className="text-textColor w-full text-center  text-sm smallPhone:text-xs"
               >
                 {userInfo.profileRank}
               </Text>
-               <Text
-                 style={{ fontFamily: "OpenSans_300Light" }}
-                 className="text-textColor w-full text-center text-sm smallPhone:text-xs"
-               >
-                 {userInfo.elo} {t('profile.elo')}
-               </Text>
-               <Text
-                 style={{ fontFamily: "OpenSans_300Light" }}
-                 className="text-textColor w-full text-center  text-sm smallPhone:text-xs"
-               >
-                  {t('profile.memberSince')} {userInfo.createdAt?.toString().slice(0, 10) ?? ""}
-                </Text>
+              <Text
+                style={{ fontFamily: 'OpenSans_300Light' }}
+                className="text-textColor w-full text-center text-sm smallPhone:text-xs"
+              >
+                {userInfo.elo} {t('profile.elo')}
+              </Text>
+              <Text
+                style={{ fontFamily: 'OpenSans_300Light' }}
+                className="text-textColor w-full text-center  text-sm smallPhone:text-xs"
+              >
+                {t('profile.memberSince')} {userInfo.createdAt?.toString().slice(0, 10) ?? ''}
+              </Text>
             </View>
           </View>
-          <MainProfileInfo email={userInfo.email ?? ""} isVisibleInRanking={userInfo.isVisibleInRanking ?? false} />
+          <MainProfileInfo
+            email={userInfo.email ?? ''}
+            isVisibleInRanking={userInfo.isVisibleInRanking ?? false}
+          />
         </View>
       )}
     </BackgroundMainSection>

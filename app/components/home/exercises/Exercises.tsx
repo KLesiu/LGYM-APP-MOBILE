@@ -1,22 +1,15 @@
-import { View, Text, Pressable } from "react-native";
-import { useState, useCallback, useMemo, useEffect } from "react";
-import {
-  ExerciseForm,
-  ExerciseForPlanDay,
-} from "../../../../types/models";
-import CreateExercise from "./CreateExercise";
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../elements/CustomButton";
-import React from "react";
-import BackgroundMainSection from "../../elements/BackgroundMainSection";
-import { useHomeContext } from "../HomeContext";
-import BodyPartsList from "./BodyPartsList";
-import ExercisesList from "./ExercisesList";
-import ExerciseDetails from "./ExerciseDetails";
-import ExerciseTranslationDialog from "./ExerciseTranslationDialog";
-import BackIcon from "./../../../../img/icons/backIcon.svg";
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import { View, Text, Pressable } from 'react-native';
+import { ExerciseForm, ExerciseForPlanDay } from '../../../../types/models';
+import CreateExercise from './CreateExercise';
+import CustomButton, { ButtonSize, ButtonStyle } from '../../elements/CustomButton';
+import BackgroundMainSection from '../../elements/BackgroundMainSection';
+import { useHomeContext } from '../HomeContext';
+import BodyPartsList from './BodyPartsList';
+import ExercisesList from './ExercisesList';
+import ExerciseDetails from './ExerciseDetails';
+import ExerciseTranslationDialog from './ExerciseTranslationDialog';
+import BackIcon from './../../../../img/icons/backIcon.svg';
 import {
   getGetApiExerciseGetAllGlobalExercisesQueryKey,
   getGetApiExerciseIdGetAllExercisesQueryKey,
@@ -24,17 +17,17 @@ import {
   useGetApiExerciseGetAllGlobalExercises,
   useGetApiExerciseIdGetAllUserExercises,
   usePostApiExerciseIdAddGlobalTranslation,
-} from "../../../../api/generated/exercise/exercise";
+} from '../../../../api/generated/exercise/exercise';
 import {
   EnumLookupDto,
   ExerciseResponseDto,
   ExerciseTranslationDto,
-} from "../../../../api/generated/model";
-import { useTranslation } from "react-i18next";
-import { useAuthStore } from "../../../../stores/useAuthStore";
-import { isAdminUser } from "../../../../utils/authorization";
-import { useQueryClient } from "@tanstack/react-query";
-import toastService from "../../../services/toastService";
+} from '../../../../api/generated/model';
+import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../../../stores/useAuthStore';
+import { isAdminUser } from '../../../../lib/domain/authorization';
+import { useQueryClient } from '@tanstack/react-query';
+import toastService from '../../../services/toastService';
 
 interface ExercisesProps {
   isCreatePlanDayMode?: boolean;
@@ -51,58 +44,44 @@ const Exercises: React.FC<ExercisesProps> = ({
 }) => {
   const { t, i18n } = useTranslation();
   const { toggleMenuButton, hideMenu, userId } = useHomeContext();
-  const { user } = useAuthStore();
+  const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [selectedBodyPart, setSelectedBodyPart] = useState<EnumLookupDto | null>(
-    null
-  );
+  const [selectedBodyPart, setSelectedBodyPart] = useState<EnumLookupDto | null>(null);
 
-  const [selectedExercise, setSelectedExercise] = useState<ExerciseForm | null>(
-    null
-  );
+  const [selectedExercise, setSelectedExercise] = useState<ExerciseForm | null>(null);
   const [isGlobal, setIsGlobal] = useState<boolean>(false);
   const [isExerciseFormVisible, setIsExerciseFormVisible] = useState(false);
-  const [exerciseToTranslate, setExerciseToTranslate] =
-    useState<ExerciseResponseDto | null>(null);
+  const [exerciseToTranslate, setExerciseToTranslate] = useState<ExerciseResponseDto | null>(null);
 
   const addGlobalTranslationMutation = usePostApiExerciseIdAddGlobalTranslation();
 
-  const {
-    data: globalExercisesData,
-    refetch: refetchGlobal,
-  } = useGetApiExerciseGetAllGlobalExercises({
-    query: {
-      queryKey: [
-        ...getGetApiExerciseGetAllGlobalExercisesQueryKey(),
-        i18n.language,
-      ],
-    },
-  });
+  const { data: globalExercisesData } =
+    useGetApiExerciseGetAllGlobalExercises({
+      query: {
+        queryKey: [...getGetApiExerciseGetAllGlobalExercisesQueryKey(), i18n.language],
+      },
+    });
 
-  const {
-    data: userExercisesData,
-    refetch: refetchUser,
-  } = useGetApiExerciseIdGetAllUserExercises(userId, {
-    query: {
-      enabled: !!userId,
-      queryKey: [
-        ...getGetApiExerciseIdGetAllUserExercisesQueryKey(userId),
-        i18n.language,
-      ],
+  const { data: userExercisesData } = useGetApiExerciseIdGetAllUserExercises(
+    userId,
+    {
+      query: {
+        enabled: !!userId,
+        queryKey: [...getGetApiExerciseIdGetAllUserExercisesQueryKey(userId), i18n.language],
+      },
     },
-  });
+  );
 
   const globalExercises = useMemo(() => {
-    if(!Array.isArray(globalExercisesData?.data)) return [];
-   return globalExercisesData?.data 
+    if (!Array.isArray(globalExercisesData?.data)) return [];
+    return globalExercisesData.data;
   }, [globalExercisesData]);
 
   const userExercises = useMemo(() => {
-    if(!Array.isArray(userExercisesData?.data)) return [];
-    return userExercisesData?.data;
+    if (!Array.isArray(userExercisesData?.data)) return [];
+    return userExercisesData.data;
   }, [userExercisesData]);
-
 
   const isAdmin = isAdminUser(user);
 
@@ -122,7 +101,6 @@ const Exercises: React.FC<ExercisesProps> = ({
     setIsExerciseFormVisible(false);
     if (!isCreatePlanDayMode) toggleMenuButton(false);
     hideMenu();
-    await Promise.all([refetchUser(), refetchGlobal()]);
     setSelectedExercise(null);
   };
 
@@ -151,17 +129,14 @@ const Exercises: React.FC<ExercisesProps> = ({
     await Promise.all(invalidatePromises);
   }, [queryClient, userId]);
 
-  const addTranslation = async (data: {
-    culture: string;
-    name: string;
-  }): Promise<void> => {
+  const addTranslation = async (data: { culture: string; name: string }): Promise<void> => {
     if (!exerciseToTranslate?._id || !userId) {
-      toastService.showError(t("common.tryAgain"), t("common.error"));
+      toastService.showError(t('common.tryAgain'), t('common.error'));
       return;
     }
 
     if (!isAdmin || exerciseToTranslate.user) {
-      toastService.showError(t("common.tryAgain"), t("common.error"));
+      toastService.showError(t('common.tryAgain'), t('common.error'));
       return;
     }
 
@@ -177,10 +152,9 @@ const Exercises: React.FC<ExercisesProps> = ({
         data: payload,
       });
       await refreshExerciseQueries();
-      await Promise.all([refetchUser(), refetchGlobal()]);
       closeTranslationForm();
-    } catch (error) {
-      toastService.showError(t("common.tryAgain"), t("common.error"));
+    } catch {
+      toastService.showError(t('common.tryAgain'), t('common.error'));
     }
   };
 
@@ -190,7 +164,7 @@ const Exercises: React.FC<ExercisesProps> = ({
       setIsExerciseFormVisible(true);
       toggleMenuButton(true);
     },
-    [toggleMenuButton]
+    [toggleMenuButton],
   );
 
   const selectBodyPart = (bodyPart: EnumLookupDto) => {
@@ -222,7 +196,7 @@ const Exercises: React.FC<ExercisesProps> = ({
     setCurrentStep(0);
     setSelectedBodyPart(null);
     setSelectedExercise(null);
-  }, [i18n.language]);
+  }, []);
 
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -237,28 +211,20 @@ const Exercises: React.FC<ExercisesProps> = ({
             addTranslation={setExerciseToTranslate}
             userExercises={filteredUserExercisesByBodyPart}
             globalExercises={filteredGlobalExercisesByBodyPart}
-            isCreatePlanDayMode={isCreatePlanDayMode}
-            exercisesList={exercisesList}
+            {...(typeof isCreatePlanDayMode === 'boolean' ? { isCreatePlanDayMode } : {})}
+            {...(exercisesList ? { exercisesList } : {})}
             addExerciseToList={addExerciseToList}
           />
         );
       case 2:
-        return (
-          <ExerciseDetails
-            goBack={goBack}
-            exercise={selectedExercise as ExerciseForm}
-          />
-        );
+        return <ExerciseDetails goBack={goBack} exercise={selectedExercise as ExerciseForm} />;
     }
   };
 
   return (
     <BackgroundMainSection>
       {currentStep !== 2 && (
-        <View
-          className="flex flex-row px-4 py-2 items-center justify-between "
-          style={{ gap: 8 }}
-        >
+        <View className="flex flex-row px-4 py-2 items-center justify-between " style={{ gap: 8 }}>
           {isCreatePlanDayMode && (
             <Pressable
               style={{ borderRadius: 10000 }}
@@ -268,10 +234,7 @@ const Exercises: React.FC<ExercisesProps> = ({
               <BackIcon />
             </Pressable>
           )}
-          <Text
-            className="text-xl text-primaryColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
-          >
+          <Text className="text-xl text-primaryColor" style={{ fontFamily: 'OpenSans_700Bold' }}>
             {t('exercises.title')}
           </Text>
           <View className="flex flex-row" style={{ gap: 8 }}>
@@ -299,7 +262,7 @@ const Exercises: React.FC<ExercisesProps> = ({
           closeForm={closeExerciseForm}
           isAdmin={isAdmin}
           isGlobal={isGlobal}
-          form={selectedExercise ?? undefined}
+          {...(selectedExercise ? { form: selectedExercise } : {})}
         />
       )}
       {exerciseToTranslate && (

@@ -1,28 +1,22 @@
-import React, { useCallback, useMemo } from "react";
-import { View, TouchableOpacity, Text, Animated, useWindowDimensions } from "react-native";
-import HomeIcon from "./../../../img/icons/homeIcon.svg";
-import ProfileIcon from "./../../../img/icons/profileIcon.svg";
-import HistoryIcon from "./../../../img/icons/calendarIcon.svg";
-import AddTrainingIcon from "./../../../img/icons/plusCircleIcon.svg";
-import ExerciseIcon from "./../../../img/icons/exercisesIcon.svg";
-import PlanIcon from "./../../../img/icons/planIcon.svg";
-import GymIcon from "./../../../img/icons/gymIcon.svg";
-import RecordIcon from "./../../../img/icons/recordsIcon.svg";
-import MenuIcon from "./../../../img/icons/menuIcon.svg";
-import { useHomeContext } from "../home/HomeContext";
-import { useTranslation } from "react-i18next";
-import { DEFAULT_HOME_SCREEN, type HomeScreenId } from "../home/homeScreens";
+import React, { useCallback, useMemo } from 'react';
+import { View, TouchableOpacity, Text, Animated, useWindowDimensions } from 'react-native';
+import HomeIcon from './../../../img/icons/homeIcon.svg';
+import ProfileIcon from './../../../img/icons/profileIcon.svg';
+import HistoryIcon from './../../../img/icons/calendarIcon.svg';
+import AddTrainingIcon from './../../../img/icons/plusCircleIcon.svg';
+import ExerciseIcon from './../../../img/icons/exercisesIcon.svg';
+import PlanIcon from './../../../img/icons/planIcon.svg';
+import GymIcon from './../../../img/icons/gymIcon.svg';
+import RecordIcon from './../../../img/icons/recordsIcon.svg';
+import MenuIcon from './../../../img/icons/menuIcon.svg';
+import { useHomeContext } from '../home/HomeContext';
+import { useTranslation } from 'react-i18next';
+import { DEFAULT_HOME_SCREEN, type HomeScreenId } from '../home/homeScreens';
 
 const Menu: React.FC = () => {
   const { t } = useTranslation();
-  const {
-    isExpanded,
-    isMenuButtonVisible,
-    animation,
-    navigateToScreen,
-    toggleMenu,
-    hideMenu,
-  } = useHomeContext();
+  const { isExpanded, isMenuButtonVisible, animation, navigateToScreen, toggleMenu, hideMenu } =
+    useHomeContext();
   const { width } = useWindowDimensions();
 
   const animatedScale = animation.interpolate({
@@ -42,29 +36,29 @@ const Menu: React.FC = () => {
 
   const menuItems = useMemo(() => {
     const items = [
-      { icon: <HomeIcon />, label: t("menu.home"), screenId: DEFAULT_HOME_SCREEN },
-      { 
-        icon: <ExerciseIcon />, 
-        label: t("menu.exercises"), 
-        screenId: "EXERCISES" as HomeScreenId,
+      { icon: <HomeIcon />, label: t('menu.home'), screenId: DEFAULT_HOME_SCREEN },
+      {
+        icon: <ExerciseIcon />,
+        label: t('menu.exercises'),
+        screenId: 'EXERCISES' as HomeScreenId,
       },
-      { icon: <GymIcon />, label: t("menu.gym"), screenId: "GYM" as HomeScreenId },
+      { icon: <GymIcon />, label: t('menu.gym'), screenId: 'GYM' as HomeScreenId },
       {
         icon: <AddTrainingIcon />,
-        label: t("menu.training"),
-        screenId: "TRAINING" as HomeScreenId,
+        label: t('menu.training'),
+        screenId: 'TRAINING' as HomeScreenId,
       },
-      { icon: <PlanIcon />, label: t("menu.plan"), screenId: "PLAN" as HomeScreenId },
+      { icon: <PlanIcon />, label: t('menu.plan'), screenId: 'PLAN' as HomeScreenId },
       {
         icon: <HistoryIcon color="white" />,
-        label: t("menu.history"),
-        screenId: "HISTORY" as HomeScreenId,
+        label: t('menu.history'),
+        screenId: 'HISTORY' as HomeScreenId,
       },
-      { icon: <RecordIcon />, label: t("menu.records"), screenId: "RECORDS" as HomeScreenId },
+      { icon: <RecordIcon />, label: t('menu.records'), screenId: 'RECORDS' as HomeScreenId },
       {
         icon: <ProfileIcon />,
-        label: t("menu.profile"),
-        screenId: "PROFILE" as HomeScreenId,
+        label: t('menu.profile'),
+        screenId: 'PROFILE' as HomeScreenId,
       },
     ];
 
@@ -84,7 +78,7 @@ const Menu: React.FC = () => {
       hideMenu();
       navigateToScreen(screenId, { showBlockedToast: true });
     },
-    [hideMenu, navigateToScreen]
+    [hideMenu, navigateToScreen],
   );
 
   if (!isMenuButtonVisible) return null;
@@ -98,15 +92,15 @@ const Menu: React.FC = () => {
             opacity: animatedOpacity,
           }}
           className="absolute items-center justify-center bottom-[-65px]"
-          pointerEvents={isExpanded ? "auto" : "none"}
+          pointerEvents={isExpanded ? 'auto' : 'none'}
         >
           <View
             style={{ borderRadius: 10000 }}
             className="relative w-[450px] smallPhone:w-[400px] h-[440px] smallPhone:h-[380px] items-center justify-center bg-[#282424db] -mb-[82px] "
           >
-            {menuItems.map((item, index) => (
+            {menuItems.map((item) => (
               <TouchableOpacity
-                key={index}
+                key={item.screenId}
                 onPress={() => handleMenuItemPress(item.screenId)}
                 style={{
                   transform: [{ translateX: item.x }, { translateY: item.y }],

@@ -1,11 +1,11 @@
-import { View, Text, Image } from "react-native";
-import { useTranslation } from "react-i18next";
-import CustomButton, { ButtonSize } from "../../elements/CustomButton";
-import EditIcon from "./../../../../img/icons/editIcon.svg";
-import RemoveIcon from "./../../../../img/icons/deleteIcon.svg";
-import React, { useMemo } from "react";
-import Card from "../../elements/Card";
-import type { GymChoiceInfoDto } from "../../../../api/generated/model";
+import { View, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import CustomButton, { ButtonSize } from '../../elements/CustomButton';
+import EditIcon from './../../../../img/icons/editIcon.svg';
+import RemoveIcon from './../../../../img/icons/deleteIcon.svg';
+import React, { useMemo } from 'react';
+import Card from '../../elements/Card';
+import type { GymChoiceInfoDto } from '../../../../api/generated/model';
 
 interface GymPlaceProps {
   gym: GymChoiceInfoDto;
@@ -21,16 +21,16 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
     () =>
       lastTrainingInfo && lastTrainingInfo.createdAt
         ? new Date(lastTrainingInfo.createdAt).toLocaleDateString()
-        : "",
-    [lastTrainingInfo]
+        : '',
+    [lastTrainingInfo],
   );
 
   const trainingName = useMemo(
     () =>
       lastTrainingInfo && lastTrainingInfo.type && lastTrainingInfo.type.name
         ? lastTrainingInfo.type.name
-        : "",
-    [lastTrainingInfo]
+        : '',
+    [lastTrainingInfo],
   );
 
   return (
@@ -39,35 +39,29 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
         <View className="flex flex-row justify-between items-center w-full">
           <View className="flex flex-col">
             <Text
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              style={{ fontFamily: 'OpenSans_700Bold' }}
               className=" text-base font-bold text-textColor"
             >
               {props.gym.name}
             </Text>
             <Text
-              style={{ fontFamily: "OpenSans_400Regular" }}
+              style={{ fontFamily: 'OpenSans_400Regular' }}
               className=" text-sm text-fifthColor"
             >
-              {t("gym.lastTraining")} {`${trainingDate} ${trainingName}`}
+              {t('gym.lastTraining')} {`${trainingDate} ${trainingName}`}
             </Text>
           </View>
           {props.isEditable && (
             <View style={{ gap: 8 }} className="flex flex-row">
               <CustomButton
                 buttonStyleSize={ButtonSize.small}
-                onPress={() =>
-                  props.editGym ? props.editGym(`${props.gym._id}`) : null
-                }
-                customSlots={[
-                  <EditIcon fill={"white"} width={24} height={24} />,
-                ]}
+                onPress={() => (props.editGym ? props.editGym(`${props.gym._id}`) : null)}
+                customSlots={[<EditIcon key="edit-gym" fill={'white'} width={24} height={24} />]}
               />
               <CustomButton
                 buttonStyleSize={ButtonSize.small}
-                onPress={() =>
-                  props.deleteGym ? props.deleteGym(`${props.gym._id}`) : null
-                }
-                customSlots={[<RemoveIcon />]}
+                onPress={() => (props.deleteGym ? props.deleteGym(`${props.gym._id}`) : null)}
+                customSlots={[<RemoveIcon key="remove-gym" />]}
               />
             </View>
           )}

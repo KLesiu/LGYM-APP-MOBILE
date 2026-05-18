@@ -1,11 +1,11 @@
-import React from "react";
-import { Modal, Pressable, Text, View } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import CustomButton, { ButtonStyle } from "../elements/CustomButton";
-import type { ContextualHelpContent } from "../../onboarding/tutorialStepsConfig";
+import React from 'react';
+import { Modal, Pressable, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import CustomButton, { ButtonStyle } from '../elements/CustomButton';
+import type { ContextualHelpContent } from '../../onboarding/tutorialStepsConfig';
 
-export type ContextualHelpMode = "TUTORIAL" | "INFO";
+export type ContextualHelpMode = 'TUTORIAL' | 'INFO';
 
 interface ContextualHelpModalProps {
   visible: boolean;
@@ -29,9 +29,9 @@ const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
   }
 
   const buttonText =
-    mode === "INFO"
-      ? (content.primaryActionLabel ?? "Zamknij")
-      : (content.primaryActionLabel ?? "Dalej");
+    mode === 'INFO'
+      ? (content.primaryActionLabel ?? 'Zamknij')
+      : (content.primaryActionLabel ?? 'Dalej');
 
   return (
     <Modal
@@ -50,7 +50,7 @@ const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
           style={{ elevation: 16 }}
         >
           <LinearGradient
-            colors={["#273127", "#141414", "#101010"]}
+            colors={['#273127', '#141414', '#101010']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
           >
@@ -59,13 +59,13 @@ const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
                 <View className="flex-1 pr-4" style={{ gap: 6 }}>
                   <Text
                     className="text-xs uppercase tracking-[1.4px] text-fifthColor"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
+                    style={{ fontFamily: 'OpenSans_700Bold' }}
                   >
-                    {content.accentLabel ?? (mode === "TUTORIAL" ? "Samouczek" : "Pomoc")}
+                    {content.accentLabel ?? (mode === 'TUTORIAL' ? 'Samouczek' : 'Pomoc')}
                   </Text>
                   <Text
                     className="text-2xl text-textColor"
-                    style={{ fontFamily: "OpenSans_700Bold" }}
+                    style={{ fontFamily: 'OpenSans_700Bold' }}
                   >
                     {content.title}
                   </Text>
@@ -90,14 +90,14 @@ const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
               >
                 <View
                   className="h-16 w-16 items-center justify-center rounded-2xl"
-                  style={{ backgroundColor: "rgba(32,188,45,0.15)" }}
+                  style={{ backgroundColor: 'rgba(32,188,45,0.15)' }}
                 >
                   <Icon name={content.iconName} size={30} color="#20BC2D" />
                 </View>
 
                 <Text
                   className="text-base leading-6 text-textColor"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  style={{ fontFamily: 'OpenSans_400Regular' }}
                 >
                   {content.description}
                 </Text>
@@ -106,7 +106,7 @@ const ContextualHelpModal: React.FC<ContextualHelpModalProps> = ({
               <CustomButton
                 onPress={onNext}
                 buttonStyleType={
-                  mode === "TUTORIAL" ? ButtonStyle.success : ButtonStyle.outlineBlack
+                  mode === 'TUTORIAL' ? ButtonStyle.success : ButtonStyle.outlineBlack
                 }
                 text={buttonText}
                 width="w-full"

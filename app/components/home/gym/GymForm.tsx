@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
-import { View, Text, TextInput } from "react-native";
-import { GymForm as GymFormVm } from "./../../../../types/models";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import Dialog from "../../elements/Dialog";
-import GymIcon from "./../../../../img/icons/gymIcon.svg";
-import { useHomeContext } from "../HomeContext";
-import { getErrorMessage } from "../../../../utils/errorHandler";
-import React from "react";
-import { usePostApiGymIdAddGym, usePostApiGymEditGym } from "../../../../api/generated/gym/gym";
-import type { GymFormDto } from "../../../../api/generated/model";
-import { useTranslation } from "react-i18next";
-import toastService from "../../../services/toastService";
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput } from 'react-native';
+import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
+import Dialog from '../../elements/Dialog';
+import GymIcon from './../../../../img/icons/gymIcon.svg';
+import { useHomeContext } from '../HomeContext';
+import { getErrorMessage, sanitize } from '../../../../lib/domain/errorHandler';
+import { usePostApiGymIdAddGym, usePostApiGymEditGym } from '../../../../api/generated/gym/gym';
+import type { GymFormDto } from '../../../../api/generated/model';
+import { useTranslation } from 'react-i18next';
+import toastService from '../../../services/toastService';
 
 interface GymFormProps {
   closeForm: () => Promise<void> | void;
@@ -21,7 +19,7 @@ interface GymFormProps {
 const GymForm: React.FC<GymFormProps> = (props) => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
-  const [gymName, setGymName] = useState<string>("");
+  const [gymName, setGymName] = useState<string>('');
 
   const addGymMutation = usePostApiGymIdAddGym();
   const editGymMutation = usePostApiGymEditGym();
@@ -30,7 +28,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
 
   useEffect(() => {
     if (props.gym && props.gym.name) setGymName(props.gym.name);
-  }, []);
+  }, [props.gym]);
 
   useEffect(() => {
     return () => {
@@ -40,7 +38,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
 
   const validateForm = (): boolean => {
     if (!gymName.trim()) {
-      toastService.showValidationError(t("gym.nameRequired"));
+      toastService.showValidationError(t('gym.nameRequired'));
       return false;
     }
 
@@ -54,21 +52,27 @@ const GymForm: React.FC<GymFormProps> = (props) => {
 
     const payload: GymFormDto = {
       name: gymName.trim(),
-      _id: props.gym?._id,
+      ...(props.gym?._id ? { _id: props.gym._id } : {}),
     };
-    editGymMutation.mutate({
-      data: payload,
-    }, {
-      onSuccess: async () => {
-        await props.closeForm();
-        await props.onSubmitSuccess?.();
+    editGymMutation.mutate(
+      {
+        data: payload,
       },
-      onError: (error: any) => {
-        console.error("Error updating gym:", error);
-        const errorMessage = getErrorMessage(error, t('common.error'));
-        toastService.showError(errorMessage);
-      }
-    });
+      {
+        onSuccess: async () => {
+          await props.closeForm();
+          await props.onSubmitSuccess?.();
+        },
+        onError: (error: unknown) => {
+          const sanitizedError = sanitize(error);
+          if (__DEV__ && sanitizedError.devDetails) {
+            console.warn('[GymForm] update gym failed', sanitizedError.devDetails);
+          }
+          const errorMessage = getErrorMessage(error, t('common.error'));
+          toastService.showError(errorMessage);
+        },
+      },
+    );
   };
 
   const createGym = () => {
@@ -79,20 +83,26 @@ const GymForm: React.FC<GymFormProps> = (props) => {
     const payload: GymFormDto = {
       name: gymName.trim(),
     };
-    addGymMutation.mutate({
-      id: userId,
-      data: payload,
-    }, {
-      onSuccess: async () => {
-        await props.closeForm();
-        await props.onSubmitSuccess?.();
+    addGymMutation.mutate(
+      {
+        id: userId,
+        data: payload,
       },
-      onError: (error: any) => {
-        console.error("Error creating gym:", error);
-        const errorMessage = getErrorMessage(error, t('common.error'));
-        toastService.showError(errorMessage);
-      }
-    });
+      {
+        onSuccess: async () => {
+          await props.closeForm();
+          await props.onSubmitSuccess?.();
+        },
+        onError: (error: unknown) => {
+          const sanitizedError = sanitize(error);
+          if (__DEV__ && sanitizedError.devDetails) {
+            console.warn('[GymForm] create gym failed', sanitizedError.devDetails);
+          }
+          const errorMessage = getErrorMessage(error, t('common.error'));
+          toastService.showError(errorMessage);
+        },
+      },
+    );
   };
 
   const handleSubmit = () => {
@@ -106,7 +116,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
         <View className="px-5 py-2">
           <Text
             className=" text-3xl smallPhone:text-2xl text-textColor"
-            style={{ fontFamily: "OpenSans_700Bold" }}
+            style={{ fontFamily: 'OpenSans_700Bold' }}
           >
             {props.gym ? t('gym.editGym') : t('gym.newGym')}
           </Text>
@@ -116,7 +126,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
             <GymIcon />
             <Text
               className="text-xl smallPhone:text-lg text-textColor"
-              style={{ fontFamily: "OpenSans_400Regular" }}
+              style={{ fontFamily: 'OpenSans_400Regular' }}
             >
               {t('gym.setGym')}
             </Text>
@@ -124,7 +134,7 @@ const GymForm: React.FC<GymFormProps> = (props) => {
           <View style={{ gap: 4 }} className="flex flex-col">
             <View className="flex flex-row gap-1">
               <Text
-                style={{ fontFamily: "OpenSans_300Light" }}
+                style={{ fontFamily: 'OpenSans_300Light' }}
                 className="  text-textColor   text-base smallPhone:text-sm"
               >
                 {t('gym.gymName')}:
@@ -134,8 +144,8 @@ const GymForm: React.FC<GymFormProps> = (props) => {
 
             <TextInput
               style={{
-                fontFamily: "OpenSans_400Regular",
-                backgroundColor: "rgb(30, 30, 30)",
+                fontFamily: 'OpenSans_400Regular',
+                backgroundColor: 'rgb(30, 30, 30)',
                 borderRadius: 8,
               }}
               className=" w-full  px-2 py-4 text-textColor  "
@@ -165,4 +175,3 @@ const GymForm: React.FC<GymFormProps> = (props) => {
 };
 
 export default GymForm;
-

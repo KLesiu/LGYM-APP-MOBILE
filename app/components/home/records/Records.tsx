@@ -1,44 +1,34 @@
-import { Text, View, ScrollView } from "react-native";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import RecordsPopUp from "./RecordsPopUp";
-import ViewLoading from "../../elements/ViewLoading";
-import SearchBox from "../../elements/SearchBox";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Text, View, FlatList } from 'react-native';
+import RecordsPopUp from './RecordsPopUp';
+import ViewLoading from '../../elements/ViewLoading';
+import SearchBox from '../../elements/SearchBox';
 
-import CustomButton, {
-  ButtonSize,
-  ButtonStyle,
-} from "../../elements/CustomButton";
-import React from "react";
-import ConfirmDialog from "../../elements/ConfirmDialog";
-import { useHomeContext } from "../HomeContext";
-import BackgroundMainSection from "../../elements/BackgroundMainSection";
-import RecordsItem from "./RecordsItem";
-import { FontWeights } from "../../../../enums/FontsProperties";
+import CustomButton, { ButtonSize, ButtonStyle } from '../../elements/CustomButton';
+import ConfirmDialog from '../../elements/ConfirmDialog';
+import { useHomeContext } from '../HomeContext';
+import BackgroundMainSection from '../../elements/BackgroundMainSection';
+import RecordsItem from './RecordsItem';
+import { FontWeights } from '../../../../enums/FontsProperties';
 import {
   useGetApiMainRecordsIdGetLastMainRecords,
   getApiMainRecordsIdDeleteMainRecord,
   getGetApiMainRecordsIdGetLastMainRecordsQueryKey,
   getGetApiMainRecordsIdGetMainRecordsHistoryQueryKey,
-} from "../../../../api/generated/main-records/main-records";
-import { MainRecordsLastDto } from "../../../../api/generated/model";
-import { useTranslation } from "react-i18next";
-import { useQueryClient } from "@tanstack/react-query";
+} from '../../../../api/generated/main-records/main-records';
+import { MainRecordsLastDto } from '../../../../api/generated/model';
+import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 
-interface RecordsProps {}
-
-const Records: React.FC<RecordsProps> = () => {
+const Records: React.FC = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [popUp, setPopUp] = useState<boolean>(false);
   const [exercise, setExercise] = useState<string | undefined>();
-  const [searchText, setSearchText] = useState<string>("");
-  const [choosenRecord, setChoosenRecord] = useState<
-    MainRecordsLastDto | undefined
-  >();
-  const [
-    isDeleteRecordConfirmationDialogVisible,
-    setIsDeleteRecordConfirmationDialogVisible,
-  ] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>('');
+  const [choosenRecord, setChoosenRecord] = useState<MainRecordsLastDto | undefined>();
+  const [isDeleteRecordConfirmationDialogVisible, setIsDeleteRecordConfirmationDialogVisible] =
+    useState<boolean>(false);
   const { userId } = useHomeContext();
 
   const {
@@ -48,7 +38,7 @@ const Records: React.FC<RecordsProps> = () => {
   } = useGetApiMainRecordsIdGetLastMainRecords(userId, {
     query: {
       enabled: !!userId,
-      refetchOnMount: "always",
+      refetchOnMount: 'always',
     },
   });
 
@@ -84,7 +74,7 @@ const Records: React.FC<RecordsProps> = () => {
     }
 
     return records.filter((record) =>
-      (record.exerciseDetails?.name || "").toLowerCase().includes(normalizedSearch)
+      (record.exerciseDetails?.name || '').toLowerCase().includes(normalizedSearch),
     );
   }, [recordsData, searchText]);
 
@@ -103,7 +93,7 @@ const Records: React.FC<RecordsProps> = () => {
       setExercise(exerciseId);
       showPopUp();
     },
-    []
+    [showPopUp],
   );
 
   const deleteRecord = async () => {
@@ -116,14 +106,11 @@ const Records: React.FC<RecordsProps> = () => {
     }
   };
 
-  const deleteDialogVisible = useCallback(
-    (visible: boolean, record?: MainRecordsLastDto) => {
-      if (visible) setChoosenRecord(record);
-      else setChoosenRecord(undefined);
-      setIsDeleteRecordConfirmationDialogVisible(visible);
-    },
-    []
-  );
+  const deleteDialogVisible = useCallback((visible: boolean, record?: MainRecordsLastDto) => {
+    if (visible) setChoosenRecord(record);
+    else setChoosenRecord(undefined);
+    setIsDeleteRecordConfirmationDialogVisible(visible);
+  }, []);
 
   return (
     <BackgroundMainSection>
@@ -135,7 +122,7 @@ const Records: React.FC<RecordsProps> = () => {
             <View className="flex flex-row justify-between items-center">
               <Text
                 className="text-textColor  text-base "
-                style={{ fontFamily: "OpenSans_700Bold" }}
+                style={{ fontFamily: 'OpenSans_700Bold' }}
               >
                 {t('records.yourRecords')}
               </Text>
@@ -151,50 +138,42 @@ const Records: React.FC<RecordsProps> = () => {
               />
             </View>
             <SearchBox value={searchText} onChangeText={setSearchText} />
-            <ScrollView
+            <FlatList
               className="w-full h-full"
-              contentContainerStyle={{ padding: 8 }}
-            >
-              {filteredRecords.length ? (
-                <View className="flex flex-col w-full" style={{ gap: 8 }}>
-                  {filteredRecords.map((record) => (
-                    <RecordsItem
-                      key={record._id}
-                      record={record}
-                      updateSettedExerciseRecord={updateSettedExerciseRecord}
-                      deleteDialogVisible={deleteDialogVisible}
-                    />
-                  ))}
-                </View>
-              ) : (
+              contentContainerStyle={{ padding: 8, flexGrow: 1 }}
+              data={filteredRecords}
+              keyExtractor={(record, index) => record._id || `${record.exerciseDetails?.name ?? 'record'}-${index}`}
+              ListEmptyComponent={
                 <View className="w-full py-6">
-                  <Text
-                    className="text-sm text-fifthColor text-center"
-                    style={{ fontFamily: "OpenSans_400Regular" }}
-                  >
+                  <Text className="text-sm text-fifthColor text-center" style={{ fontFamily: 'OpenSans_400Regular' }}>
                     {searchText.trim().length > 0
                       ? t('records.noSearchResults')
                       : t('records.noRecordsYet')}
                   </Text>
                 </View>
+              }
+              renderItem={({ item: record }) => (
+                <RecordsItem
+                  record={record}
+                  updateSettedExerciseRecord={updateSettedExerciseRecord}
+                  deleteDialogVisible={deleteDialogVisible}
+                />
               )}
-            </ScrollView>
+            />
           </View>
         )}
 
         <ConfirmDialog
           visible={isDeleteRecordConfirmationDialogVisible}
           title={t('records.deleteConfirmTitle', {
-            name: choosenRecord?.exerciseDetails?.name || ''
+            name: choosenRecord?.exerciseDetails?.name || '',
           })}
           message={t('records.deleteConfirmMessage')}
           onConfirm={deleteRecord}
           onCancel={() => deleteDialogVisible(false)}
         />
       </View>
-      {popUp && (
-        <RecordsPopUp offPopUp={changePopUpValue} exerciseId={exercise} />
-      )}
+      {popUp && <RecordsPopUp offPopUp={changePopUpValue} exerciseId={exercise} />}
     </BackgroundMainSection>
   );
 };

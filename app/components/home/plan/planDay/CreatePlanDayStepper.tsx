@@ -1,16 +1,16 @@
-import React from "react";
-import { View, Text } from "react-native";
-import { useTranslation } from "react-i18next";
+import React from 'react';
+import { View, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 interface CreatePlanDayStepperProps {
   currentStep: number;
 }
 
 const stepLabels = [
-  "plans.stepNameLabel",
-  "plans.stepExercisesLabel",
-  "plans.stepConfigLabel",
-  "plans.stepSummaryLabel",
+  'plans.stepNameLabel',
+  'plans.stepExercisesLabel',
+  'plans.stepConfigLabel',
+  'plans.stepSummaryLabel',
 ];
 
 const CreatePlanDayStepper: React.FC<CreatePlanDayStepperProps> = ({ currentStep }) => {
@@ -22,15 +22,12 @@ const CreatePlanDayStepper: React.FC<CreatePlanDayStepperProps> = ({ currentStep
       <View style={{ gap: 4 }}>
         <Text
           className="text-3xl smallPhone:text-xl text-textColor"
-          style={{ fontFamily: "OpenSans_700Bold" }}
+          style={{ fontFamily: 'OpenSans_700Bold' }}
         >
-          {t("plans.newPlanDay")}
+          {t('plans.newPlanDay')}
         </Text>
-        <Text
-          className="text-sm text-fifthColor"
-          style={{ fontFamily: "OpenSans_400Regular" }}
-        >
-          {t("plans.stepProgress", {
+        <Text className="text-sm text-fifthColor" style={{ fontFamily: 'OpenSans_400Regular' }}>
+          {t('plans.stepProgress', {
             current: safeCurrentStep + 1,
             total: stepLabels.length,
           })}
@@ -46,7 +43,7 @@ const CreatePlanDayStepper: React.FC<CreatePlanDayStepperProps> = ({ currentStep
               <View
                 className="h-2 rounded-full"
                 style={{
-                  backgroundColor: isCompleted || isCurrent ? "#20BC2D" : "#3A3A3A",
+                  backgroundColor: isCompleted || isCurrent ? '#20BC2D' : '#3A3A3A',
                   opacity: isCurrent ? 1 : 0.75,
                 }}
               />
@@ -54,8 +51,8 @@ const CreatePlanDayStepper: React.FC<CreatePlanDayStepperProps> = ({ currentStep
                 numberOfLines={2}
                 className="text-xs text-center"
                 style={{
-                  fontFamily: isCurrent ? "OpenSans_700Bold" : "OpenSans_400Regular",
-                  color: isCompleted || isCurrent ? "white" : "#A1A1AA",
+                  fontFamily: isCurrent ? 'OpenSans_700Bold' : 'OpenSans_400Regular',
+                  color: isCompleted || isCurrent ? 'white' : '#A1A1AA',
                 }}
               >
                 {t(label)}

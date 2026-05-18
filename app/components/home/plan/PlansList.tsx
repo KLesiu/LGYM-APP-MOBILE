@@ -1,15 +1,15 @@
-import { View, Text, ScrollView } from "react-native";
-import { useHomeContext } from "../HomeContext";
-import { PlanForm } from "../../../../types/models";
-import { useMemo } from "react";
-import Dialog from "../../elements/Dialog";
-import ViewLoading from "../../elements/ViewLoading";
-import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import PlansListItem from "./PlansListItem";
-import React from "react";
-import { FontWeights } from "../../../../enums/FontsProperties";
-import { useGetApiIdGetPlansList } from "../../../../api/generated/plan/plan";
-import { useTranslation } from "react-i18next";
+import { View, Text, ScrollView } from 'react-native';
+import { useHomeContext } from '../HomeContext';
+import { PlanForm } from '../../../../types/models';
+import { useMemo } from 'react';
+import Dialog from '../../elements/Dialog';
+import ViewLoading from '../../elements/ViewLoading';
+import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
+import PlansListItem from './PlansListItem';
+import React from 'react';
+import { FontWeights } from '../../../../enums/FontsProperties';
+import { useGetApiIdGetPlansList } from '../../../../api/generated/plan/plan';
+import { useTranslation } from 'react-i18next';
 
 interface PlansListProps {
   togglePlanConfig: (value: boolean) => void;
@@ -42,7 +42,7 @@ const PlansList: React.FC<PlansListProps> = ({
           <View className="px-5 py-2">
             <Text
               className="text-3xl smallPhone:text-xl text-textColor"
-              style={{ fontFamily: "OpenSans_700Bold" }}
+              style={{ fontFamily: 'OpenSans_700Bold' }}
             >
               {t('plans.yourPlans')}
             </Text>
@@ -63,10 +63,7 @@ const PlansList: React.FC<PlansListProps> = ({
             </ScrollView>
           )}
 
-          <View
-            className="p-5 flex flex-row justify-between"
-            style={{ gap: 20 }}
-          >
+          <View className="p-5 flex flex-row justify-between" style={{ gap: 20 }}>
             <CustomButton
               buttonStyleType={ButtonStyle.outlineBlack}
               onPress={goBack}
