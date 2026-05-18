@@ -1,14 +1,13 @@
+import React, { useEffect, useState } from 'react';
 import { Text, View, TextInput } from 'react-native';
 import AutoComplete from './../../elements/Autocomplete';
-import { useEffect, useState } from 'react';
 import { ExerciseForm } from './../../../../types/models';
 import { isFloatValidator } from './../../../../lib/validators/numberValidator';
-import { MainRecordsFormDtoUnit } from '../../../../api/generated/model';
+import { ExerciseResponseDto, MainRecordsFormDtoUnit } from '../../../../api/generated/model';
 import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
 import { DropdownItem } from './../../../../interfaces/Dropdown';
 import Dialog from '../../elements/Dialog';
 import { useHomeContext } from '../HomeContext';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import RecordIcon from './../../../../img/icons/recordsIcon.svg';
 import { useGetApiExerciseIdGetAllExercises } from '../../../../api/generated/exercise/exercise';
@@ -18,7 +17,6 @@ import {
   usePostApiMainRecordsIdAddNewRecord,
 } from '../../../../api/generated/main-records/main-records';
 
-import { ExerciseResponseDto } from '../../../../api/generated/model';
 import { useQueryClient } from '@tanstack/react-query';
 import toastService from '../../../services/toastService';
 import { getErrorMessage, sanitize } from '../../../../lib/domain/errorHandler';

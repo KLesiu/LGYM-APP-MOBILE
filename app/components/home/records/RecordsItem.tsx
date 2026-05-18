@@ -35,12 +35,12 @@ const RecordsItem: React.FC<RecordsItemProps> = ({
             <CustomButton
               buttonStyleSize={ButtonSize.none}
               onPress={() => updateSettedExerciseRecord(record.exerciseDetails?._id!)}
-              customSlots={[<ProgressIcon stroke={'white'} height={24} width={24} />]}
+                customSlots={[<ProgressIcon key="record-progress" stroke={'white'} height={24} width={24} />]}
             />
             <CustomButton
               buttonStyleSize={ButtonSize.none}
               onPress={() => deleteDialogVisible(true, record)}
-              customSlots={[<RemoveIcon />]}
+                customSlots={[<RemoveIcon key="record-remove" />]}
             />
           </View>
         </View>

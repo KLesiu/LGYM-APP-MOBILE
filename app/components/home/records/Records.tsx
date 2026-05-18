@@ -1,11 +1,10 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Text, View, FlatList } from 'react-native';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import RecordsPopUp from './RecordsPopUp';
 import ViewLoading from '../../elements/ViewLoading';
 import SearchBox from '../../elements/SearchBox';
 
 import CustomButton, { ButtonSize, ButtonStyle } from '../../elements/CustomButton';
-import React from 'react';
 import ConfirmDialog from '../../elements/ConfirmDialog';
 import { useHomeContext } from '../HomeContext';
 import BackgroundMainSection from '../../elements/BackgroundMainSection';
