@@ -72,6 +72,31 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
     return node;
   };
 
+  const slotContent = props.isLoading ? (
+    <ViewLoading customClasses="py-0" />
+  ) : props.customSlots ? (
+    props.customSlots.map((slot, index) => {
+      const slotKeyBase =
+        typeof slot === 'string' || typeof slot === 'number'
+          ? String(slot)
+          : React.isValidElement(slot) && typeof slot.type === 'string'
+            ? slot.type
+            : 'custom-slot';
+
+      return <View key={`${slotKeyBase}-${index}`}>{renderNode(slot)}</View>;
+    })
+  ) : (
+    <Text
+      className={` text-center ${textColorClass()} `}
+      style={{
+        fontFamily: props.textWeight,
+        fontWeight: fontWeight,
+      }}
+    >
+      {props.text}
+    </Text>
+  );
+
   return (
     <Pressable
       style={{ borderRadius: 8 }}
@@ -83,30 +108,7 @@ const CustomButton: React.FC<ButtonProps> = (props) => {
       }`}
       onPress={props.onPress}
     >
-      {props.isLoading ? (
-        <ViewLoading customClasses="py-0" />
-      ) : props.customSlots ? (
-        props.customSlots.map((slot) => {
-          const slotKey =
-            typeof slot === 'string' || typeof slot === 'number'
-              ? String(slot)
-              : React.isValidElement(slot) && typeof slot.type === 'string'
-                ? slot.type
-                : 'custom-slot';
-
-          return <View key={slotKey}>{renderNode(slot)}</View>;
-        })
-      ) : (
-        <Text
-          className={` text-center ${textColorClass()} `}
-          style={{
-            fontFamily: props.textWeight,
-            fontWeight: fontWeight,
-          }}
-        >
-          {props.text}
-        </Text>
-      )}
+      {slotContent}
       {React.Children.map(props.children, (child) => renderNode(child))}
     </Pressable>
   );

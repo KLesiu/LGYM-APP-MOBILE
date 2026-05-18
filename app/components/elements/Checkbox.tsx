@@ -10,7 +10,7 @@ interface CheckboxProps {
 
 const Checkbox: React.FC<CheckboxProps> = ({ value, setValue, customClasses }) => {
   return (
-    <Pressable className={customClasses ?? ''} onPress={() => setValue && setValue(!value)}>
+    <Pressable className={customClasses ?? ''} onPress={() => setValue?.(!value)}>
       <Ionicons
         name={value ? 'checkbox' : 'square-outline'}
         size={28}
