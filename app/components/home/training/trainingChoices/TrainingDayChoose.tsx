@@ -47,7 +47,7 @@ const TrainingDayChoose: React.FC<TrainingDayChooseProps> = ({ showDaySection, g
         <Text className="text-lg text-textColor" style={{ fontFamily: 'OpenSans_700Bold' }}>
           {t('training.chooseDay')}
         </Text>
-        {!trainingTypes.length ? (
+        {trainingTypes.length === 0 ? (
           <NoTrainingDaysInfo goBack={goBack} />
         ) : (
           <ScrollView className="w-full">

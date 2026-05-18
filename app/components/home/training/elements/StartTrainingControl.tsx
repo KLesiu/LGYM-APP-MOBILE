@@ -19,7 +19,7 @@ const StartTrainingControl: React.FC<StartTrainingControlProps> = ({
       {isAddTrainingActive ? (
         <CustomButton
           onPress={getCurrentPlanDayTraining}
-          customSlots={[<Icon style={{ fontSize: 140, color: '#20BC2D' }} name="play-circle" />]}
+          customSlots={[<Icon key="start-training" style={{ fontSize: 140, color: '#20BC2D' }} name="play-circle" />]}
         />
       ) : (
         <Pressable onPress={getInformationAboutGyms}>

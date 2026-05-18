@@ -1,10 +1,10 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import TrainingDayChoose from './trainingChoices/TrainingDayChoose';
 import TrainingGymChoose from './trainingChoices/TrainingGymChoose';
 import TrainingPlanDay from './trainingPlanDay/TrainingPlanDay';
 import TrainingSummary from './TrainingSummary';
 import StartTrainingControl from './elements/StartTrainingControl';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import type {
   GymForm,
   TrainingSummary as TrainingSummaryInterface,
@@ -12,7 +12,6 @@ import type {
 import { useHomeContext } from '../HomeContext';
 import TrainingPlanDayProvider from './trainingPlanDay/TrainingPlanDayContext';
 import { TrainingViewSteps } from '../../../../enums/TrainingView';
-import React from 'react';
 import { GymChoiceInfoDto } from '../../../../api/generated/model';
 import { useOnboarding } from '../../../onboarding/OnboardingContext';
 import { TutorialStep } from '../../../onboarding/tutorialBackend';
