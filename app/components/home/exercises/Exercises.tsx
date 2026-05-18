@@ -1,9 +1,8 @@
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { useState, useCallback, useMemo, useEffect } from 'react';
 import { ExerciseForm, ExerciseForPlanDay } from '../../../../types/models';
 import CreateExercise from './CreateExercise';
 import CustomButton, { ButtonSize, ButtonStyle } from '../../elements/CustomButton';
-import React from 'react';
 import BackgroundMainSection from '../../elements/BackgroundMainSection';
 import { useHomeContext } from '../HomeContext';
 import BodyPartsList from './BodyPartsList';
@@ -212,7 +211,7 @@ const Exercises: React.FC<ExercisesProps> = ({
             addTranslation={setExerciseToTranslate}
             userExercises={filteredUserExercisesByBodyPart}
             globalExercises={filteredGlobalExercisesByBodyPart}
-            {...(isCreatePlanDayMode !== undefined ? { isCreatePlanDayMode } : {})}
+            {...(typeof isCreatePlanDayMode === 'boolean' ? { isCreatePlanDayMode } : {})}
             {...(exercisesList ? { exercisesList } : {})}
             addExerciseToList={addExerciseToList}
           />

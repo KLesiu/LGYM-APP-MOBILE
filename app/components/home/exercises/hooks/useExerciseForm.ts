@@ -193,7 +193,7 @@ export const useExerciseForm = ({ form, isGlobal, isAdmin, closeForm }: UseExerc
 
   const bodyPartsToSelect = useMemo(() => {
     const responseData = bodyPartsData?.data as EnumLookupResponseDto;
-    if (responseData && responseData.values) {
+    if (responseData?.values) {
       return responseData.values.map((item: EnumLookupDto) => ({
         label: item.displayName || item.name || '',
         value: item.name || '',

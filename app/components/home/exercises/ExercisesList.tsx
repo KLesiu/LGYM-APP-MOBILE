@@ -99,7 +99,7 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
           <ExercisesListElement
             isGlobal={currentTypeOfExercises === TypeOfExercises.GLOBAL}
             exercise={exercise}
-            {...(isCreatePlanDayMode !== undefined ? { isCreatePlanDayMode } : {})}
+            {...(typeof isCreatePlanDayMode === 'boolean' ? { isCreatePlanDayMode } : {})}
             onPress={() => selectExercise(exercise, false)}
             {...(addExerciseToList ? { addExerciseToList } : {})}
             {...(exercisesList ? { exercisesList } : {})}
