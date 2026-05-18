@@ -40,7 +40,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
       )
       .map((seriesScore) => {
         const { reps, weight, unit, gymName } = seriesScore.score!;
-        const gymText = !isGymFilterActive ? ` (${gymName})` : '';
+        const gymText = isGymFilterActive ? '' : ` (${gymName})`;
         return `${reps}x${weight}${(unit as EnumLookupDto).displayName}${gymText}`;
       })
       .join(', ');

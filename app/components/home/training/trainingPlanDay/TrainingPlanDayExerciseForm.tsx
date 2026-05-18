@@ -1,13 +1,12 @@
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import AutoComplete from '../../../elements/Autocomplete';
-import { useEffect, useMemo, useState } from 'react';
 import { isIntValidator } from '../../../../../lib/validators/numberValidator';
 import { ExerciseForm } from '../../../../../types/models';
 import CustomButton, { ButtonStyle } from '../../../elements/CustomButton';
 import { DropdownItem } from '../../../../../interfaces/Dropdown';
 import Dialog from '../../../elements/Dialog';
 import { useHomeContext } from '../../HomeContext';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useGetApiExerciseIdGetAllExercises,

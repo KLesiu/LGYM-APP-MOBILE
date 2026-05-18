@@ -1,12 +1,10 @@
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
-import { PlanDayExercisesFormVm } from '../../../../../../types/models';
+import { PlanDayExercisesFormVm, TrainingSessionScores } from '../../../../../../types/models';
 import Checkbox from '../../../../elements/Checkbox';
 import RemoveIcon from './../../../../../../img/icons/deleteIcon.svg';
 import { useTrainingPlanDay } from '../TrainingPlanDayContext';
-import { useEffect, useState } from 'react';
-import { TrainingSessionScores } from '../../../../../../types/models';
 import CustomButton, { ButtonSize, ButtonStyle } from '../../../../elements/CustomButton';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface TrainingPlanDayExerciseListCardProps {
