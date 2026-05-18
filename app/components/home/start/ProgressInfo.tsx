@@ -1,9 +1,8 @@
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import ProfileRank from '../../elements/ProfileRank';
 import ProgressBar from '../../elements/ProgressBar';
-import { useEffect, useState } from 'react';
 import Card from '../../elements/Card';
-import React from 'react';
 import { useAuthStore } from '../../../../stores/useAuthStore';
 import { useTranslation } from 'react-i18next';
 

@@ -1,11 +1,10 @@
+import React, { JSX, useCallback } from 'react';
 import { View, Text } from 'react-native';
 import CustomButton, { ButtonSize, ButtonStyle } from '../../elements/CustomButton';
 import AddTraining from '../training/Training';
-import { JSX, useCallback } from 'react';
 import { useHomeContext } from '../HomeContext';
 import Card from '../../elements/Card';
 import ViewLoading from '../../elements/ViewLoading';
-import React from 'react';
 import { FontWeights } from '../../../../enums/FontsProperties';
 import { useGetApiIdGetLastTraining } from '../../../../api/generated/training/training';
 import { useTranslation } from 'react-i18next';

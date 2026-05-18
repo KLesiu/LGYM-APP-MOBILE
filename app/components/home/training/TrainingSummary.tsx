@@ -1,9 +1,8 @@
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
-import { useEffect, useState } from 'react';
 import ProfileRank from '../../elements/ProfileRank';
 import ProgressBar from '../../elements/ProgressBar';
 import { TrainingSummary as TrainingSummaryInterface } from './../../../../types/models';
-import React from 'react';
 import SeriesSummaryRow from './elements/SeriesSummaryRow';
 import { useTranslation } from 'react-i18next';
 
@@ -17,7 +16,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
   const [progress, setProgress] = useState<number>();
 
   useEffect(() => {
-    if (props.trainingSummary.nextRank && props.trainingSummary.nextRank.needElo) {
+    if (props.trainingSummary.nextRank?.needElo) {
       setProgress(
         Math.floor(
           ((props.trainingSummary.gainElo + props.trainingSummary.userOldElo) /
@@ -27,6 +26,18 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
       );
     }
   }, [props.trainingSummary]);
+
+  const nextRankLabel = useMemo(() => {
+    if (!props.trainingSummary.nextRank) {
+      return t('training.highestRank');
+    }
+
+    if (typeof props.trainingSummary.nextRank.name === 'string') {
+      return props.trainingSummary.nextRank.name;
+    }
+
+    return (props.trainingSummary.nextRank.name as { name?: string } | undefined)?.name ?? t('common.unknown');
+  }, [props.trainingSummary.nextRank, t]);
 
   return (
     <View
@@ -83,12 +94,7 @@ const TrainingSummary: React.FC<TrainingSummaryProps> = (props) => {
                   style={{ fontFamily: 'OpenSans_400Regular' }}
                 >
                   {t('training.nextRank')}{' '}
-                  {props.trainingSummary.nextRank
-                    ? typeof props.trainingSummary.nextRank.name === 'string'
-                      ? props.trainingSummary.nextRank.name
-                      : ((props.trainingSummary.nextRank.name as { name?: string } | undefined)
-                          ?.name ?? t('common.unknown'))
-                    : t('training.highestRank')}
+                  {nextRankLabel}
                 </Text>
               </View>
               {props.trainingSummary.nextRank &&
