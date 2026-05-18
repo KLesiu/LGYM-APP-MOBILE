@@ -88,7 +88,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                   onPress={moveExerciseUp}
                   buttonStyleSize={ButtonSize.none}
                   buttonStyleType={ButtonStyle.none}
-                  customSlots={[<Ionicons name="chevron-up" size={22} color={'white'} />]}
+                  customSlots={[<Ionicons key="move-up" name="chevron-up" size={22} color={'white'} />]}
                 />
             )}
 
@@ -97,7 +97,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                   onPress={moveExerciseDown}
                   buttonStyleSize={ButtonSize.none}
                   buttonStyleType={ButtonStyle.none}
-                  customSlots={[<Ionicons name="chevron-down" size={22} color={'white'} />]}
+                  customSlots={[<Ionicons key="move-down" name="chevron-down" size={22} color={'white'} />]}
                 />
             )}
             {removeExerciseFromList && (
@@ -105,7 +105,7 @@ const ExerciseListItem: React.FC<ExerciseListItemProps> = ({
                 onPress={() => removeExerciseFromList(exerciseListItem)}
                 buttonStyleSize={ButtonSize.none}
                 buttonStyleType={ButtonStyle.none}
-                customSlots={[<RemoveIcon width={20} height={20} />]}
+                customSlots={[<RemoveIcon key="remove-exercise" width={20} height={20} />]}
               />
             )}
           </View>
