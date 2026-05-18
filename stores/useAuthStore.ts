@@ -57,7 +57,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return;
     }
 
-    let parsedRoles: UserInfoDto['roles'];
+    let parsedRoles: UserInfoDto['roles'] = undefined;
     if (roles) {
       try {
         parsedRoles = JSON.parse(roles) as UserInfoDto['roles'];
@@ -89,7 +89,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
     set({ token, user, isAuthenticated: true, isHydrated: true });
   },
-  setToken: (token) => set({ ...(token !== undefined ? { token } : {}), isAuthenticated: !!token }),
+  setToken: (token) =>
+    set({ ...(token !== undefined ? { token } : {}), isAuthenticated: token !== null && token !== undefined }),
   setUser: (user) => set({ user }),
   clearSession: async () => {
     await secureStorage.clear();

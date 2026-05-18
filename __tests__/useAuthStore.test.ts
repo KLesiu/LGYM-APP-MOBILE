@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
 import { useAuthStore } from '../stores/useAuthStore';
-import { secureStorage } from '../lib/secureStorage';
 
 const mockedAsyncStorage = AsyncStorage as jest.Mocked<typeof AsyncStorage>;
 const mockedSecureStore = SecureStore as jest.Mocked<typeof SecureStore>;

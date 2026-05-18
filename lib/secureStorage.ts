@@ -23,30 +23,54 @@ const readAsyncStorageValue = async (key: SecureKey): Promise<string | null> => 
   }
 };
 
+const readSecureValue = async (key: SecureKey): Promise<string | null> => {
+  try {
+    return await SecureStore.getItemAsync(key);
+  } catch {
+    return null;
+  }
+};
+
+const deleteSecureValue = async (key: SecureKey): Promise<void> => {
+  try {
+    await SecureStore.deleteItemAsync(key);
+  } catch {
+    return;
+  }
+};
+
+const setSecureValue = async (key: SecureKey, value: string): Promise<void> => {
+  try {
+    await SecureStore.setItemAsync(key, value);
+  } catch {
+    return;
+  }
+};
+
 const writeSecureValue = async (
   key: SecureKey,
   value: string | null | undefined,
 ): Promise<void> => {
   if (!isStoredValue(value)) {
-    await SecureStore.deleteItemAsync(key);
+    await deleteSecureValue(key);
     return;
   }
 
-  await SecureStore.setItemAsync(key, value);
+  await setSecureValue(key, value);
 };
 
 export const secureStorageKeys = SECURE_KEYS;
 
 export const secureStorage = {
   getItem: async (key: SecureKey): Promise<string | null> => {
-    const secureValue = await SecureStore.getItemAsync(key);
+    const secureValue = await readSecureValue(key);
     if (secureValue !== null) {
       return secureValue;
     }
 
     const migratedValue = await readAsyncStorageValue(key);
     if (migratedValue !== null) {
-      await SecureStore.setItemAsync(key, migratedValue);
+      await setSecureValue(key, migratedValue);
       await AsyncStorage.removeItem(key);
     }
 
@@ -57,19 +81,19 @@ export const secureStorage = {
     await AsyncStorage.removeItem(key);
   },
   removeItem: async (key: SecureKey): Promise<void> => {
-    await Promise.allSettled([SecureStore.deleteItemAsync(key), AsyncStorage.removeItem(key)]);
+    await Promise.allSettled([deleteSecureValue(key), AsyncStorage.removeItem(key)]);
   },
   clear: async (): Promise<void> => {
     await Promise.allSettled(
       SECURE_KEYS.flatMap((key) => [
-        SecureStore.deleteItemAsync(key),
+        deleteSecureValue(key),
         AsyncStorage.removeItem(key),
       ]),
     );
   },
   migrateFromAsyncStorage: async (): Promise<void> => {
     for (const key of SECURE_KEYS) {
-      const secureValue = await SecureStore.getItemAsync(key);
+      const secureValue = await readSecureValue(key);
       if (secureValue !== null) {
         continue;
       }
@@ -79,13 +103,13 @@ export const secureStorage = {
         continue;
       }
 
-      await SecureStore.setItemAsync(key, legacyValue);
+      await setSecureValue(key, legacyValue);
       await AsyncStorage.removeItem(key);
     }
   },
   getSessionSnapshot: async (): Promise<Record<SecureKey, string | null>> => {
     const entries = await Promise.all(
-      SECURE_KEYS.map(async (key) => [key, await SecureStore.getItemAsync(key)] as const),
+      SECURE_KEYS.map(async (key) => [key, await readSecureValue(key)] as const),
     );
 
     return Object.fromEntries(entries) as Record<SecureKey, string | null>;
