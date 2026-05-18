@@ -56,12 +56,12 @@ const GymPlace: React.FC<GymPlaceProps> = (props) => {
               <CustomButton
                 buttonStyleSize={ButtonSize.small}
                 onPress={() => (props.editGym ? props.editGym(`${props.gym._id}`) : null)}
-                customSlots={[<EditIcon fill={'white'} width={24} height={24} />]}
+                customSlots={[<EditIcon key="edit-gym" fill={'white'} width={24} height={24} />]}
               />
               <CustomButton
                 buttonStyleSize={ButtonSize.small}
                 onPress={() => (props.deleteGym ? props.deleteGym(`${props.gym._id}`) : null)}
-                customSlots={[<RemoveIcon />]}
+                customSlots={[<RemoveIcon key="remove-gym" />]}
               />
             </View>
           )}

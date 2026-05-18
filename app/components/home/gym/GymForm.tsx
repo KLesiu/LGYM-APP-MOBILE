@@ -1,11 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import CustomButton, { ButtonStyle } from '../../elements/CustomButton';
 import Dialog from '../../elements/Dialog';
 import GymIcon from './../../../../img/icons/gymIcon.svg';
 import { useHomeContext } from '../HomeContext';
 import { getErrorMessage, sanitize } from '../../../../lib/domain/errorHandler';
-import React from 'react';
 import { usePostApiGymIdAddGym, usePostApiGymEditGym } from '../../../../api/generated/gym/gym';
 import type { GymFormDto } from '../../../../api/generated/model';
 import { useTranslation } from 'react-i18next';

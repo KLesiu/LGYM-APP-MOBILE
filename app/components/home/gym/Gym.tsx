@@ -1,11 +1,10 @@
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import CustomButton, { ButtonSize, ButtonStyle } from '../../elements/CustomButton';
 import { FontWeights } from './../../../../enums/FontsProperties';
 import GymPlace from './GymPlace';
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import GymFormComponent from './GymForm';
-import React from 'react';
 import ConfirmDialog from '../../elements/ConfirmDialog';
 import BackgroundMainSection from '../../elements/BackgroundMainSection';
 import { useHomeContext } from '../HomeContext';
@@ -47,7 +46,7 @@ const Gym: React.FC = () => {
   const [currentChosenGym, setCurrentChosenGym] = useState<GymChoiceInfoDto>();
   const [isGymFormVisible, setIsGymFormVisible] = useState<boolean>(false);
   const [isDeleteGymConfirmationDialogVisible, setIsDeleteConfirmationDialogVisible] =
-    useState<boolean>(false);
+    useState(false);
 
   const {
     data: gymsResponse,
@@ -167,14 +166,12 @@ const Gym: React.FC = () => {
           </ScrollView>
         )}
       </View>
-      {isGymFormVisible ? (
+      {isGymFormVisible && (
         <GymFormComponent
           closeForm={closeForm}
           {...(currentChosenGym ? { gym: currentChosenGym } : {})}
-          {...(!currentChosenGym ? { onSubmitSuccess: handleGymFormSuccess } : {})}
+          {...(currentChosenGym ? {} : { onSubmitSuccess: handleGymFormSuccess })}
         />
-      ) : (
-        <></>
       )}
       <ConfirmDialog
         visible={isDeleteGymConfirmationDialogVisible}
