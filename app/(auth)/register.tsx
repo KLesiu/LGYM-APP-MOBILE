@@ -19,7 +19,7 @@ const Register: React.FC = () => {
   const { t } = useTranslation();
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [rpassword, setRPassword] = useState<string>('');
+  const [rpassword, setRPassword] = useState('');
   const [email, setEmail] = useState<string>('');
   const [isVisibleInRanking, setIsVisibleInRanking] = useState<boolean>(true);
   const router = useRouter();

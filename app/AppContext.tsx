@@ -33,12 +33,12 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [isTokenChecked, setIsTokenChecked] = useState<boolean>(false);
   const queryClient = useQueryClient();
 
-  const getTokenFromLocalStorage = useCallback(async () => {
+  const getTokenFromLocalStorage = useCallback(() => {
     setCanAppStart(true);
   }, []);
 
   useEffect(() => {
-    void getTokenFromLocalStorage();
+    getTokenFromLocalStorage();
   }, [getTokenFromLocalStorage]);
 
   const clearBeforeLogout = useCallback(async () => {
@@ -47,7 +47,9 @@ const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   }, [queryClient]);
 
   const changeIsVisibleInRanking = useCallback((newValue: boolean): void => {
-    void newValue;
+    if (newValue) {
+      return;
+    }
   }, []);
 
   const refreshLocalizedCaches = useCallback(async (): Promise<void> => {
