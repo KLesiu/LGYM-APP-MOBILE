@@ -2,12 +2,12 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import type { GymForm, TrainingSessionScores, TrainingSummary } from '../../../../../../types/models';
-import type { UserInfoDto } from '../../../../../../api/generated/model';
 import {
   ExerciseScoresTrainingFormDtoUnit,
   type ExerciseScoresTrainingFormDto,
-  type TrainingFormDto,
   type RankDto,
+  type TrainingFormDto,
+  type UserInfoDto,
 } from '../../../../../../api/generated/model';
 import {
   getApiCheckToken,
@@ -220,9 +220,9 @@ export const useTrainingSubmission = ({
       const createdAt = new Date().toISOString();
       const training: ExerciseScoresTrainingFormDto[] = exercises.map((ele: TrainingSessionScores) => ({
         exercise: `${ele.exercise._id}`,
-        reps: parseFloat(ele.reps),
+        reps: Number.parseFloat(ele.reps),
         series: ele.series,
-        weight: parseFloat(ele.weight),
+        weight: Number.parseFloat(ele.weight),
         unit: ExerciseScoresTrainingFormDtoUnit.Kilograms,
       }));
 
@@ -235,7 +235,7 @@ export const useTrainingSubmission = ({
 
       try {
         const result = await addTrainingMutation({ id: userId, data: body });
-        if (result && result.data) {
+        if (result?.data) {
           toastService.hide();
           await hideAndDeleteTrainingSession();
           setStep(TrainingViewSteps.TRAINING_SUMMARY);

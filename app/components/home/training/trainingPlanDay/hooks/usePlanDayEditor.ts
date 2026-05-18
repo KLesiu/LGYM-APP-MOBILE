@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { EnumLookupDto, ExerciseResponseDto } from '../../../../../../api/generated/model';
+import type { BodyParts, EnumLookupDto, ExerciseResponseDto } from '../../../../../../api/generated/model';
 import { getGetApiExerciseIdGetExerciseQueryOptions } from '../../../../../../api/generated/exercise/exercise';
-import type { BodyParts } from '../../../../../../api/generated/model';
 import type { PlanDayVm } from '../../../../../../types/models';
 import { useTrainingPlanDay } from '../TrainingPlanDayContext';
 
@@ -47,7 +46,7 @@ export const usePlanDayEditor = () => {
       const newPlanDayExercises = planDay?.exercises.filter(
         (exercise) => exercise.exercise._id !== exerciseId,
       );
-      if (!newPlanDayExercises || !newPlanDayExercises.length || !planDay) return;
+      if (!newPlanDayExercises?.length || !planDay) return;
       const newPlanDay = { ...planDay, exercises: newPlanDayExercises };
       await sendPlanDayToLocalStorage(newPlanDay);
       setPlanDay(newPlanDay);
@@ -169,7 +168,6 @@ export const usePlanDayEditor = () => {
 
       newPlanDay = { ...newPlanDay, exercises: newPlanDayExercises };
 
-      if (!newPlanDay) return;
       addNewExerciseToTrainingSessionScores(newExercise, exerciseScoreInsertIndex);
       setCurrentExercise(newExercise);
       await addExerciseToPlanDay(newPlanDay);

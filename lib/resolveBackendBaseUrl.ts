@@ -14,7 +14,7 @@ const isLoopbackHost = (host: string): boolean => host === 'localhost' || host =
 
 const getAndroidEmulatorHost = (): string | null => {
   const configuredHost = process.env.REACT_APP_ANDROID_EMULATOR_HOST?.trim();
-  return configuredHost ?? null;
+  return configuredHost ? configuredHost : null;
 };
 
 const getMetroHostName = (hostUri?: string | null): string | null => {

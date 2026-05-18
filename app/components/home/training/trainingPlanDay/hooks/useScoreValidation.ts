@@ -51,8 +51,8 @@ export const useScoreValidation = (t: TFunction) => {
           missingFields.push(t('training.reps'));
         }
 
-        const parsedReps = parseFloat(repsWithDot);
-        const parsedWeight = parseFloat(weightWithDot);
+        const parsedReps = Number.parseFloat(repsWithDot);
+        const parsedWeight = Number.parseFloat(weightWithDot);
 
         if (!weightValue) {
           missingFields.push(t('training.weightKg'));
