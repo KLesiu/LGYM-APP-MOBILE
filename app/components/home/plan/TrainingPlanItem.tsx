@@ -64,14 +64,14 @@ const TrainingPlanItem: React.FC<TrainingPlanItemProps> = ({
             <CustomButton
               buttonStyleSize={ButtonSize.small}
               onPress={() => showPlanDayForm(item, undefined)}
-              customSlots={[<EditIcon fill={'white'} />]}
+                customSlots={[<EditIcon key="edit-plan-day" fill={'white'} />]}
             />
           </View>
           <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
             <CustomButton
               buttonStyleSize={ButtonSize.small}
               onPress={() => deletePlanDayVisible(true, item)}
-              customSlots={[<DeleteIcon />]}
+                customSlots={[<DeleteIcon key="delete-plan-day" />]}
             />
           </View>
         </View>

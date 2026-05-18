@@ -182,7 +182,7 @@ export const useTrainingPlanController = ({
 
         toastService.showError(t('plans.copiedMessage'), t('plans.copiedTitle'));
 
-        if (newPlan && newPlan.id) {
+        if (newPlan?.id) {
           const planToActivate: PlanForm = {
             _id: newPlan.id,
             name: newPlan.name || '',
@@ -236,7 +236,7 @@ export const useTrainingPlanController = ({
 
   useEffect(() => {
     setStepAction(TutorialStep.CreatePlanDay, () => {
-      showPlanDayForm(undefined);
+      showPlanDayForm();
     });
 
     return () => {

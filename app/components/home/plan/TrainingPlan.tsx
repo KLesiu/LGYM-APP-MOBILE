@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, View, ScrollView } from 'react-native';
 import ViewLoading from '../../elements/ViewLoading';
 import CreatePlanConfig from './CreatePlanConfig';
 import CreatePlanDay from './planDay/CreatePlanDay';
-import { PlanDayBaseInfoVm } from './../../../../types/models';
+import { PlanDayBaseInfoVm, PlanForm } from './../../../../types/models';
 import CustomButton, { ButtonSize, ButtonStyle } from '../../elements/CustomButton';
 import PlanIcon from './../../../../img/icons/planIcon.svg';
 import ShareIcon from './../../../../img/icons/shareIcon.svg';
@@ -14,13 +14,11 @@ import TrainingPlanItem from './TrainingPlanItem';
 import PlanDayProvider from './planDay/CreatePlanDayContext';
 import { useHomeContext } from '../HomeContext';
 import PlansList from './PlansList';
-import { PlanForm } from '../../../../types/models';
 import DeleteIcon from './../../../../img/icons/deleteIcon.svg';
 import PlanShareDialog from './PlanShareDialog';
 import PlanCopyDialog from './PlanCopyDialog';
 import { useGetApiIdGetPlanConfig } from '../../../../api/generated/plan/plan';
 import { useGetApiPlanDayIdGetPlanDaysInfo } from '../../../../api/generated/plan-day/plan-day';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTrainingPlanController } from './hooks/useTrainingPlanController';
 
@@ -76,7 +74,7 @@ const TrainingPlan: React.FC = () => {
   } = useTrainingPlanController({
     planConfig,
     onRefetchPlanDays: refetchPlanDaysAsync,
-    onRefetchAll: async () => Promise.resolve(),
+    onRefetchAll: async () => undefined,
   });
 
   const isLoading = isPlanConfigLoading || isPlanDaysLoading || isSwitchingPlan;
@@ -109,7 +107,7 @@ const TrainingPlan: React.FC = () => {
                   </Text>
                 </View>
                 <View className="flex flex-row" style={{ gap: 16 }}>
-                  <CustomButton text={t('plans.addTrainingDay')} onPress={() => showPlanDayForm(undefined)} buttonStyleType={ButtonStyle.success} textWeight={FontWeights.bold} buttonStyleSize={ButtonSize.long} customClasses="flex-1" />
+                  <CustomButton text={t('plans.addTrainingDay')} onPress={() => showPlanDayForm()} buttonStyleType={ButtonStyle.success} textWeight={FontWeights.bold} buttonStyleSize={ButtonSize.long} customClasses="flex-1" />
                   <View className="flex justify-center items-center w-12 smallPhone:w-10 h-12 smallPhone:h-10 bg-secondaryColor70 rounded-lg ">
                     <CustomButton onPress={showPlansList} buttonStyleSize={ButtonSize.small} customSlots={[<PlanIcon key="plan-icon" />]} />
                   </View>
@@ -141,7 +139,7 @@ const TrainingPlan: React.FC = () => {
       {isPlanDayFormVisible && planConfig && (
         <PlanDayProvider closeForm={hidePlanDayForm}>
           <CreatePlanDay
-            {...(isPreviewPlanDay !== undefined ? { isPreview: isPreviewPlanDay } : {})}
+            {...(typeof isPreviewPlanDay === 'boolean' ? { isPreview: isPreviewPlanDay } : {})}
             {...(planConfig._id ? { planId: planConfig._id } : {})}
             {...(currentPlanDay?._id ? { planDayId: currentPlanDay._id } : {})}
             onSaveSuccess={handlePlanDayCreated}
