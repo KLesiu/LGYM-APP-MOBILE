@@ -2,7 +2,7 @@
 
 ## Dev environment setup
 
-- Install Node.js 22.18+.
+- Install the version from `.nvmrc` (currently Node.js 22.18.0) to match the CI Node 22 line.
 - Run `npm install`.
 - Set `REACT_APP_BACKEND` in `.env`.
 
