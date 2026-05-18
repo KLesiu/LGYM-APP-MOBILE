@@ -1,5 +1,4 @@
-import React, { JSX, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { createContext } from 'react';
+import React, { JSX, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, BackHandler } from 'react-native';
 import { useAuthStore } from '../../../stores/useAuthStore';
 import { DEFAULT_HOME_SCREEN, type HomeScreenId } from './homeScreens';

@@ -1,11 +1,10 @@
+import React, { useEffect, JSX } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { useEffect, JSX } from 'react';
 import ProfileRank from '../../elements/ProfileRank';
 import MainProfileInfo from './MainProfileInfo';
 import BackgroundMainSection from '../../elements/BackgroundMainSection';
 import { useHomeContext } from '../HomeContext';
 import ViewLoading from '../../elements/ViewLoading';
-import React from 'react';
 import BackIcon from './../../../../img/icons/backIcon.svg';
 import Start from '../start/Start';
 import { useTranslation } from 'react-i18next';

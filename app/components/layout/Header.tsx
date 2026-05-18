@@ -1,7 +1,6 @@
+import React, { JSX, useMemo } from 'react';
 import { View, Image, Text } from 'react-native';
-import { JSX, useMemo } from 'react';
 import LGYMLogo from './../../../assets/logoLGYMNewX.png';
-import React from 'react';
 import ProfileRank from '../elements/ProfileRank';
 import { useAuthStore } from '../../../stores/useAuthStore';
 import { useTranslation } from 'react-i18next';
