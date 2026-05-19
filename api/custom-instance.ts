@@ -6,6 +6,11 @@ import i18n from '../app/i18n';
 
 type CancelablePromise<T> = Promise<T> & { cancel: () => void };
 
+const createIdempotencyKey = (): string => {
+  const randomPart = Math.random().toString(36).slice(2);
+  return `mobile-${Date.now()}-${randomPart}`;
+};
+
 const trimTrailingSlash = (value: string): string => {
   let end = value.length;
 
@@ -160,6 +165,7 @@ export const customInstance = <T>(
 AXIOS_INSTANCE.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token;
   const language = i18n.language ?? 'en';
+  const method = config.method?.toUpperCase();
 
   const requestHeaders = AxiosHeaders.from(config.headers);
 
@@ -172,6 +178,14 @@ AXIOS_INSTANCE.interceptors.request.use((config) => {
 
   // Set language header
   requestHeaders.set('Accept-Language', language);
+
+  if (
+    method &&
+    ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) &&
+    !requestHeaders.has('Idempotency-Key')
+  ) {
+    requestHeaders.set('Idempotency-Key', createIdempotencyKey());
+  }
 
   if (token) {
     requestHeaders.set('Authorization', `Bearer ${token}`);
