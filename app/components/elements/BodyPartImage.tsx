@@ -11,8 +11,8 @@ import Quads from "./../../../img/bodyParts/Quads.png";
 import Hamstrings from "./../../../img/bodyParts/Hamstrings.png";
 import Calves from "./../../../img/bodyParts/Calves.png";
 import Glutes from "./../../../img/bodyParts/Glutes.png";
-import { ExerciseFormDtoBodyPart } from "../../../api/generated/model";
-import type { ExerciseFormDtoBodyPart as ExerciseBodyPartValue } from "../../../api/generated/model";
+import { ExerciseFormDtoBodyPart } from "../../../api/generated/model/exerciseFormDtoBodyPart";
+import type { ExerciseFormDtoBodyPart as ExerciseBodyPartValue } from "../../../api/generated/model/exerciseFormDtoBodyPart";
 import ChestBig from "./../../../img/bodyParts/bigSize/Chest.png"
 import BackBig from "./../../../img/bodyParts/bigSize/Back.png"
 import ShouldersBig from "./../../../img/bodyParts/bigSize/Shoulders.png"
