@@ -5,12 +5,11 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface PlanDto {
+export interface ResetPasswordRequest {
   /** @nullable */
-  id?: string | null;
+  token?: string | null;
   /** @nullable */
-  name?: string | null;
-  isActive?: boolean;
+  newPassword?: string | null;
   /** @nullable */
-  userId?: string | null;
+  confirmPassword?: string | null;
 }

@@ -5,12 +5,9 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface PlanDto {
+export interface ExternalLoginDto {
   /** @nullable */
-  id?: string | null;
+  provider?: string | null;
   /** @nullable */
-  name?: string | null;
-  isActive?: boolean;
-  /** @nullable */
-  userId?: string | null;
+  providerEmail?: string | null;
 }

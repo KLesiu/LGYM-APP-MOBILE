@@ -4,10 +4,14 @@
  * LgymApi.Api
  * OpenAPI spec version: 1.0
  */
+import type { GetApiTrainerTraineesDefaultOperator } from './getApiTrainerTraineesDefaultOperator';
+import type { GetApiTrainerTraineesGroupLogic } from './getApiTrainerTraineesGroupLogic';
 
 export type GetApiTrainerTraineesParams = {
 Search?: string;
 Status?: string;
+DefaultOperator?: GetApiTrainerTraineesDefaultOperator;
+GroupLogic?: GetApiTrainerTraineesGroupLogic;
 SortBy?: string;
 SortDirection?: string;
 Page?: number;

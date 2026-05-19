@@ -13,6 +13,8 @@ export interface TrainerInvitationDto {
   /** @nullable */
   traineeId?: string | null;
   /** @nullable */
+  inviteeEmail?: string | null;
+  /** @nullable */
   code?: string | null;
   /** @nullable */
   status?: string | null;
@@ -20,4 +22,8 @@ export interface TrainerInvitationDto {
   /** @nullable */
   respondedAt?: string | null;
   createdAt?: string;
+  /** @nullable */
+  traineeName?: string | null;
+  /** @nullable */
+  traineeEmail?: string | null;
 }

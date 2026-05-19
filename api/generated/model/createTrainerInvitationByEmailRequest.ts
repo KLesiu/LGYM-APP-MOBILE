@@ -5,12 +5,11 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface PlanDto {
+export interface CreateTrainerInvitationByEmailRequest {
   /** @nullable */
-  id?: string | null;
+  email?: string | null;
   /** @nullable */
-  name?: string | null;
-  isActive?: boolean;
+  preferredLanguage?: string | null;
   /** @nullable */
-  userId?: string | null;
+  preferredTimeZone?: string | null;
 }
