@@ -24,12 +24,15 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CreateTrainerInvitationByEmailRequest,
   CreateTrainerInvitationRequest,
   EloRegistryBaseChartDto,
   ExerciseScoresChartDataDto,
   ExerciseScoresChartRequestDto,
   GetApiTrainerTraineesParams,
   MainRecordResponseDto,
+  PaginatedTrainerInvitationRequest,
+  PaginatedTrainerInvitationResult,
   ResponseMessageDto,
   TrainerDashboardTraineesResponse,
   TrainerInvitationDto,
@@ -43,186 +46,6 @@ import { customInstance } from '../../custom-instance';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
-
-
-
-export type postApiTrainerInvitationsResponse200 = {
-  data: TrainerInvitationDto
-  status: 200
-}
-    
-export type postApiTrainerInvitationsResponseSuccess = (postApiTrainerInvitationsResponse200) & {
-  headers: Headers;
-};
-;
-
-export type postApiTrainerInvitationsResponse = (postApiTrainerInvitationsResponseSuccess)
-
-export const getPostApiTrainerInvitationsUrl = () => {
-
-
-  
-
-  return `/api/trainer/invitations`
-}
-
-export const postApiTrainerInvitations = async (createTrainerInvitationRequest: CreateTrainerInvitationRequest, options?: RequestInit): Promise<postApiTrainerInvitationsResponse> => {
-  
-  return customInstance<postApiTrainerInvitationsResponse>(getPostApiTrainerInvitationsUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      createTrainerInvitationRequest,)
-  }
-);}
-
-
-
-
-export const getPostApiTrainerInvitationsMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitations>>, TError,{data: CreateTrainerInvitationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitations>>, TError,{data: CreateTrainerInvitationRequest}, TContext> => {
-
-const mutationKey = ['postApiTrainerInvitations'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerInvitations>>, {data: CreateTrainerInvitationRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postApiTrainerInvitations(data,requestOptions)
-        }
-
-
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostApiTrainerInvitationsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerInvitations>>>
-    export type PostApiTrainerInvitationsMutationBody = CreateTrainerInvitationRequest
-    export type PostApiTrainerInvitationsMutationError = unknown
-
-    export const usePostApiTrainerInvitations = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitations>>, TError,{data: CreateTrainerInvitationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postApiTrainerInvitations>>,
-        TError,
-        {data: CreateTrainerInvitationRequest},
-        TContext
-      > => {
-      return useMutation(getPostApiTrainerInvitationsMutationOptions(options), queryClient);
-    }
-    export type getApiTrainerInvitationsResponse200 = {
-  data: TrainerInvitationDto[]
-  status: 200
-}
-    
-export type getApiTrainerInvitationsResponseSuccess = (getApiTrainerInvitationsResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getApiTrainerInvitationsResponse = (getApiTrainerInvitationsResponseSuccess)
-
-export const getGetApiTrainerInvitationsUrl = () => {
-
-
-  
-
-  return `/api/trainer/invitations`
-}
-
-export const getApiTrainerInvitations = async ( options?: RequestInit): Promise<getApiTrainerInvitationsResponse> => {
-  
-  return customInstance<getApiTrainerInvitationsResponse>(getGetApiTrainerInvitationsUrl(),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
-
-
-
-export const getGetApiTrainerInvitationsQueryKey = () => {
-    return [
-    `/api/trainer/invitations`
-    ] as const;
-    }
-
-    
-export const getGetApiTrainerInvitationsQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetApiTrainerInvitationsQueryKey();
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrainerInvitations>>> = ({ signal }) => getApiTrainerInvitations({ signal, ...requestOptions });
-
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetApiTrainerInvitationsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiTrainerInvitations>>>
-export type GetApiTrainerInvitationsQueryError = unknown
-
-
-export function useGetApiTrainerInvitations<TData = Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError = unknown>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getApiTrainerInvitations>>,
-          TError,
-          Awaited<ReturnType<typeof getApiTrainerInvitations>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiTrainerInvitations<TData = Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getApiTrainerInvitations>>,
-          TError,
-          Awaited<ReturnType<typeof getApiTrainerInvitations>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiTrainerInvitations<TData = Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useGetApiTrainerInvitations<TData = Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError = unknown>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerInvitations>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetApiTrainerInvitationsQueryOptions(options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
 
 
 
@@ -937,6 +760,309 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiTrainerTraineesTraineeIdUnlinkMutationOptions(options), queryClient);
+    }
+    export type postApiTrainerInvitationsResponse200 = {
+  data: TrainerInvitationDto
+  status: 200
+}
+    
+export type postApiTrainerInvitationsResponseSuccess = (postApiTrainerInvitationsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiTrainerInvitationsResponse = (postApiTrainerInvitationsResponseSuccess)
+
+export const getPostApiTrainerInvitationsUrl = () => {
+
+
+  
+
+  return `/api/trainer/invitations`
+}
+
+export const postApiTrainerInvitations = async (createTrainerInvitationRequest: CreateTrainerInvitationRequest, options?: RequestInit): Promise<postApiTrainerInvitationsResponse> => {
+  
+  return customInstance<postApiTrainerInvitationsResponse>(getPostApiTrainerInvitationsUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      createTrainerInvitationRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTrainerInvitationsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitations>>, TError,{data: CreateTrainerInvitationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitations>>, TError,{data: CreateTrainerInvitationRequest}, TContext> => {
+
+const mutationKey = ['postApiTrainerInvitations'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerInvitations>>, {data: CreateTrainerInvitationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTrainerInvitations(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerInvitationsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerInvitations>>>
+    export type PostApiTrainerInvitationsMutationBody = CreateTrainerInvitationRequest
+    export type PostApiTrainerInvitationsMutationError = unknown
+
+    export const usePostApiTrainerInvitations = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitations>>, TError,{data: CreateTrainerInvitationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerInvitations>>,
+        TError,
+        {data: CreateTrainerInvitationRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerInvitationsMutationOptions(options), queryClient);
+    }
+    export type postApiTrainerInvitationsPaginatedResponse200 = {
+  data: PaginatedTrainerInvitationResult
+  status: 200
+}
+    
+export type postApiTrainerInvitationsPaginatedResponseSuccess = (postApiTrainerInvitationsPaginatedResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiTrainerInvitationsPaginatedResponse = (postApiTrainerInvitationsPaginatedResponseSuccess)
+
+export const getPostApiTrainerInvitationsPaginatedUrl = () => {
+
+
+  
+
+  return `/api/trainer/invitations/paginated`
+}
+
+export const postApiTrainerInvitationsPaginated = async (paginatedTrainerInvitationRequest: PaginatedTrainerInvitationRequest, options?: RequestInit): Promise<postApiTrainerInvitationsPaginatedResponse> => {
+  
+  return customInstance<postApiTrainerInvitationsPaginatedResponse>(getPostApiTrainerInvitationsPaginatedUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      paginatedTrainerInvitationRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTrainerInvitationsPaginatedMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsPaginated>>, TError,{data: PaginatedTrainerInvitationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsPaginated>>, TError,{data: PaginatedTrainerInvitationRequest}, TContext> => {
+
+const mutationKey = ['postApiTrainerInvitationsPaginated'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerInvitationsPaginated>>, {data: PaginatedTrainerInvitationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTrainerInvitationsPaginated(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerInvitationsPaginatedMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerInvitationsPaginated>>>
+    export type PostApiTrainerInvitationsPaginatedMutationBody = PaginatedTrainerInvitationRequest
+    export type PostApiTrainerInvitationsPaginatedMutationError = unknown
+
+    export const usePostApiTrainerInvitationsPaginated = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsPaginated>>, TError,{data: PaginatedTrainerInvitationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerInvitationsPaginated>>,
+        TError,
+        {data: PaginatedTrainerInvitationRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerInvitationsPaginatedMutationOptions(options), queryClient);
+    }
+    export type postApiTrainerInvitationsByEmailResponse200 = {
+  data: TrainerInvitationDto
+  status: 200
+}
+    
+export type postApiTrainerInvitationsByEmailResponseSuccess = (postApiTrainerInvitationsByEmailResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiTrainerInvitationsByEmailResponse = (postApiTrainerInvitationsByEmailResponseSuccess)
+
+export const getPostApiTrainerInvitationsByEmailUrl = () => {
+
+
+  
+
+  return `/api/trainer/invitations/by-email`
+}
+
+export const postApiTrainerInvitationsByEmail = async (createTrainerInvitationByEmailRequest: CreateTrainerInvitationByEmailRequest, options?: RequestInit): Promise<postApiTrainerInvitationsByEmailResponse> => {
+  
+  return customInstance<postApiTrainerInvitationsByEmailResponse>(getPostApiTrainerInvitationsByEmailUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      createTrainerInvitationByEmailRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTrainerInvitationsByEmailMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsByEmail>>, TError,{data: CreateTrainerInvitationByEmailRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsByEmail>>, TError,{data: CreateTrainerInvitationByEmailRequest}, TContext> => {
+
+const mutationKey = ['postApiTrainerInvitationsByEmail'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerInvitationsByEmail>>, {data: CreateTrainerInvitationByEmailRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTrainerInvitationsByEmail(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerInvitationsByEmailMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerInvitationsByEmail>>>
+    export type PostApiTrainerInvitationsByEmailMutationBody = CreateTrainerInvitationByEmailRequest
+    export type PostApiTrainerInvitationsByEmailMutationError = unknown
+
+    export const usePostApiTrainerInvitationsByEmail = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsByEmail>>, TError,{data: CreateTrainerInvitationByEmailRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerInvitationsByEmail>>,
+        TError,
+        {data: CreateTrainerInvitationByEmailRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerInvitationsByEmailMutationOptions(options), queryClient);
+    }
+    export type postApiTrainerInvitationsInvitationIdRevokeResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+    
+export type postApiTrainerInvitationsInvitationIdRevokeResponseSuccess = (postApiTrainerInvitationsInvitationIdRevokeResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiTrainerInvitationsInvitationIdRevokeResponse = (postApiTrainerInvitationsInvitationIdRevokeResponseSuccess)
+
+export const getPostApiTrainerInvitationsInvitationIdRevokeUrl = (invitationId: string,) => {
+
+
+  
+
+  return `/api/trainer/invitations/${invitationId}/revoke`
+}
+
+export const postApiTrainerInvitationsInvitationIdRevoke = async (invitationId: string, options?: RequestInit): Promise<postApiTrainerInvitationsInvitationIdRevokeResponse> => {
+  
+  return customInstance<postApiTrainerInvitationsInvitationIdRevokeResponse>(getPostApiTrainerInvitationsInvitationIdRevokeUrl(invitationId),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostApiTrainerInvitationsInvitationIdRevokeMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsInvitationIdRevoke>>, TError,{invitationId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsInvitationIdRevoke>>, TError,{invitationId: string}, TContext> => {
+
+const mutationKey = ['postApiTrainerInvitationsInvitationIdRevoke'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerInvitationsInvitationIdRevoke>>, {invitationId: string}> = (props) => {
+          const {invitationId} = props ?? {};
+
+          return  postApiTrainerInvitationsInvitationIdRevoke(invitationId,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerInvitationsInvitationIdRevokeMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerInvitationsInvitationIdRevoke>>>
+    
+    export type PostApiTrainerInvitationsInvitationIdRevokeMutationError = unknown
+
+    export const usePostApiTrainerInvitationsInvitationIdRevoke = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerInvitationsInvitationIdRevoke>>, TError,{invitationId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerInvitationsInvitationIdRevoke>>,
+        TError,
+        {invitationId: string},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerInvitationsInvitationIdRevokeMutationOptions(options), queryClient);
     }
     export type getApiTrainerTraineesTraineeIdPlansResponse200 = {
   data: TrainerManagedPlanDto[]

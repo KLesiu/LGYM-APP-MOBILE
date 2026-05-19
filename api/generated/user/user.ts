@@ -24,12 +24,12 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  ChangeVisibilityInRankingRequest,
+  ForgotPasswordRequest,
   LoginRequest,
   LoginResponseDto,
-  PostApiChangeVisibilityInRankingBodyOne,
-  PostApiChangeVisibilityInRankingBodyThree,
-  PostApiChangeVisibilityInRankingBodyTwo,
   RegisterUserRequest,
+  ResetPasswordRequest,
   ResponseMessageDto,
   UpdateTimeZoneRequest,
   UserBaseInfoDto,
@@ -811,15 +811,15 @@ export const getPostApiChangeVisibilityInRankingUrl = () => {
   return `/api/changeVisibilityInRanking`
 }
 
-export const postApiChangeVisibilityInRanking = async (postApiChangeVisibilityInRankingBody: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree, options?: RequestInit): Promise<postApiChangeVisibilityInRankingResponse> => {
+export const postApiChangeVisibilityInRanking = async (changeVisibilityInRankingRequest: ChangeVisibilityInRankingRequest, options?: RequestInit): Promise<postApiChangeVisibilityInRankingResponse> => {
   
   return customInstance<postApiChangeVisibilityInRankingResponse>(getPostApiChangeVisibilityInRankingUrl(),
   {      
     ...options,
-    method: 'POST'
-    ,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      postApiChangeVisibilityInRankingBody,)
+      changeVisibilityInRankingRequest,)
   }
 );}
 
@@ -827,8 +827,8 @@ export const postApiChangeVisibilityInRanking = async (postApiChangeVisibilityIn
 
 
 export const getPostApiChangeVisibilityInRankingMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: ChangeVisibilityInRankingRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: ChangeVisibilityInRankingRequest}, TContext> => {
 
 const mutationKey = ['postApiChangeVisibilityInRanking'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -840,7 +840,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, {data: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, {data: ChangeVisibilityInRankingRequest}> = (props) => {
           const {data} = props ?? {};
 
           return  postApiChangeVisibilityInRanking(data,requestOptions)
@@ -854,15 +854,15 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type PostApiChangeVisibilityInRankingMutationResult = NonNullable<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>>
-    export type PostApiChangeVisibilityInRankingMutationBody = PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree
+    export type PostApiChangeVisibilityInRankingMutationBody = ChangeVisibilityInRankingRequest
     export type PostApiChangeVisibilityInRankingMutationError = unknown
 
     export const usePostApiChangeVisibilityInRanking = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>, TError,{data: ChangeVisibilityInRankingRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiChangeVisibilityInRanking>>,
         TError,
-        {data: PostApiChangeVisibilityInRankingBodyOne | PostApiChangeVisibilityInRankingBodyTwo | PostApiChangeVisibilityInRankingBodyThree},
+        {data: ChangeVisibilityInRankingRequest},
         TContext
       > => {
       return useMutation(getPostApiChangeVisibilityInRankingMutationOptions(options), queryClient);
@@ -942,5 +942,164 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiUpdateTimeZoneMutationOptions(options), queryClient);
+    }
+    export type postApiForgotPasswordResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+    
+export type postApiForgotPasswordResponseSuccess = (postApiForgotPasswordResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiForgotPasswordResponse = (postApiForgotPasswordResponseSuccess)
+
+export const getPostApiForgotPasswordUrl = () => {
+
+
+  
+
+  return `/api/forgot-password`
+}
+
+export const postApiForgotPassword = async (forgotPasswordRequest: ForgotPasswordRequest, options?: RequestInit): Promise<postApiForgotPasswordResponse> => {
+  
+  return customInstance<postApiForgotPasswordResponse>(getPostApiForgotPasswordUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      forgotPasswordRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiForgotPasswordMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiForgotPassword>>, TError,{data: ForgotPasswordRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiForgotPassword>>, TError,{data: ForgotPasswordRequest}, TContext> => {
+
+const mutationKey = ['postApiForgotPassword'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiForgotPassword>>, {data: ForgotPasswordRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiForgotPassword(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiForgotPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiForgotPassword>>>
+    export type PostApiForgotPasswordMutationBody = ForgotPasswordRequest
+    export type PostApiForgotPasswordMutationError = unknown
+
+    export const usePostApiForgotPassword = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiForgotPassword>>, TError,{data: ForgotPasswordRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiForgotPassword>>,
+        TError,
+        {data: ForgotPasswordRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiForgotPasswordMutationOptions(options), queryClient);
+    }
+    export type postApiResetPasswordResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+
+export type postApiResetPasswordResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiResetPasswordResponseSuccess = (postApiResetPasswordResponse200) & {
+  headers: Headers;
+};
+export type postApiResetPasswordResponseError = (postApiResetPasswordResponse400) & {
+  headers: Headers;
+};
+
+export type postApiResetPasswordResponse = (postApiResetPasswordResponseSuccess | postApiResetPasswordResponseError)
+
+export const getPostApiResetPasswordUrl = () => {
+
+
+  
+
+  return `/api/reset-password`
+}
+
+export const postApiResetPassword = async (resetPasswordRequest: ResetPasswordRequest, options?: RequestInit): Promise<postApiResetPasswordResponse> => {
+  
+  return customInstance<postApiResetPasswordResponse>(getPostApiResetPasswordUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      resetPasswordRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiResetPasswordMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiResetPassword>>, TError,{data: ResetPasswordRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiResetPassword>>, TError,{data: ResetPasswordRequest}, TContext> => {
+
+const mutationKey = ['postApiResetPassword'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiResetPassword>>, {data: ResetPasswordRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiResetPassword(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiResetPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiResetPassword>>>
+    export type PostApiResetPasswordMutationBody = ResetPasswordRequest
+    export type PostApiResetPasswordMutationError = ResponseMessageDto
+
+    export const usePostApiResetPassword = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiResetPassword>>, TError,{data: ResetPasswordRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiResetPassword>>,
+        TError,
+        {data: ResetPasswordRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiResetPasswordMutationOptions(options), queryClient);
     }
     

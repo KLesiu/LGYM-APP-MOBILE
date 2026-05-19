@@ -24,6 +24,8 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  PaginatedRoleRequest,
+  PaginatedRoleResult,
   PermissionClaimLookupDto,
   ResponseMessageDto,
   RoleDto,
@@ -224,6 +226,82 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiRolesMutationOptions(options), queryClient);
+    }
+    export type postApiRolesPaginatedResponse200 = {
+  data: PaginatedRoleResult
+  status: 200
+}
+    
+export type postApiRolesPaginatedResponseSuccess = (postApiRolesPaginatedResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiRolesPaginatedResponse = (postApiRolesPaginatedResponseSuccess)
+
+export const getPostApiRolesPaginatedUrl = () => {
+
+
+  
+
+  return `/api/roles/paginated`
+}
+
+export const postApiRolesPaginated = async (paginatedRoleRequest: PaginatedRoleRequest, options?: RequestInit): Promise<postApiRolesPaginatedResponse> => {
+  
+  return customInstance<postApiRolesPaginatedResponse>(getPostApiRolesPaginatedUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      paginatedRoleRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiRolesPaginatedMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRolesPaginated>>, TError,{data: PaginatedRoleRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiRolesPaginated>>, TError,{data: PaginatedRoleRequest}, TContext> => {
+
+const mutationKey = ['postApiRolesPaginated'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiRolesPaginated>>, {data: PaginatedRoleRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiRolesPaginated(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiRolesPaginatedMutationResult = NonNullable<Awaited<ReturnType<typeof postApiRolesPaginated>>>
+    export type PostApiRolesPaginatedMutationBody = PaginatedRoleRequest
+    export type PostApiRolesPaginatedMutationError = unknown
+
+    export const usePostApiRolesPaginated = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiRolesPaginated>>, TError,{data: PaginatedRoleRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiRolesPaginated>>,
+        TError,
+        {data: PaginatedRoleRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiRolesPaginatedMutationOptions(options), queryClient);
     }
     export type getApiRolesIdResponse200 = {
   data: RoleDto
