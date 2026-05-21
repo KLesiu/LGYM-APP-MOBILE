@@ -1,0 +1,22 @@
+{
+  "active_plan": "D:\\Backup\\LGYM-APP\\mobile\\.sisyphus\\plans\\issue-85-domkniecie-featurea.md",
+  "started_at": "2026-05-21T20:23:57.670Z",
+  "session_ids": [
+    "ses_1b53f5ba9ffeT03hjJoDIn3kvq"
+  ],
+  "session_origins": {
+    "ses_1b53f5ba9ffeT03hjJoDIn3kvq": "direct"
+  },
+  "plan_name": "issue-85-domkniecie-featurea",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Zweryfikować kontrakty API i punkty wejścia",
+      "session_id": "ses_1b3c83c4fffefTdDOfN907oHpH",
+      "agent": "Sisyphus-Junior",
+      "updated_at": "2026-05-21T21:20:18.608Z"
+    }
+  }
+}

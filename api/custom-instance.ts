@@ -1,8 +1,11 @@
 import axios, { AxiosHeaders, AxiosRequestConfig } from 'axios';
 import Constants from 'expo-constants';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 import { useAuthStore } from '../stores/useAuthStore';
 import i18n from '../app/i18n';
+import { getErrorMessage } from '../utils/errorHandler';
 
 type CancelablePromise<T> = Promise<T> & { cancel: () => void };
 
@@ -194,3 +197,45 @@ AXIOS_INSTANCE.interceptors.request.use((config) => {
   config.headers = requestHeaders;
   return config;
 });
+
+// Response interceptor for global auth/session error handling
+AXIOS_INSTANCE.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error?.response?.status;
+    const errorMessage = getErrorMessage(error, '');
+
+    if (status === 401) {
+      // Unauthorized: clear token and redirect to login
+      await AsyncStorage.removeItem('token');
+      useAuthStore.getState().logout();
+      router.replace('/Login');
+    } else if (status === 403) {
+      // Forbidden: check if user is blocked or revoked
+      const isBlockedOrRevoked = 
+        errorMessage.toLowerCase().includes('blocked') || 
+        errorMessage.toLowerCase().includes('revoked');
+
+      if (isBlockedOrRevoked) {
+        // Show alert and force logout
+        Alert.alert(
+          'Access Denied',
+          errorMessage || 'Your account has been blocked or revoked.',
+          [
+            {
+              text: 'OK',
+              onPress: async () => {
+                await AsyncStorage.removeItem('token');
+                useAuthStore.getState().logout();
+                router.replace('/Login');
+              },
+            },
+          ]
+        );
+      }
+    }
+
+    // Pass error through to component-level handling
+    return Promise.reject(error);
+  }
+);
