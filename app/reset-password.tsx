@@ -1,20 +1,34 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
+  TextInput,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
-import { useRouter, useFocusEffect, Stack } from "expo-router";
+import { useRouter, useFocusEffect, Stack, useLocalSearchParams } from "expo-router";
 import { useAppContext } from "./AppContext";
 import { useTranslation } from "react-i18next";
 import toastService from "./services/toastService";
+import { usePostApiResetPassword } from "../api/generated/user/user";
+import { getErrorMessage } from "../utils/errorHandler";
+import CustomButton, {
+  ButtonSize,
+  ButtonStyle,
+} from "./components/elements/CustomButton";
+import MiniLoading from "./components/elements/MiniLoading";
 
 const ResetPassword: React.FC = () => {
   const router = useRouter();
   const { t } = useTranslation();
   const { setErrors: setAppErrors } = useAppContext();
+  const params = useLocalSearchParams();
+  const token = typeof params.token === "string" ? params.token : "";
+
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const { mutate, isPending } = usePostApiResetPassword();
 
   useFocusEffect(
     useCallback(() => {
@@ -26,6 +40,56 @@ const ResetPassword: React.FC = () => {
       };
     }, [setAppErrors])
   );
+
+  const validate = (): boolean => {
+    const newErrors: string[] = [];
+
+    if (!token) {
+      newErrors.push(t("auth.invalidResetToken"));
+    }
+
+    if (!newPassword) {
+      newErrors.push(t("auth.passwordRequired"));
+    } else if (newPassword.length < 6) {
+      newErrors.push(t("auth.passwordLength"));
+    }
+
+    if (newPassword !== confirmPassword) {
+      newErrors.push(t("auth.passwordsMismatch"));
+    }
+
+    if (newErrors.length > 0) {
+      toastService.showValidationError(newErrors);
+    }
+
+    return newErrors.length === 0;
+  };
+
+  const resetPassword = async (): Promise<void> => {
+    if (!validate()) return;
+
+    mutate(
+      {
+        data: {
+          token: token,
+          newPassword: newPassword,
+        },
+      },
+      {
+        onSuccess: () => {
+          toastService.showSuccess(t("auth.passwordResetSuccess"));
+          router.push("Login");
+        },
+        onError: (error: any) => {
+          console.error("Reset password error:", error);
+          const errorMessage = getErrorMessage(error, t("auth.resetPasswordFailed"));
+          toastService.showError(errorMessage, t("auth.resetPasswordFailed"));
+        },
+      }
+    );
+  };
+
+  const isFormValid = newPassword.length >= 6 && newPassword === confirmPassword && !!token;
 
   return (
     <>
@@ -51,14 +115,72 @@ const ResetPassword: React.FC = () => {
               className="text-textColor text-2xl"
               style={{ fontFamily: "OpenSans_700Bold" }}
             >
-              Reset Password
+              {t("auth.resetPassword")}
             </Text>
             <Text
               className="text-fifthColor text-base text-center"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              This screen will allow users to set a new password using a reset token.
+              {t("auth.resetPasswordDescription")}
             </Text>
+
+            {!token && (
+              <View className="w-full bg-redColor/10 rounded-lg p-4 mt-4">
+                <Text className="text-redColor text-sm" style={{ fontFamily: "OpenSans_400Regular" }}>
+                  {t("auth.invalidResetToken")}
+                </Text>
+              </View>
+            )}
+
+            <View className="flex flex-col w-full" style={{ gap: 8 }}>
+              <View className="flex flex-row gap-1">
+                <Text
+                  className="text-textColor text-base smallPhone:text-sm"
+                  style={{ fontFamily: "OpenSans_300Light" }}
+                >
+                  {t("auth.newPassword")}
+                </Text>
+                <Text className="text-redColor">*</Text>
+              </View>
+              <TextInput
+                secureTextEntry={true}
+                onChangeText={(text) => setNewPassword(text)}
+                value={newPassword}
+                style={{ fontFamily: "OpenSans_400Regular" }}
+                className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
+                editable={!!token}
+              />
+            </View>
+
+            <View className="flex flex-col w-full" style={{ gap: 8 }}>
+              <View className="flex flex-row gap-1">
+                <Text
+                  className="text-textColor text-base smallPhone:text-sm"
+                  style={{ fontFamily: "OpenSans_300Light" }}
+                >
+                  {t("auth.confirmPassword")}
+                </Text>
+                <Text className="text-redColor">*</Text>
+              </View>
+              <TextInput
+                secureTextEntry={true}
+                onChangeText={(text) => setConfirmPassword(text)}
+                value={confirmPassword}
+                style={{ fontFamily: "OpenSans_400Regular" }}
+                className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
+                editable={!!token}
+              />
+            </View>
+
+            <CustomButton
+              text={t("auth.resetPassword")}
+              onPress={resetPassword}
+              width="w-full"
+              buttonStyleType={ButtonStyle.success}
+              buttonStyleSize={ButtonSize.xl}
+              disabled={!isFormValid || isPending}
+            />
+            <MiniLoading />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

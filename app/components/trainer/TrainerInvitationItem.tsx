@@ -1,35 +1,48 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
-
-interface TrainerInvitation {
-  id: string;
-  email: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  createdAt: string;
-}
+import { usePostApiTrainerInvitationsInvitationIdRevoke } from '../../../api/generated/trainer-relationship/trainer-relationship';
+import toastService from '../../services/toastService';
+import { getErrorMessage } from '../../../utils/errorHandler';
+import ConfirmDialog from '../elements/ConfirmDialog';
+import type { TrainerInvitationDto } from '../../../api/generated/model';
 
 interface TrainerInvitationItemProps {
-  invitation: TrainerInvitation;
+  invitation: TrainerInvitationDto;
   onRevoke?: (invitationId: string) => void;
-  isRevoking?: boolean;
 }
 
 const TrainerInvitationItem: React.FC<TrainerInvitationItemProps> = ({
   invitation,
   onRevoke,
-  isRevoking = false,
 }) => {
   const { t } = useTranslation();
+  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const { mutateAsync: revokeInvitation, isPending } = usePostApiTrainerInvitationsInvitationIdRevoke();
 
-  const handleRevoke = () => {
-    if (onRevoke) {
-      onRevoke(invitation.id);
+  const invitationId = invitation._id ?? '';
+  const status = invitation.status ?? 'pending';
+  const email = invitation.inviteeEmail ?? invitation.traineeEmail ?? '';
+  const createdAt = invitation.createdAt ?? '';
+
+  const handleRevoke = async () => {
+    if (!invitationId) return;
+    try {
+      await revokeInvitation({ invitationId });
+      toastService.showSuccess(t('trainer.invitationRevoked'));
+      if (onRevoke) {
+        onRevoke(invitationId);
+      }
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, t('trainer.invitationRevokeFailed'));
+      toastService.showError(errorMessage, t('trainer.invitationRevokeFailed'));
+    } finally {
+      setIsConfirmVisible(false);
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
+  const getStatusColor = (statusValue: string) => {
+    switch (statusValue) {
       case 'pending':
         return '#FFA500';
       case 'accepted':
@@ -41,8 +54,8 @@ const TrainerInvitationItem: React.FC<TrainerInvitationItemProps> = ({
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
+  const getStatusLabel = (statusValue: string) => {
+    switch (statusValue) {
       case 'pending':
         return 'Pending';
       case 'accepted':
@@ -50,43 +63,52 @@ const TrainerInvitationItem: React.FC<TrainerInvitationItemProps> = ({
       case 'rejected':
         return 'Rejected';
       default:
-        return status;
+        return statusValue;
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.email}>{invitation.email}</Text>
-        <View style={styles.statusRow}>
-          <View
-            style={[
-              styles.statusBadge,
-              { backgroundColor: getStatusColor(invitation.status) },
-            ]}
-          >
-            <Text style={styles.statusText}>
-              {getStatusLabel(invitation.status)}
+    <>
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Text style={styles.email}>{email || '-'}</Text>
+          <View style={styles.statusRow}>
+            <View
+              style={[
+                styles.statusBadge,
+                { backgroundColor: getStatusColor(status) },
+              ]}
+            >
+              <Text style={styles.statusText}>
+                {getStatusLabel(status)}
+              </Text>
+            </View>
+            <Text style={styles.date}>
+              {createdAt ? new Date(createdAt).toLocaleDateString() : '-'}
             </Text>
           </View>
-          <Text style={styles.date}>
-            {new Date(invitation.createdAt).toLocaleDateString()}
-          </Text>
         </View>
-      </View>
 
-      {invitation.status === 'pending' && (
-        <TouchableOpacity
-          style={[styles.revokeButton, isRevoking && styles.revokeButtonDisabled]}
-          onPress={handleRevoke}
-          disabled={isRevoking}
-        >
-          <Text style={styles.revokeButtonText}>
-            {isRevoking ? 'Revoking...' : 'Revoke'}
-          </Text>
-        </TouchableOpacity>
-      )}
-    </View>
+        {status === 'pending' && (
+          <TouchableOpacity
+            style={[styles.revokeButton, isPending && styles.revokeButtonDisabled]}
+            onPress={() => setIsConfirmVisible(true)}
+            disabled={isPending || !invitationId}
+          >
+            <Text style={styles.revokeButtonText}>
+              {isPending ? 'Revoking...' : 'Revoke'}
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <ConfirmDialog
+        visible={isConfirmVisible}
+        title={t('trainer.revokeInvitationTitle')}
+        message={t('trainer.revokeInvitationMessage')}
+        onConfirm={handleRevoke}
+        onCancel={() => setIsConfirmVisible(false)}
+      />
+    </>
   );
 };
 

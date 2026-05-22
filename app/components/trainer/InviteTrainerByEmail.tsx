@@ -1,26 +1,54 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { usePostApiTrainerInvitationsByEmail } from '../../../api/generated/trainer-relationship/trainer-relationship';
+import toastService from '../../services/toastService';
+import { getErrorMessage } from '../../../utils/errorHandler';
 
 interface InviteTrainerByEmailProps {
   onInviteSent?: (email: string) => void;
-  isLoading?: boolean;
 }
 
 const InviteTrainerByEmail: React.FC<InviteTrainerByEmailProps> = ({
   onInviteSent,
-  isLoading = false,
 }) => {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
+  const { mutateAsync: inviteTrainer, isPending } = usePostApiTrainerInvitationsByEmail();
 
-  const handleSubmit = () => {
-    // TODO: Implement API call to inviteTrainerByEmail mutation
-    // usePostApiTrainerInvitationsByEmail hook will be used here
-    if (onInviteSent) {
-      onInviteSent(email);
+  const trimmedEmail = useMemo(() => email.trim(), [email]);
+  const isValidEmail = useMemo(() => {
+    if (!trimmedEmail) return false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(trimmedEmail);
+  }, [trimmedEmail]);
+
+  const handleSubmit = async () => {
+    if (!trimmedEmail) {
+      toastService.showValidationError(t('auth.emailRequired'));
+      return;
     }
-    setEmail('');
+
+    if (!isValidEmail) {
+      toastService.showValidationError(t('auth.invalidEmail'));
+      return;
+    }
+
+    try {
+      await inviteTrainer({
+        data: {
+          email: trimmedEmail,
+        },
+      });
+      toastService.showSuccess(t('trainer.invitationSent'));
+      if (onInviteSent) {
+        onInviteSent(trimmedEmail);
+      }
+      setEmail('');
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, t('trainer.invitationFailed'));
+      toastService.showError(errorMessage, t('trainer.invitationFailed'));
+    }
   };
 
   return (
@@ -35,23 +63,21 @@ const InviteTrainerByEmail: React.FC<InviteTrainerByEmailProps> = ({
         placeholder="trainer@example.com"
         value={email}
         onChangeText={setEmail}
-        editable={!isLoading}
+        editable={!isPending}
         placeholderTextColor="#999"
+        autoCapitalize="none"
+        keyboardType="email-address"
       />
 
       <TouchableOpacity
-        style={[styles.button, isLoading && styles.buttonDisabled]}
+        style={[styles.button, isPending && styles.buttonDisabled]}
         onPress={handleSubmit}
-        disabled={isLoading || !email}
+        disabled={isPending || !isValidEmail}
       >
         <Text style={styles.buttonText}>
-          {isLoading ? 'Sending...' : 'Send Invitation'}
+          {isPending ? 'Sending...' : 'Send Invitation'}
         </Text>
       </TouchableOpacity>
-
-      <Text style={styles.placeholder}>
-        [Scaffold: Form validation and API integration will be added in Task 8]
-      </Text>
     </View>
   );
 };
@@ -98,12 +124,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
-  },
-  placeholder: {
-    fontSize: 12,
-    color: '#999',
-    fontStyle: 'italic',
-    marginTop: 8,
   },
 });
 

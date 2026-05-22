@@ -17,6 +17,15 @@
       "session_id": "ses_1b3c83c4fffefTdDOfN907oHpH",
       "agent": "Sisyphus-Junior",
       "updated_at": "2026-05-21T21:20:18.608Z"
+    },
+    "todo:5": {
+      "task_key": "todo:5",
+      "task_label": "5",
+      "task_title": "Wdrożyć ekran forgot password",
+      "session_id": "ses_1b31885f1ffeqyiQhbfHwJeP4W",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-21T23:39:59.953Z"
     }
   }
 }

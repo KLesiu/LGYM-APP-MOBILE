@@ -384,7 +384,7 @@ Max Concurrent: 4
     Evidence: .sisyphus/evidence/task-4-status-map.png
   ```
 
-- [ ] 5. Wdrożyć ekran forgot password
+- [x] 5. Wdrożyć ekran forgot password
 
   **What to do**:
   - Dodać publiczny ekran z polem email i submit do `POST /api/forgot-password`.
@@ -436,7 +436,7 @@ Max Concurrent: 4
     Evidence: .sisyphus/evidence/task-5-forgot-invalid-email.png
   ```
 
-- [ ] 6. Wdrożyć ekran reset password
+- [x] 6. Wdrożyć ekran reset password
 
   **What to do**:
   - Dodać formularz z `token`, `newPassword`, `confirmPassword`.
@@ -488,7 +488,7 @@ Max Concurrent: 4
     Evidence: .sisyphus/evidence/task-6-reset-mismatch.png
   ```
 
-- [ ] 7. Wdrożyć public invitation status flow
+- [x] 7. Wdrożyć public invitation status flow
 
   **What to do**:
   - Dodać anonimowy ekran statusu zaproszenia korzystający z `GET /api/invitations/{invitationId}?code=...`.
@@ -539,7 +539,7 @@ Max Concurrent: 4
     Evidence: .sisyphus/evidence/task-7-status-404.png
   ```
 
-- [ ] 8. Wdrożyć trainer invitation by email + revoke/list UX
+- [x] 8. Wdrożyć trainer invitation by email + revoke/list UX
 
   **What to do**:
   - Dodać formularz zapraszania po emailu.

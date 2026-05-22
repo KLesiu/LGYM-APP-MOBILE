@@ -33,6 +33,22 @@ const showError = (messages: string | string[], title = i18n.t("common.error")) 
   });
 };
 
+const showSuccess = (messages: string | string[], title = i18n.t("common.success")) => {
+  const normalizedMessages = normalizeMessages(messages);
+
+  if (!normalizedMessages.length) {
+    return;
+  }
+
+  Toast.show({
+    type: "success",
+    text1: title,
+    text2: mapMessagesToDescription(normalizedMessages),
+    topOffset: 60,
+    visibilityTime: DEFAULT_TOAST_TIME,
+  });
+};
+
 const showValidationError = (messages: string | string[]) => {
   showError(messages);
 };
@@ -43,6 +59,7 @@ const hide = () => {
 
 export const toastService = {
   showError,
+  showSuccess,
   showValidationError,
   hide,
 };

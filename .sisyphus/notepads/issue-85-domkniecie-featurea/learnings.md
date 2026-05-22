@@ -227,3 +227,10 @@ Response interceptor was calling `useRouter()` hook inside axios interceptor, wh
 - 401 responses: Token cleared, user redirected to login (no hook errors)
 - 403 with "blocked"/"revoked": Alert shown, then logout + redirect (no hook errors)
 - Router navigation works correctly from interceptor context
+
+## Task 8: Trainer invitations flow (2026-05-22)
+- Integrated trainer invitation UI into Profile screen with InviteTrainerByEmail + TrainerInvitationsList refresh token trigger.
+- InviteTrainerByEmail now validates email, calls usePostApiTrainerInvitationsByEmail, clears input on success, shows success/error toasts.
+- TrainerInvitationsList now fetches paginated invitations via usePostApiTrainerInvitationsPaginated, supports load-more, empty/error states, retry, and refresh after invite/revoke.
+- TrainerInvitationItem now revokes via usePostApiTrainerInvitationsInvitationIdRevoke with confirmation dialog and success/error toasts.
+- Added toastService.showSuccess helper to support success feedback across new flows.
