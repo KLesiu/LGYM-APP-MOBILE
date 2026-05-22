@@ -26,6 +26,15 @@
       "agent": "Sisyphus-Junior",
       "category": "quick",
       "updated_at": "2026-05-21T23:39:59.953Z"
+    },
+    "todo:9": {
+      "task_key": "todo:9",
+      "task_label": "9",
+      "task_title": "Dopięcie UX dla 400 vs 404 vs 403 w nowych flow",
+      "session_id": "ses_1b2fedab5ffejb50oNRBQEs1lb",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-22T00:07:40.275Z"
     }
   }
 }

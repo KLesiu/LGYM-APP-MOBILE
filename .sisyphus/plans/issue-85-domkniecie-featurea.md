@@ -591,7 +591,7 @@ Max Concurrent: 4
     Evidence: .sisyphus/evidence/task-8-revoke.png
   ```
 
-- [ ] 9. Dopięcie UX dla 400 vs 404 vs 403 w nowych flow
+- [x] 9. Dopięcie UX dla 400 vs 404 vs 403 w nowych flow
 
   **What to do**:
   - Ujednolicić zachowanie touched flows tak, aby:
@@ -643,7 +643,7 @@ Max Concurrent: 4
     Evidence: .sisyphus/evidence/task-9-error-404.png
   ```
 
-- [ ] 10. Uzgodnić i domknąć visibility-in-ranking contract
+- [x] 10. Uzgodnić i domknąć visibility-in-ranking contract
 
   **What to do**:
   - Na podstawie wyniku Task 1 potwierdzić lub poprawić wywołanie endpointu zmiany widoczności w rankingu.
@@ -692,7 +692,7 @@ Max Concurrent: 4
     Evidence: .sisyphus/evidence/task-10-visibility-rollback.png
   ```
 
-- [ ] 11. Zintegrować entrypointy, zrobić smoke QA i domknąć zakres
+- [x] 11. Zintegrować entrypointy, zrobić smoke QA i domknąć zakres
 
   **What to do**:
   - Dodać linki/przyciski wejścia do nowych flow w odpowiednich miejscach aplikacji.
