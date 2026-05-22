@@ -35,6 +35,23 @@
       "agent": "Sisyphus-Junior",
       "category": "quick",
       "updated_at": "2026-05-22T00:07:40.275Z"
+    },
+    "final-wave:f1": {
+      "task_key": "final-wave:f1",
+      "task_label": "F1",
+      "task_title": "**Plan Compliance Audit** — `oracle`",
+      "session_id": "ses_1b2b2f488ffeAPGV8CpfJ91tPR",
+      "agent": "oracle",
+      "updated_at": "2026-05-22T01:32:57.809Z"
+    },
+    "final-wave:f2": {
+      "task_key": "final-wave:f2",
+      "task_label": "F2",
+      "task_title": "**Code Quality Review** — `unspecified-high`",
+      "session_id": "ses_1b29d2b06ffefI1PGvCX5zGeSg",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-05-22T01:56:43.274Z"
     }
   }
 }

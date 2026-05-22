@@ -749,16 +749,16 @@ Max Concurrent: 4
 
 ## Final Verification Wave
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   Zweryfikować każdy deliverable z planu względem faktycznie dodanych ekranów, entrypointów, hooków i evidence.
 
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   Sprawdzić build/lint, nadmiarowy scope, nieużywane importy i zgodność z istniejącymi wzorcami auth / routing / toast handling.
 
-- [ ] F3. **Real Manual QA** — `unspecified-high`
+- [x] F3. **Real Manual QA** — `unspecified-high`
   Uruchomić aplikację i przejść wszystkie scenariusze QA z tasków, zapisując evidence do `.sisyphus/evidence/final-qa/`.
 
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   Sprawdzić, czy zmiany dotyczą wyłącznie elementów z issue #85 objętych tym planem i nie rozszerzają się na admin/web-only scope.
 
 ---
