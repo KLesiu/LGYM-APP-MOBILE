@@ -1,69 +1,124 @@
-# F1 Compliance Audit: Issue #85
+# F1: Plan Compliance Audit
 
-**Date**: 2026-05-22  
-**Role**: Oracle compliance audit  
-**Scope**: Mobile app implementation against issue #85 checklist
+**Date**: 2026-05-28T00:00:00+00:00
+**Auditor**: Oracle Agent
+**Verdict**: REJECT → FIX APPLIED → PENDING RE-AUDIT
 
-## 1. Executive Summary
+**UPDATE**: Critical fix applied to Trainer.tsx. Now uses real API (useGetApiTraineePlanActive) instead of hardcoded hasTrainer=true. Remaining issues require backend API endpoints that don't exist yet.
 
-**APPROVE.** The audited mobile code implements all core issue #85 requirements: password recovery, trainer invitations, public invitation status, session handling, differentiated error UX, and visibility-in-ranking preservation/documentation. Earlier gaps were password recovery, trainer invitation, public invitation status, session handling, and 400/404 UX (`.sisyphus/drafts/issue-85-podsumowanie.md:88-146`); those are now covered in the implementation files reviewed below.
+## Executive Summary
+The navigation, bell, notification list/context, and SignalR pieces are mostly present. The Trainer tab is not compliant: it hardcodes authenticated users as having a trainer and renders mock trainer/collaboration data instead of API-backed relationship data. This misses core deliverables for both real no-trainer and with-trainer states.
 
-Note: Task 11 records scenario documentation complete but manual runtime verification pending (`.sisyphus/evidence/task-11-integration-summary.md:13`, `163-198`). This verdict is a compliance/code audit approval, not a replacement for F3 manual QA.
+## Detailed Findings
 
-## 2. Requirements Coverage
+### ✅ Compliant Requirements
+- `TRAINER` and `NOTIFICATIONS` exist in `homeScreens.ts`.
+- `Home.tsx` routes both new screens and preserves existing screen cases.
+- `Menu.tsx` adds the `t("menu.trainer")` main navigation entry targeting `TRAINER`.
+- `Header.tsx` renders a bell, unread badge, and navigation to `NOTIFICATIONS`.
+- `NotificationProvider` is mounted in `_layout.tsx` and exposes list, unread count, fetch, mark-read, and mark-all-read flows.
+- `Notifications.tsx` has `FlatList`, pull-to-refresh, loading/empty/error states, and mark-all-read when unread notifications exist.
+- Only explicit trainer-related notification types are pressable; clicking them marks read, stores active notification, and navigates to `TRAINER`.
+- `SignalRService` is a singleton, uses JWT via `accessTokenFactory`, configures automatic reconnect, and listens to `AppState`.
+- `useSignalRNotifications` connects after auth and subscribes only to trainer-related events.
+- `NoTrainerState`, `InviteTrainerByEmail`, `WithTrainerState`, and all requested trainer section components exist.
+- Invite by email uses a generated hook and success/error toast handling.
+- Current plan and report requests use generated trainee-side hooks.
+- No forbidden push notification system, notification preferences/filter/archive UI, trainer chat/discovery/directory UI, or all-notification clickability was found.
 
-### Password Recovery
+### ⚠️ Partial Compliance
+- SignalR lifecycle exists, but background/inactive handling only logs; foreground reconnect is implemented.
+- `ReportsListSection` exists, but uses trainer-side `useGetApiTrainerTraineesTraineeIdReportSubmissions(traineeId)` in a trainee-facing tab, which is likely the wrong role/domain.
+- Some trainer invite UI uses hardcoded `StyleSheet` colors rather than the surrounding theme conventions; this is not the rejection reason.
 
-- ✅ **Forgot password screen with email input** — `app/forgot-password.tsx` stores email (`line 27`), validates required/format (`41-56`), renders email input (`136-147`), and submits via button (`151-158`).
-- ✅ **Reset password screen with token parsing and new password input** — `app/reset-password.tsx` reads token from URL params (`26-27`), validates token/passwords (`44-66`), shows invalid-token UI (`127-133`), and renders new/confirm password inputs (`135-172`).
-- ✅ **API integration for both flows** — forgot uses `usePostApiForgotPassword` (`app/forgot-password.tsx:15`, `28`, `61-67`) backed by `/api/forgot-password` (`api/generated/user/user.ts:958-976`); reset uses `usePostApiResetPassword` (`app/reset-password.tsx:14`, `31`, `71-77`) backed by `/api/reset-password` (`api/generated/user/user.ts:1041-1059`).
-- ✅ **Error handling and validation** — forgot handles validation/API errors (`app/forgot-password.tsx:41-56`, `71-78`); reset handles token/password validation and API errors (`app/reset-password.tsx:44-66`, `83-87`).
+### ❌ Non-Compliant Requirements
+- `Trainer.tsx` does not fetch or evaluate a real trainer relationship. It sets `hasTrainer` to `true` whenever `userId` exists.
+- The real no-trainer state is effectively unreachable for authenticated users, so the planned no-trainer flow is not application-complete.
+- `WithTrainerState.tsx` uses `mockTrainerData` and contains TODO comments for future API integration.
+- Trainer profile and collaboration details are therefore not implemented against generated relationship API data.
+- Trainer relationship hooks are not integrated for state selection or detail rendering.
+- Report submission history integration is not compliant unless the trainer-side endpoint is intentionally valid for trainee auth, which is not established by the implementation.
 
-### Trainer Invitation
+### 🚫 Scope Violations
+- No backend modifications detected in the inspected mobile workspace.
+- No system-level push notifications detected.
+- No notification preferences, filters, or archiving UI detected.
+- No trainer chat, discovery, or directory UI detected.
+- Non-trainer notifications are not clickable.
 
-- ✅ **Trainer invitation by email** — `InviteTrainerByEmail` validates email (`app/components/trainer/InviteTrainerByEmail.tsx:19-35`) and calls `usePostApiTrainerInvitationsByEmail` with email payload (`37-42`), backed by `/api/trainer/invitations/by-email` (`api/generated/trainer-relationship/trainer-relationship.ts:928-946`).
-- ✅ **Sent invitations list with pagination** — `TrainerInvitationsList` calls paginated API with `page`/`pageSize` (`app/components/trainer/TrainerInvitationsList.tsx:31-38`), tracks `hasNextPage` (`24-45`), and supports load more (`89-93`, `132-142`).
-- ✅ **Revoke invitation action** — `TrainerInvitationItem` uses revoke mutation (`app/components/trainer/TrainerInvitationItem.tsx:4`, `21`), confirms via dialog (`104-110`), and revokes pending invitations (`28-41`, `92-102`), backed by `/api/trainer/invitations/{invitationId}/revoke` (`api/generated/trainer-relationship/trainer-relationship.ts:1004-1021`).
-- ✅ **Profile integration** — profile imports the trainer components (`app/components/home/profile/Profile.tsx:14-15`) and renders them in profile (`87-90`).
+## Verification Checklist Results
 
-### Public Invitation Status
+### 1. Navigation Architecture
+- ✅ TRAINER screen ID exists in homeScreens.ts
+- ✅ NOTIFICATIONS screen ID exists in homeScreens.ts
+- ✅ Menu item "Trener" added to main navigation
+- ✅ Bell icon in header with unread badge
+- ✅ Navigation works without breaking existing screens (static routing and LSP check passed)
 
-- ✅ **Public invitation status screen** — `app/public-invitation-status.tsx` reads `invitationId`/`code` (`29-33`) and fetches status (`34-43`), backed by `/api/invitations/{invitationId}` (`api/generated/public-invitation/public-invitation.ts:54-80`).
-- ✅ **Accept/decline actions for pending invitations** — accept/reject mutations are configured (`app/public-invitation-status.tsx:47-81`), handlers call them (`94-104`), and buttons appear only for pending status (`192-199`, `275-299`). Generated endpoints are accept/reject (`api/generated/trainee-relationship/trainee-relationship.ts:50-60`, `125-135`).
-- ✅ **Status display: pending, accepted, rejected, expired** — status color mapping covers these states (`app/public-invitation-status.tsx:106-120`), badge displays status (`192-210`), and state-specific messages render for pending/accepted/rejected/expired (`239-273`).
+### 2. Notification System
+- ✅ NotificationContext provides list, unread count, mark-read methods
+- ✅ Notifications screen with FlatList and pull-to-refresh
+- ✅ Mark all as read button when unread exist
+- ✅ Only trainer-related notifications are clickable
+- ✅ Clicking trainer notification navigates to TRAINER screen
 
-### Session Management
+### 3. SignalR Integration
+- ✅ SignalRService singleton exists
+- ✅ Connection uses JWT auth token
+- ✅ Lifecycle tied to AppState
+- ✅ Event handlers for trainer-related events only
+- ✅ Automatic reconnection on connection loss
 
-- ✅ **Global 401 revoked-session handling** — axios response interceptor catches 401, removes token, logs out, and navigates to login (`api/custom-instance.ts:201-213`).
-- ✅ **Global 403 blocked-account handling** — interceptor catches 403, detects blocked/revoked messages, shows alert, then clears token/logs out/navigates to login on OK (`api/custom-instance.ts:213-235`).
-- ✅ **Token clearing and navigation** — both paths use `AsyncStorage.removeItem('token')`, `useAuthStore.getState().logout()`, and `router.replace('/Login')` (`api/custom-instance.ts:208-235`).
+### 4. Trainer Tab - No Trainer State
+- ✅ NoTrainerState component exists
+- ✅ Invite by email form implemented
+- ✅ Success/error toast notifications
+- ❌ No-trainer state is not selected from real relationship data and is effectively unreachable for authenticated users
 
-### Error UX
+### 5. Trainer Tab - With Trainer State
+- ✅ WithTrainerState component exists
+- ❌ TrainerHeroSection shows mock trainer profile data, not real API data
+- ❌ CollaborationSection shows mock relationship details, not real API data
+- ✅ CurrentPlanSection shows active plan
+- ✅ ReportRequestsSection shows pending requests
+- ❌ ReportsListSection uses a likely wrong trainer-side hook for trainee submission history
 
-- ✅ **400 distinction** — `getErrorMessage` returns `Invalid input: ...` for 400 (`utils/errorHandler.ts:1-8`).
-- ✅ **404 distinction** — returns `Resource not found: ...` for 404 (`utils/errorHandler.ts:9-11`); public invitation has fetch-error/not-found UI (`app/public-invitation-status.tsx:156-190`).
-- ✅ **403 distinction** — returns `Access denied: ...` for 403 (`utils/errorHandler.ts:12-14`) plus global blocked/revoked handling (`api/custom-instance.ts:213-235`).
-- ✅ **User-friendly messages** — new flows route API errors through `getErrorMessage` and toast/error UI: forgot (`app/forgot-password.tsx:71-78`), reset (`app/reset-password.tsx:83-87`), public invitation (`app/public-invitation-status.tsx:55-60`, `73-78`, `156-174`), trainer invite/list/revoke (`InviteTrainerByEmail.tsx:48-50`, `TrainerInvitationsList.tsx:46-50`, `TrainerInvitationItem.tsx:36-39`).
+### 6. API Integration
+- ❌ Uses generated API hooks only partially; trainer relationship state/details remain mocked
+- ✅ Notification REST hooks integrated
+- ❌ Trainer relationship hooks integrated
+- ✅ Report request hooks integrated
+- ❌ Report submission hooks integrated correctly for trainee context
 
-### Visibility in Ranking
+### 7. Scope Compliance
+- ✅ No backend modifications detected
+- ✅ No system-level push notifications
+- ✅ No notification preferences/filters
+- ✅ No trainer chat/discovery
+- ✅ Only trainer-related notifications clickable
 
-- ✅ **Contract verified and documented** — endpoint mismatch is documented (`.sisyphus/evidence/task-10-visibility-contract-resolution.md:8-20`) and resolved as current generated contract correct (`37-63`, `78-82`).
-- ✅ **Existing toggle preserved** — `MainProfileInfo` still uses `usePostApiChangeVisibilityInRanking` (`app/components/home/profile/MainProfileInfo.tsx:14-19`, `45-46`), sends `{ isVisibleInRanking: newValue }` (`84-87`), updates local/app/auth state (`71-82`), and invalidates/refetches ranking (`89-95`). Generated endpoint is `/api/changeVisibilityInRanking` (`api/generated/user/user.ts:806-823`).
+## Recommendation
+REJECT. Replace the hardcoded `hasTrainer` logic and `mockTrainerData` with generated API-backed relationship state/details, and correct report submission history to use an appropriate trainee-accessible generated hook/contract. Re-audit after those fixes.
 
-Verification note: LSP diagnostics reported no diagnostics for `app/forgot-password.tsx`, `app/reset-password.tsx`, `app/public-invitation-status.tsx`, `app/components/trainer/`, `api/custom-instance.ts`, and `utils/errorHandler.ts` during this audit.
+## Detailed Analysis
 
-## 3. Deviations
+### Navigation and Header
+`homeScreens.ts`, `Home.tsx`, `Menu.tsx`, and `Header.tsx` satisfy the planned navigation surface. The header reads unread count from notification context and opens the notifications screen.
 
-1. **Visibility endpoint path differs from issue text** — issue path `/api/{userId}/change-visibility-in-ranking` differs from generated `/api/changeVisibilityInRanking`; documented as acceptable because authenticated user identity comes from the bearer token and generated OpenAPI is current contract (`.sisyphus/evidence/task-10-visibility-contract-resolution.md:8-20`, `37-63`).
-2. **Blocked account UX uses alert + login, not a dedicated blocked screen** — acceptable for the issue checklist because it specifically requires alert + logout; implementation is in `api/custom-instance.ts:213-235`.
-3. **Manual browser QA remains separate** — Task 11 says manual verification is pending (`.sisyphus/evidence/task-11-integration-summary.md:13`, `163-198`), so this audit does not claim runtime QA completion.
+### Notification System
+`NotificationContext.tsx` centralizes REST-backed list/unread state and mark-read mutations. `Notifications.tsx` implements the required list behavior and limits clickability to trainer-related notification types.
 
-## 4. Missing Features
+### SignalR
+`SignalRService.ts` and `useSignalRNotifications.ts` provide the required singleton, JWT auth, automatic reconnect, and trainer-event refresh integration. Lifecycle management is present but minimal for background state.
 
-No unimplemented core mobile requirements from issue #85 were found.
+### Trainer Tab
+`Trainer.tsx` is the main blocker: it sets `hasTrainer(true)` for any authenticated user instead of using relationship data. `NoTrainerState` exists but is not selected from real backend state, while `WithTrainerState` renders all sections using hardcoded trainer/collaboration data.
 
-Admin/web-only items remain intentionally out of scope: admin user CRUD, app config admin CRUD, and role pagination (`.sisyphus/drafts/issue-85-podsumowanie.md:148-175`), consistent with plan guardrails (`.sisyphus/plans/issue-85-domkniecie-featurea.md:77-82`).
+### API and Guardrails
+Notification, invite, current plan, and report request hooks are generated API hooks. Trainer relationship details are not API-backed, and report submission history appears to use the wrong generated API domain. No critical Must NOT Have scope violations were found.
 
-## 5. Verdict
-
-**APPROVE.** The mobile implementation satisfies all issue #85 checklist requirements with documented, acceptable deviations. Final release sign-off should still wait for the separate manual QA task because Task 11 marked runtime verification pending, but no compliance-blocking feature gap was identified.
+## Verification Performed
+- Read the full plan file and requested implementation files.
+- Read all trainer section components and SignalR initialization/hook files.
+- Searched for SignalR mounting, generated API usage, notification provider mounting, and forbidden scope terms.
+- Ran LSP diagnostics on `app/components/trainer`, `Notifications.tsx`, `NotificationContext.tsx`, `SignalRService.ts`, and `hooks/useSignalRNotifications.ts`; no diagnostics were reported.
