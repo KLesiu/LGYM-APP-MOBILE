@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHomeContext } from "../home/HomeContext";
 import { useOnboarding } from "../../onboarding/OnboardingContext";
@@ -6,13 +6,14 @@ import NoTrainerState from "./NoTrainerState";
 import WithTrainerState from "./WithTrainerState";
 import ViewLoading from "../elements/ViewLoading";
 import { useNotifications } from "../../contexts/NotificationContext";
+import { useGetApiTraineePlanActive } from "../../../api/generated/trainee-relationship/trainee-relationship";
 
 const Trainer: React.FC = () => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { registerScreen } = useOnboarding();
   const { activeNotification, clearActiveNotification } = useNotifications();
-  const [hasTrainer, setHasTrainer] = useState<boolean | null>(null);
+  const { data: planResponse, isLoading: isPlanLoading } = useGetApiTraineePlanActive();
 
   useEffect(() => {
     registerScreen("TRAINER");
@@ -26,17 +27,13 @@ const Trainer: React.FC = () => {
     clearActiveNotification();
   }, [activeNotification, clearActiveNotification]);
 
-  useEffect(() => {
-    if (userId) {
-      setHasTrainer(true);
-    }
-  }, [userId]);
-
-  if (!userId || hasTrainer === null) {
+  if (!userId || isPlanLoading) {
     return <ViewLoading />;
   }
 
-  if (!hasTrainer) {
+  const hasActivePlan = !!planResponse?.data?._id;
+
+  if (!hasActivePlan) {
     return <NoTrainerState />;
   }
 
