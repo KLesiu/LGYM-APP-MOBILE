@@ -4,6 +4,8 @@ import BackgroundMainSection from "../elements/BackgroundMainSection";
 import TrainerHeroSection from "./TrainerHeroSection";
 import CollaborationSection from "./CollaborationSection";
 import CurrentPlanSection from "./CurrentPlanSection";
+import ReportRequestsSection from "./ReportRequestsSection";
+import ReportsListSection from "./ReportsListSection";
 
 /**
  * WithTrainerState component displays the trainer screen when the user has an active trainer relationship.
@@ -43,6 +45,8 @@ const WithTrainerState: React.FC = () => {
           relationshipStatus={mockTrainerData.relationshipStatus}
         />
         <CurrentPlanSection />
+        <ReportRequestsSection />
+        <ReportsListSection />
       </ScrollView>
     </BackgroundMainSection>
   );
