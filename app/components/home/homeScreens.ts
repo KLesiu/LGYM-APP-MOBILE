@@ -6,6 +6,7 @@ export type HomeScreenId =
   | "PLAN"
   | "HISTORY"
   | "RECORDS"
-  | "PROFILE";
+  | "PROFILE"
+  | "TRAINER";
 
 export const DEFAULT_HOME_SCREEN: HomeScreenId = "START";

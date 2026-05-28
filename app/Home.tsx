@@ -14,6 +14,7 @@ import TrainingPlan from "./components/home/plan/TrainingPlan";
 import History from "./components/home/history/History";
 import Records from "./components/home/records/Records";
 import Profile from "./components/home/profile/Profile";
+import Trainer from "./components/trainer/Trainer";
 import { DEFAULT_HOME_SCREEN, type HomeScreenId } from "./components/home/homeScreens";
 import { useOnboarding } from "./onboarding/OnboardingContext";
 import { useEffect } from "react";
@@ -51,6 +52,8 @@ const Home: React.FC = () => {
           return <Records />;
         case "PROFILE":
           return <Profile changeView={changeView} />;
+        case "TRAINER":
+          return <Trainer />;
         case "START":
         default:
           return <Start />;
