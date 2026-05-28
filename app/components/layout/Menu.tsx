@@ -66,6 +66,11 @@ const Menu: React.FC = () => {
         label: t("menu.profile"),
         screenId: "PROFILE" as HomeScreenId,
       },
+      {
+        icon: <ProfileIcon />,
+        label: t("menu.trainer"),
+        screenId: "TRAINER" as HomeScreenId,
+      },
     ];
 
     const totalItems = items.length;

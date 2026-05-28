@@ -56,7 +56,8 @@
     "plan": "Plan",
     "history": "History",
     "records": "Records",
-    "profile": "Profile"
+    "profile": "Profile",
+    "trainer": "Trainer"
   },
   "plans": {
     "yourPlans": "Your Plans",

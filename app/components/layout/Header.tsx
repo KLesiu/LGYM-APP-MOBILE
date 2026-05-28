@@ -1,4 +1,4 @@
-import { View, Image, Text } from "react-native";
+import { View, Image, Text, TouchableOpacity } from "react-native";
 import { JSX, useEffect, useMemo, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import LGYMLogo from "./../../../assets/logoLGYMNewX.png";
@@ -7,6 +7,9 @@ import ProfileRank from "../elements/ProfileRank";
 import { useAppContext } from "../../AppContext";
 import { useAuthStore } from "../../../stores/useAuthStore";
 import { useTranslation } from "react-i18next";
+import { useNotifications } from "../../contexts/NotificationContext";
+import { useHomeContext } from "../home/HomeContext";
+import BellIcon from "./../../../img/icons/bellIcon.svg";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -23,6 +26,8 @@ const Header: React.FC<HeaderProps> = ({
   const { userInfo, getRankColor } = useAppContext();
   const { user } = useAuthStore();
   const { t } = useTranslation();
+  const { unreadCount } = useNotifications();
+  const { navigateToScreen } = useHomeContext();
 
   const [name, setName] = useState<string>("");
 
@@ -39,6 +44,10 @@ const Header: React.FC<HeaderProps> = ({
 
   const displayName = (typeof user?.name === 'string' ? user.name : userInfo?.name) || name;
   const userRank = useMemo(() => userInfo?.profileRank, [userInfo]);
+
+  const handleBellPress = () => {
+    navigateToScreen("NOTIFICATIONS");
+  };
 
   return (
     <View
@@ -68,6 +77,19 @@ const Header: React.FC<HeaderProps> = ({
       {children}
       <View className="flex flex-row items-center" style={{ gap: 8 }}>
         {userRank && <ProfileRank rank={userRank} customClasses="h-6 w-6" />}
+
+        <View className="relative">
+          <TouchableOpacity onPress={handleBellPress}>
+            <BellIcon width={24} height={24} />
+          </TouchableOpacity>
+          {unreadCount.count > 0 && (
+            <View className="absolute -top-1 -right-1 bg-red-500 rounded-full w-5 h-5 items-center justify-center">
+              <Text className="text-white text-[10px] font-bold">
+                {unreadCount.count > 99 ? "99+" : unreadCount.count}
+              </Text>
+            </View>
+          )}
+        </View>
 
         <View className="flex flex-row items-center gap-2">
             <View className="flex flex-col">
