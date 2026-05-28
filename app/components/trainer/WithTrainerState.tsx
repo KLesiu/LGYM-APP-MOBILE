@@ -3,6 +3,7 @@ import { ScrollView } from "react-native";
 import BackgroundMainSection from "../elements/BackgroundMainSection";
 import TrainerHeroSection from "./TrainerHeroSection";
 import CollaborationSection from "./CollaborationSection";
+import CurrentPlanSection from "./CurrentPlanSection";
 
 /**
  * WithTrainerState component displays the trainer screen when the user has an active trainer relationship.
@@ -41,7 +42,7 @@ const WithTrainerState: React.FC = () => {
           relationshipStartDate={mockTrainerData.relationshipStartDate}
           relationshipStatus={mockTrainerData.relationshipStatus}
         />
-        {/* TODO: Add sections from T11 (notifications from trainer) and T12 (trainer-managed plans) here */}
+        <CurrentPlanSection />
       </ScrollView>
     </BackgroundMainSection>
   );
