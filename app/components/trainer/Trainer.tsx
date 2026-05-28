@@ -3,12 +3,15 @@ import { useTranslation } from "react-i18next";
 import { useHomeContext } from "../home/HomeContext";
 import { useOnboarding } from "../../onboarding/OnboardingContext";
 import NoTrainerState from "./NoTrainerState";
+import WithTrainerState from "./WithTrainerState";
 import ViewLoading from "../elements/ViewLoading";
+import { useNotifications } from "../../contexts/NotificationContext";
 
 const Trainer: React.FC = () => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { registerScreen } = useOnboarding();
+  const { activeNotification, clearActiveNotification } = useNotifications();
   const [hasTrainer, setHasTrainer] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -16,10 +19,16 @@ const Trainer: React.FC = () => {
   }, [registerScreen]);
 
   useEffect(() => {
-    // For now, default to no trainer state
-    // In the future, this would check the user's trainer relationship via API
+    if (!activeNotification) {
+      return;
+    }
+
+    clearActiveNotification();
+  }, [activeNotification, clearActiveNotification]);
+
+  useEffect(() => {
     if (userId) {
-      setHasTrainer(false);
+      setHasTrainer(true);
     }
   }, [userId]);
 
@@ -31,8 +40,7 @@ const Trainer: React.FC = () => {
     return <NoTrainerState />;
   }
 
-  // TODO: Implement WithTrainerState component for when user has a trainer
-  return <ViewLoading />;
+  return <WithTrainerState />;
 };
 
 export default Trainer;
