@@ -46,6 +46,8 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
   // Local state for pagination
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize] = useState(20);
+  const [activeNotification, setActiveNotification] =
+    useState<NotificationItem | null>(null);
 
   // Notifications list query
   const {
@@ -156,6 +158,10 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const hasError = !!(notificationsError || unreadCountError);
 
   // Build context value
+  const clearActiveNotification = useCallback(() => {
+    setActiveNotification(null);
+  }, []);
+
   const contextValue: NotificationContextValue = useMemo(
     () => ({
       notifications,
@@ -164,6 +170,9 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
       refreshUnreadCount,
       markAsRead,
       markAllAsRead,
+      activeNotification,
+      setActiveNotification,
+      clearActiveNotification,
       isLoading,
       hasError,
     }),
@@ -174,6 +183,8 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
       refreshUnreadCount,
       markAsRead,
       markAllAsRead,
+      activeNotification,
+      clearActiveNotification,
       isLoading,
       hasError,
     ]

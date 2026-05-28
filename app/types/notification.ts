@@ -54,6 +54,11 @@ export interface NotificationContextValue extends NotificationContextState {
   markAsRead: (notificationId: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
 
+  // Deep link context
+  activeNotification: NotificationItem | null;
+  setActiveNotification: (notification: NotificationItem | null) => void;
+  clearActiveNotification: () => void;
+
   // Utility methods
   isLoading: boolean;
   hasError: boolean;
