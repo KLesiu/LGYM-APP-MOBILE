@@ -1,45 +1,38 @@
-import React, { useEffect } from "react";
-import { Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import BackgroundMainSection from "../elements/BackgroundMainSection";
 import { useHomeContext } from "../home/HomeContext";
 import { useOnboarding } from "../../onboarding/OnboardingContext";
+import NoTrainerState from "./NoTrainerState";
+import ViewLoading from "../elements/ViewLoading";
 
 const Trainer: React.FC = () => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { registerScreen } = useOnboarding();
+  const [hasTrainer, setHasTrainer] = useState<boolean | null>(null);
 
   useEffect(() => {
     registerScreen("TRAINER");
   }, [registerScreen]);
 
-  return (
-    <BackgroundMainSection>
-      <View className="flex flex-col h-full w-full p-4" style={{ gap: 12 }}>
-        <Text
-          className="text-primaryColor text-xl"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          {t("trainer.title", "Trainer")}
-        </Text>
-        <Text
-          className="text-textColor text-sm"
-          style={{ fontFamily: "OpenSans_400Regular" }}
-        >
-          {t("trainer.placeholder", "Trainer screen coming soon.")}
-        </Text>
-        {userId ? null : (
-          <Text
-            className="text-textColor text-xs"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            {t("common.loading")}
-          </Text>
-        )}
-      </View>
-    </BackgroundMainSection>
-  );
+  useEffect(() => {
+    // For now, default to no trainer state
+    // In the future, this would check the user's trainer relationship via API
+    if (userId) {
+      setHasTrainer(false);
+    }
+  }, [userId]);
+
+  if (!userId || hasTrainer === null) {
+    return <ViewLoading />;
+  }
+
+  if (!hasTrainer) {
+    return <NoTrainerState />;
+  }
+
+  // TODO: Implement WithTrainerState component for when user has a trainer
+  return <ViewLoading />;
 };
 
 export default Trainer;
