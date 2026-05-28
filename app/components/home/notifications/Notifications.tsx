@@ -5,12 +5,14 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import Toast from "react-native-toast-message";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useNotifications } from "../../../contexts/NotificationContext";
 import type { NotificationItem } from "../../../types/notification";
 import ViewLoading from "../../elements/ViewLoading";
+import { useHomeContext } from "../HomeContext";
 
 interface NotificationItemComponentProps {
   notification: NotificationItem;
@@ -44,37 +46,103 @@ const formatTimestamp = (dateString: string): string => {
 const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
   notification,
 }) => {
-  return (
-    <View
-      className={`p-4 rounded-lg mb-2 ${
-        notification.isRead ? "bg-secondaryColor" : "bg-secondaryColor/80"
-      }`}
-    >
-      <View className="flex-row justify-between items-start">
-        <View className="flex-1 pr-2">
-          <Text
-            className={`text-textColor ${
-              notification.isRead ? "opacity-70" : "font-semibold"
-            }`}
-          >
-            {notification.message || "No message"}
+  const { t } = useTranslation();
+  const { navigateToScreen } = useHomeContext();
+  const { markAsRead, setActiveNotification } = useNotifications();
+
+  const trainerNotificationTypes = useMemo(
+    () =>
+      new Set([
+        "TrainerInvitationReceived",
+        "ReportRequestReceived",
+        "TrainingPlanUpdated",
+        "TrainerMessageReceived",
+      ]),
+    []
+  );
+
+  const isTrainerNotification = useMemo(
+    () => !!notification.type && trainerNotificationTypes.has(notification.type),
+    [notification.type, trainerNotificationTypes]
+  );
+
+  const handlePress = useCallback(async () => {
+    if (!isTrainerNotification) {
+      return;
+    }
+
+    try {
+      await markAsRead(notification._id);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: t("notifications.markAsReadFailed", "Failed to mark as read"),
+      });
+    }
+
+    setActiveNotification(notification);
+    navigateToScreen("TRAINER");
+  }, [
+    isTrainerNotification,
+    markAsRead,
+    navigateToScreen,
+    notification,
+    setActiveNotification,
+    t,
+  ]);
+
+  const content = (
+    <View className="flex-row justify-between items-start">
+      <View className="flex-1 pr-2">
+        <Text
+          className={`text-textColor ${
+            notification.isRead ? "opacity-70" : "font-semibold"
+          }`}
+        >
+          {notification.message || "No message"}
+        </Text>
+        {notification.type && (
+          <Text className="text-textColor text-xs opacity-50 mt-1">
+            {notification.type}
           </Text>
-          {notification.type && (
-            <Text className="text-textColor text-xs opacity-50 mt-1">
-              {notification.type}
-            </Text>
-          )}
-        </View>
-        {!notification.isRead && (
-          <View className="w-2 h-2 bg-primaryColor rounded-full mt-1" />
         )}
       </View>
+      {!notification.isRead && (
+        <View className="w-2 h-2 bg-primaryColor rounded-full mt-1" />
+      )}
+    </View>
+  );
+
+  const containerClassName = `p-4 rounded-lg mb-2 ${
+    notification.isRead ? "bg-secondaryColor" : "bg-secondaryColor/80"
+  }`;
+
+  if (!isTrainerNotification) {
+    return (
+      <View className={containerClassName}>
+        {content}
+        {notification.createdAt && (
+          <Text className="text-textColor text-xs opacity-50 mt-2">
+            {formatTimestamp(notification.createdAt)}
+          </Text>
+        )}
+      </View>
+    );
+  }
+
+  return (
+    <TouchableOpacity
+      onPress={handlePress}
+      activeOpacity={0.8}
+      className={containerClassName}
+    >
+      {content}
       {notification.createdAt && (
         <Text className="text-textColor text-xs opacity-50 mt-2">
           {formatTimestamp(notification.createdAt)}
         </Text>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 
