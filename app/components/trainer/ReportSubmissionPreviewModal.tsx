@@ -189,9 +189,46 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
                     >
                       {item.value}
                     </Text>
+
+                    {submission?.trainerFieldComments?.[item.key] ? (
+                      <View
+                        className="rounded-xl border border-white/10 bg-[#202020] px-3 py-3"
+                        style={{ gap: 4 }}
+                      >
+                        <Text
+                          className="text-primaryColor text-xs uppercase"
+                          style={{ fontFamily: "OpenSans_700Bold" }}
+                        >
+                          {t("trainer.trainerFeedbackLabel", "Trainer feedback")}
+                        </Text>
+                        <Text
+                          className="text-textColor text-sm"
+                          style={{ fontFamily: "OpenSans_400Regular" }}
+                        >
+                          {submission.trainerFieldComments[item.key]}
+                        </Text>
+                      </View>
+                    ) : null}
                   </View>
                 ))
               )}
+
+              {submission?.trainerOverallComment ? (
+                <View className="rounded-2xl bg-[#1B1B1B] px-4 py-4" style={{ gap: 8 }}>
+                  <Text
+                    className="text-primaryColor text-sm uppercase"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    {t("trainer.trainerOverallFeedback", "Trainer overall feedback")}
+                  </Text>
+                  <Text
+                    className="text-textColor opacity-85 text-sm"
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                  >
+                    {submission.trainerOverallComment}
+                  </Text>
+                </View>
+              ) : null}
             </ScrollView>
 
             <CustomButton

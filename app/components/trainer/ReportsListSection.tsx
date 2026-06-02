@@ -5,9 +5,12 @@ import ViewLoading from "../elements/ViewLoading";
 import { useGetApiTraineeReportSubmissions } from "../../../api/generated/trainee-reporting/trainee-reporting";
 import type { ReportSubmissionDto, ResponseMessageDto } from "../../../api/generated/model";
 import ReportSubmissionPreviewModal from "./ReportSubmissionPreviewModal";
+import { useNotifications } from "../../contexts/NotificationContext";
+import { getReportSubmissionIdFromRedirectUrl } from "../../types/notification";
 
 const ReportsListSection: React.FC = () => {
   const { t } = useTranslation();
+  const { activeNotification, clearActiveNotification } = useNotifications();
   const [selectedSubmission, setSelectedSubmission] = useState<ReportSubmissionDto | null>(null);
   const {
     data: submissionsResponse,
@@ -28,6 +31,38 @@ const ReportsListSection: React.FC = () => {
 
     return Array.isArray(responseData) ? responseData : [];
   }, [submissionsResponse?.data]);
+
+  const activeSubmissionId = useMemo(
+    () => getReportSubmissionIdFromRedirectUrl(activeNotification?.redirectUrl),
+    [activeNotification?.redirectUrl]
+  );
+
+  React.useEffect(() => {
+    if (activeNotification?.type !== "ReportFeedbackReceived" || !activeSubmissionId) {
+      return;
+    }
+
+    if (selectedSubmission?._id === activeSubmissionId) {
+      return;
+    }
+
+    const matchingSubmission = submissions.find(
+      (submission) => submission._id === activeSubmissionId
+    );
+
+    if (!matchingSubmission) {
+      return;
+    }
+
+    setSelectedSubmission(matchingSubmission);
+    clearActiveNotification();
+  }, [
+    activeNotification?.type,
+    activeSubmissionId,
+    clearActiveNotification,
+    selectedSubmission?._id,
+    submissions,
+  ]);
 
   const formatDate = (isoString: string | undefined | null): string => {
     if (!isoString) return "";
