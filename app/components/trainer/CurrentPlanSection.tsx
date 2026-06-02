@@ -46,7 +46,7 @@ const CurrentPlanSection: React.FC = () => {
             className="bg-primaryColor p-3 rounded-lg"
           >
             <Text
-              className="text-white text-center"
+              className="text-black text-center"
               style={{ fontFamily: "OpenSans_600SemiBold" }}
             >
               {t("common.retry", "Retry")}
@@ -115,7 +115,7 @@ const CurrentPlanSection: React.FC = () => {
           <View className="flex-row items-center">
             <View className="bg-green-500 px-3 py-1 rounded-full">
               <Text
-                className="text-white text-sm"
+                className="text-black text-sm"
                 style={{ fontFamily: "OpenSans_600SemiBold" }}
               >
                 {t("trainer.activePlan", "Active")}
@@ -130,7 +130,7 @@ const CurrentPlanSection: React.FC = () => {
         className="bg-primaryColor p-3 rounded-lg"
       >
         <Text
-          className="text-white text-center"
+          className="text-black text-center"
           style={{ fontFamily: "OpenSans_700Bold" }}
         >
           {t("trainer.viewPlanDetails", "View Plan Details")}

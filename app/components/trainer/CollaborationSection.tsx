@@ -3,8 +3,8 @@ import { View, Text } from "react-native";
 import { useTranslation } from "react-i18next";
 
 interface CollaborationSectionProps {
-  relationshipStartDate: string;
-  relationshipStatus: string;
+  relationshipStartDate?: string | null;
+  relationshipStatus?: string | null;
 }
 
 const CollaborationSection: React.FC<CollaborationSectionProps> = ({
@@ -62,8 +62,8 @@ const CollaborationSection: React.FC<CollaborationSectionProps> = ({
     }
   };
 
-  const getStatusColor = (status: string): string => {
-    switch (status.toLowerCase()) {
+  const getStatusColor = (status?: string | null): string => {
+    switch (status?.toLowerCase()) {
       case "active":
         return "text-green-500";
       case "pending":
@@ -75,6 +75,23 @@ const CollaborationSection: React.FC<CollaborationSectionProps> = ({
     }
   };
 
+  const getStatusLabel = (status?: string | null): string => {
+    switch (status?.toLowerCase()) {
+      case "active":
+        return t("trainer.statusActive", "Active");
+      case "pending":
+        return t("trainer.statusPending", "Pending");
+      case "inactive":
+        return t("trainer.statusInactive", "Inactive");
+      default:
+        return status || t("trainer.statusUnknown", "Unknown");
+    }
+  };
+
+  const hasStartDate = !!relationshipStartDate;
+  const hasStatus = !!relationshipStatus;
+  const hasAnyDetails = hasStartDate || hasStatus;
+
   return (
     <View className="bg-secondaryColor p-4 rounded-lg">
       <Text 
@@ -83,53 +100,68 @@ const CollaborationSection: React.FC<CollaborationSectionProps> = ({
       >
         {t("trainer.collaboration", "Collaboration")}
       </Text>
-      
-      <View style={{ gap: 10 }}>
-        <View className="flex-row justify-between items-center">
-          <Text 
-            className="text-textColor opacity-60"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            {t("trainer.since", "Since")}
-          </Text>
-          <Text 
-            className="text-textColor"
-            style={{ fontFamily: "OpenSans_600SemiBold" }}
-          >
-            {formatDate(relationshipStartDate)}
-          </Text>
+
+      {!hasAnyDetails ? (
+        <Text
+          className="text-textColor opacity-60"
+          style={{ fontFamily: "OpenSans_400Regular" }}
+        >
+          {t("trainer.collaborationDetailsUnavailable")}
+        </Text>
+      ) : (
+        <View style={{ gap: 10 }}>
+          {hasStartDate && relationshipStartDate ? (
+            <>
+              <View className="flex-row justify-between items-center">
+                <Text
+                  className="text-textColor opacity-60"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  {t("trainer.since", "Since")}
+                </Text>
+                <Text
+                  className="text-textColor"
+                  style={{ fontFamily: "OpenSans_600SemiBold" }}
+                >
+                  {formatDate(relationshipStartDate)}
+                </Text>
+              </View>
+
+              <View className="flex-row justify-between items-center">
+                <Text
+                  className="text-textColor opacity-60"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  {t("trainer.duration", "Duration")}
+                </Text>
+                <Text
+                  className="text-textColor"
+                  style={{ fontFamily: "OpenSans_600SemiBold" }}
+                >
+                  {formatDuration(relationshipStartDate)}
+                </Text>
+              </View>
+            </>
+          ) : null}
+
+          {hasStatus ? (
+            <View className="flex-row justify-between items-center">
+              <Text
+                className="text-textColor opacity-60"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                {t("trainer.status", "Status")}
+              </Text>
+              <Text
+                className={getStatusColor(relationshipStatus)}
+                style={{ fontFamily: "OpenSans_700Bold" }}
+              >
+                {getStatusLabel(relationshipStatus)}
+              </Text>
+            </View>
+          ) : null}
         </View>
-        
-        <View className="flex-row justify-between items-center">
-          <Text 
-            className="text-textColor opacity-60"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            {t("trainer.duration", "Duration")}
-          </Text>
-          <Text 
-            className="text-textColor"
-            style={{ fontFamily: "OpenSans_600SemiBold" }}
-          >
-            {formatDuration(relationshipStartDate)}
-          </Text>
-        </View>
-        
-        <View className="flex-row justify-between items-center">
-          <Text 
-            className="text-textColor opacity-60"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            {t("trainer.status", "Status")}
-          </Text>
-          <Text 
-            className={getStatusColor(relationshipStatus)}
-            style={{ fontFamily: "OpenSans_700Bold" }}
-          >
-            {relationshipStatus.charAt(0).toUpperCase() + relationshipStatus.slice(1)}
-          </Text>
-        </View>
-      </View>
+      )}
     </View>
   );
 };
