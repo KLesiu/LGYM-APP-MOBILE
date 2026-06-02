@@ -35,6 +35,17 @@ export const getReportRequestIdFromRedirectUrl = (
   return match?.[1] ?? null;
 };
 
+export const getReportSubmissionIdFromRedirectUrl = (
+  redirectUrl?: string | null
+): string | null => {
+  if (!redirectUrl) {
+    return null;
+  }
+
+  const match = redirectUrl.match(/\/trainer\/report-submissions\/([^/?#]+)/);
+  return match?.[1] ?? null;
+};
+
 /**
  * Represents the unread notification state
  */

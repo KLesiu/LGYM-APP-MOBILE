@@ -69,6 +69,7 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
       "trainer.invitation.accepted": t("notifications.trainerInvitationAcceptedLabel"),
       "trainer.invitation.rejected": t("notifications.trainerInvitationRejectedLabel"),
       ReportRequestReceived: t("notifications.reportRequestReceivedLabel"),
+      ReportFeedbackReceived: t("notifications.reportFeedbackReceivedLabel"),
     }),
     [t]
   );
@@ -79,6 +80,7 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
         "trainer.invitation.sent",
         "TrainerInvitationReceived",
         "ReportRequestReceived",
+        "ReportFeedbackReceived",
         "TrainingPlanUpdated",
         "TrainerMessageReceived",
       ]),

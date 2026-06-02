@@ -11,6 +11,7 @@ import ReportsListSection from "./ReportsListSection";
 import type { TraineeTrainerProfileDto } from "../../../api/generated/model";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { getReportRequestIdFromRedirectUrl } from "../../types/notification";
+import { getReportSubmissionIdFromRedirectUrl } from "../../types/notification";
 
 type TrainerTabKey = "overview" | "plan" | "requests" | "reports";
 
@@ -27,9 +28,17 @@ const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) =
     const reportRequestId = getReportRequestIdFromRedirectUrl(
       activeNotification?.redirectUrl
     );
+    const reportSubmissionId = getReportSubmissionIdFromRedirectUrl(
+      activeNotification?.redirectUrl
+    );
 
     if (activeNotification?.type === "ReportRequestReceived" && reportRequestId) {
       setActiveTab("requests");
+      return;
+    }
+
+    if (activeNotification?.type === "ReportFeedbackReceived" && reportSubmissionId) {
+      setActiveTab("reports");
     }
   }, [activeNotification?.redirectUrl, activeNotification?.type]);
 

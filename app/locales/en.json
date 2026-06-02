@@ -66,7 +66,8 @@
     "trainerInvitationLabel": "Trainer collaboration invitation",
     "trainerInvitationAcceptedLabel": "Invitation accepted",
     "trainerInvitationRejectedLabel": "Invitation rejected",
-    "reportRequestReceivedLabel": "New report request"
+    "reportRequestReceivedLabel": "New report request",
+    "reportFeedbackReceivedLabel": "Trainer added report feedback"
   },
   "plans": {
     "yourPlans": "Your Plans",
@@ -414,6 +415,8 @@
     "viewReportAnswers": "Preview",
     "noSubmittedAnswers": "No submitted answers",
     "noAnswerValue": "No answer",
+    "trainerFeedbackLabel": "Trainer feedback",
+    "trainerOverallFeedback": "Trainer overall feedback",
     "answerYes": "Yes",
     "answerNo": "No",
     "noSubmissionDate": "No date",

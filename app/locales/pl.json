@@ -66,7 +66,8 @@
     "trainerInvitationLabel": "Zaproszenie do współpracy trenerskiej",
     "trainerInvitationAcceptedLabel": "Zaproszenie zaakceptowane",
     "trainerInvitationRejectedLabel": "Zaproszenie odrzucone",
-    "reportRequestReceivedLabel": "Nowa prośba o raport"
+    "reportRequestReceivedLabel": "Nowa prośba o raport",
+    "reportFeedbackReceivedLabel": "Trener dodał komentarz do raportu"
   },
   "plans": {
     "yourPlans": "Twoje Plany",
@@ -417,6 +418,8 @@
     "viewReportAnswers": "Podgląd",
     "noSubmittedAnswers": "Brak zapisanych odpowiedzi",
     "noAnswerValue": "Brak odpowiedzi",
+    "trainerFeedbackLabel": "Komentarz trenera",
+    "trainerOverallFeedback": "Ogólny komentarz trenera",
     "answerYes": "Tak",
     "answerNo": "Nie",
     "noSubmissionDate": "Brak daty",
