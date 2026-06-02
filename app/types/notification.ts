@@ -13,6 +13,28 @@ export interface NotificationItem extends InAppNotificationResultDto {
   _id: string; // Ensure _id is always present
 }
 
+export const getInvitationIdFromRedirectUrl = (
+  redirectUrl?: string | null
+): string | null => {
+  if (!redirectUrl) {
+    return null;
+  }
+
+  const match = redirectUrl.match(/\/trainers\/invitations\/([^/?#]+)/);
+  return match?.[1] ?? null;
+};
+
+export const getReportRequestIdFromRedirectUrl = (
+  redirectUrl?: string | null
+): string | null => {
+  if (!redirectUrl) {
+    return null;
+  }
+
+  const match = redirectUrl.match(/\/trainer\/report-requests\/([^/?#]+)/);
+  return match?.[1] ?? null;
+};
+
 /**
  * Represents the unread notification state
  */

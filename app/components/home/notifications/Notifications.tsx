@@ -5,14 +5,23 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useNotifications } from "../../../contexts/NotificationContext";
 import type { NotificationItem } from "../../../types/notification";
+import { getInvitationIdFromRedirectUrl } from "../../../types/notification";
 import ViewLoading from "../../elements/ViewLoading";
 import { useHomeContext } from "../HomeContext";
+import {
+  usePostApiTraineeInvitationsInvitationIdAccept,
+  usePostApiTraineeInvitationsInvitationIdReject,
+} from "../../../../api/generated/trainee-relationship/trainee-relationship";
+import toastService from "../../../services/toastService";
+import { getErrorMessage } from "../../../../utils/errorHandler";
+
+type NotificationTypeLabels = Partial<Record<string, string>>;
 
 interface NotificationItemComponentProps {
   notification: NotificationItem;
@@ -48,11 +57,26 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
 }) => {
   const { t } = useTranslation();
   const { navigateToScreen } = useHomeContext();
-  const { markAsRead, setActiveNotification } = useNotifications();
+  const { markAsRead, setActiveNotification, fetchNotifications, refreshUnreadCount } = useNotifications();
+  const { mutateAsync: acceptInvitation, isPending: isAccepting } =
+    usePostApiTraineeInvitationsInvitationIdAccept();
+  const { mutateAsync: rejectInvitation, isPending: isRejecting } =
+    usePostApiTraineeInvitationsInvitationIdReject();
+
+  const notificationTypeLabels = useMemo(
+    (): NotificationTypeLabels => ({
+      "trainer.invitation.sent": t("notifications.trainerInvitationLabel"),
+      "trainer.invitation.accepted": t("notifications.trainerInvitationAcceptedLabel"),
+      "trainer.invitation.rejected": t("notifications.trainerInvitationRejectedLabel"),
+      ReportRequestReceived: t("notifications.reportRequestReceivedLabel"),
+    }),
+    [t]
+  );
 
   const trainerNotificationTypes = useMemo(
     () =>
       new Set([
+        "trainer.invitation.sent",
         "TrainerInvitationReceived",
         "ReportRequestReceived",
         "TrainingPlanUpdated",
@@ -66,6 +90,57 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
     [notification.type, trainerNotificationTypes]
   );
 
+  const invitationId = useMemo(
+    () => getInvitationIdFromRedirectUrl(notification.redirectUrl),
+    [notification.redirectUrl]
+  );
+  const [isInvitationResolved, setIsInvitationResolved] = useState(false);
+
+  const isTrainerInvitation =
+    notification.type === "trainer.invitation.sent" &&
+    !!invitationId &&
+    !notification.isRead &&
+    !isInvitationResolved;
+
+  const handleInvitationActionSuccess = useCallback(async () => {
+    await markAsRead(notification._id);
+    setIsInvitationResolved(true);
+    await refreshUnreadCount();
+    await fetchNotifications(0, 20);
+  }, [fetchNotifications, markAsRead, notification._id, refreshUnreadCount]);
+
+  const handleAcceptInvitation = useCallback(async () => {
+    if (!invitationId) {
+      return;
+    }
+
+    try {
+      await acceptInvitation({ invitationId });
+      toastService.showSuccess(t("trainer.invitationAccepted"));
+      await handleInvitationActionSuccess();
+    } catch (error) {
+      toastService.showError(
+        getErrorMessage(error, t("trainer.invitationAcceptFailed"))
+      );
+    }
+  }, [acceptInvitation, handleInvitationActionSuccess, invitationId, t]);
+
+  const handleRejectInvitation = useCallback(async () => {
+    if (!invitationId) {
+      return;
+    }
+
+    try {
+      await rejectInvitation({ invitationId });
+      toastService.showSuccess(t("trainer.invitationRejected"));
+      await handleInvitationActionSuccess();
+    } catch (error) {
+      toastService.showError(
+        getErrorMessage(error, t("trainer.invitationRejectFailed"))
+      );
+    }
+  }, [handleInvitationActionSuccess, invitationId, rejectInvitation, t]);
+
   const handlePress = useCallback(async () => {
     if (!isTrainerNotification) {
       return;
@@ -73,6 +148,8 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
 
     try {
       await markAsRead(notification._id);
+      await refreshUnreadCount();
+      await fetchNotifications(0, 20);
     } catch (error) {
       Toast.show({
         type: "error",
@@ -84,9 +161,11 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
     navigateToScreen("TRAINER");
   }, [
     isTrainerNotification,
+    fetchNotifications,
     markAsRead,
     navigateToScreen,
     notification,
+    refreshUnreadCount,
     setActiveNotification,
     t,
   ]);
@@ -103,7 +182,7 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
         </Text>
         {notification.type && (
           <Text className="text-textColor text-xs opacity-50 mt-1">
-            {notification.type}
+            {notificationTypeLabels[notification.type] || notification.type}
           </Text>
         )}
       </View>
@@ -113,6 +192,33 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
     </View>
   );
 
+  const invitationActions = isTrainerInvitation ? (
+    <View className="flex-row mt-3" style={{ gap: 8 }}>
+      <TouchableOpacity
+        onPress={handleAcceptInvitation}
+        disabled={isAccepting || isRejecting}
+        className={`flex-1 p-2 rounded-lg ${(isAccepting || isRejecting) ? "bg-primaryColor/60" : "bg-primaryColor"}`}
+      >
+        <Text className="text-white text-center text-sm font-semibold">
+          {isAccepting
+            ? t("common.loading", "Loading...")
+            : t("trainer.acceptInvitation")}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={handleRejectInvitation}
+        disabled={isAccepting || isRejecting}
+        className={`flex-1 p-2 rounded-lg ${(isAccepting || isRejecting) ? "bg-red-500/60" : "bg-red-500"}`}
+      >
+        <Text className="text-white text-center text-sm font-semibold">
+          {isRejecting
+            ? t("common.loading", "Loading...")
+            : t("trainer.rejectInvitation")}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  ) : null;
+
   const containerClassName = `p-4 rounded-lg mb-2 ${
     notification.isRead ? "bg-secondaryColor" : "bg-secondaryColor/80"
   }`;
@@ -121,6 +227,7 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
     return (
       <View className={containerClassName}>
         {content}
+        {invitationActions}
         {notification.createdAt && (
           <Text className="text-textColor text-xs opacity-50 mt-2">
             {formatTimestamp(notification.createdAt)}
@@ -137,6 +244,7 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
       className={containerClassName}
     >
       {content}
+      {invitationActions}
       {notification.createdAt && (
         <Text className="text-textColor text-xs opacity-50 mt-2">
           {formatTimestamp(notification.createdAt)}
@@ -195,6 +303,7 @@ const Notifications: React.FC = () => {
 
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [isMarkingAllAsRead, setIsMarkingAllAsRead] = React.useState(false);
+  const [activeTab, setActiveTab] = useState<"new" | "seen">("new");
 
   useEffect(() => {
     fetchNotifications();
@@ -234,6 +343,14 @@ const Notifications: React.FC = () => {
     (item) => !item.isRead
   );
 
+  const filteredNotifications = useMemo(
+    () =>
+      notifications.items.filter((item) =>
+        activeTab === "new" ? !item.isRead : !!item.isRead
+      ),
+    [activeTab, notifications.items]
+  );
+
   if (isLoading && notifications.items.length === 0) {
     return (
       <BackgroundMainSection>
@@ -253,6 +370,37 @@ const Notifications: React.FC = () => {
   return (
     <BackgroundMainSection>
       <View className="flex-1">
+        <View className="px-4 pt-3 pb-2 flex-row" style={{ gap: 8 }}>
+          <TouchableOpacity
+            onPress={() => setActiveTab("new")}
+            className={`flex-1 p-3 rounded-lg ${
+              activeTab === "new" ? "bg-primaryColor" : "bg-secondaryColor"
+            }`}
+          >
+            <Text
+              className={`text-center font-semibold ${
+                activeTab === "new" ? "text-white" : "text-textColor"
+              }`}
+            >
+              {t("notifications.newTab")}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setActiveTab("seen")}
+            className={`flex-1 p-3 rounded-lg ${
+              activeTab === "seen" ? "bg-primaryColor" : "bg-secondaryColor"
+            }`}
+          >
+            <Text
+              className={`text-center font-semibold ${
+                activeTab === "seen" ? "text-white" : "text-textColor"
+              }`}
+            >
+              {t("notifications.seenTab")}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         {hasUnreadNotifications && (
           <View className="px-4 pt-2 pb-2">
             <TouchableOpacity
@@ -272,7 +420,7 @@ const Notifications: React.FC = () => {
         )}
 
         <FlatList
-          data={notifications.items}
+          data={filteredNotifications}
           keyExtractor={(item) => item._id}
           renderItem={renderNotificationItem}
           refreshControl={
