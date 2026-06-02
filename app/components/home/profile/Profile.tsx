@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from "react-native";
-import { useState, useEffect, JSX } from "react";
+import { useEffect, JSX } from "react";
 import ProfileRank from "../../elements/ProfileRank";
 import MainProfileInfo from "./MainProfileInfo";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
@@ -11,8 +11,6 @@ import React from "react";
 import BackIcon from "./../../../../img/icons/backIcon.svg"
 import Start from "../start/Start";
 import { useTranslation } from "react-i18next";
-import InviteTrainerByEmail from "../../trainer/InviteTrainerByEmail";
-import TrainerInvitationsList from "../../trainer/TrainerInvitationsList";
 
 interface ProfileProps{
   changeView:(component?: React.JSX.Element | undefined) => void
@@ -21,8 +19,6 @@ interface ProfileProps{
 const Profile: React.FC<ProfileProps> = ({ changeView }) => {
   const { toggleMenuButton,hideMenu } = useHomeContext();
   const { t } = useTranslation();
-
-  const [refreshToken, setRefreshToken] = useState<number>(0);
 
   const { userInfo } = useAppContext();
 
@@ -84,10 +80,6 @@ const Profile: React.FC<ProfileProps> = ({ changeView }) => {
             </View>
           </View>
           <MainProfileInfo email={userInfo.email ?? ""} isVisibleInRanking={userInfo.isVisibleInRanking ?? false} />
-          <View className="w-full" style={{ gap: 12 }}>
-            <InviteTrainerByEmail onInviteSent={() => setRefreshToken(Date.now())} />
-            <TrainerInvitationsList refreshToken={refreshToken} />
-          </View>
         </View>
       )}
     </BackgroundMainSection>

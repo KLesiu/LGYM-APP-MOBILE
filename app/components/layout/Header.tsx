@@ -31,15 +31,21 @@ const Header: React.FC<HeaderProps> = ({
 
   const [name, setName] = useState<string>("");
 
-  const getName = async () => {
-    const storedName = await AsyncStorage.getItem("username");
-    if (storedName) {
-      setName(storedName);
-    }
-  };
-
   useEffect(() => {
-    getName();
+    let isMounted = true;
+
+    const loadName = async () => {
+      const storedName = await AsyncStorage.getItem("username");
+      if (storedName && isMounted) {
+        setName(storedName);
+      }
+    };
+
+    void loadName();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const displayName = (typeof user?.name === 'string' ? user.name : userInfo?.name) || name;
@@ -76,20 +82,23 @@ const Header: React.FC<HeaderProps> = ({
 
       {children}
       <View className="flex flex-row items-center" style={{ gap: 8 }}>
-        {userRank && <ProfileRank rank={userRank} customClasses="h-6 w-6" />}
-
         <View className="relative">
           <TouchableOpacity onPress={handleBellPress}>
-            <BellIcon width={24} height={24} />
+            <BellIcon width={24} height={24} color="#ffffff" />
           </TouchableOpacity>
           {unreadCount.count > 0 && (
-            <View className="absolute -top-1 -right-1 bg-red-500 rounded-full w-5 h-5 items-center justify-center">
+            <View
+              pointerEvents="none"
+              className="absolute -top-1 -right-1 bg-red-500 rounded-full w-5 h-5 items-center justify-center"
+            >
               <Text className="text-white text-[10px] font-bold">
                 {unreadCount.count > 99 ? "99+" : unreadCount.count}
               </Text>
             </View>
           )}
         </View>
+
+        {userRank && <ProfileRank rank={userRank} customClasses="h-6 w-6" />}
 
         <View className="flex flex-row items-center gap-2">
             <View className="flex flex-col">
