@@ -7,6 +7,8 @@ import {
 import type {
   GetApiIdNotificationsParams,
   PostApiIdNotificationsMarkAllReadParams,
+  ResponseMessageDto,
+  UnreadCountDto,
 } from '../../../api/generated/model';
 import { useAuthStore } from '../../../stores/useAuthStore';
 import { useNotifications } from '../../contexts/NotificationContext';
@@ -24,7 +26,7 @@ export const useNotificationService = () => {
   // Generated hooks
   const { refetch: refetchNotificationsList } = useGetApiIdNotifications(
     userId,
-    { pageIndex: 0, pageSize: 20 }
+    { Limit: 20 }
   );
 
   const { refetch: refetchUnreadCount } =
@@ -35,6 +37,10 @@ export const useNotificationService = () => {
 
   const { mutateAsync: markAllReadMutation } =
     usePostApiIdNotificationsMarkAllRead();
+
+  const isUnreadCountResult = (
+    data: UnreadCountDto | ResponseMessageDto | undefined
+  ): data is UnreadCountDto => !!data && 'count' in data;
 
   /**
    * Fetch notifications list with pagination
@@ -68,7 +74,10 @@ export const useNotificationService = () => {
         console.error('Failed to fetch unread count:', result.error);
         throw result.error;
       }
-      return result.data?.data?.count || 0;
+
+      return isUnreadCountResult(result.data?.data)
+        ? result.data.data.count ?? 0
+        : 0;
     } catch (error) {
       console.error('Error fetching unread count:', error);
       throw error;

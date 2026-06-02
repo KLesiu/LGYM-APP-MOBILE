@@ -13,6 +13,11 @@ import {
   usePostApiIdNotificationsMarkAllRead,
 } from "../../api/generated/in-app-notification/in-app-notification";
 import type {
+  PagedNotificationsResultDto,
+  ResponseMessageDto,
+  UnreadCountDto,
+} from "../../api/generated/model";
+import type {
   NotificationContextValue,
   NotificationItem,
   NotificationsListState,
@@ -22,6 +27,14 @@ import type {
 const NotificationContext = createContext<NotificationContextValue | null>(
   null
 );
+
+const isPagedNotificationsResult = (
+  data: PagedNotificationsResultDto | ResponseMessageDto | undefined
+): data is PagedNotificationsResultDto => !!data && "items" in data;
+
+const isUnreadCountResult = (
+  data: UnreadCountDto | ResponseMessageDto | undefined
+): data is UnreadCountDto => !!data && "count" in data;
 
 export const useNotifications = (): NotificationContextValue => {
   const context = useContext(NotificationContext);
@@ -56,8 +69,7 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
     error: notificationsError,
     refetch: refetchNotifications,
   } = useGetApiIdNotifications(userId, {
-    pageIndex,
-    pageSize,
+    Limit: pageSize,
   });
 
   // Unread count query
@@ -78,19 +90,31 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
   // Build notifications list state
   const notifications: NotificationsListState = useMemo(() => {
-    const items = (notificationsData?.data?.items || []).map(
-      (item) =>
-        ({
-          ...item,
-          _id: item._id || "",
-        } as NotificationItem)
+    const notificationsResult = notificationsData?.data;
+    const rawItems = isPagedNotificationsResult(notificationsResult)
+      ? notificationsResult.items ?? []
+      : [];
+
+    const mappedItems: NotificationItem[] = rawItems.map((item) => ({
+      ...item,
+      _id: item._id || "",
+    }));
+
+    const items = Array.from(
+      new Map(mappedItems.map((item) => [item._id, item])).values()
     );
 
     return {
       items,
-      hasNextPage: notificationsData?.data?.hasNextPage || false,
-      nextCursorCreatedAt: notificationsData?.data?.nextCursorCreatedAt || null,
-      nextCursorId: notificationsData?.data?.nextCursorId || null,
+      hasNextPage: isPagedNotificationsResult(notificationsResult)
+        ? notificationsResult.hasNextPage ?? false
+        : false,
+      nextCursorCreatedAt: isPagedNotificationsResult(notificationsResult)
+        ? notificationsResult.nextCursorCreatedAt ?? null
+        : null,
+      nextCursorId: isPagedNotificationsResult(notificationsResult)
+        ? notificationsResult.nextCursorId ?? null
+        : null,
       isLoading: notificationsLoading,
       error: notificationsError as Error | null,
     };
@@ -98,8 +122,10 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
   // Build unread count state
   const unreadCount: UnreadState = useMemo(() => {
+    const unreadResult = unreadCountData?.data;
+
     return {
-      count: unreadCountData?.data?.count || 0,
+      count: isUnreadCountResult(unreadResult) ? unreadResult.count ?? 0 : 0,
       isLoading: unreadCountLoading,
       error: unreadCountError as Error | null,
     };

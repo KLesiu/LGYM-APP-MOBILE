@@ -23,6 +23,7 @@ export type SignalREventHandler<T = any> = (data: T) => void;
  * These correspond to server-side SignalR hub event names
  */
 export enum TrainerNotificationEvents {
+  ReceiveNotification = "ReceiveNotification",
   /**
    * Fired when a trainer sends an invitation to a user
    */

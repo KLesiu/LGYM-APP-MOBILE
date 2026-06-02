@@ -16,8 +16,8 @@ export const useSignalRNotifications = () => {
 
     const signalRService = signalRServiceRef.current;
 
-    const handleNotificationEvent = async () => {
-      console.log("[useSignalRNotifications] Received notification event, refreshing...");
+    const refreshNotifications = async (trigger: string) => {
+      console.log(`[useSignalRNotifications] Received ${trigger}, refreshing notifications...`);
       try {
         await refreshUnreadCount();
         await fetchNotifications(0, 20);
@@ -25,6 +25,29 @@ export const useSignalRNotifications = () => {
         console.error("[useSignalRNotifications] Failed to refresh notifications:", error);
       }
     };
+
+    const handleNotificationEvent = async (notification?: { type?: string | null }) => {
+      if (!notification) {
+        return;
+      }
+
+      await refreshNotifications(
+        `notification${notification.type ? ` type ${notification.type}` : ""}`
+      );
+    };
+
+    const handleTrainerEvent = async (eventName: string) => {
+      await refreshNotifications(`SignalR event ${eventName}`);
+    };
+
+    const handleTrainerInvitationReceived = () =>
+      handleTrainerEvent(TrainerNotificationEvents.TrainerInvitationReceived);
+    const handleReportRequestReceived = () =>
+      handleTrainerEvent(TrainerNotificationEvents.ReportRequestReceived);
+    const handleTrainingPlanUpdated = () =>
+      handleTrainerEvent(TrainerNotificationEvents.TrainingPlanUpdated);
+    const handleTrainerMessageReceived = () =>
+      handleTrainerEvent(TrainerNotificationEvents.TrainerMessageReceived);
 
     const connectSignalR = async () => {
       if (!isAuthenticated || !token) {
@@ -36,21 +59,22 @@ export const useSignalRNotifications = () => {
         console.log("[useSignalRNotifications] Connecting to SignalR...");
         await signalRService.connect(token);
 
+        signalRService.on(TrainerNotificationEvents.ReceiveNotification, handleNotificationEvent);
         signalRService.on(
           TrainerNotificationEvents.TrainerInvitationReceived,
-          handleNotificationEvent
+          handleTrainerInvitationReceived
         );
         signalRService.on(
           TrainerNotificationEvents.ReportRequestReceived,
-          handleNotificationEvent
+          handleReportRequestReceived
         );
         signalRService.on(
           TrainerNotificationEvents.TrainingPlanUpdated,
-          handleNotificationEvent
+          handleTrainingPlanUpdated
         );
         signalRService.on(
           TrainerNotificationEvents.TrainerMessageReceived,
-          handleNotificationEvent
+          handleTrainerMessageReceived
         );
 
         console.log("[useSignalRNotifications] SignalR event handlers attached");
@@ -65,21 +89,22 @@ export const useSignalRNotifications = () => {
 
       try {
         console.log("[useSignalRNotifications] Disconnecting from SignalR...");
+        signalRService.off(TrainerNotificationEvents.ReceiveNotification, handleNotificationEvent);
         signalRService.off(
           TrainerNotificationEvents.TrainerInvitationReceived,
-          handleNotificationEvent
+          handleTrainerInvitationReceived
         );
         signalRService.off(
           TrainerNotificationEvents.ReportRequestReceived,
-          handleNotificationEvent
+          handleReportRequestReceived
         );
         signalRService.off(
           TrainerNotificationEvents.TrainingPlanUpdated,
-          handleNotificationEvent
+          handleTrainingPlanUpdated
         );
         signalRService.off(
           TrainerNotificationEvents.TrainerMessageReceived,
-          handleNotificationEvent
+          handleTrainerMessageReceived
         );
 
         await signalRService.disconnect();
