@@ -8,4 +8,6 @@
 export interface GoogleSignInRequest {
   /** @nullable */
   idToken?: string | null;
+  /** @nullable */
+  accessToken?: string | null;
 }

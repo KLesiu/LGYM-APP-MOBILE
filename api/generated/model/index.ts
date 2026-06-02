@@ -154,6 +154,7 @@ export * from './supplementComplianceSummaryDto';
 export * from './supplementPlanDto';
 export * from './supplementPlanItemDto';
 export * from './supplementScheduleEntryDto';
+export * from './traineeTrainerProfileDto';
 export * from './trainerDashboardTraineeDto';
 export * from './trainerDashboardTraineeDtoStatus';
 export * from './trainerDashboardTraineesResponse';

@@ -25,6 +25,7 @@ import type {
 
 import type {
   ResponseMessageDto,
+  TraineeTrainerProfileDto,
   TrainerManagedPlanDto
 } from '.././model';
 
@@ -260,7 +261,111 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
       return useMutation(getPostApiTraineeTrainerDetachMutationOptions(options), queryClient);
     }
-    export type getApiTraineePlanActiveResponse200 = {
+    export type getApiTraineeTrainerResponse200 = {
+  data: TraineeTrainerProfileDto
+  status: 200
+}
+    
+export type getApiTraineeTrainerResponseSuccess = (getApiTraineeTrainerResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getApiTraineeTrainerResponse = (getApiTraineeTrainerResponseSuccess)
+
+export const getGetApiTraineeTrainerUrl = () => {
+
+
+  
+
+  return `/api/trainee/trainer`
+}
+
+export const getApiTraineeTrainer = async ( options?: RequestInit): Promise<getApiTraineeTrainerResponse> => {
+  
+  return customInstance<getApiTraineeTrainerResponse>(getGetApiTraineeTrainerUrl(),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiTraineeTrainerQueryKey = () => {
+    return [
+    `/api/trainee/trainer`
+    ] as const;
+    }
+
+    
+export const getGetApiTraineeTrainerQueryOptions = <TData = Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiTraineeTrainerQueryKey();
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTraineeTrainer>>> = ({ signal }) => getApiTraineeTrainer({ signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiTraineeTrainerQueryResult = NonNullable<Awaited<ReturnType<typeof getApiTraineeTrainer>>>
+export type GetApiTraineeTrainerQueryError = unknown
+
+
+export function useGetApiTraineeTrainer<TData = Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTraineeTrainer>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTraineeTrainer>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTraineeTrainer<TData = Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTraineeTrainer>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTraineeTrainer>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTraineeTrainer<TData = Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiTraineeTrainer<TData = Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeTrainer>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiTraineeTrainerQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+export type getApiTraineePlanActiveResponse200 = {
   data: TrainerManagedPlanDto
   status: 200
 }

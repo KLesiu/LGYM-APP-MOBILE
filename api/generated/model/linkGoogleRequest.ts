@@ -8,4 +8,6 @@
 export interface LinkGoogleRequest {
   /** @nullable */
   idToken?: string | null;
+  /** @nullable */
+  accessToken?: string | null;
 }
