@@ -17,5 +17,9 @@ export interface ReportSubmissionDto {
   submittedAt?: string;
   /** @nullable */
   answers?: ReportSubmissionDtoAnswers;
+  /** @nullable */
+  trainerOverallComment?: string | null;
+  /** @nullable */
+  trainerFieldComments?: { [key: string]: string; } | null;
   request?: ReportRequestDto;
 }
