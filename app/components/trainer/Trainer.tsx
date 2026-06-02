@@ -5,39 +5,30 @@ import { useOnboarding } from "../../onboarding/OnboardingContext";
 import NoTrainerState from "./NoTrainerState";
 import WithTrainerState from "./WithTrainerState";
 import ViewLoading from "../elements/ViewLoading";
-import { useNotifications } from "../../contexts/NotificationContext";
-import { useGetApiTraineePlanActive } from "../../../api/generated/trainee-relationship/trainee-relationship";
+import { useGetApiTraineeTrainer } from "../../../api/generated/trainee-relationship/trainee-relationship";
 
 const Trainer: React.FC = () => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { registerScreen } = useOnboarding();
-  const { activeNotification, clearActiveNotification } = useNotifications();
-  const { data: planResponse, isLoading: isPlanLoading } = useGetApiTraineePlanActive();
+  const { data: trainerResponse, isLoading: isTrainerLoading, error } =
+    useGetApiTraineeTrainer();
 
   useEffect(() => {
     registerScreen("TRAINER");
   }, [registerScreen]);
 
-  useEffect(() => {
-    if (!activeNotification) {
-      return;
-    }
-
-    clearActiveNotification();
-  }, [activeNotification, clearActiveNotification]);
-
-  if (!userId || isPlanLoading) {
+  if (!userId || isTrainerLoading) {
     return <ViewLoading />;
   }
 
-  const hasActivePlan = !!planResponse?.data?._id;
+  const hasTrainerRelationship = !!trainerResponse?.data?.trainerId && !error;
 
-  if (!hasActivePlan) {
+  if (!hasTrainerRelationship) {
     return <NoTrainerState />;
   }
 
-  return <WithTrainerState />;
+  return <WithTrainerState trainerProfile={trainerResponse?.data} />;
 };
 
 export default Trainer;
