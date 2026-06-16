@@ -56,6 +56,7 @@
     "training": "Trening",
     "plan": "Plan",
     "history": "Historia",
+    "measurements": "Pomiary",
     "records": "Rekordy",
     "profile": "Profil",
     "trainer": "Trener"
@@ -345,6 +346,89 @@
     "invalidWeight": "Podaj poprawny ciężar",
     "noSearchResults": "Brak rekordów pasujących do wyszukiwania.",
     "noRecordsYet": "Nie masz jeszcze zapisanych rekordów."
+  },
+  "measurements": {
+    "title": "Pomiary",
+    "subtitle": "Dodawaj pomiary i śledź trend od pierwszego do ostatniego wpisu.",
+    "addCta": "Dodaj pomiar",
+    "saveAllCta": "Zapisz pomiary",
+    "addTitle": "Nowy pomiar",
+    "addDescription": "Wybierz typ pomiaru, jednostkę i zapisz aktualny wynik.",
+    "bulkAddDescription": "Uzupełnij dowolne pola poniżej. Zapiszemy tylko te pomiary, które wpiszesz.",
+    "createSuccess": "Pomiar został zapisany",
+    "latestTitle": "Najnowsze pomiary",
+    "historyTitle": "Historia pomiarów",
+    "noMeasurementsYet": "Nie masz jeszcze żadnych zapisanych pomiarów.",
+    "noHistoryYet": "Brak historii pomiarów dla wybranych filtrów.",
+    "noSearchResults": "Brak pomiarów pasujących do wyszukiwania.",
+    "valuePlaceholder": "Wpisz wartość w {{unit}}",
+    "fields": {
+      "bodyPart": "Typ pomiaru",
+      "unit": "Jednostka",
+      "value": "Wartość"
+    },
+    "filters": {
+      "bodyPartLabel": "Filtruj po typie pomiaru",
+      "unitLabel": "Jednostka podglądu",
+      "allBodyParts": "Wszystkie typy"
+    },
+    "tabs": {
+      "trend": "Trend",
+      "latest": "Najnowsze",
+      "history": "Historia"
+    },
+    "trend": {
+      "title": "Trend",
+      "up": "Przybyło +{{value}}",
+      "down": "Ubyło -{{value}}",
+      "same": "Bez zmian",
+      "insufficientData": "Dodaj przynajmniej dwa pomiary, aby zobaczyć trend.",
+      "range": "Od {{firstValue}} {{unit}} ({{firstDate}}) do {{lastValue}} {{unit}} ({{lastDate}})",
+      "empty": "Dodaj pierwsze pomiary, aby zobaczyć podsumowanie trendu."
+    },
+    "quickFill": {
+      "title": "Quick fill",
+      "description": "Możesz przywrócić ostatnio zapisany zestaw pomiarów i tylko poprawić te pola, które się zmieniły.",
+      "useLast": "Użyj ostatnich",
+      "clear": "Wyczyść skrót"
+    },
+    "validation": {
+      "bodyPartRequired": "Wybór partii ciała jest wymagany",
+      "unitRequired": "Wybór jednostki jest wymagany",
+      "valueRequired": "Wartość pomiaru jest wymagana",
+      "invalidValue": "Podaj poprawną wartość większą od zera",
+      "invalidSpecificValue": "Pole {{field}} ma nieprawidłową wartość",
+      "atLeastOneMeasurementRequired": "Uzupełnij przynajmniej jeden pomiar"
+    },
+    "bodyParts": {
+      "BodyWeight": "Masa ciała",
+      "Neck": "Szyja",
+      "Chest": "Klatka piersiowa",
+      "Waist": "Talia",
+      "Hips": "Biodra",
+      "Thigh": "Udo",
+      "BodyFat": "Poziom tkanki tłuszczowej",
+      "Bmi": "BMI",
+      "Back": "Plecy",
+      "Shoulders": "Barki",
+      "Biceps": "Ramię / biceps",
+      "Triceps": "Triceps",
+      "Forearms": "Przedramiona",
+      "Abs": "Brzuch",
+      "Quads": "Czworogłowe",
+      "Hamstrings": "Dwugłowe",
+      "Calves": "Łydka",
+      "Glutes": "Pośladki"
+    },
+    "units": {
+      "Kilograms": "kg",
+      "Pounds": "lbs",
+      "Centimeters": "cm",
+      "Meters": "m",
+      "Millimeters": "mm",
+      "Percent": "%",
+      "Bmi": "BMI"
+    }
   },
   "updateDialog": {
     "title": "Wymagana aktualizacja",

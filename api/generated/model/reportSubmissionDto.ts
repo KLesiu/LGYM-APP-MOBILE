@@ -6,6 +6,7 @@
  */
 import type { ReportRequestDto } from './reportRequestDto';
 import type { ReportSubmissionDtoAnswers } from './reportSubmissionDtoAnswers';
+import type { ReportSubmissionDtoTrainerFieldComments } from './reportSubmissionDtoTrainerFieldComments';
 
 export interface ReportSubmissionDto {
   /** @nullable */
@@ -20,6 +21,6 @@ export interface ReportSubmissionDto {
   /** @nullable */
   trainerOverallComment?: string | null;
   /** @nullable */
-  trainerFieldComments?: { [key: string]: string; } | null;
+  trainerFieldComments?: ReportSubmissionDtoTrainerFieldComments;
   request?: ReportRequestDto;
 }

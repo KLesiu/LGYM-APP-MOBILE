@@ -29,7 +29,9 @@ import type {
   GetApiMeasurementsIdTrendParams,
   MeasurementFormDto,
   MeasurementResponseDto,
+  MeasurementsBulkFormDto,
   MeasurementTrendDto,
+  MeasurementTrendsDto,
   MeasurementsHistoryDto,
   MeasurementsListDto,
   ResponseMessageDto
@@ -115,7 +117,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type PostApiMeasurementsAddMutationBody = MeasurementFormDto
     export type PostApiMeasurementsAddMutationError = ResponseMessageDto
 
-    export const usePostApiMeasurementsAdd = <TError = ResponseMessageDto,
+export const usePostApiMeasurementsAdd = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMeasurementsAdd>>, TError,{data: MeasurementFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiMeasurementsAdd>>,
@@ -124,6 +126,68 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiMeasurementsAddMutationOptions(options), queryClient);
+    }
+export type postApiMeasurementsAddBulkResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+
+export type postApiMeasurementsAddBulkResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
+export type postApiMeasurementsAddBulkResponseSuccess = (postApiMeasurementsAddBulkResponse200) & {
+  headers: Headers;
+};
+export type postApiMeasurementsAddBulkResponseError = (postApiMeasurementsAddBulkResponse400) & {
+  headers: Headers;
+};
+
+export type postApiMeasurementsAddBulkResponse = (postApiMeasurementsAddBulkResponseSuccess | postApiMeasurementsAddBulkResponseError)
+
+export const getPostApiMeasurementsAddBulkUrl = () => {
+  return `/api/measurements/add-bulk`
+}
+
+export const postApiMeasurementsAddBulk = async (measurementsBulkFormDto: MeasurementsBulkFormDto, options?: RequestInit): Promise<postApiMeasurementsAddBulkResponse> => {
+  return customInstance<postApiMeasurementsAddBulkResponse>(getPostApiMeasurementsAddBulkUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(measurementsBulkFormDto)
+  }
+);}
+
+export const getPostApiMeasurementsAddBulkMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>, TError,{data: MeasurementsBulkFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>, TError,{data: MeasurementsBulkFormDto}, TContext> => {
+
+const mutationKey = ['postApiMeasurementsAddBulk'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>, {data: MeasurementsBulkFormDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiMeasurementsAddBulk(data,requestOptions)
+        }
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export const usePostApiMeasurementsAddBulk = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>, TError,{data: MeasurementsBulkFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>,
+        TError,
+        {data: MeasurementsBulkFormDto},
+        TContext
+      > => {
+      return useMutation(getPostApiMeasurementsAddBulkMutationOptions(options), queryClient);
     }
     export type getApiMeasurementsIdGetMeasurementDetailResponse200 = {
   data: MeasurementResponseDto
@@ -646,6 +710,121 @@ export function useGetApiMeasurementsIdTrend<TData = Awaited<ReturnType<typeof g
   return { ...query, queryKey: queryOptions.queryKey };
 }
 
+
+
+
+export type getApiMeasurementsIdTrendsResponse200 = {
+  data: MeasurementTrendsDto
+  status: 200
+}
+
+export type getApiMeasurementsIdTrendsResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
+export type getApiMeasurementsIdTrendsResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+    
+export type getApiMeasurementsIdTrendsResponseSuccess = (getApiMeasurementsIdTrendsResponse200) & {
+  headers: Headers;
+};
+export type getApiMeasurementsIdTrendsResponseError = (getApiMeasurementsIdTrendsResponse400 | getApiMeasurementsIdTrendsResponse403) & {
+  headers: Headers;
+};
+
+export type getApiMeasurementsIdTrendsResponse = (getApiMeasurementsIdTrendsResponseSuccess | getApiMeasurementsIdTrendsResponseError)
+
+export const getGetApiMeasurementsIdTrendsUrl = (id: string,) => {
+
+
+  
+
+  return `/api/measurements/${id}/trends`
+}
+
+export const getApiMeasurementsIdTrends = async (id: string, options?: RequestInit): Promise<getApiMeasurementsIdTrendsResponse> => {
+  
+  return customInstance<getApiMeasurementsIdTrendsResponse>(getGetApiMeasurementsIdTrendsUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiMeasurementsIdTrendsQueryKey = (id: string,) => {
+    return [
+    `/api/measurements/${id}/trends`
+    ] as const;
+    }
+
+    
+export const getGetApiMeasurementsIdTrendsQueryOptions = <TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError = ResponseMessageDto>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiMeasurementsIdTrendsQueryKey(id);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>> = ({ signal }) => getApiMeasurementsIdTrends(id, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiMeasurementsIdTrendsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>>
+export type GetApiMeasurementsIdTrendsQueryError = ResponseMessageDto
+
+
+export function useGetApiMeasurementsIdTrends<TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError = ResponseMessageDto>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>,
+          TError,
+          Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiMeasurementsIdTrends<TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError = ResponseMessageDto>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>,
+          TError,
+          Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiMeasurementsIdTrends<TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError = ResponseMessageDto>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiMeasurementsIdTrends<TData = Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError = ResponseMessageDto>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiMeasurementsIdTrends>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiMeasurementsIdTrendsQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
 
 
 

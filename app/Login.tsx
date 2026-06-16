@@ -100,7 +100,7 @@ const Login: React.FC = () => {
             setUserInfo(userInfo);
             setAppErrors([]);
             await syncTutorialState(Boolean(userInfo.hasActiveTutorials));
-            router.push("/Home");
+            router.push("/Start");
           } catch (error) {
             console.error("Error storing credentials:", error);
             toastService.showError(

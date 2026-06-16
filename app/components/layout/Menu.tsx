@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { View, TouchableOpacity, Text, Animated, useWindowDimensions } from "react-native";
+import { View, TouchableOpacity, Text, Animated, useWindowDimensions, ScrollView } from "react-native";
 import HomeIcon from "./../../../img/icons/homeIcon.svg";
 import ProfileIcon from "./../../../img/icons/profileIcon.svg";
 import HistoryIcon from "./../../../img/icons/calendarIcon.svg";
@@ -8,6 +8,7 @@ import ExerciseIcon from "./../../../img/icons/exercisesIcon.svg";
 import PlanIcon from "./../../../img/icons/planIcon.svg";
 import GymIcon from "./../../../img/icons/gymIcon.svg";
 import RecordIcon from "./../../../img/icons/recordsIcon.svg";
+import ChartsIcon from "./../../../img/icons/chartsIcon.svg";
 import MenuIcon from "./../../../img/icons/menuIcon.svg";
 import { useHomeContext } from "../home/HomeContext";
 import { useTranslation } from "react-i18next";
@@ -36,8 +37,9 @@ const Menu: React.FC = () => {
   });
 
   const menuConfig = useMemo(() => {
-    if (width <= 360) return { xMultiplier: 140, yMultiplier: 160 };
-    return { xMultiplier: 160, yMultiplier: 180 };
+    if (width <= 360) return { itemWidth: (width - 72) / 2 };
+    if (width <= 420) return { itemWidth: (width - 88) / 3 };
+    return { itemWidth: 110 };
   }, [width]);
 
   const menuItems = useMemo(() => {
@@ -60,6 +62,11 @@ const Menu: React.FC = () => {
         label: t("menu.history"),
         screenId: "HISTORY" as HomeScreenId,
       },
+      {
+        icon: <ChartsIcon />,
+        label: t("menu.measurements"),
+        screenId: "MEASUREMENTS" as HomeScreenId,
+      },
       { icon: <RecordIcon />, label: t("menu.records"), screenId: "RECORDS" as HomeScreenId },
       {
         icon: <ProfileIcon />,
@@ -73,15 +80,7 @@ const Menu: React.FC = () => {
       },
     ];
 
-    const totalItems = items.length;
-    const { xMultiplier, yMultiplier } = menuConfig;
-
-    return items.map((item, index) => {
-      const angle = (index / (totalItems - 1)) * Math.PI + Math.PI / 2;
-      const x = -Math.sin(angle) * xMultiplier;
-      const y = Math.cos(angle) * yMultiplier;
-      return { ...item, x, y };
-    });
+    return items;
   }, [menuConfig, t]);
 
   const handleMenuItemPress = useCallback(
@@ -102,29 +101,34 @@ const Menu: React.FC = () => {
             transform: [{ scale: animatedScale }],
             opacity: animatedOpacity,
           }}
-          className="absolute items-center justify-center bottom-[-65px]"
+          className="absolute bottom-24 left-4 right-4"
           pointerEvents={isExpanded ? "auto" : "none"}
         >
           <View
-            style={{ borderRadius: 10000 }}
-            className="relative w-[450px] smallPhone:w-[400px] h-[440px] smallPhone:h-[380px] items-center justify-center bg-[#282424db] -mb-[82px] "
+            style={{ borderRadius: 24 }}
+            className="bg-[#282424f2] px-4 py-5 border border-[#3a3a3a]"
           >
-            {menuItems.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleMenuItemPress(item.screenId)}
-                style={{
-                  transform: [{ translateX: item.x }, { translateY: item.y }],
-                  borderRadius: 10000,
-                }}
-                className="absolute w-20 h-20 smallPhone:w-16 smallPhone:h-16 items-center justify-center bg-bgColor p-1 smallPhone:p-0"
-              >
-                {item.icon}
-                <Text className="text-gray-400 text-sm smallPhone:text-xs font-light">
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 12 }}>
+              <View className="flex-row flex-wrap justify-center" style={{ gap: 12 }}>
+                {menuItems.map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleMenuItemPress(item.screenId)}
+                    style={{
+                      borderRadius: 18,
+                      width: menuConfig.itemWidth,
+                      minHeight: width <= 360 ? 82 : 90,
+                    }}
+                    className="items-center justify-center bg-bgColor px-2 py-3"
+                  >
+                    <View className="mb-2">{item.icon}</View>
+                    <Text className="text-gray-400 text-center text-sm smallPhone:text-xs font-light">
+                      {item.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
           </View>
         </Animated.View>
       )}

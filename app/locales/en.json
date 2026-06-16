@@ -56,6 +56,7 @@
     "training": "Training",
     "plan": "Plan",
     "history": "History",
+    "measurements": "Measurements",
     "records": "Records",
     "profile": "Profile",
     "trainer": "Trainer"
@@ -345,6 +346,89 @@
     "invalidWeight": "Enter a valid weight",
     "noSearchResults": "No records match your search.",
     "noRecordsYet": "You don't have any saved records yet."
+  },
+  "measurements": {
+    "title": "Measurements",
+    "subtitle": "Add measurements and track the trend from the first to the latest entry.",
+    "addCta": "Add measurement",
+    "saveAllCta": "Save measurements",
+    "addTitle": "New measurement",
+    "addDescription": "Choose a measurement type, unit and save the current result.",
+    "bulkAddDescription": "Fill in any fields below. Only the measurements you enter will be saved.",
+    "createSuccess": "Measurement saved successfully",
+    "latestTitle": "Latest measurements",
+    "historyTitle": "Measurement history",
+    "noMeasurementsYet": "You do not have any saved measurements yet.",
+    "noHistoryYet": "No measurement history for the selected filters.",
+    "noSearchResults": "No measurements match your search.",
+    "valuePlaceholder": "Enter value in {{unit}}",
+    "fields": {
+      "bodyPart": "Measurement type",
+      "unit": "Unit",
+      "value": "Value"
+    },
+    "filters": {
+      "bodyPartLabel": "Filter by measurement type",
+      "unitLabel": "Preview unit",
+      "allBodyParts": "All types"
+    },
+    "tabs": {
+      "trend": "Trend",
+      "latest": "Latest",
+      "history": "History"
+    },
+    "trend": {
+      "title": "Trend",
+      "up": "Gained +{{value}}",
+      "down": "Lost -{{value}}",
+      "same": "No change",
+      "insufficientData": "Add at least two measurements to see the trend.",
+      "range": "From {{firstValue}} {{unit}} ({{firstDate}}) to {{lastValue}} {{unit}} ({{lastDate}})",
+      "empty": "Add your first measurements to see the trend summary."
+    },
+    "quickFill": {
+      "title": "Quick fill",
+      "description": "Restore your last saved measurement set and only adjust the fields that changed.",
+      "useLast": "Use last saved",
+      "clear": "Clear shortcut"
+    },
+    "validation": {
+      "bodyPartRequired": "Body part selection is required",
+      "unitRequired": "Unit selection is required",
+      "valueRequired": "Measurement value is required",
+      "invalidValue": "Enter a valid value greater than zero",
+      "invalidSpecificValue": "Field {{field}} has an invalid value",
+      "atLeastOneMeasurementRequired": "Fill in at least one measurement"
+    },
+    "bodyParts": {
+      "BodyWeight": "Body weight",
+      "Neck": "Neck",
+      "Chest": "Chest",
+      "Waist": "Waist",
+      "Hips": "Hips",
+      "Thigh": "Thigh",
+      "BodyFat": "Body fat",
+      "Bmi": "BMI",
+      "Back": "Back",
+      "Shoulders": "Shoulders",
+      "Biceps": "Arm / bicep",
+      "Triceps": "Triceps",
+      "Forearms": "Forearms",
+      "Abs": "Abdomen",
+      "Quads": "Quads",
+      "Hamstrings": "Hamstrings",
+      "Calves": "Calf",
+      "Glutes": "Glutes"
+    },
+    "units": {
+      "Kilograms": "kg",
+      "Pounds": "lbs",
+      "Centimeters": "cm",
+      "Meters": "m",
+      "Millimeters": "mm",
+      "Percent": "%",
+      "Bmi": "BMI"
+    }
   },
   "updateDialog": {
     "title": "Update required",

@@ -29,6 +29,7 @@ import type {
   ReportSubmissionDto,
   ReportTemplateDto,
   ResponseMessageDto,
+  UpdateReportSubmissionFeedbackRequest,
   UpsertReportTemplateRequest
 } from '.././model';
 
@@ -691,3 +692,90 @@ export function useGetApiTrainerTraineesTraineeIdReportSubmissions<TData = Await
 
 
 
+export type postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponse200 = {
+  data: ReportSubmissionDto
+  status: 200
+}
+
+export type postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponseSuccess = (postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponse200) & {
+  headers: Headers;
+};
+export type postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponseError = (postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponse = (postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponseSuccess | postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponseError)
+
+export const getPostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackUrl = (traineeId: string,
+    submissionId: string,) => {
+
+
+  
+
+  return `/api/trainer/trainees/${traineeId}/report-submissions/${submissionId}/feedback`
+}
+
+export const postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback = async (traineeId: string,
+    submissionId: string,
+    updateReportSubmissionFeedbackRequest: UpdateReportSubmissionFeedbackRequest, options?: RequestInit): Promise<postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponse> => {
+  
+  return customInstance<postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackResponse>(getPostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackUrl(traineeId,submissionId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      updateReportSubmissionFeedbackRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback>>, TError,{traineeId: string;submissionId: string;data: UpdateReportSubmissionFeedbackRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback>>, TError,{traineeId: string;submissionId: string;data: UpdateReportSubmissionFeedbackRequest}, TContext> => {
+
+const mutationKey = ['postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback>>, {traineeId: string;submissionId: string;data: UpdateReportSubmissionFeedbackRequest}> = (props) => {
+          const {traineeId,submissionId,data} = props ?? {};
+
+          return  postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback(traineeId,submissionId,data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback>>>
+    export type PostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackMutationBody = UpdateReportSubmissionFeedbackRequest
+    export type PostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackMutationError = ResponseMessageDto
+
+    export const usePostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback>>, TError,{traineeId: string;submissionId: string;data: UpdateReportSubmissionFeedbackRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedback>>,
+        TError,
+        {traineeId: string;submissionId: string;data: UpdateReportSubmissionFeedbackRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackMutationOptions(options), queryClient);
+    }
+    

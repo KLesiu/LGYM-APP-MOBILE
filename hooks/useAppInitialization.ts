@@ -142,7 +142,7 @@ export const useAppInitialization = () => {
     setUserInfo(userInfo);
     useAuthStore.getState().setUser(userInfo);
     await syncTutorialState(Boolean(userInfo.hasActiveTutorials));
-    router.replace("/Home");
+    router.replace("/Start");
   };
 
   const resetSessionState = async (errorMessage?: string): Promise<void> => {

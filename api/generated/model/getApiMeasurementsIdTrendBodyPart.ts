@@ -21,4 +21,11 @@ export const GetApiMeasurementsIdTrendBodyPart = {
   Hamstrings: 'Hamstrings',
   Calves: 'Calves',
   Glutes: 'Glutes',
+  BodyWeight: 'BodyWeight',
+  Neck: 'Neck',
+  Waist: 'Waist',
+  Hips: 'Hips',
+  Thigh: 'Thigh',
+  BodyFat: 'BodyFat',
+  Bmi: 'Bmi',
 } as const;

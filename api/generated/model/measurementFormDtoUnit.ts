@@ -10,7 +10,11 @@ export type MeasurementFormDtoUnit = typeof MeasurementFormDtoUnit[keyof typeof 
 
 export const MeasurementFormDtoUnit = {
   Unknown: 'Unknown',
+  Kilograms: 'Kilograms',
+  Pounds: 'Pounds',
   Meters: 'Meters',
   Centimeters: 'Centimeters',
   Millimeters: 'Millimeters',
+  Percent: 'Percent',
+  Bmi: 'Bmi',
 } as const;

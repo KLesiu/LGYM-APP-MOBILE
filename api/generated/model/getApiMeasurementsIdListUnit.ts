@@ -10,7 +10,11 @@ export type GetApiMeasurementsIdListUnit = typeof GetApiMeasurementsIdListUnit[k
 
 export const GetApiMeasurementsIdListUnit = {
   Unknown: 'Unknown',
+  Kilograms: 'Kilograms',
+  Pounds: 'Pounds',
   Meters: 'Meters',
   Centimeters: 'Centimeters',
   Millimeters: 'Millimeters',
+  Percent: 'Percent',
+  Bmi: 'Bmi',
 } as const;

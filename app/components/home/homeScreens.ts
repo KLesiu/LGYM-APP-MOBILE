@@ -5,6 +5,7 @@ export type HomeScreenId =
   | "TRAINING"
   | "PLAN"
   | "HISTORY"
+  | "MEASUREMENTS"
   | "RECORDS"
   | "PROFILE"
   | "TRAINER"

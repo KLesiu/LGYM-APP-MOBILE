@@ -12,6 +12,7 @@ import Gym from "./components/home/gym/Gym";
 import Training from "./components/home/training/Training";
 import TrainingPlan from "./components/home/plan/TrainingPlan";
 import History from "./components/home/history/History";
+import Measurements from "./components/home/measurements/Measurements";
 import Records from "./components/home/records/Records";
 import Profile from "./components/home/profile/Profile";
 import Trainer from "./components/trainer/Trainer";
@@ -49,6 +50,8 @@ const Home: React.FC = () => {
           return <TrainingPlan />;
         case "HISTORY":
           return <History />;
+        case "MEASUREMENTS":
+          return <Measurements />;
         case "RECORDS":
           return <Records />;
         case "PROFILE":

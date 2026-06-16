@@ -9,10 +9,24 @@ import type { EnumLookupDto } from './enumLookupDto';
 export interface MeasurementTrendDto {
   bodyPart?: EnumLookupDto;
   unit?: EnumLookupDto;
-  startValue?: number;
-  currentValue?: number;
-  change?: number;
-  changePercentage?: number;
+  /** @nullable */
+  firstMeasurementValue?: number | null;
+  /** @nullable */
+  firstMeasurementDate?: string | null;
+  /** @nullable */
+  lastMeasurementValue?: number | null;
+  /** @nullable */
+  lastMeasurementDate?: string | null;
+  /** @nullable */
+  difference?: number | null;
+  /** @nullable */
+  startValue?: number | null;
+  /** @nullable */
+  currentValue?: number | null;
+  /** @nullable */
+  change?: number | null;
+  /** @nullable */
+  changePercentage?: number | null;
   /** @nullable */
   direction?: string | null;
   points?: number;
