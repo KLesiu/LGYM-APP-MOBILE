@@ -23,6 +23,10 @@ import type {
   NotificationsListState,
   UnreadState,
 } from "../types/notification";
+import {
+  getInvitationIdFromRedirectUrl,
+  isTrainerInvitationNotificationType,
+} from "../types/notification";
 
 const NotificationContext = createContext<NotificationContextValue | null>(
   null
@@ -35,6 +39,17 @@ const isPagedNotificationsResult = (
 const isUnreadCountResult = (
   data: UnreadCountDto | ResponseMessageDto | undefined
 ): data is UnreadCountDto => !!data && "count" in data;
+
+const getNotificationDeduplicationKey = (item: NotificationItem): string => {
+  if (isTrainerInvitationNotificationType(item.type)) {
+    const invitationId = getInvitationIdFromRedirectUrl(item.redirectUrl);
+    if (invitationId) {
+      return `trainer-invitation:${invitationId}`;
+    }
+  }
+
+  return item._id;
+};
 
 export const useNotifications = (): NotificationContextValue => {
   const context = useContext(NotificationContext);
@@ -101,7 +116,9 @@ const NotificationProvider: React.FC<NotificationProviderProps> = ({
     }));
 
     const items = Array.from(
-      new Map(mappedItems.map((item) => [item._id, item])).values()
+      new Map(
+        mappedItems.map((item) => [getNotificationDeduplicationKey(item), item])
+      ).values()
     );
 
     return {

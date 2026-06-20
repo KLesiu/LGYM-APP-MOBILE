@@ -23,119 +23,16 @@ import {
   type MeasurementFormDto,
   type MeasurementsBulkFormDto,
 } from "../../../../api/generated/model";
-
-type UnitOption = {
-  value: MeasurementFormDtoUnit;
-  labelKey: string;
-};
-
-type MeasurementFieldConfig = {
-  key: MeasurementFormDtoBodyPart;
-  labelKey: string;
-  defaultUnit: MeasurementFormDtoUnit;
-  unitOptions: UnitOption[];
-};
-
-const LENGTH_UNIT_OPTIONS: UnitOption[] = [
-  { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-  { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-  { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-];
-
-const WEIGHT_UNIT_OPTIONS: UnitOption[] = [
-  { value: MeasurementFormDtoUnit.Kilograms, labelKey: "measurements.units.Kilograms" },
-  { value: MeasurementFormDtoUnit.Pounds, labelKey: "measurements.units.Pounds" },
-];
-
-const PERCENT_UNIT_OPTIONS: UnitOption[] = [
-  { value: MeasurementFormDtoUnit.Percent, labelKey: "measurements.units.Percent" },
-];
-
-const BMI_UNIT_OPTIONS: UnitOption[] = [
-  { value: MeasurementFormDtoUnit.Bmi, labelKey: "measurements.units.Bmi" },
-];
-
-const FIELD_CONFIGS: MeasurementFieldConfig[] = [
-  {
-    key: MeasurementFormDtoBodyPart.BodyWeight,
-    labelKey: "measurements.bodyParts.BodyWeight",
-    defaultUnit: MeasurementFormDtoUnit.Kilograms,
-    unitOptions: WEIGHT_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Neck,
-    labelKey: "measurements.bodyParts.Neck",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Chest,
-    labelKey: "measurements.bodyParts.Chest",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Waist,
-    labelKey: "measurements.bodyParts.Waist",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Abs,
-    labelKey: "measurements.bodyParts.Abs",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Hips,
-    labelKey: "measurements.bodyParts.Hips",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Thigh,
-    labelKey: "measurements.bodyParts.Thigh",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Calves,
-    labelKey: "measurements.bodyParts.Calves",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Biceps,
-    labelKey: "measurements.bodyParts.Biceps",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.BodyFat,
-    labelKey: "measurements.bodyParts.BodyFat",
-    defaultUnit: MeasurementFormDtoUnit.Percent,
-    unitOptions: PERCENT_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Bmi,
-    labelKey: "measurements.bodyParts.Bmi",
-    defaultUnit: MeasurementFormDtoUnit.Bmi,
-    unitOptions: BMI_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Shoulders,
-    labelKey: "measurements.bodyParts.Shoulders",
-    defaultUnit: MeasurementFormDtoUnit.Centimeters,
-    unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-];
+import {
+  MEASUREMENT_FIELD_CONFIGS,
+} from "./measurementConfig";
 
 type FormState = Record<MeasurementFormDtoBodyPart, { value: string; unit: MeasurementFormDtoUnit }>;
 
 const MEASUREMENTS_QUICK_FILL_STORAGE_KEY = "measurements.quickFill.lastSnapshot";
 
 const createInitialState = (): FormState =>
-  FIELD_CONFIGS.reduce((accumulator, field) => {
+  MEASUREMENT_FIELD_CONFIGS.reduce((accumulator, field) => {
     accumulator[field.key] = {
       value: "",
       unit: field.defaultUnit,
@@ -152,7 +49,7 @@ const sanitizeStoredState = (rawValue: string | null): FormState | null => {
     const parsedValue = JSON.parse(rawValue) as Partial<FormState>;
     const baseState = createInitialState();
 
-    for (const field of FIELD_CONFIGS) {
+      for (const field of MEASUREMENT_FIELD_CONFIGS) {
       const storedField = parsedValue[field.key];
       if (!storedField) {
         continue;
@@ -210,7 +107,7 @@ const MeasurementsPopUp: React.FC<MeasurementsPopUpProps> = ({ offPopUp }) => {
 
   const unitDropdownOptions = useMemo<Record<MeasurementFormDtoBodyPart, DropdownItem[]>>(
     () =>
-      FIELD_CONFIGS.reduce((accumulator, field) => {
+        MEASUREMENT_FIELD_CONFIGS.reduce((accumulator, field) => {
         accumulator[field.key] = field.unitOptions.map((option) => ({
           label: t(option.labelKey),
           value: option.value,
@@ -248,7 +145,7 @@ const MeasurementsPopUp: React.FC<MeasurementsPopUpProps> = ({ offPopUp }) => {
   const buildPayload = (): MeasurementsBulkFormDto | null => {
     const measurements: MeasurementFormDto[] = [];
 
-    for (const field of FIELD_CONFIGS) {
+    for (const field of MEASUREMENT_FIELD_CONFIGS) {
       const normalizedValue = formState[field.key].value.replace(/,/g, ".").trim();
       if (!normalizedValue) {
         continue;
@@ -367,7 +264,7 @@ const MeasurementsPopUp: React.FC<MeasurementsPopUpProps> = ({ offPopUp }) => {
         )}
 
         <ScrollView contentContainerStyle={{ gap: 16, paddingBottom: 12 }}>
-          {FIELD_CONFIGS.map((field) => {
+          {MEASUREMENT_FIELD_CONFIGS.map((field) => {
             const selectedUnit = formState[field.key].unit;
 
             return (

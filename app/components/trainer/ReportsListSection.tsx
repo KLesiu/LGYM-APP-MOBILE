@@ -32,6 +32,25 @@ const ReportsListSection: React.FC = () => {
     return Array.isArray(responseData) ? responseData : [];
   }, [submissionsResponse?.data]);
 
+  const extractSubmissions = (responseData: unknown): ReportSubmissionDto[] => {
+    if (
+      typeof responseData !== "object" ||
+      responseData === null ||
+      !("data" in responseData)
+    ) {
+      return [];
+    }
+
+    const payload = (responseData as { data?: unknown }).data;
+
+    if (!payload || typeof payload !== "object" || !("data" in payload)) {
+      return [];
+    }
+
+    const submissionsPayload = (payload as { data?: unknown }).data;
+    return Array.isArray(submissionsPayload) ? submissionsPayload : [];
+  };
+
   const activeSubmissionId = useMemo(
     () => getReportSubmissionIdFromRedirectUrl(activeNotification?.redirectUrl),
     [activeNotification?.redirectUrl]
@@ -46,20 +65,50 @@ const ReportsListSection: React.FC = () => {
       return;
     }
 
-    const matchingSubmission = submissions.find(
-      (submission) => submission._id === activeSubmissionId
-    );
+    let isCancelled = false;
 
-    if (!matchingSubmission) {
-      return;
-    }
+    const openSubmissionFromFreshData = async () => {
+      const currentMatch = submissions.find(
+        (submission) => submission._id === activeSubmissionId
+      );
 
-    setSelectedSubmission(matchingSubmission);
-    clearActiveNotification();
+      if (
+        currentMatch &&
+        ((currentMatch.trainerFieldComments &&
+          Object.keys(currentMatch.trainerFieldComments).length > 0) ||
+          currentMatch.trainerOverallComment)
+      ) {
+        if (!isCancelled) {
+          setSelectedSubmission(currentMatch);
+          clearActiveNotification();
+        }
+        return;
+      }
+
+      const refreshedResponse = await refetch();
+      const refreshedSubmissions = extractSubmissions(refreshedResponse);
+      const refreshedMatch = refreshedSubmissions.find(
+        (submission) => submission._id === activeSubmissionId
+      );
+
+      if (!refreshedMatch || isCancelled) {
+        return;
+      }
+
+      setSelectedSubmission(refreshedMatch);
+      clearActiveNotification();
+    };
+
+    void openSubmissionFromFreshData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [
     activeNotification?.type,
     activeSubmissionId,
     clearActiveNotification,
+    refetch,
     selectedSubmission?._id,
     submissions,
   ]);

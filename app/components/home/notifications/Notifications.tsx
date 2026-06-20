@@ -11,7 +11,10 @@ import Toast from "react-native-toast-message";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useNotifications } from "../../../contexts/NotificationContext";
 import type { NotificationItem } from "../../../types/notification";
-import { getInvitationIdFromRedirectUrl } from "../../../types/notification";
+import {
+  getInvitationIdFromRedirectUrl,
+  isTrainerInvitationNotificationType,
+} from "../../../types/notification";
 import ViewLoading from "../../elements/ViewLoading";
 import { useHomeContext } from "../HomeContext";
 import {
@@ -66,6 +69,9 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
   const notificationTypeLabels = useMemo(
     (): NotificationTypeLabels => ({
       "trainer.invitation.sent": t("notifications.trainerInvitationLabel"),
+      TrainerInvitationReceived: t(
+        "notifications.trainerInvitationReceivedLabel"
+      ),
       "trainer.invitation.accepted": t("notifications.trainerInvitationAcceptedLabel"),
       "trainer.invitation.rejected": t("notifications.trainerInvitationRejectedLabel"),
       ReportRequestReceived: t("notifications.reportRequestReceivedLabel"),
@@ -99,7 +105,7 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
   const [isInvitationResolved, setIsInvitationResolved] = useState(false);
 
   const isTrainerInvitation =
-    notification.type === "trainer.invitation.sent" &&
+    isTrainerInvitationNotificationType(notification.type) &&
     !!invitationId &&
     !notification.isRead &&
     !isInvitationResolved;
@@ -296,6 +302,7 @@ const ErrorState: React.FC<{ onRetry: () => void }> = ({ onRetry }) => {
 
 const Notifications: React.FC = () => {
   const { t } = useTranslation();
+  const { navigateToScreen } = useHomeContext();
   const {
     notifications,
     fetchNotifications,
@@ -372,6 +379,25 @@ const Notifications: React.FC = () => {
   return (
     <BackgroundMainSection>
       <View className="flex-1">
+        <View
+          className="px-4 pt-4 pb-2 flex-row items-center justify-between"
+          style={{ gap: 12 }}
+        >
+          <Text
+            className="text-primaryColor text-xl"
+            style={{ fontFamily: "OpenSans_700Bold" }}
+          >
+            {t("notifications.title", "Notifications")}
+          </Text>
+          <TouchableOpacity
+            onPress={() => navigateToScreen("START")}
+            className="bg-secondaryColor px-4 py-2 rounded-lg"
+          >
+            <Text className="text-textColor font-semibold">
+              {t("notifications.backToStart", "Back to Start")}
+            </Text>
+          </TouchableOpacity>
+        </View>
         <View className="px-4 pt-3 pb-2 flex-row" style={{ gap: 8 }}>
           <TouchableOpacity
             onPress={() => setActiveTab("new")}

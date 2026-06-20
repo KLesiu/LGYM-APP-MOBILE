@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import {
+  Image,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -12,6 +13,11 @@ import { useTranslation } from "react-i18next";
 import type { ReportSubmissionDto, ReportTemplateFieldDto } from "../../../api/generated/model";
 import CustomButton, { ButtonStyle } from "../elements/CustomButton";
 
+type ModularReportTemplateFieldDto = Omit<ReportTemplateFieldDto, "type"> & {
+  type?: string | null;
+  moduleConfig?: unknown | null;
+};
+
 interface ReportSubmissionPreviewModalProps {
   visible: boolean;
   submission: ReportSubmissionDto | null;
@@ -22,6 +28,15 @@ interface AnswerItem {
   key: string;
   label: string;
   value: string;
+  kind: "text" | "measurements" | "photos";
+  measurementRows: Array<{ label: string; value: string }>;
+  photos: Array<{
+    id: string;
+    viewType: string;
+    thumbnailUrl?: string | null;
+    readUrl?: string | null;
+    uploadedAt?: string;
+  }>;
 }
 
 interface AnswerValueLabels {
@@ -50,6 +65,15 @@ const formatAnswerValue = (value: unknown, labels: AnswerValueLabels) => {
   return JSON.stringify(value);
 };
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+const getHumanizedKey = (value: string) =>
+  value
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[_-]+/g, " ")
+    .replace(/^./, (char) => char.toUpperCase());
+
 const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> = ({
   visible,
   submission,
@@ -69,18 +93,109 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
     const answers = submission?.answers ?? {};
     const answerEntries = Object.entries(answers);
     const templateFields = [...(submission?.request?.template?.fields ?? [])]
-      .filter((field): field is ReportTemplateFieldDto => Boolean(field?.key))
+      .filter((field) => Boolean(field?.key))
+      .map(
+        (field): ModularReportTemplateFieldDto => ({
+          ...field,
+          type: typeof field.type === "string" ? field.type : undefined,
+          moduleConfig: Reflect.get(field, "moduleConfig") as unknown,
+        })
+      )
       .sort((firstField, secondField) => (firstField.order ?? 0) - (secondField.order ?? 0));
+
+    const getFieldKind = (fieldType: string | null | undefined): AnswerItem["kind"] => {
+      if (fieldType === "Measurements") {
+        return "measurements";
+      }
+
+      if (fieldType === "Photos") {
+        return "photos";
+      }
+
+      return "text";
+    };
+
+    const getMeasurementRows = (
+      field: ModularReportTemplateFieldDto | undefined,
+      value: unknown
+    ): Array<{ label: string; value: string }> => {
+      if (!isRecord(value)) {
+        return [];
+      }
+
+      const configuredTypes =
+        field && isRecord(field.moduleConfig) && Array.isArray(field.moduleConfig.measurementTypes)
+          ? field.moduleConfig.measurementTypes.filter(
+              (item): item is string => typeof item === "string" && item.trim().length > 0
+            )
+          : [];
+
+      const sourceEntries = Object.entries(value);
+      const orderedEntries = configuredTypes.length
+        ? configuredTypes
+            .map(
+              (configuredType) =>
+                sourceEntries.find(([key]) => key.toLowerCase() === configuredType.toLowerCase()) ?? null
+            )
+            .filter((entry): entry is [string, unknown] => entry !== null)
+        : sourceEntries;
+
+      return orderedEntries.map(([key, rawValue]) => {
+        if (isRecord(rawValue)) {
+          const numericValue = rawValue.value;
+          const unit = typeof rawValue.unit === "string" ? rawValue.unit : null;
+          const formattedValue = formatAnswerValue(numericValue, answerLabels);
+
+          return {
+            label: getHumanizedKey(key),
+            value: unit ? `${formattedValue} ${unit}` : formattedValue,
+          };
+        }
+
+        return {
+          label: getHumanizedKey(key),
+          value: formatAnswerValue(rawValue, answerLabels),
+        };
+      });
+    };
+
+    const getPhotos = (value: unknown): AnswerItem["photos"] => {
+      if (!Array.isArray(value)) {
+        return [];
+      }
+
+      return value
+        .filter((item): item is Record<string, unknown> => isRecord(item))
+        .map((photo, index) => ({
+          id:
+            typeof photo._id === "string"
+              ? photo._id
+              : typeof photo.photoId === "string"
+                ? photo.photoId
+                : `${index}`,
+          viewType: typeof photo.viewType === "string" ? photo.viewType : t("common.photo", "Photo"),
+          thumbnailUrl: typeof photo.thumbnailUrl === "string" ? photo.thumbnailUrl : null,
+          readUrl: typeof photo.readUrl === "string" ? photo.readUrl : null,
+          uploadedAt: typeof photo.uploadedAt === "string" ? photo.uploadedAt : undefined,
+        }));
+    };
 
     const usedKeys = new Set<string>();
     const orderedItems = templateFields.map((field) => {
       const fieldKey = field.key as string;
       usedKeys.add(fieldKey);
 
+      const kind = getFieldKind(field.type);
+      const measurementRows = kind === "measurements" ? getMeasurementRows(field, answers[fieldKey]) : [];
+      const photos = kind === "photos" ? getPhotos(answers[fieldKey]) : [];
+
       return {
         key: fieldKey,
         label: field.label || fieldKey,
         value: formatAnswerValue(answers[fieldKey], answerLabels),
+        kind,
+        measurementRows,
+        photos,
       };
     });
 
@@ -90,6 +205,9 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
         key,
         label: key,
         value: formatAnswerValue(value, answerLabels),
+        kind: "text" as const,
+        measurementRows: [],
+        photos: [],
       }));
 
     return [...orderedItems, ...extraItems];
@@ -187,8 +305,78 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
                       className="text-textColor opacity-85 text-sm"
                       style={{ fontFamily: "OpenSans_400Regular" }}
                     >
-                      {item.value}
+                      {item.kind === "text" ? item.value : ""}
                     </Text>
+
+                    {item.kind === "measurements" && item.measurementRows.length > 0 ? (
+                      <View style={{ gap: 8 }}>
+                        {item.measurementRows.map((row) => (
+                          <View
+                            key={`${item.key}-${row.label}`}
+                            className="flex-row items-center justify-between rounded-xl bg-[#202020] px-3 py-3"
+                            style={{ gap: 12 }}
+                          >
+                            <Text
+                              className="text-textColor opacity-70 text-sm flex-1"
+                              style={{ fontFamily: "OpenSans_400Regular" }}
+                            >
+                              {row.label}
+                            </Text>
+                            <Text
+                              className="text-textColor text-sm"
+                              style={{ fontFamily: "OpenSans_700Bold" }}
+                            >
+                              {row.value}
+                            </Text>
+                          </View>
+                        ))}
+                      </View>
+                    ) : null}
+
+                    {item.kind === "photos" && item.photos.length > 0 ? (
+                      <View style={{ gap: 10 }}>
+                        {item.photos.map((photo) => (
+                          <View
+                            key={`${item.key}-${photo.id}`}
+                            className="overflow-hidden rounded-xl bg-[#202020]"
+                            style={{ gap: 8 }}
+                          >
+                            {photo.thumbnailUrl || photo.readUrl ? (
+                              <Image
+                                source={{ uri: photo.thumbnailUrl || photo.readUrl || undefined }}
+                                style={{ width: "100%", height: 180 }}
+                                resizeMode="cover"
+                              />
+                            ) : null}
+                            <View className="px-3 py-3" style={{ gap: 4 }}>
+                              <Text
+                                className="text-textColor text-sm"
+                                style={{ fontFamily: "OpenSans_700Bold" }}
+                              >
+                                {photo.viewType}
+                              </Text>
+                              {photo.uploadedAt ? (
+                                <Text
+                                  className="text-textColor opacity-60 text-xs"
+                                  style={{ fontFamily: "OpenSans_400Regular" }}
+                                >
+                                  {formatDate(photo.uploadedAt)}
+                                </Text>
+                              ) : null}
+                            </View>
+                          </View>
+                        ))}
+                      </View>
+                    ) : null}
+
+                    {item.kind !== "text" && item.measurementRows.length === 0 && item.photos.length === 0 ? (
+                      <Text
+                        className="text-textColor opacity-85 text-sm"
+                        style={{ fontFamily: "OpenSans_400Regular" }}
+                      >
+                        {item.value}
+                      </Text>
+                    ) : null}
 
                     {submission?.trainerFieldComments?.[item.key] ? (
                       <View

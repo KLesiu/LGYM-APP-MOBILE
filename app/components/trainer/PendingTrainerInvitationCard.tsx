@@ -6,7 +6,10 @@ import {
   usePostApiTraineeInvitationsInvitationIdReject,
 } from "../../../api/generated/trainee-relationship/trainee-relationship";
 import { useNotifications } from "../../contexts/NotificationContext";
-import { getInvitationIdFromRedirectUrl } from "../../types/notification";
+import {
+  getInvitationIdFromRedirectUrl,
+  isTrainerInvitationNotificationType,
+} from "../../types/notification";
 import toastService from "../../services/toastService";
 import { getErrorMessage } from "../../../utils/errorHandler";
 
@@ -24,7 +27,9 @@ const PendingTrainerInvitationCard: React.FC = () => {
     [activeNotification?.redirectUrl]
   );
 
-  const isTrainerInvitation = activeNotification?.type === "trainer.invitation.sent";
+  const isTrainerInvitation = isTrainerInvitationNotificationType(
+    activeNotification?.type
+  );
   const isSubmitting = isAccepting || isRejecting;
 
   if (!activeNotification || !isTrainerInvitation || !invitationId) {

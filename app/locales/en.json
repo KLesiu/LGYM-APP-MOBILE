@@ -62,13 +62,21 @@
     "trainer": "Trainer"
   },
   "notifications": {
+    "title": "Notifications",
+    "backToStart": "Back to Start",
     "newTab": "New",
     "seenTab": "Seen",
     "trainerInvitationLabel": "Trainer collaboration invitation",
+    "trainerInvitationReceivedLabel": "Trainer collaboration invitation",
     "trainerInvitationAcceptedLabel": "Invitation accepted",
     "trainerInvitationRejectedLabel": "Invitation rejected",
     "reportRequestReceivedLabel": "New report request",
-    "reportFeedbackReceivedLabel": "Trainer added report feedback"
+    "reportFeedbackReceivedLabel": "Trainer added report feedback",
+    "empty": "No notifications yet",
+    "emptyDescription": "You'll see your notifications here",
+    "error": "Failed to load notifications",
+    "markAllAsRead": "Mark all as read",
+    "markingAsRead": "Marking as read..."
   },
   "plans": {
     "yourPlans": "Your Plans",
@@ -450,6 +458,8 @@
     "elo": "Elo"
   },
   "trainer": {
+    "title": "Trainer",
+    "noTrainer": "You don't have a trainer yet.",
     "yourTrainer": "Your trainer",
     "connectedTitle": "Trainer connected",
     "connectedDescription": "Trainer details will appear here when they become available in the app.",
@@ -482,6 +492,13 @@
     "acceptInvitation": "Accept",
     "rejectInvitation": "Reject",
     "inviteDescription": "When a trainer invites you to work together, the invitation will appear in your notifications.",
+    "currentPlan": "Current Plan",
+    "planLoadError": "Failed to load plan",
+    "noPlanAssigned": "No training plan assigned yet",
+    "unnamedPlan": "Unnamed Plan",
+    "createdOn": "Created on",
+    "activePlan": "Active",
+    "viewPlanDetails": "View Plan Details",
     "reportRequests": "Report requests",
     "reportRequestsError": "Failed to load report requests",
     "noReportRequests": "No pending report requests",
@@ -496,6 +513,11 @@
     "submitting": "Submitting...",
     "reportSubmitted": "Report submitted",
     "submitReportFailed": "Unable to submit report",
+    "reportsList": "Reports List",
+    "reportsListError": "Failed to load reports",
+    "noReportsSubmitted": "No reports submitted yet",
+    "reportSubmission": "Report submission",
+    "submittedOn": "Submitted on",
     "viewReportAnswers": "Preview",
     "noSubmittedAnswers": "No submitted answers",
     "noAnswerValue": "No answer",
@@ -512,7 +534,29 @@
     "requiredBooleanField": "This field must be checked",
     "booleanFieldLabel": "Check this if the answer is yes",
     "dateFieldPlaceholder": "YYYY-MM-DD",
-    "answerPlaceholder": "Type your answer"
+    "answerPlaceholder": "Type your answer",
+    "measurementsModuleDescription": "Enter current measurements or load your last saved values.",
+    "loadLatestMeasurements": "Load latest measurements",
+    "noLatestMeasurements": "You do not have saved measurements to load yet.",
+    "measurementValuePlaceholder": "Enter a value",
+    "measurementModuleRequired": "Fill in all required measurements.",
+    "invalidMeasurementValue": "Enter valid measurement values.",
+    "latestMeasurementLabel": "Latest entry",
+    "photosModuleDescription": "Add the required photos from your phone gallery.",
+    "photoModuleRequired": "Add all required photos.",
+    "photoPermissionDenied": "The app needs photo library access to add a report photo.",
+    "photoUploadFailed": "Unable to add the photo to the report.",
+    "addPhoto": "Add photo",
+    "replacePhoto": "Replace photo",
+    "removePhoto": "Remove",
+    "uploadingPhoto": "Uploading photo...",
+    "noSelectedPhoto": "No photo selected yet",
+    "photoView": {
+      "front": "Front",
+      "side": "Side",
+      "back": "Back",
+      "general": "Photo"
+    }
   },
   "createExercise": {
     "newExercise": "New Exercise",

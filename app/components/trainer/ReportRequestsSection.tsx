@@ -48,9 +48,11 @@ const ReportRequestsSection: React.FC = () => {
     }
   };
 
-  const pendingRequests = useMemo(() => {
+  const visibleRequests = useMemo(() => {
     const requests = requestsResponse?.data ?? [];
-    return requests.filter((request) => request.status === "Pending");
+    return requests.filter(
+      (request) => request.status === "Pending" || request.status === "Expired"
+    );
   }, [requestsResponse?.data]);
 
   const activeReportRequestId = useMemo(
@@ -67,7 +69,7 @@ const ReportRequestsSection: React.FC = () => {
       return;
     }
 
-    const matchingRequest = pendingRequests.find(
+    const matchingRequest = visibleRequests.find(
       (request) => request._id === activeReportRequestId
     );
 
@@ -81,7 +83,7 @@ const ReportRequestsSection: React.FC = () => {
     activeNotification?.type,
     activeReportRequestId,
     clearActiveNotification,
-    pendingRequests,
+    visibleRequests,
     selectedRequest?._id,
   ]);
 
@@ -165,7 +167,7 @@ const ReportRequestsSection: React.FC = () => {
     );
   }
 
-  if (pendingRequests.length === 0) {
+  if (visibleRequests.length === 0) {
     return (
       <View className="bg-secondaryColor p-4 rounded-lg" style={{ gap: 12 }}>
         <Text
@@ -191,7 +193,7 @@ const ReportRequestsSection: React.FC = () => {
           {t("trainer.reportRequests", "Report Requests")}
         </Text>
 
-        {pendingRequests.map((request, index) => {
+        {visibleRequests.map((request, index) => {
           const validFieldCount = (request.template?.fields ?? []).filter(
             (field) => Boolean(field?.key)
           ).length;

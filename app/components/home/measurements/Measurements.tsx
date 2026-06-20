@@ -17,128 +17,16 @@ import {
   useGetApiMeasurementsIdTrends,
 } from "../../../../api/generated/measurements/measurements";
 import {
-  MeasurementFormDtoBodyPart,
   MeasurementFormDtoUnit,
   type MeasurementResponseDto,
   type MeasurementTrendDto,
 } from "../../../../api/generated/model";
-
-type BodyPartFilter = MeasurementFormDtoBodyPart | "ALL";
-
-type MeasurementTypeOption = {
-  value: BodyPartFilter;
-  labelKey: string;
-};
-
-type UnitOption = {
-  value: MeasurementFormDtoUnit;
-  labelKey: string;
-};
-
-const MEASUREMENT_TYPE_OPTIONS: MeasurementTypeOption[] = [
-  { value: "ALL", labelKey: "measurements.filters.allBodyParts" },
-  { value: MeasurementFormDtoBodyPart.BodyWeight, labelKey: "measurements.bodyParts.BodyWeight" },
-  { value: MeasurementFormDtoBodyPart.Neck, labelKey: "measurements.bodyParts.Neck" },
-  { value: MeasurementFormDtoBodyPart.Chest, labelKey: "measurements.bodyParts.Chest" },
-  { value: MeasurementFormDtoBodyPart.Waist, labelKey: "measurements.bodyParts.Waist" },
-  { value: MeasurementFormDtoBodyPart.Abs, labelKey: "measurements.bodyParts.Abs" },
-  { value: MeasurementFormDtoBodyPart.Hips, labelKey: "measurements.bodyParts.Hips" },
-  { value: MeasurementFormDtoBodyPart.Thigh, labelKey: "measurements.bodyParts.Thigh" },
-  { value: MeasurementFormDtoBodyPart.Calves, labelKey: "measurements.bodyParts.Calves" },
-  { value: MeasurementFormDtoBodyPart.Biceps, labelKey: "measurements.bodyParts.Biceps" },
-  { value: MeasurementFormDtoBodyPart.BodyFat, labelKey: "measurements.bodyParts.BodyFat" },
-  { value: MeasurementFormDtoBodyPart.Bmi, labelKey: "measurements.bodyParts.Bmi" },
-  { value: MeasurementFormDtoBodyPart.Shoulders, labelKey: "measurements.bodyParts.Shoulders" },
-];
-
-const UNIT_OPTIONS_BY_TYPE: Record<Exclude<BodyPartFilter, "ALL">, UnitOption[]> = {
-  [MeasurementFormDtoBodyPart.Unknown]: [],
-  [MeasurementFormDtoBodyPart.BodyWeight]: [
-    { value: MeasurementFormDtoUnit.Kilograms, labelKey: "measurements.units.Kilograms" },
-    { value: MeasurementFormDtoUnit.Pounds, labelKey: "measurements.units.Pounds" },
-  ],
-  [MeasurementFormDtoBodyPart.BodyFat]: [
-    { value: MeasurementFormDtoUnit.Percent, labelKey: "measurements.units.Percent" },
-  ],
-  [MeasurementFormDtoBodyPart.Bmi]: [
-    { value: MeasurementFormDtoUnit.Bmi, labelKey: "measurements.units.Bmi" },
-  ],
-  [MeasurementFormDtoBodyPart.Neck]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Chest]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Waist]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Abs]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Hips]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Thigh]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Calves]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Biceps]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Shoulders]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Back]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Triceps]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Forearms]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Quads]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Hamstrings]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-  [MeasurementFormDtoBodyPart.Glutes]: [
-    { value: MeasurementFormDtoUnit.Centimeters, labelKey: "measurements.units.Centimeters" },
-    { value: MeasurementFormDtoUnit.Meters, labelKey: "measurements.units.Meters" },
-    { value: MeasurementFormDtoUnit.Millimeters, labelKey: "measurements.units.Millimeters" },
-  ],
-};
+import {
+  type BodyPartFilter,
+  type UnitOption,
+  MEASUREMENT_TYPE_OPTIONS,
+  UNIT_OPTIONS_BY_TYPE,
+} from "./measurementConfig";
 
 const formatDate = (date: string | null | undefined, locale: string): string => {
   if (!date) {

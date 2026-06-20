@@ -62,13 +62,21 @@
     "trainer": "Trener"
   },
   "notifications": {
+    "title": "Powiadomienia",
+    "backToStart": "Wróć na Start",
     "newTab": "Nowe",
     "seenTab": "Wyświetlone",
     "trainerInvitationLabel": "Zaproszenie do współpracy trenerskiej",
+    "trainerInvitationReceivedLabel": "Zaproszenie do współpracy trenerskiej",
     "trainerInvitationAcceptedLabel": "Zaproszenie zaakceptowane",
     "trainerInvitationRejectedLabel": "Zaproszenie odrzucone",
     "reportRequestReceivedLabel": "Nowa prośba o raport",
-    "reportFeedbackReceivedLabel": "Trener dodał komentarz do raportu"
+    "reportFeedbackReceivedLabel": "Trener dodał komentarz do raportu",
+    "empty": "Brak powiadomień",
+    "emptyDescription": "Tutaj zobaczysz swoje powiadomienia",
+    "error": "Nie udało się pobrać powiadomień",
+    "markAllAsRead": "Oznacz wszystko jako przeczytane",
+    "markingAsRead": "Oznaczanie jako przeczytane..."
   },
   "plans": {
     "yourPlans": "Twoje Plany",
@@ -450,6 +458,8 @@
     "elo": "Elo"
   },
   "trainer": {
+    "title": "Trener",
+    "noTrainer": "Nie masz jeszcze trenera.",
     "yourTrainer": "Twój trener",
     "connectedTitle": "Połączono z trenerem",
     "connectedDescription": "Szczegóły trenera pojawią się tutaj, gdy będą dostępne w aplikacji.",
@@ -485,6 +495,13 @@
     "acceptInvitation": "Akceptuj",
     "rejectInvitation": "Odrzuć",
     "inviteDescription": "Gdy trener zaprosi Cię do współpracy, zaproszenie pojawi się w powiadomieniach.",
+    "currentPlan": "Bieżący plan",
+    "planLoadError": "Nie udało się pobrać planu",
+    "noPlanAssigned": "Nie przypisano jeszcze planu treningowego",
+    "unnamedPlan": "Plan bez nazwy",
+    "createdOn": "Utworzono",
+    "activePlan": "Aktywny",
+    "viewPlanDetails": "Zobacz szczegóły planu",
     "reportRequests": "Prośby o raport",
     "reportRequestsError": "Nie udało się pobrać próśb o raport",
     "noReportRequests": "Brak oczekujących próśb o raport",
@@ -499,6 +516,11 @@
     "submitting": "Wysyłanie...",
     "reportSubmitted": "Raport został wysłany",
     "submitReportFailed": "Nie udało się wysłać raportu",
+    "reportsList": "Lista raportów",
+    "reportsListError": "Nie udało się pobrać raportów",
+    "noReportsSubmitted": "Brak wysłanych raportów",
+    "reportSubmission": "Wysłany raport",
+    "submittedOn": "Wysłano",
     "viewReportAnswers": "Podgląd",
     "noSubmittedAnswers": "Brak zapisanych odpowiedzi",
     "noAnswerValue": "Brak odpowiedzi",
@@ -516,7 +538,29 @@
     "requiredBooleanField": "To pole musi zostać zaznaczone",
     "booleanFieldLabel": "Zaznacz, jeśli odpowiedź brzmi tak",
     "dateFieldPlaceholder": "RRRR-MM-DD",
-    "answerPlaceholder": "Wpisz odpowiedź"
+    "answerPlaceholder": "Wpisz odpowiedź",
+    "measurementsModuleDescription": "Wpisz aktualne pomiary albo wczytaj ostatnio zapisane wartości.",
+    "loadLatestMeasurements": "Wczytaj ostatnie pomiary",
+    "noLatestMeasurements": "Nie masz jeszcze zapisanych pomiarów do wczytania.",
+    "measurementValuePlaceholder": "Wpisz wartość",
+    "measurementModuleRequired": "Uzupełnij wszystkie wymagane pomiary.",
+    "invalidMeasurementValue": "Wpisz poprawne wartości pomiarów.",
+    "latestMeasurementLabel": "Ostatni zapis",
+    "photosModuleDescription": "Dodaj wymagane zdjęcia z galerii telefonu.",
+    "photoModuleRequired": "Dodaj wszystkie wymagane zdjęcia.",
+    "photoPermissionDenied": "Aplikacja potrzebuje dostępu do zdjęć, aby dodać fotografię do raportu.",
+    "photoUploadFailed": "Nie udało się dodać zdjęcia do raportu.",
+    "addPhoto": "Dodaj zdjęcie",
+    "replacePhoto": "Zmień zdjęcie",
+    "removePhoto": "Usuń",
+    "uploadingPhoto": "Wysyłanie zdjęcia...",
+    "noSelectedPhoto": "Nie dodano jeszcze zdjęcia",
+    "photoView": {
+      "front": "Przód",
+      "side": "Bok",
+      "back": "Tył",
+      "general": "Zdjęcie"
+    }
   },
     "createExercise": {
       "newExercise": "Nowe Ćwiczenie",

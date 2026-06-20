@@ -5,6 +5,19 @@
 
 import type { InAppNotificationResultDto } from "../../api/generated/model";
 
+export const TRAINER_INVITATION_NOTIFICATION_TYPES = [
+  "trainer.invitation.sent",
+  "TrainerInvitationReceived",
+] as const;
+
+export const isTrainerInvitationNotificationType = (
+  type?: string | null
+): boolean =>
+  !!type &&
+  TRAINER_INVITATION_NOTIFICATION_TYPES.includes(
+    type as (typeof TRAINER_INVITATION_NOTIFICATION_TYPES)[number]
+  );
+
 /**
  * Represents a single notification item
  * Extends the generated DTO with additional runtime properties
