@@ -513,16 +513,13 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
       const uploadedPhotoFromHistory =
         historyResponse.status === 200 && Array.isArray(historyResponse.data?.photos)
           ? historyResponse.data.photos.find(
-              (photo) =>
-                photo._id === completeResponse.data?.photoId ||
-                (photo.storageKey ?? "") === uploadInitResponse.data?.storageKey
+              (photo) => photo._id === completeResponse.data?.photoId
             )
           : undefined;
 
       replacePhotoForView(fieldKey, viewType, {
         _id: completeResponse.data?.photoId ?? uploadedPhotoFromHistory?._id ?? null,
-        storageKey:
-          uploadedPhotoFromHistory?.storageKey ?? uploadInitResponse.data.storageKey ?? null,
+        storageKey: uploadInitResponse.data.storageKey ?? null,
         viewType,
         sizeBytes: uploadedPhotoFromHistory?.sizeBytes ?? uploadedSize,
         thumbnailUrl: uploadedPhotoFromHistory?.thumbnailUrl ?? null,
