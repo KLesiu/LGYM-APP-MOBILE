@@ -10,6 +10,12 @@ import type {
   SubmitReportRequestRequestAnswers,
 } from "../../../api/generated/model";
 import {
+  getGetApiMeasurementsIdGetHistoryQueryKey,
+  getGetApiMeasurementsIdListQueryKey,
+  getGetApiMeasurementsIdTrendQueryKey,
+  getGetApiMeasurementsIdTrendsQueryKey,
+} from "../../../api/generated/measurements/measurements";
+import {
   getGetApiTraineeReportSubmissionsQueryKey,
   useGetApiTraineeReportRequests,
   usePostApiTraineeReportRequestsRequestIdSubmit,
@@ -17,10 +23,12 @@ import {
 import ReportRequestFormModal from "./ReportRequestFormModal";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { getReportRequestIdFromRedirectUrl } from "../../types/notification";
+import { useHomeContext } from "../home/HomeContext";
 
 const ReportRequestsSection: React.FC = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const { userId } = useHomeContext();
   const { activeNotification, clearActiveNotification } = useNotifications();
   const [submittingRequestId, setSubmittingRequestId] = useState<string | null>(
     null
@@ -100,12 +108,33 @@ const ReportRequestsSection: React.FC = () => {
         },
       });
       toastService.showSuccess(
-        t("trainer.reportSubmitted", "Report submitted")
+        t(
+          "trainer.reportSubmittedWithMeasurements",
+          "Raport wysłany. Pomiary zapisano w historii."
+        )
       );
       setSelectedRequest(null);
-      await queryClient.invalidateQueries({
-        queryKey: getGetApiTraineeReportSubmissionsQueryKey(),
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: getGetApiTraineeReportSubmissionsQueryKey(),
+        }),
+        ...(userId
+          ? [
+              queryClient.invalidateQueries({
+                queryKey: getGetApiMeasurementsIdListQueryKey(userId),
+              }),
+              queryClient.invalidateQueries({
+                queryKey: getGetApiMeasurementsIdGetHistoryQueryKey(userId),
+              }),
+              queryClient.invalidateQueries({
+                queryKey: getGetApiMeasurementsIdTrendQueryKey(userId),
+              }),
+              queryClient.invalidateQueries({
+                queryKey: getGetApiMeasurementsIdTrendsQueryKey(userId),
+              }),
+            ]
+          : []),
+      ]);
       await refetch();
     } catch (submitError) {
       const errorMessage = getErrorMessage(

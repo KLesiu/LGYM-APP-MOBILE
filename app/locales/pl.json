@@ -515,6 +515,7 @@
     "submitReport": "Wyślij raport",
     "submitting": "Wysyłanie...",
     "reportSubmitted": "Raport został wysłany",
+    "reportSubmittedWithMeasurements": "Raport wysłany. Pomiary zapisano w historii.",
     "submitReportFailed": "Nie udało się wysłać raportu",
     "reportsList": "Lista raportów",
     "reportsListError": "Nie udało się pobrać raportów",

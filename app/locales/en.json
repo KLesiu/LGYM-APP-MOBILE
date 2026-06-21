@@ -512,6 +512,7 @@
     "submitReport": "Submit report",
     "submitting": "Submitting...",
     "reportSubmitted": "Report submitted",
+    "reportSubmittedWithMeasurements": "Report submitted. Measurements were saved to history.",
     "submitReportFailed": "Unable to submit report",
     "reportsList": "Reports List",
     "reportsListError": "Failed to load reports",
