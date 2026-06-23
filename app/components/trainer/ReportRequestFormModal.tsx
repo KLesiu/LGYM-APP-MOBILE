@@ -695,6 +695,7 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
     setValidationErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0) {
+      toastService.showValidationError([...new Set(Object.values(nextErrors))]);
       return null;
     }
 
