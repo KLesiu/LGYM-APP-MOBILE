@@ -137,11 +137,7 @@ const ReportRequestsSection: React.FC = () => {
       ]);
       await refetch();
     } catch (submitError) {
-      const errorMessage = getErrorMessage(
-        submitError,
-        t("trainer.submitReportFailed", "Unable to submit report")
-      );
-      toastService.showError(errorMessage);
+      throw submitError;
     } finally {
       setSubmittingRequestId(null);
     }

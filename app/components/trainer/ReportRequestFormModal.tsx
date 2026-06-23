@@ -31,6 +31,7 @@ import CustomButton, { ButtonStyle } from "../elements/CustomButton";
 import Checkbox from "../elements/Checkbox";
 import CustomDropdown from "../elements/Dropdown";
 import toastService from "../../services/toastService";
+import { getErrorMessage } from "../../../utils/errorHandler";
 import {
   completeTraineeReportingPhotoUpload,
   getTraineeReportingPhotoHistory,
@@ -201,6 +202,7 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
   const [values, setValues] = useState<FormState>({});
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [uploadingPhotoKeys, setUploadingPhotoKeys] = useState<Record<string, boolean>>({});
+  const [formFeedbackMessage, setFormFeedbackMessage] = useState<string | null>(null);
 
   const fields = useMemo(() => {
     return [...(request?.template?.fields ?? [])]
@@ -252,15 +254,19 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
     if (!visible) {
       setValidationErrors({});
       setUploadingPhotoKeys({});
+      setFormFeedbackMessage(null);
       return;
     }
 
     setValues(buildInitialValues(fields));
     setValidationErrors({});
     setUploadingPhotoKeys({});
+    setFormFeedbackMessage(null);
   }, [fields, visible]);
 
   const setFieldValue = (fieldKey: string, value: FormValue) => {
+    setFormFeedbackMessage(null);
+
     setValues((currentValues) => ({
       ...currentValues,
       [fieldKey]: value,
@@ -529,7 +535,10 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
       });
     } catch (error) {
       toastService.showError(
-        t("trainer.photoUploadFailed", "Nie udało się dodać zdjęcia do raportu")
+        getErrorMessage(
+          error,
+          t("trainer.photoUploadFailed", "Nie udało się dodać zdjęcia do raportu")
+        )
       );
     } finally {
       setPhotoUploadingState(fieldKey, viewType, false);
@@ -695,6 +704,7 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
     setValidationErrors(nextErrors);
 
     if (Object.keys(nextErrors).length > 0) {
+      setFormFeedbackMessage([...new Set(Object.values(nextErrors))][0] ?? null);
       toastService.showValidationError([...new Set(Object.values(nextErrors))]);
       return null;
     }
@@ -709,7 +719,18 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
       return;
     }
 
-    await onSubmit(answers);
+    setFormFeedbackMessage(null);
+
+    try {
+      await onSubmit(answers);
+    } catch (submitError) {
+      const errorMessage = getErrorMessage(
+        submitError,
+        t("trainer.submitReportFailed", "Unable to submit report")
+      );
+      setFormFeedbackMessage(errorMessage);
+      toastService.showError(errorMessage);
+    }
   };
 
   const renderMeasurementField = (
@@ -994,6 +1015,16 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
                   >
                     {t("trainer.reportRequestNote")}: {request.note}
                   </Text>
+                ) : null}
+                {formFeedbackMessage ? (
+                  <View className="rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-3">
+                    <Text
+                      className="text-red-400 text-sm"
+                      style={{ fontFamily: "OpenSans_600SemiBold" }}
+                    >
+                      {formFeedbackMessage}
+                    </Text>
+                  </View>
                 ) : null}
               </View>
 
