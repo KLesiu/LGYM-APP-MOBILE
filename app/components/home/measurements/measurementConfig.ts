@@ -41,6 +41,8 @@ export const BMI_UNIT_OPTIONS: UnitOption[] = [
   { value: MeasurementFormDtoUnit.Bmi, labelKey: "measurements.units.Bmi" },
 ];
 
+// TODO: BMI should return as an automatically calculated value, not a manual input option.
+
 export const MEASUREMENT_FIELD_CONFIGS: MeasurementFieldConfig[] = [
   {
     key: MeasurementFormDtoBodyPart.BodyWeight,
@@ -95,18 +97,6 @@ export const MEASUREMENT_FIELD_CONFIGS: MeasurementFieldConfig[] = [
     labelKey: "measurements.bodyParts.Biceps",
     defaultUnit: MeasurementFormDtoUnit.Centimeters,
     unitOptions: LENGTH_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.BodyFat,
-    labelKey: "measurements.bodyParts.BodyFat",
-    defaultUnit: MeasurementFormDtoUnit.Percent,
-    unitOptions: PERCENT_UNIT_OPTIONS,
-  },
-  {
-    key: MeasurementFormDtoBodyPart.Bmi,
-    labelKey: "measurements.bodyParts.Bmi",
-    defaultUnit: MeasurementFormDtoUnit.Bmi,
-    unitOptions: BMI_UNIT_OPTIONS,
   },
   {
     key: MeasurementFormDtoBodyPart.Shoulders,
