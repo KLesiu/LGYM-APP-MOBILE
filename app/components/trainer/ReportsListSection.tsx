@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import ViewLoading from "../elements/ViewLoading";
@@ -7,11 +7,13 @@ import type { ReportSubmissionDto, ResponseMessageDto } from "../../../api/gener
 import ReportSubmissionPreviewModal from "./ReportSubmissionPreviewModal";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { getReportSubmissionIdFromRedirectUrl } from "../../types/notification";
+import { markReportSubmissionFeedbackRead, type ReportSubmissionFeedbackStateDto } from "../../services/reporting/reportingFeedback";
 
 const ReportsListSection: React.FC = () => {
   const { t } = useTranslation();
   const { activeNotification, clearActiveNotification } = useNotifications();
   const [selectedSubmission, setSelectedSubmission] = useState<ReportSubmissionDto | null>(null);
+  const markedSubmissionIdsRef = useRef<Set<string>>(new Set());
   const {
     data: submissionsResponse,
     isLoading,
@@ -31,6 +33,59 @@ const ReportsListSection: React.FC = () => {
 
     return Array.isArray(responseData) ? responseData : [];
   }, [submissionsResponse?.data]);
+
+  const hasTrainerFeedback = useCallback((submission: ReportSubmissionDto | null | undefined) => {
+    if (!submission) {
+      return false;
+    }
+
+    return Boolean(
+      submission.trainerOverallComment ||
+        (submission.trainerFieldComments && Object.keys(submission.trainerFieldComments).length > 0)
+    );
+  }, []);
+
+  const openSubmission = useCallback(
+    async (submission: ReportSubmissionDto) => {
+      setSelectedSubmission(submission);
+
+      const submissionWithState = submission as ReportSubmissionFeedbackStateDto;
+      const submissionId = submission._id;
+      if (
+        !submissionId ||
+        !hasTrainerFeedback(submission) ||
+        submissionWithState.trainerFeedbackReadAt ||
+        markedSubmissionIdsRef.current.has(submissionId)
+      ) {
+        return;
+      }
+
+      markedSubmissionIdsRef.current.add(submissionId);
+
+      try {
+        const response = await markReportSubmissionFeedbackRead(submissionId);
+        const updatedSubmission = response.data as ReportSubmissionFeedbackStateDto;
+
+        if (response.status === 200 && updatedSubmission && typeof updatedSubmission === "object") {
+          setSelectedSubmission((current) =>
+            current?._id === submissionId
+              ? {
+                  ...current,
+                  ...(updatedSubmission as ReportSubmissionDto),
+                }
+              : current
+          );
+          await refetch();
+          return;
+        }
+
+        markedSubmissionIdsRef.current.delete(submissionId);
+      } catch {
+        markedSubmissionIdsRef.current.delete(submissionId);
+      }
+    },
+    [hasTrainerFeedback, refetch]
+  );
 
   const extractSubmissions = (responseData: unknown): ReportSubmissionDto[] => {
     if (
@@ -72,14 +127,9 @@ const ReportsListSection: React.FC = () => {
         (submission) => submission._id === activeSubmissionId
       );
 
-      if (
-        currentMatch &&
-        ((currentMatch.trainerFieldComments &&
-          Object.keys(currentMatch.trainerFieldComments).length > 0) ||
-          currentMatch.trainerOverallComment)
-      ) {
+      if (currentMatch && hasTrainerFeedback(currentMatch)) {
         if (!isCancelled) {
-          setSelectedSubmission(currentMatch);
+          await openSubmission(currentMatch);
           clearActiveNotification();
         }
         return;
@@ -95,9 +145,9 @@ const ReportsListSection: React.FC = () => {
         return;
       }
 
-      setSelectedSubmission(refreshedMatch);
-      clearActiveNotification();
-    };
+        await openSubmission(refreshedMatch);
+        clearActiveNotification();
+      };
 
     void openSubmissionFromFreshData();
 
@@ -111,6 +161,8 @@ const ReportsListSection: React.FC = () => {
     refetch,
     selectedSubmission?._id,
     submissions,
+    hasTrainerFeedback,
+    openSubmission,
   ]);
 
   const formatDate = (isoString: string | undefined | null): string => {
@@ -210,7 +262,9 @@ const ReportsListSection: React.FC = () => {
             </View>
               <View style={{ alignItems: "flex-end", gap: 8 }}>
                 <TouchableOpacity
-                  onPress={() => setSelectedSubmission(submission)}
+                  onPress={() => {
+                    void openSubmission(submission);
+                  }}
                   className="bg-primaryColor px-4 py-2 rounded-lg"
                 >
                   <Text
