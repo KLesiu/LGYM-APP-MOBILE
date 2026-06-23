@@ -10,12 +10,30 @@ export const TRAINER_INVITATION_NOTIFICATION_TYPES = [
   "TrainerInvitationReceived",
 ] as const;
 
+export const TRAINER_RELEVANT_NOTIFICATION_TYPES = [
+  ...TRAINER_INVITATION_NOTIFICATION_TYPES,
+  "trainer.invitation.accepted",
+  "trainer.invitation.rejected",
+  "ReportRequestReceived",
+  "ReportFeedbackReceived",
+  "TrainingPlanUpdated",
+  "TrainerMessageReceived",
+] as const;
+
 export const isTrainerInvitationNotificationType = (
   type?: string | null
 ): boolean =>
   !!type &&
   TRAINER_INVITATION_NOTIFICATION_TYPES.includes(
     type as (typeof TRAINER_INVITATION_NOTIFICATION_TYPES)[number]
+  );
+
+export const isTrainerRelevantNotificationType = (
+  type?: string | null
+): boolean =>
+  !!type &&
+  TRAINER_RELEVANT_NOTIFICATION_TYPES.includes(
+    type as (typeof TRAINER_RELEVANT_NOTIFICATION_TYPES)[number]
   );
 
 /**
@@ -25,6 +43,17 @@ export const isTrainerInvitationNotificationType = (
 export interface NotificationItem extends InAppNotificationResultDto {
   _id: string; // Ensure _id is always present
 }
+
+export const getNotificationDeduplicationKey = (item: NotificationItem): string => {
+  if (isTrainerInvitationNotificationType(item.type)) {
+    const invitationId = getInvitationIdFromRedirectUrl(item.redirectUrl);
+    if (invitationId) {
+      return `trainer-invitation:${invitationId}`;
+    }
+  }
+
+  return item._id;
+};
 
 export const getInvitationIdFromRedirectUrl = (
   redirectUrl?: string | null
@@ -57,6 +86,71 @@ export const getReportSubmissionIdFromRedirectUrl = (
 
   const match = redirectUrl.match(/\/trainer\/report-submissions\/([^/?#]+)/);
   return match?.[1] ?? null;
+};
+
+export type TrainerNotificationTargetTab = "overview" | "plan" | "requests" | "reports";
+
+export const getTrainerNotificationTargetTab = (
+  notification?: Pick<NotificationItem, "type" | "redirectUrl"> | null
+): TrainerNotificationTargetTab | null => {
+  if (!notification?.type) {
+    return null;
+  }
+
+  if (
+    notification.type === "ReportRequestReceived" &&
+    getReportRequestIdFromRedirectUrl(notification.redirectUrl)
+  ) {
+    return "requests";
+  }
+
+  if (
+    notification.type === "ReportFeedbackReceived" &&
+    getReportSubmissionIdFromRedirectUrl(notification.redirectUrl)
+  ) {
+    return "reports";
+  }
+
+  if (notification.type === "TrainingPlanUpdated") {
+    return "plan";
+  }
+
+  return null;
+};
+
+export const formatNotificationTimestamp = (dateString?: string | null): string => {
+  if (!dateString) {
+    return "";
+  }
+
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInMinutes < 1) {
+      return "Just now";
+    }
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
+    }
+
+    if (diffInHours < 24) {
+      return `${diffInHours}h ago`;
+    }
+
+    if (diffInDays < 7) {
+      return `${diffInDays}d ago`;
+    }
+
+    return date.toLocaleDateString();
+  } catch {
+    return "";
+  }
 };
 
 /**

@@ -8,10 +8,13 @@ import CollaborationSection from "./CollaborationSection";
 import CurrentPlanSection from "./CurrentPlanSection";
 import ReportRequestsSection from "./ReportRequestsSection";
 import ReportsListSection from "./ReportsListSection";
+import TrainerNotificationsSection from "./TrainerNotificationsSection";
 import type { TraineeTrainerProfileDto } from "../../../api/generated/model";
 import { useNotifications } from "../../contexts/NotificationContext";
-import { getReportRequestIdFromRedirectUrl } from "../../types/notification";
-import { getReportSubmissionIdFromRedirectUrl } from "../../types/notification";
+import {
+  getTrainerNotificationTargetTab,
+  type NotificationItem,
+} from "../../types/notification";
 
 type TrainerTabKey = "overview" | "plan" | "requests" | "reports";
 
@@ -21,26 +24,27 @@ interface WithTrainerStateProps {
 
 const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) => {
   const { t } = useTranslation();
-  const { activeNotification } = useNotifications();
+  const { activeNotification, setActiveNotification } = useNotifications();
   const [activeTab, setActiveTab] = useState<TrainerTabKey>("overview");
 
   useEffect(() => {
-    const reportRequestId = getReportRequestIdFromRedirectUrl(
-      activeNotification?.redirectUrl
-    );
-    const reportSubmissionId = getReportSubmissionIdFromRedirectUrl(
-      activeNotification?.redirectUrl
-    );
+    const targetTab = getTrainerNotificationTargetTab(activeNotification);
 
-    if (activeNotification?.type === "ReportRequestReceived" && reportRequestId) {
-      setActiveTab("requests");
+    if (targetTab) {
+      setActiveTab(targetTab);
+    }
+  }, [activeNotification]);
+
+  const handleOpenNotificationTarget = (notification: NotificationItem) => {
+    const targetTab = getTrainerNotificationTargetTab(notification);
+
+    if (!targetTab) {
       return;
     }
 
-    if (activeNotification?.type === "ReportFeedbackReceived" && reportSubmissionId) {
-      setActiveTab("reports");
-    }
-  }, [activeNotification?.redirectUrl, activeNotification?.type]);
+    setActiveNotification(notification);
+    setActiveTab(targetTab);
+  };
 
   const tabs = useMemo(
     () => [
@@ -56,10 +60,15 @@ const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) =
     switch (activeTab) {
       case "overview":
         return (
-          <CollaborationSection
-            relationshipStartDate={trainerProfile?.linkedAt}
-            relationshipStatus="active"
-          />
+          <>
+            <TrainerNotificationsSection
+              onOpenTargetTab={handleOpenNotificationTarget}
+            />
+            <CollaborationSection
+              relationshipStartDate={trainerProfile?.linkedAt}
+              relationshipStatus="active"
+            />
+          </>
         );
       case "plan":
         return <CurrentPlanSection />;

@@ -24,8 +24,7 @@ import type {
   UnreadState,
 } from "../types/notification";
 import {
-  getInvitationIdFromRedirectUrl,
-  isTrainerInvitationNotificationType,
+  getNotificationDeduplicationKey,
 } from "../types/notification";
 
 const NotificationContext = createContext<NotificationContextValue | null>(
@@ -39,17 +38,6 @@ const isPagedNotificationsResult = (
 const isUnreadCountResult = (
   data: UnreadCountDto | ResponseMessageDto | undefined
 ): data is UnreadCountDto => !!data && "count" in data;
-
-const getNotificationDeduplicationKey = (item: NotificationItem): string => {
-  if (isTrainerInvitationNotificationType(item.type)) {
-    const invitationId = getInvitationIdFromRedirectUrl(item.redirectUrl);
-    if (invitationId) {
-      return `trainer-invitation:${invitationId}`;
-    }
-  }
-
-  return item._id;
-};
 
 export const useNotifications = (): NotificationContextValue => {
   const context = useContext(NotificationContext);
