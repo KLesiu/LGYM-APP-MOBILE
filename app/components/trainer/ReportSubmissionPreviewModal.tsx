@@ -80,6 +80,18 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
   onClose,
 }) => {
   const { t } = useTranslation();
+  const getPhotoViewLabel = (viewType?: string | null) => {
+    if (!viewType) {
+      return t("common.photo", "Photo");
+    }
+
+    const normalized = viewType.toLowerCase();
+    const translationKey = `trainer.photoView.${normalized}`;
+    const translated = t(translationKey);
+
+    return translated !== translationKey ? translated : getHumanizedKey(viewType);
+  };
+
   const answerLabels = useMemo<AnswerValueLabels>(
     () => ({
       yes: t("trainer.answerYes", "Yes"),
@@ -173,7 +185,7 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
               : typeof photo.photoId === "string"
                 ? photo.photoId
                 : `${index}`,
-          viewType: typeof photo.viewType === "string" ? photo.viewType : t("common.photo", "Photo"),
+          viewType: getPhotoViewLabel(typeof photo.viewType === "string" ? photo.viewType : null),
           thumbnailUrl: typeof photo.thumbnailUrl === "string" ? photo.thumbnailUrl : null,
           readUrl: typeof photo.readUrl === "string" ? photo.readUrl : null,
           uploadedAt: typeof photo.uploadedAt === "string" ? photo.uploadedAt : undefined,
@@ -211,7 +223,7 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
       }));
 
     return [...orderedItems, ...extraItems];
-  }, [answerLabels, submission?.answers, submission?.request?.template?.fields]);
+  }, [answerLabels, submission?.answers, submission?.request?.template?.fields, t]);
 
   const formatDate = (isoString?: string) => {
     if (!isoString) {

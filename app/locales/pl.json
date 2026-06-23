@@ -569,6 +569,8 @@
     "photoView": {
       "front": "Przód",
       "side": "Bok",
+      "sideleft": "Bok lewy",
+      "sideright": "Bok prawy",
       "back": "Tył",
       "general": "Zdjęcie"
     }

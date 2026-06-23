@@ -565,6 +565,8 @@
     "photoView": {
       "front": "Front",
       "side": "Side",
+      "sideleft": "Side left",
+      "sideright": "Side right",
       "back": "Back",
       "general": "Photo"
     }
