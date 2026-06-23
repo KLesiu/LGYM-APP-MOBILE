@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useHomeContext } from "../home/HomeContext";
 import BellIcon from "./../../../img/icons/bellIcon.svg";
+import UnreadNotificationWarningModal from "./UnreadNotificationWarningModal";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -119,6 +120,8 @@ const Header: React.FC<HeaderProps> = ({
             </View>
         </View>
       </View>
+
+      <UnreadNotificationWarningModal />
     </View>
   );
 };
