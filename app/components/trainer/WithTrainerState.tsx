@@ -5,6 +5,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import BackgroundMainSection from "../elements/BackgroundMainSection";
 import TrainerHeroSection from "./TrainerHeroSection";
 import CollaborationSection from "./CollaborationSection";
+import CurrentDietSection from "./CurrentDietSection";
 import CurrentPlanSection from "./CurrentPlanSection";
 import ReportRequestsSection from "./ReportRequestsSection";
 import ReportsListSection from "./ReportsListSection";
@@ -16,7 +17,7 @@ import {
   type NotificationItem,
 } from "../../types/notification";
 
-type TrainerTabKey = "overview" | "plan" | "requests" | "reports";
+type TrainerTabKey = "overview" | "plan" | "diet" | "requests" | "reports";
 
 interface WithTrainerStateProps {
   trainerProfile?: TraineeTrainerProfileDto;
@@ -50,6 +51,7 @@ const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) =
     () => [
       { key: "overview" as const, label: t("trainer.overviewTab"), icon: "person-outline" },
       { key: "plan" as const, label: t("trainer.planTab"), icon: "barbell-outline" },
+      { key: "diet" as const, label: t("trainer.dietTab"), icon: "restaurant-outline" },
       { key: "requests" as const, label: t("trainer.requestsTab"), icon: "clipboard-outline" },
       { key: "reports" as const, label: t("trainer.reportsTab"), icon: "document-text-outline" },
     ],
@@ -72,6 +74,8 @@ const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) =
         );
       case "plan":
         return <CurrentPlanSection />;
+      case "diet":
+        return <CurrentDietSection />;
       case "requests":
         return <ReportRequestsSection />;
       case "reports":
