@@ -13,6 +13,7 @@ import { useNotifications } from "../../../contexts/NotificationContext";
 import type { NotificationItem } from "../../../types/notification";
 import {
   getInvitationIdFromRedirectUrl,
+  isTrainerRelevantNotificationType,
   isTrainerInvitationNotificationType,
 } from "../../../types/notification";
 import ViewLoading from "../../elements/ViewLoading";
@@ -76,26 +77,16 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
       "trainer.invitation.rejected": t("notifications.trainerInvitationRejectedLabel"),
       ReportRequestReceived: t("notifications.reportRequestReceivedLabel"),
       ReportFeedbackReceived: t("notifications.reportFeedbackReceivedLabel"),
+      TrainingPlanUpdated: t("notifications.trainingPlanUpdatedLabel", "Training plan updated"),
+      DietPlanUpdated: t("notifications.dietPlanUpdatedLabel", "Diet updated"),
+      TrainerMessageReceived: t("notifications.trainerMessageReceivedLabel", "Trainer message"),
     }),
     [t]
   );
 
-  const trainerNotificationTypes = useMemo(
-    () =>
-      new Set([
-        "trainer.invitation.sent",
-        "TrainerInvitationReceived",
-        "ReportRequestReceived",
-        "ReportFeedbackReceived",
-        "TrainingPlanUpdated",
-        "TrainerMessageReceived",
-      ]),
-    []
-  );
-
   const isTrainerNotification = useMemo(
-    () => !!notification.type && trainerNotificationTypes.has(notification.type),
-    [notification.type, trainerNotificationTypes]
+    () => isTrainerRelevantNotificationType(notification.type),
+    [notification.type]
   );
 
   const invitationId = useMemo(
