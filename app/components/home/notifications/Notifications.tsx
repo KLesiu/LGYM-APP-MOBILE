@@ -79,6 +79,7 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
       ReportFeedbackReceived: t("notifications.reportFeedbackReceivedLabel"),
       TrainingPlanUpdated: t("notifications.trainingPlanUpdatedLabel", "Training plan updated"),
       DietPlanUpdated: t("notifications.dietPlanUpdatedLabel", "Diet updated"),
+      TraineeNoteUpdated: t("notifications.traineeNoteUpdatedLabel", "Trainer note updated"),
       TrainerMessageReceived: t("notifications.trainerMessageReceivedLabel", "Trainer message"),
     }),
     [t]

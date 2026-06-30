@@ -63,14 +63,14 @@ const CurrentDietSection: React.FC = () => {
   };
 
   const mealColumns = [
-    { key: "estimatedCalories", label: t("trainer.dietCalories", "Calories"), width: 92 },
-    { key: "proteinGrams", label: t("trainer.dietProtein", "Protein"), width: 88 },
-    { key: "carbsGrams", label: t("trainer.dietCarbs", "Carbs"), width: 88 },
-    { key: "fatGrams", label: t("trainer.dietFat", "Fat"), width: 88 },
+    { key: "estimatedCalories", label: t("trainer.dietCalories", "Calories") },
+    { key: "proteinGrams", label: t("trainer.dietProtein", "Protein") },
+    { key: "carbsGrams", label: t("trainer.dietCarbs", "Carbs") },
+    { key: "fatGrams", label: t("trainer.dietFat", "Fat") },
   ] as const;
 
   return (
-    <View className="bg-secondaryColor p-4 rounded-lg" style={{ gap: 12 }}>
+    <View className="bg-secondaryColor p-4 rounded-lg" style={{ gap: 14 }}>
       <Text className="text-primaryColor text-base" style={{ fontFamily: "OpenSans_700Bold" }}>
         {t("trainer.currentDiets", "Current Diets")}
       </Text>
@@ -80,27 +80,28 @@ const CurrentDietSection: React.FC = () => {
         const hasMeals = meals.length > 0;
 
         return (
-          <View key={plan._id || `${plan.name}-${planIndex}`} className="bg-mainColor rounded-xl p-4" style={{ gap: 12 }}>
-            <View style={{ gap: 8 }}>
-              <Text className="text-textColor text-lg" style={{ fontFamily: "OpenSans_700Bold" }}>
+          <View key={plan._id || `${plan.name}-${planIndex}`} className="bg-[#181818] rounded-2xl border border-white/10 p-4" style={{ gap: 14 }}>
+            <View style={{ gap: 10 }}>
+              <Text className="text-textColor text-xl flex-1" style={{ fontFamily: "OpenSans_700Bold" }}>
                 {plan.name || t("trainer.unnamedDiet", "Unnamed Diet")}
               </Text>
+
               <View className="flex-row flex-wrap" style={{ gap: 8 }}>
-                <View className="bg-secondaryColor px-3 py-2 rounded-lg">
-                  <Text className="text-textColor opacity-60 text-xs">{t("trainer.dietStartDate", "Start")}</Text>
-                  <Text className="text-textColor" style={{ fontFamily: "OpenSans_600SemiBold" }}>{formatDate(plan.startDate)}</Text>
+                <View className="bg-[#222222] px-3 py-3 rounded-xl min-w-[30%] flex-1">
+                  <Text className="text-textColor opacity-60 text-[11px] uppercase">{t("trainer.dietStartDate", "Start")}</Text>
+                  <Text className="text-textColor mt-1" style={{ fontFamily: "OpenSans_700Bold" }}>{formatDate(plan.startDate)}</Text>
                 </View>
-                <View className="bg-secondaryColor px-3 py-2 rounded-lg">
-                  <Text className="text-textColor opacity-60 text-xs">{t("trainer.dietEndDate", "End")}</Text>
-                  <Text className="text-textColor" style={{ fontFamily: "OpenSans_600SemiBold" }}>{formatDate(plan.endDate)}</Text>
+                <View className="bg-[#222222] px-3 py-3 rounded-xl min-w-[30%] flex-1">
+                  <Text className="text-textColor opacity-60 text-[11px] uppercase">{t("trainer.dietEndDate", "End")}</Text>
+                  <Text className="text-textColor mt-1" style={{ fontFamily: "OpenSans_700Bold" }}>{formatDate(plan.endDate)}</Text>
                 </View>
-                <View className="bg-secondaryColor px-3 py-2 rounded-lg">
-                  <Text className="text-textColor opacity-60 text-xs">{t("trainer.dietMealsCount", "Meals")}</Text>
-                  <Text className="text-textColor" style={{ fontFamily: "OpenSans_600SemiBold" }}>{meals.length}</Text>
+                <View className="bg-[#222222] px-3 py-3 rounded-xl min-w-[30%] flex-1">
+                  <Text className="text-textColor opacity-60 text-[11px] uppercase">{t("trainer.dietMealsCount", "Meals")}</Text>
+                  <Text className="text-textColor mt-1" style={{ fontFamily: "OpenSans_700Bold" }}>{meals.length}</Text>
                 </View>
               </View>
               {plan.notes ? (
-                <View className="bg-secondaryColor rounded-lg p-3" style={{ gap: 4 }}>
+                <View className="bg-[#222222] rounded-xl p-3" style={{ gap: 4 }}>
                   <Text className="text-primaryColor text-xs" style={{ fontFamily: "OpenSans_700Bold" }}>
                     {t("trainer.dietNotes", "Trainer notes")}
                   </Text>
@@ -111,26 +112,26 @@ const CurrentDietSection: React.FC = () => {
               ) : null}
             </View>
 
-            <View style={{ gap: 8 }}>
+            <View style={{ gap: 10 }}>
               <Text className="text-primaryColor text-base" style={{ fontFamily: "OpenSans_700Bold" }}>
                 {t("trainer.dietSummary", "Diet summary")}
               </Text>
               <View className="flex-row flex-wrap" style={{ gap: 8 }}>
-                <View className="bg-secondaryColor rounded-lg p-3 min-w-[44%] flex-1">
+                <View className="bg-[#222222] rounded-xl p-3 min-w-[44%] flex-1">
                   <Text className="text-textColor opacity-60 text-xs">{t("trainer.dietCalories", "Calories")}</Text>
-                  <Text className="text-textColor text-base" style={{ fontFamily: "OpenSans_700Bold" }}>{formatValue(plan.estimatedCalories)}</Text>
+                  <Text className="text-textColor text-lg mt-1" style={{ fontFamily: "OpenSans_700Bold" }}>{formatValue(plan.estimatedCalories)}</Text>
                 </View>
-                <View className="bg-secondaryColor rounded-lg p-3 min-w-[44%] flex-1">
+                <View className="bg-[#222222] rounded-xl p-3 min-w-[44%] flex-1">
                   <Text className="text-textColor opacity-60 text-xs">{t("trainer.dietProtein", "Protein")}</Text>
-                  <Text className="text-textColor text-base" style={{ fontFamily: "OpenSans_700Bold" }}>{formatValue(plan.proteinGrams)}</Text>
+                  <Text className="text-textColor text-lg mt-1" style={{ fontFamily: "OpenSans_700Bold" }}>{formatValue(plan.proteinGrams)}</Text>
                 </View>
-                <View className="bg-secondaryColor rounded-lg p-3 min-w-[44%] flex-1">
+                <View className="bg-[#222222] rounded-xl p-3 min-w-[44%] flex-1">
                   <Text className="text-textColor opacity-60 text-xs">{t("trainer.dietCarbs", "Carbs")}</Text>
-                  <Text className="text-textColor text-base" style={{ fontFamily: "OpenSans_700Bold" }}>{formatValue(plan.carbsGrams)}</Text>
+                  <Text className="text-textColor text-lg mt-1" style={{ fontFamily: "OpenSans_700Bold" }}>{formatValue(plan.carbsGrams)}</Text>
                 </View>
-                <View className="bg-secondaryColor rounded-lg p-3 min-w-[44%] flex-1">
+                <View className="bg-[#222222] rounded-xl p-3 min-w-[44%] flex-1">
                   <Text className="text-textColor opacity-60 text-xs">{t("trainer.dietFat", "Fat")}</Text>
-                  <Text className="text-textColor text-base" style={{ fontFamily: "OpenSans_700Bold" }}>{formatValue(plan.fatGrams)}</Text>
+                  <Text className="text-textColor text-lg mt-1" style={{ fontFamily: "OpenSans_700Bold" }}>{formatValue(plan.fatGrams)}</Text>
                 </View>
               </View>
             </View>
@@ -141,54 +142,52 @@ const CurrentDietSection: React.FC = () => {
               </Text>
 
               {!hasMeals ? (
-                <View className="bg-secondaryColor rounded-lg p-3">
+                <View className="bg-[#222222] rounded-xl p-3">
                   <Text className="text-textColor opacity-60 text-center">
                     {t("trainer.noDietMeals", "No meals assigned")}
                   </Text>
                 </View>
               ) : (
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <View className="bg-secondaryColor rounded-lg overflow-hidden" style={{ minWidth: 560 }}>
-                    <View className="flex-row items-center border-b border-white/10 px-3 py-3">
-                      <Text className="text-primaryColor text-xs uppercase" style={{ fontFamily: "OpenSans_700Bold", width: 200 }}>
-                        {t("trainer.dietMealColumn", "Meal")}
-                      </Text>
-                      {mealColumns.map((column) => (
-                        <Text
-                          key={column.key}
-                          className="text-primaryColor text-xs uppercase text-right"
-                          style={{ fontFamily: "OpenSans_700Bold", width: column.width }}
-                        >
-                          {column.label}
-                        </Text>
-                      ))}
-                    </View>
-
+                <ScrollView
+                  className="max-h-[320px]"
+                  nestedScrollEnabled
+                  showsVerticalScrollIndicator={false}
+                >
+                  <View style={{ gap: 10 }}>
                     {meals.map((meal, index) => (
                       <View
                         key={meal._id || `${meal.name}-${index}`}
-                        className="border-b border-white/5 px-3 py-3"
+                        className="bg-[#222222] rounded-xl border border-white/8 p-3"
+                        style={{ gap: 10 }}
                       >
-                        <View className="flex-row items-center">
-                          <View style={{ width: 200, paddingRight: 12 }}>
-                            <Text className="text-textColor" style={{ fontFamily: "OpenSans_700Bold" }}>
+                        <View className="flex-row items-start justify-between" style={{ gap: 12 }}>
+                          <View className="flex-1">
+                            <Text className="text-textColor text-base" style={{ fontFamily: "OpenSans_700Bold" }}>
                               {index + 1}. {meal.name || t("trainer.unnamedMeal", "Meal")}
                             </Text>
                             {meal.description ? (
-                              <Text className="text-textColor opacity-70 text-xs mt-1" style={{ fontFamily: "OpenSans_400Regular" }}>
+                              <Text className="text-textColor opacity-70 text-xs mt-1 leading-5" style={{ fontFamily: "OpenSans_400Regular" }}>
                                 {meal.description}
                               </Text>
                             ) : null}
                           </View>
-
-                          {mealColumns.map((column) => (
-                            <Text
-                              key={column.key}
-                              className="text-textColor text-right"
-                              style={{ fontFamily: "OpenSans_600SemiBold", width: column.width }}
-                            >
-                              {formatValue(meal[column.key])}
+                          <View className="bg-primaryColor/15 px-2 py-1 rounded-full">
+                            <Text className="text-primaryColor text-[11px]" style={{ fontFamily: "OpenSans_700Bold" }}>
+                              #{(meal.order ?? index) + 1}
                             </Text>
+                          </View>
+                        </View>
+
+                        <View className="flex-row flex-wrap" style={{ gap: 8 }}>
+                          {mealColumns.map((column) => (
+                            <View key={column.key} className="bg-[#181818] rounded-lg px-3 py-3 min-w-[47%] flex-1">
+                              <Text className="text-textColor opacity-60 text-[11px] uppercase" style={{ fontFamily: "OpenSans_600SemiBold" }}>
+                                {column.label}
+                              </Text>
+                              <Text className="text-textColor text-base mt-1" style={{ fontFamily: "OpenSans_700Bold" }}>
+                                {formatValue(meal[column.key])}
+                              </Text>
+                            </View>
                           ))}
                         </View>
                       </View>

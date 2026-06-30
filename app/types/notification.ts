@@ -18,6 +18,7 @@ export const TRAINER_RELEVANT_NOTIFICATION_TYPES = [
   "ReportFeedbackReceived",
   "TrainingPlanUpdated",
   "DietPlanUpdated",
+  "TraineeNoteUpdated",
   "TrainerMessageReceived",
 ] as const;
 
@@ -89,7 +90,18 @@ export const getReportSubmissionIdFromRedirectUrl = (
   return match?.[1] ?? null;
 };
 
-export type TrainerNotificationTargetTab = "overview" | "plan" | "diet" | "requests" | "reports";
+export const getTraineeNoteIdFromRedirectUrl = (
+  redirectUrl?: string | null
+): string | null => {
+  if (!redirectUrl) {
+    return null;
+  }
+
+  const match = redirectUrl.match(/\/trainer\/notes\/([^/?#]+)/);
+  return match?.[1] ?? null;
+};
+
+export type TrainerNotificationTargetTab = "overview" | "plan" | "diet" | "notes" | "requests" | "reports";
 
 export const getTrainerNotificationTargetTab = (
   notification?: Pick<NotificationItem, "type" | "redirectUrl"> | null
@@ -118,6 +130,13 @@ export const getTrainerNotificationTargetTab = (
 
   if (notification.type === "DietPlanUpdated") {
     return "diet";
+  }
+
+  if (
+    notification.type === "TraineeNoteUpdated" &&
+    getTraineeNoteIdFromRedirectUrl(notification.redirectUrl)
+  ) {
+    return "notes";
   }
 
   return null;
