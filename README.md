@@ -14,10 +14,12 @@ LGYM Mobile to aplikacja mobilna wspierająca codzienny trening, planowanie, mon
 - zarządzanie planami treningowymi,
 - prowadzenie aktywnego treningu krok po kroku,
 - historię i rekordy,
+- pomiary i śledzenie progresu ciała,
 - pracę z ćwiczeniami i siłowniami,
+- dostęp do planów dietetycznych,
 - onboarding nowego użytkownika,
 - powiadomienia in-app oraz aktualizacje live,
-- współpracę z trenerem, raporty i feedback.
+- współpracę z trenerem, raporty, feedback, zdjęcia i notatki.
 
 ### Cel biznesowy
 
@@ -25,8 +27,8 @@ Głównym celem aplikacji jest uproszczenie ścieżki użytkownika od pierwszego
 
 W praktyce aplikacja ma wspierać:
 
-- **retencję użytkownika** przez wygodny dziennik treningowy i historię wyników,
-- **jakość współpracy trener–podopieczny** przez raporty, komentarze i powiadomienia live,
+- **retencję użytkownika** przez wygodny dziennik treningowy, historię wyników i pomiary,
+- **jakość współpracy trener–podopieczny** przez raporty, komentarze, notatki i powiadomienia live,
 - **operacyjność trenerów** przez wysyłanie próśb o raport, zarządzanie planami i przegląd odpowiedzi,
 - **skalowalność produktu** przez generowane kontrakty API, modularny frontend i spójny model danych.
 
@@ -46,15 +48,16 @@ Może m.in.:
 
 - logować się i rejestrować,
 - tworzyć i wykonywać własne plany,
-- śledzić historię i rekordy,
+- śledzić historię, rekordy i pomiary,
 - odbierać zaproszenia trenerskie,
 - otrzymywać prośby o raport,
 - wypełniać raporty,
 - przeglądać komentarze trenera do raportów,
+- korzystać z planów dietetycznych,
 - otrzymywać powiadomienia live o zdarzeniach związanych z trenerem.
 
 #### 2. Trener
-Model danych i API wspierają także scenariusze trenerskie, a klient mobilny ma już wbudowaną część trener-related UX, m.in. obsługę relacji, requestów i raportów.
+Model danych i API wspierają także scenariusze trenerskie, a klient mobilny ma już wbudowaną część trainer-related UX, m.in. obsługę relacji, requestów, raportów, feedbacku, notatek i nawigacji zależnej od notyfikacji.
 
 ---
 
@@ -83,11 +86,14 @@ Główne pliki:
 
 Aplikacja działa wewnątrz głównego kontenera Home, który przełącza moduły przez wewnętrzny screen router.
 
+Aktualny model nawigacji obejmuje m.in. `START`, `TRAINING`, `PLAN`, `EXERCISES`, `GYM`, `HISTORY`, `RECORDS`, `PROFILE`, `TRAINER`, `NOTIFICATIONS` oraz `MEASUREMENTS`, a ich stan jest koordynowany przez `HomeContext`.
+
 Główne pliki:
 
 - `app/_layout.tsx`
 - `app/Start.tsx`
 - `app/components/home/homeScreens.ts`
+- `app/components/home/HomeContext.tsx`
 - `app/components/layout/Header.tsx`
 - `app/components/layout/Menu.tsx`
 
@@ -191,7 +197,7 @@ Główne pliki:
 
 Produkt wspiera analizę wcześniejszych aktywności:
 
-- historia treningów,
+- historię treningów,
 - sesje w rozbiciu na czas/datę,
 - rekordy i popupy rekordów.
 
@@ -211,7 +217,23 @@ Główne pliki:
 - `app/components/home/profile/Profile.tsx`
 - `app/components/home/profile/MainProfileInfo.tsx`
 
-### 11. Trener / współpraca trener–podopieczny
+### 11. Pomiary i śledzenie progresu ciała
+
+Nowy moduł `Measurements` rozszerza aplikację o monitorowanie zmian ciała i trendów postępu. Z perspektywy produktu to ważne uzupełnienie klasycznego dziennika treningowego, bo pozwala śledzić efekty współpracy nie tylko przez treningi i rekordy, ale też przez dane antropometryczne.
+
+Obszar obejmuje:
+
+- listę i historię pomiarów,
+- podgląd najnowszych wartości,
+- widoki trendów i porównań,
+- modalny flow dodawania / edycji danych.
+
+Główne pliki:
+
+- `app/components/home/measurements/Measurements.tsx`
+- `app/components/home/measurements/MeasurementsPopUp.tsx`
+
+### 12. Trener / współpraca trener–podopieczny
 
 To jeden z bardziej rozbudowanych obszarów biznesowych aplikacji. Obejmuje:
 
@@ -238,7 +260,25 @@ Główne pliki:
 - `app/components/trainer/ReportsListSection.tsx`
 - `app/components/trainer/ReportSubmissionPreviewModal.tsx`
 
-### 12. Powiadomienia in-app i realtime
+### 13. Dieta, raportowanie zdjęciowe i notatki
+
+Warstwa mobilna obsługuje już nie tylko sam trening, ale też dodatkowe obszary współpracy trener–podopieczny:
+
+- pobieranie i prezentowanie planów dietetycznych,
+- reporting zdjęciowy z flow upload init / upload complete,
+- historię zdjęć powiązanych z raportowaniem,
+- notatki trenera i podopiecznego jako osobny element współpracy.
+
+To rozszerza produkt z „aplikacji treningowej” do narzędzia szerszej opieki treningowo-żywieniowej.
+
+Główne pliki:
+
+- `app/services/dietPlans/dietPlanService.ts`
+- `app/services/reporting/reportingPhotos.ts`
+- `app/services/reporting/reportingFeedback.ts`
+- `app/services/traineeNotes/traineeNoteService.ts`
+
+### 14. Powiadomienia in-app i realtime
 
 System powiadomień wspiera:
 
@@ -247,7 +287,8 @@ System powiadomień wspiera:
 - oznaczanie jako przeczytane,
 - live refresh przez SignalR,
 - routing do ekranów związanych z trenerem,
-- obsługę eventów typu trainer invitation, report request, report feedback.
+- obsługę eventów typu trainer invitation, report request, report feedback,
+- zdarzenia związane z dietą, pomiarami, notatkami i wiadomościami trenerskimi.
 
 Główne pliki:
 
@@ -273,7 +314,14 @@ Główne pliki:
 - **Axios**
 - **SignalR** (`@microsoft/signalr`)
 - **Zustand**
+- **expo-image-picker**
+- **expo-location**
+- **expo-clipboard**
 - **NativeWind / Tailwind utilities**
+- **Victory Native**
+- **react-native-calendar-strip**
+- **@shopify/react-native-skia**
+- **react-native-toast-message**
 - **React Native SVG**
 - **React Native Vector Icons**
 - **i18next + react-i18next**
@@ -310,6 +358,17 @@ To oznacza, że:
 - `api/generated/` — wygenerowane klienty backendu
 - `helpers/` / `services/` / `types/` — pomocnicze elementy wspólne
 
+### Konfiguracja Expo i runtime
+
+Aktualna konfiguracja `app.json` pokazuje kilka ważnych cech aplikacji:
+
+- włączone `newArchEnabled`,
+- pluginy `expo-router`, `expo-font`, `expo-image-picker`,
+- skonfigurowane `runtimeVersion` i `updates.url` dla OTA updates,
+- jawne `bundleIdentifier` / `package` dla iOS i Androida.
+
+To oznacza, że README powinien traktować aplikację nie tylko jako lokalny klient developerski, ale jako gotowy do dystrybucji produkt mobilny.
+
 ### Integracja z backendem
 
 Aplikacja używa wygenerowanych kontraktów z `orval`.
@@ -330,6 +389,9 @@ Use case’y, które korzystają z tego flow:
 - zaproszenia trenerskie,
 - nowe requesty o raport,
 - komentarze trenera do raportów,
+- aktualizacje planów dietetycznych,
+- powiadomienia o pomiarach,
+- notatki podopiecznego i wiadomości trenerskie,
 - inne trainer-related notification events.
 
 ### i18n
@@ -358,13 +420,17 @@ UI bazuje na kombinacji:
 Najważniejsze skrypty z `package.json`:
 
 ```bash
-npm run start         # Expo dev server
-npm run android       # start dla Androida
-npm run ios           # build/run iOS
-npm run web           # web preview
-npm run build:android # EAS build Android
-npm run build:ios     # EAS build iOS
-npm run generate:api  # regeneracja klienta API przez orval
+npm run start            # Expo dev server
+npm run android          # start dla Androida
+npm run ios              # build/run iOS
+npm run web              # web preview
+npm run build:android    # EAS build Android
+npm run build:androidDev # alternatywny profil Android build
+npm run build:ios        # EAS build iOS
+npm run submit:ios       # submit latest iOS build
+npm run clean-setup      # czyści lokalne enums/interfaces
+npm run copy-setup       # kopiuje enums/interfaces z ../apiv2
+npm run generate:api     # regeneracja klienta API przez orval
 ```
 
 ### Konfiguracja środowiska lokalnego
@@ -379,6 +445,12 @@ Opcjonalnie dla Android emulatora:
 
 ```env
 REACT_APP_ANDROID_EMULATOR_HOST=10.0.2.2
+```
+
+Warto też pamiętać o wymaganym środowisku Node z `package.json`:
+
+```text
+node >= 22.18.0
 ```
 
 ### Założenia techniczne i ograniczenia
@@ -409,11 +481,13 @@ The product combines:
 
 - workout planning,
 - guided training execution,
-- progress tracking,
+- history and records,
+- measurements and body progress tracking,
 - gym and exercise management,
+- diet plan access,
 - onboarding and product education,
 - in-app notifications and live updates,
-- trainer–trainee collaboration, reports, and feedback.
+- trainer–trainee collaboration, reports, feedback, photos, and notes.
 
 ### Business goal
 
@@ -421,8 +495,8 @@ The app is designed to reduce friction between planning and execution while impr
 
 In practice, the product supports:
 
-- **user retention** through consistent workout logging and progress visibility,
-- **coaching quality** through report requests, comments, and live notifications,
+- **user retention** through consistent workout logging, progress visibility, and measurements,
+- **coaching quality** through report requests, comments, notes, and live notifications,
 - **trainer efficiency** through structured requests, report review, and guided follow-up,
 - **product scalability** through generated API contracts, modular frontend architecture, and reusable UI patterns.
 
@@ -442,15 +516,16 @@ Can:
 
 - log in and register,
 - create and execute training plans,
-- review history and records,
+- review history, records, and measurements,
 - receive trainer invitations,
 - receive report requests,
 - fill in reports,
 - review trainer feedback on reports,
+- use diet plans,
 - receive live notifications related to trainer activity.
 
 #### 2. Trainer
-The data model and APIs support trainer workflows, and the mobile app already contains trainer-related UX for relationship management, requests, reports, and feedback-aware navigation.
+The data model and APIs support trainer workflows, and the mobile app already contains trainer-related UX for relationship management, requests, reports, feedback-aware navigation, notes, and notification-driven actions.
 
 ---
 
@@ -479,11 +554,14 @@ Primary files:
 
 The app runs inside a Home container that switches between major functional modules through an internal screen router.
 
+The current navigation model includes `START`, `TRAINING`, `PLAN`, `EXERCISES`, `GYM`, `HISTORY`, `RECORDS`, `PROFILE`, `TRAINER`, `NOTIFICATIONS`, and `MEASUREMENTS`, coordinated through `HomeContext`.
+
 Primary files:
 
 - `app/_layout.tsx`
 - `app/Start.tsx`
 - `app/components/home/homeScreens.ts`
+- `app/components/home/HomeContext.tsx`
 - `app/components/layout/Header.tsx`
 - `app/components/layout/Menu.tsx`
 
@@ -607,7 +685,23 @@ Primary files:
 - `app/components/home/profile/Profile.tsx`
 - `app/components/home/profile/MainProfileInfo.tsx`
 
-### 11. Trainer collaboration
+### 11. Measurements and body progress tracking
+
+The new `Measurements` module extends the product with body progress tracking. From a business perspective, this matters because the app can now capture coaching outcomes not only through workout logs and records, but also through anthropometric change.
+
+The area covers:
+
+- measurement history and listing,
+- latest values,
+- trend-oriented views,
+- modal flows for adding or editing data.
+
+Primary files:
+
+- `app/components/home/measurements/Measurements.tsx`
+- `app/components/home/measurements/MeasurementsPopUp.tsx`
+
+### 12. Trainer collaboration
 
 This is one of the most business-critical product areas. It includes:
 
@@ -634,7 +728,25 @@ Primary files:
 - `app/components/trainer/ReportsListSection.tsx`
 - `app/components/trainer/ReportSubmissionPreviewModal.tsx`
 
-### 12. In-app notifications and real-time updates
+### 13. Diet plans, photo reporting, and trainee notes
+
+The mobile layer now covers more than training itself. It also includes:
+
+- diet plan retrieval and presentation,
+- photo-reporting flows with upload init / upload complete,
+- reporting photo history,
+- trainee / trainer notes as a dedicated collaboration surface.
+
+This shifts the app toward a broader coaching product, not only a workout tracker.
+
+Primary files:
+
+- `app/services/dietPlans/dietPlanService.ts`
+- `app/services/reporting/reportingPhotos.ts`
+- `app/services/reporting/reportingFeedback.ts`
+- `app/services/traineeNotes/traineeNoteService.ts`
+
+### 14. In-app notifications and real-time updates
 
 The notification system supports:
 
@@ -643,7 +755,8 @@ The notification system supports:
 - mark-as-read flows,
 - live refresh over SignalR,
 - trainer-related deep-links,
-- trainer invitation / report request / report feedback events.
+- trainer invitation / report request / report feedback events,
+- diet, measurement, trainee-note, and trainer-message related events.
 
 Primary files:
 
@@ -669,7 +782,14 @@ Primary files:
 - **Axios**
 - **SignalR** (`@microsoft/signalr`)
 - **Zustand**
+- **expo-image-picker**
+- **expo-location**
+- **expo-clipboard**
 - **NativeWind / Tailwind-style utilities**
+- **Victory Native**
+- **react-native-calendar-strip**
+- **@shopify/react-native-skia**
+- **react-native-toast-message**
 - **React Native SVG**
 - **React Native Vector Icons**
 - **i18next + react-i18next**
@@ -704,6 +824,17 @@ This means:
 - `api/generated/` — generated backend clients
 - `helpers/`, `services/`, `types/` — supporting infrastructure
 
+### Expo runtime and delivery configuration
+
+`app.json` shows several important runtime characteristics:
+
+- `newArchEnabled` is enabled,
+- plugins include `expo-router`, `expo-font`, and `expo-image-picker`,
+- OTA delivery is configured through `runtimeVersion` and `updates.url`,
+- iOS and Android bundle identifiers are defined explicitly.
+
+This means the app should be understood as a distribution-ready mobile product, not only a local Expo prototype.
+
 ### Backend integration
 
 The app relies on generated API contracts built with `orval`.
@@ -724,6 +855,9 @@ Examples:
 - trainer invitations,
 - report requests,
 - trainer feedback on reports,
+- diet-plan updates,
+- measurement-related notifications,
+- trainee notes and trainer messages,
 - other trainer-related notification updates.
 
 ### Internationalization
@@ -752,13 +886,17 @@ The UI combines:
 Key scripts from `package.json`:
 
 ```bash
-npm run start         # Expo dev server
-npm run android       # Android dev start
-npm run ios           # iOS build/run
-npm run web           # web preview
-npm run build:android # EAS Android build
-npm run build:ios     # EAS iOS build
-npm run generate:api  # regenerate API clients via orval
+npm run start            # Expo dev server
+npm run android          # Android dev start
+npm run ios              # iOS build/run
+npm run web              # web preview
+npm run build:android    # EAS Android build
+npm run build:androidDev # alternate Android build profile
+npm run build:ios        # EAS iOS build
+npm run submit:ios       # submit latest iOS build
+npm run clean-setup      # remove local enums/interfaces
+npm run copy-setup       # copy enums/interfaces from ../apiv2
+npm run generate:api     # regenerate API clients via orval
 ```
 
 ### Local environment configuration
@@ -773,6 +911,12 @@ Optional Android emulator helper:
 
 ```env
 REACT_APP_ANDROID_EMULATOR_HOST=10.0.2.2
+```
+
+Required runtime from `package.json`:
+
+```text
+node >= 22.18.0
 ```
 
 ### Technical assumptions and constraints
