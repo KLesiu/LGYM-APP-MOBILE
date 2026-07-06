@@ -48,6 +48,39 @@ interface ApiResponse<T> {
   headers: unknown;
 }
 
+export interface PreparedPhotoUploadFile {
+  normalizedFileUri: string;
+  fileBlob: Blob;
+  sizeBytes: number;
+}
+
+const hasSupportedFileScheme = (value: string): boolean =>
+  value.startsWith("file://") || value.startsWith("content://") || value.startsWith("ph://");
+
+const isWindowsLikeAbsolutePath = (value: string): boolean => /^[a-zA-Z]:[\\/]/.test(value);
+
+const normalizeLocalFileUri = (rawFileUri: string): string => {
+  const trimmedFileUri = rawFileUri.trim();
+
+  if (trimmedFileUri.length === 0) {
+    return trimmedFileUri;
+  }
+
+  if (hasSupportedFileScheme(trimmedFileUri)) {
+    return trimmedFileUri;
+  }
+
+  if (isWindowsLikeAbsolutePath(trimmedFileUri)) {
+    return `file:///${trimmedFileUri.replace(/\\/g, "/")}`;
+  }
+
+  if (trimmedFileUri.startsWith("/")) {
+    return `file://${trimmedFileUri}`;
+  }
+
+  return trimmedFileUri;
+};
+
 export const initiateTraineeReportingPhotoUpload = (
   data: InitiatePhotoUploadRequest
 ) => {
@@ -83,25 +116,42 @@ export const getTraineeReportingPhotoHistory = (requestId: string) => {
   );
 };
 
-export const uploadPhotoToSignedUrl = async (
-  uploadUrl: string,
-  fileUri: string,
-  mimeType: string
-): Promise<number> => {
-  const fileResponse = await fetch(fileUri);
+export const preparePhotoUploadFile = async (
+  fileUri: string
+): Promise<PreparedPhotoUploadFile> => {
+  const normalizedFileUri = normalizeLocalFileUri(fileUri);
+
+  console.log("[ReportPhotoUpload] Normalized file URI", {
+    originalFileUri: fileUri,
+    normalizedFileUri,
+  });
+
+  const fileResponse = await fetch(normalizedFileUri);
   const fileBlob = await fileResponse.blob();
 
+  return {
+    normalizedFileUri,
+    fileBlob,
+    sizeBytes: fileBlob.size,
+  };
+};
+
+export const uploadPhotoToSignedUrl = async (
+  uploadUrl: string,
+  preparedFile: PreparedPhotoUploadFile,
+  mimeType: string
+): Promise<number> => {
   const uploadResponse = await fetch(uploadUrl, {
     method: "PUT",
     headers: {
       "Content-Type": mimeType,
     },
-    body: fileBlob,
+    body: preparedFile.fileBlob,
   });
 
   if (!uploadResponse.ok) {
     throw new Error(`Photo upload failed with status ${uploadResponse.status}`);
   }
 
-  return fileBlob.size;
+  return preparedFile.sizeBytes;
 };

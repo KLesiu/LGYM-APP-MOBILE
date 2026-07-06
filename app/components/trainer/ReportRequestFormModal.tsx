@@ -36,6 +36,7 @@ import {
   completeTraineeReportingPhotoUpload,
   getTraineeReportingPhotoHistory,
   initiateTraineeReportingPhotoUpload,
+  preparePhotoUploadFile,
   type ReportingPhotoHistoryItem,
   uploadPhotoToSignedUrl,
 } from "../../services/reporting/reportingPhotos";
@@ -455,8 +456,17 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
 
     setPhotoUploadingState(fieldKey, viewType, true);
 
+    let uploadStage = "before-permission";
+
     try {
+      uploadStage = "permission";
       const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      console.log("[ReportPhotoUpload] Media library permission result", {
+        granted: permission.granted,
+        canAskAgain: permission.canAskAgain,
+        status: permission.status,
+      });
 
       if (!permission.granted) {
         toastService.showError(
@@ -468,10 +478,16 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
         return;
       }
 
+      uploadStage = "picker";
       const pickerResult = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ["images"],
         allowsEditing: false,
         quality: 0.85,
+      });
+
+      console.log("[ReportPhotoUpload] Picker result", {
+        canceled: pickerResult.canceled,
+        assetsCount: pickerResult.canceled ? 0 : pickerResult.assets.length,
       });
 
       if (pickerResult.canceled || !pickerResult.assets.length) {
@@ -481,12 +497,41 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
       const selectedAsset = pickerResult.assets[0];
       const mimeType = selectedAsset.mimeType || "image/jpeg";
       const initialSize = typeof selectedAsset.fileSize === "number" ? selectedAsset.fileSize : 0;
-
-      const uploadInitResponse = await initiateTraineeReportingPhotoUpload({
+      const preparedUploadFile = await preparePhotoUploadFile(selectedAsset.uri);
+      const effectiveSize = preparedUploadFile.sizeBytes;
+      const uploadInitPayload = {
         reportRequestId: request._id,
         viewType,
         mimeType,
-        sizeBytes: initialSize,
+        sizeBytes: effectiveSize,
+      };
+
+      console.log("[ReportPhotoUpload] Selected asset details", {
+        uri: selectedAsset.uri,
+        fileName: selectedAsset.fileName,
+        mimeType,
+        pickerMimeType: selectedAsset.mimeType,
+        fileSize: selectedAsset.fileSize,
+        initialSize,
+        effectiveSize,
+        width: selectedAsset.width,
+        height: selectedAsset.height,
+        viewType,
+        reportRequestId: request._id,
+      });
+
+      console.log("[ReportPhotoUpload] upload-init payload", uploadInitPayload);
+
+      uploadStage = "upload-init";
+      const uploadInitResponse = await initiateTraineeReportingPhotoUpload({
+        ...uploadInitPayload,
+      });
+
+      console.log("[ReportPhotoUpload] upload-init response", {
+        status: uploadInitResponse.status,
+        uploadUrlPresent: Boolean(uploadInitResponse.data?.uploadUrl),
+        storageKey: uploadInitResponse.data?.storageKey,
+        expiresAt: uploadInitResponse.data?.expiresAt,
       });
 
       if (
@@ -497,25 +542,56 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
         throw new Error("Unable to initialize photo upload");
       }
 
+      uploadStage = "signed-upload";
       const uploadedSize = await uploadPhotoToSignedUrl(
         uploadInitResponse.data.uploadUrl,
-        selectedAsset.uri,
+        preparedUploadFile,
         mimeType
       );
 
-      const completeResponse = await completeTraineeReportingPhotoUpload({
+      console.log("[ReportPhotoUpload] signed upload completed", {
+        uploadedSize,
+        storageKey: uploadInitResponse.data.storageKey,
+        mimeType,
+      });
+
+      const completeUploadPayload = {
         storageKey: uploadInitResponse.data.storageKey,
         mimeType,
         sizeBytes: uploadedSize,
         reportRequestId: request._id,
         viewType,
+      };
+
+      console.log("[ReportPhotoUpload] complete-upload payload", completeUploadPayload);
+
+      uploadStage = "complete-upload";
+      const completeResponse = await completeTraineeReportingPhotoUpload({
+        ...completeUploadPayload,
+      });
+
+      console.log("[ReportPhotoUpload] complete-upload response", {
+        status: completeResponse.status,
+        photoId: completeResponse.data?.photoId,
+        uploadedAt: completeResponse.data?.uploadedAt,
+        storageKey: uploadInitResponse.data.storageKey,
       });
 
       if (completeResponse.status !== 200) {
         throw new Error("Unable to complete photo upload");
       }
 
+      uploadStage = "history";
       const historyResponse = await getTraineeReportingPhotoHistory(request._id);
+
+      console.log("[ReportPhotoUpload] history response", {
+        status: historyResponse.status,
+        photosCount: Array.isArray(historyResponse.data?.photos)
+          ? historyResponse.data.photos.length
+          : 0,
+        expectedPhotoId: completeResponse.data?.photoId,
+      });
+
       const uploadedPhotoFromHistory =
         historyResponse.status === 200 && Array.isArray(historyResponse.data?.photos)
           ? historyResponse.data.photos.find(
@@ -531,9 +607,24 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
         thumbnailUrl: uploadedPhotoFromHistory?.thumbnailUrl ?? null,
         readUrl: uploadedPhotoFromHistory?.readUrl ?? null,
         reportRequestId: request._id,
-        uploadedAt: completeResponse.data?.uploadedAt ?? uploadedPhotoFromHistory?.uploadedAt,
-      });
+          uploadedAt: completeResponse.data?.uploadedAt ?? uploadedPhotoFromHistory?.uploadedAt,
+        });
     } catch (error) {
+      console.error("[ReportPhotoUpload] Upload flow failed", error, {
+        stage: uploadStage,
+        fieldKey,
+        viewType,
+        reportRequestId: request?._id,
+      });
+
+      console.error("[ReportPhotoUpload] Upload flow error details", {
+        stage: uploadStage,
+        message: error instanceof Error ? error.message : String(error),
+        status: (error as { response?: { status?: number } })?.response?.status,
+        responseData: (error as { response?: { data?: unknown } })?.response?.data,
+        responseHeaders: (error as { response?: { headers?: unknown } })?.response?.headers,
+      });
+
       toastService.showError(
         getErrorMessage(
           error,
