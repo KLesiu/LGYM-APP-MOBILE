@@ -25,6 +25,7 @@ const ForgotPassword: React.FC = () => {
   const { t } = useTranslation();
   const { setErrors: setAppErrors } = useAppContext();
   const [email, setEmail] = useState<string>("");
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const { mutate, isPending } = usePostApiForgotPassword();
 
   useFocusEffect(
@@ -66,7 +67,8 @@ const ForgotPassword: React.FC = () => {
       },
       {
         onSuccess: () => {
-          router.push("/Login");
+          toastService.showSuccess(t("auth.forgotPasswordSuccess"));
+          setIsSuccess(true);
         },
         onError: (error: any) => {
           console.error("Forgot password error:", error);
@@ -114,48 +116,63 @@ const ForgotPassword: React.FC = () => {
               className="text-fifthColor text-base text-center"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              {t("auth.forgotPasswordDescription") ||
-                "Enter your email address and we'll send you instructions to reset your password."}
+              {isSuccess
+                ? t("auth.checkYourInbox")
+                : t("auth.forgotPasswordDescription") ||
+                  "Enter your email address and we'll send you instructions to reset your password."}
             </Text>
 
-            <View
-              className="w-full flex flex-col items-center justify-start"
-              style={{ gap: 8 }}
-            >
-              <View className="flex flex-col w-full" style={{ gap: 8 }}>
-                <View className="flex flex-row gap-1">
-                  <Text
-                    className="text-textColor text-base"
-                    style={{ fontFamily: "OpenSans_300Light" }}
-                  >
-                    {t("auth.email")}
-                  </Text>
-                  <Text className="text-redColor">*</Text>
+            {!isSuccess ? (
+              <>
+                <View
+                  className="w-full flex flex-col items-center justify-start"
+                  style={{ gap: 8 }}
+                >
+                  <View className="flex flex-col w-full" style={{ gap: 8 }}>
+                    <View className="flex flex-row gap-1">
+                      <Text
+                        className="text-textColor text-base"
+                        style={{ fontFamily: "OpenSans_300Light" }}
+                      >
+                        {t("auth.email")}
+                      </Text>
+                      <Text className="text-redColor">*</Text>
+                    </View>
+
+                    <TextInput
+                      onChangeText={(text: string) => setEmail(text)}
+                      value={email}
+                      style={{
+                        fontFamily: "OpenSans_400Regular",
+                      }}
+                      className="w-full px-2 py-4 bg-secondaryColor rounded-lg text-textColor"
+                      autoComplete="email"
+                      autoCapitalize="none"
+                      keyboardType="email-address"
+                      editable={!isPending}
+                    />
+                  </View>
                 </View>
 
-                <TextInput
-                  onChangeText={(text: string) => setEmail(text)}
-                  value={email}
-                  style={{
-                    fontFamily: "OpenSans_400Regular",
-                  }}
-                  className="w-full px-2 py-4 bg-secondaryColor rounded-lg text-textColor"
-                  autoComplete="email"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  editable={!isPending}
+                <CustomButton
+                  width="w-full"
+                  onPress={handleSubmit}
+                  disabled={isPending}
+                  buttonStyleType={ButtonStyle.success}
+                  text={t("auth.sendResetLink") || "Send Reset Link"}
+                  buttonStyleSize={ButtonSize.xl}
                 />
+              </>
+            ) : (
+              <View className="w-full bg-green-500/10 rounded-lg p-4">
+                <Text
+                  className="text-textColor text-center"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                >
+                  {t("auth.forgotPasswordSuccess")}
+                </Text>
               </View>
-            </View>
-
-            <CustomButton
-              width="w-full"
-              onPress={handleSubmit}
-              disabled={isPending}
-              buttonStyleType={ButtonStyle.success}
-              text={t("auth.sendResetLink") || "Send Reset Link"}
-              buttonStyleSize={ButtonSize.xl}
-            />
+            )}
 
             <View className="flex flex-row items-center justify-center" style={{ gap: 6 }}>
               <Text
@@ -169,7 +186,7 @@ const ForgotPassword: React.FC = () => {
                   className="text-sm text-primaryColor"
                   style={{ fontFamily: "OpenSans_700Bold" }}
                 >
-                  {t("auth.login")}
+                  {isSuccess ? t("auth.backToLogin") : t("auth.login")}
                 </Text>
               </Pressable>
             </View>

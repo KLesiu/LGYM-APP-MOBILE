@@ -126,6 +126,10 @@ const Login: React.FC = () => {
     router.push("/Register");
   };
 
+  const goToForgotPassword = () => {
+    router.push("/forgot-password");
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -167,7 +171,7 @@ const Login: React.FC = () => {
             autoComplete="given-name"
           />
         </View>
-        <View className="flex flex-col w-full relative" style={{ gap: 8 }}>
+          <View className="flex flex-col w-full relative" style={{ gap: 8 }}>
           <View className="flex flex-row gap-1">
             <Text
               className="text-textColor text-base"
@@ -195,6 +199,16 @@ const Login: React.FC = () => {
             ) : (
               <HideIcon stroke={"white"} />
             )}
+          </Pressable>
+        </View>
+        <View className="w-full flex items-end">
+          <Pressable onPress={goToForgotPassword}>
+            <Text
+              className="text-sm text-primaryColor"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              {t("auth.forgotPassword")}
+            </Text>
           </Pressable>
         </View>
       </View>

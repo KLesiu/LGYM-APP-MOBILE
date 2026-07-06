@@ -28,6 +28,7 @@ const ResetPassword: React.FC = () => {
 
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const { mutate, isPending } = usePostApiResetPassword();
 
   useFocusEffect(
@@ -73,12 +74,13 @@ const ResetPassword: React.FC = () => {
         data: {
           token: token,
           newPassword: newPassword,
+          confirmPassword: confirmPassword,
         },
       },
       {
         onSuccess: () => {
           toastService.showSuccess(t("auth.passwordResetSuccess"));
-          router.push("Login");
+          setIsSuccess(true);
         },
         onError: (error: any) => {
           console.error("Reset password error:", error);
@@ -87,6 +89,10 @@ const ResetPassword: React.FC = () => {
         },
       }
     );
+  };
+
+  const goToLogin = () => {
+    router.push("/Login");
   };
 
   const isFormValid = newPassword.length >= 6 && newPassword === confirmPassword && !!token;
@@ -121,10 +127,10 @@ const ResetPassword: React.FC = () => {
               className="text-fifthColor text-base text-center"
               style={{ fontFamily: "OpenSans_400Regular" }}
             >
-              {t("auth.resetPasswordDescription")}
+              {isSuccess ? t("auth.youCanNowLogin") : t("auth.resetPasswordDescription")}
             </Text>
 
-            {!token && (
+            {!token && !isSuccess && (
               <View className="w-full bg-redColor/10 rounded-lg p-4 mt-4">
                 <Text className="text-redColor text-sm" style={{ fontFamily: "OpenSans_400Regular" }}>
                   {t("auth.invalidResetToken")}
@@ -132,54 +138,76 @@ const ResetPassword: React.FC = () => {
               </View>
             )}
 
-            <View className="flex flex-col w-full" style={{ gap: 8 }}>
-              <View className="flex flex-row gap-1">
-                <Text
-                  className="text-textColor text-base smallPhone:text-sm"
-                  style={{ fontFamily: "OpenSans_300Light" }}
-                >
-                  {t("auth.newPassword")}
-                </Text>
-                <Text className="text-redColor">*</Text>
-              </View>
-              <TextInput
-                secureTextEntry={true}
-                onChangeText={(text) => setNewPassword(text)}
-                value={newPassword}
-                style={{ fontFamily: "OpenSans_400Regular" }}
-                className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
-                editable={!!token}
-              />
-            </View>
+            {!isSuccess ? (
+              <>
+                <View className="flex flex-col w-full" style={{ gap: 8 }}>
+                  <View className="flex flex-row gap-1">
+                    <Text
+                      className="text-textColor text-base smallPhone:text-sm"
+                      style={{ fontFamily: "OpenSans_300Light" }}
+                    >
+                      {t("auth.newPassword")}
+                    </Text>
+                    <Text className="text-redColor">*</Text>
+                  </View>
+                  <TextInput
+                    secureTextEntry={true}
+                    onChangeText={(text) => setNewPassword(text)}
+                    value={newPassword}
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                    className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
+                    editable={!!token}
+                  />
+                </View>
 
-            <View className="flex flex-col w-full" style={{ gap: 8 }}>
-              <View className="flex flex-row gap-1">
-                <Text
-                  className="text-textColor text-base smallPhone:text-sm"
-                  style={{ fontFamily: "OpenSans_300Light" }}
-                >
-                  {t("auth.confirmPassword")}
-                </Text>
-                <Text className="text-redColor">*</Text>
-              </View>
-              <TextInput
-                secureTextEntry={true}
-                onChangeText={(text) => setConfirmPassword(text)}
-                value={confirmPassword}
-                style={{ fontFamily: "OpenSans_400Regular" }}
-                className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
-                editable={!!token}
-              />
-            </View>
+                <View className="flex flex-col w-full" style={{ gap: 8 }}>
+                  <View className="flex flex-row gap-1">
+                    <Text
+                      className="text-textColor text-base smallPhone:text-sm"
+                      style={{ fontFamily: "OpenSans_300Light" }}
+                    >
+                      {t("auth.confirmPassword")}
+                    </Text>
+                    <Text className="text-redColor">*</Text>
+                  </View>
+                  <TextInput
+                    secureTextEntry={true}
+                    onChangeText={(text) => setConfirmPassword(text)}
+                    value={confirmPassword}
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                    className="w-full px-2 py-4 smallPhone:px-1 smallPhone:py-2 bg-secondaryColor rounded-lg text-textColor"
+                    editable={!!token}
+                  />
+                </View>
 
-            <CustomButton
-              text={t("auth.resetPassword")}
-              onPress={resetPassword}
-              width="w-full"
-              buttonStyleType={ButtonStyle.success}
-              buttonStyleSize={ButtonSize.xl}
-              disabled={!isFormValid || isPending}
-            />
+                <CustomButton
+                  text={t("auth.resetPassword")}
+                  onPress={resetPassword}
+                  width="w-full"
+                  buttonStyleType={ButtonStyle.success}
+                  buttonStyleSize={ButtonSize.xl}
+                  disabled={!isFormValid || isPending}
+                />
+              </>
+            ) : (
+              <>
+                <View className="w-full bg-green-500/10 rounded-lg p-4">
+                  <Text
+                    className="text-textColor text-center"
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                  >
+                    {t("auth.passwordResetSuccess")}
+                  </Text>
+                </View>
+                <CustomButton
+                  text={t("auth.backToLogin")}
+                  onPress={goToLogin}
+                  width="w-full"
+                  buttonStyleType={ButtonStyle.success}
+                  buttonStyleSize={ButtonSize.xl}
+                />
+              </>
+            )}
             <MiniLoading />
           </View>
         </ScrollView>
