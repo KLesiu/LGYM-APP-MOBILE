@@ -5,10 +5,15 @@ import { useGetApiTraineePlanActive } from "../../../api/generated/trainee-relat
 import ViewLoading from "../elements/ViewLoading";
 import { useHomeContext } from "../home/HomeContext";
 
-const CurrentPlanSection: React.FC = () => {
+  const CurrentPlanSection: React.FC = () => {
   const { t } = useTranslation();
   const { navigateToScreen } = useHomeContext();
-  const { data: planResponse, isLoading, error, refetch } = useGetApiTraineePlanActive();
+  const { data: planResponse, isLoading, error, refetch } =
+    useGetApiTraineePlanActive({
+      query: {
+        refetchOnMount: "always",
+      },
+    });
 
   const formatDate = (isoString: string | undefined): string => {
     if (!isoString) return "";

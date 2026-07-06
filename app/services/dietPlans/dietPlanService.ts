@@ -51,6 +51,7 @@ export const useCurrentDietPlans = () =>
   useQuery({
     queryKey: ["trainee-current-diet-plans"],
     queryFn: getCurrentDietPlans,
+    refetchOnMount: "always",
   });
 
 export const getCurrentDietPlan = async (): Promise<GetCurrentDietPlanResponse> =>
@@ -62,4 +63,5 @@ export const useCurrentDietPlan = () =>
   useQuery({
     queryKey: ["trainee-current-diet-plan"],
     queryFn: getCurrentDietPlan,
+    refetchOnMount: "always",
   });

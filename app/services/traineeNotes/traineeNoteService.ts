@@ -30,4 +30,5 @@ export const useTraineeNotes = () =>
   useQuery({
     queryKey: ["trainee-visible-notes"],
     queryFn: getTraineeNotes,
+    refetchOnMount: "always",
   });
