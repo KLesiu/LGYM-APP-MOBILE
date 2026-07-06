@@ -8,15 +8,18 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useRouter, useFocusEffect, Stack, useLocalSearchParams } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAppContext } from "./AppContext";
 import { useTranslation } from "react-i18next";
 import toastService from "./services/toastService";
 import { useGetApiInvitationsInvitationId } from "../api/generated/public-invitation/public-invitation";
 import {
+  getGetApiTraineeTrainerQueryKey,
   usePostApiTraineeInvitationsInvitationIdAccept,
   usePostApiTraineeInvitationsInvitationIdReject,
 } from "../api/generated/trainee-relationship/trainee-relationship";
 import { getErrorMessage } from "../utils/errorHandler";
+import { useNotifications } from "./contexts/NotificationContext";
 import CustomButton, {
   ButtonSize,
   ButtonStyle,
@@ -26,6 +29,9 @@ const PublicInvitationStatus: React.FC = () => {
   const router = useRouter();
   const { t } = useTranslation();
   const { setErrors: setAppErrors } = useAppContext();
+  const queryClient = useQueryClient();
+  const { clearActiveNotification, fetchNotifications, refreshUnreadCount } =
+    useNotifications();
   const params = useLocalSearchParams();
   
   const invitationId = typeof params.invitationId === "string" ? params.invitationId : "";
@@ -44,13 +50,23 @@ const PublicInvitationStatus: React.FC = () => {
 
   const invitationData = invitationResponse?.data;
 
+  const handleInvitationActionSuccess = useCallback(async () => {
+    clearActiveNotification();
+    await queryClient.invalidateQueries({
+      queryKey: getGetApiTraineeTrainerQueryKey(),
+    });
+    await refreshUnreadCount();
+    await fetchNotifications(0, 20);
+  }, [clearActiveNotification, fetchNotifications, queryClient, refreshUnreadCount]);
+
   const acceptMutation = usePostApiTraineeInvitationsInvitationIdAccept({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toastService.showSuccess(
           t("invitation.acceptSuccess") || "Invitation accepted successfully"
         );
-        refetch();
+        await handleInvitationActionSuccess();
+        await refetch();
       },
       onError: (error) => {
         const errorMsg = getErrorMessage(
@@ -64,11 +80,12 @@ const PublicInvitationStatus: React.FC = () => {
 
   const rejectMutation = usePostApiTraineeInvitationsInvitationIdReject({
     mutation: {
-      onSuccess: () => {
+      onSuccess: async () => {
         toastService.showSuccess(
           t("invitation.rejectSuccess") || "Invitation rejected"
         );
-        refetch();
+        await handleInvitationActionSuccess();
+        await refetch();
       },
       onError: (error) => {
         const errorMsg = getErrorMessage(

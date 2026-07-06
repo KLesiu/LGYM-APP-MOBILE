@@ -19,6 +19,7 @@ import {
 import ViewLoading from "../../elements/ViewLoading";
 import { useHomeContext } from "../HomeContext";
 import {
+  useGetApiTraineeTrainer,
   usePostApiTraineeInvitationsInvitationIdAccept,
   usePostApiTraineeInvitationsInvitationIdReject,
 } from "../../../../api/generated/trainee-relationship/trainee-relationship";
@@ -29,6 +30,7 @@ type NotificationTypeLabels = Partial<Record<string, string>>;
 
 interface NotificationItemComponentProps {
   notification: NotificationItem;
+  hasTrainerRelationship: boolean;
 }
 
 const formatTimestamp = (dateString: string): string => {
@@ -58,6 +60,7 @@ const formatTimestamp = (dateString: string): string => {
 
 const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
   notification,
+  hasTrainerRelationship,
 }) => {
   const { t } = useTranslation();
   const { navigateToScreen } = useHomeContext();
@@ -99,6 +102,7 @@ const NotificationItemComponent: React.FC<NotificationItemComponentProps> = ({
   const isTrainerInvitation =
     isTrainerInvitationNotificationType(notification.type) &&
     !!invitationId &&
+    !hasTrainerRelationship &&
     !notification.isRead &&
     !isInvitationResolved;
 
@@ -301,10 +305,17 @@ const Notifications: React.FC = () => {
     markAllAsRead,
     isLoading,
   } = useNotifications();
+  const { data: trainerResponse } = useGetApiTraineeTrainer({
+    query: {
+      refetchOnMount: "always",
+    },
+  });
 
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [isMarkingAllAsRead, setIsMarkingAllAsRead] = React.useState(false);
   const [activeTab, setActiveTab] = useState<"new" | "seen">("new");
+
+  const hasTrainerRelationship = !!trainerResponse?.data?.trainerId;
 
   useEffect(() => {
     fetchNotifications();
@@ -335,9 +346,12 @@ const Notifications: React.FC = () => {
 
   const renderNotificationItem = useCallback(
     ({ item }: { item: NotificationItem }) => (
-      <NotificationItemComponent notification={item} />
+      <NotificationItemComponent
+        notification={item}
+        hasTrainerRelationship={hasTrainerRelationship}
+      />
     ),
-    []
+    [hasTrainerRelationship]
   );
 
   const hasUnreadNotifications = notifications.items.some(
