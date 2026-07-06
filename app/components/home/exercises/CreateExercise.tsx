@@ -28,6 +28,7 @@ import type { ExerciseFormDtoBodyPart as ExerciseBodyPartValue } from "../../../
 import { useGetApiEnumsEnumType } from "../../../../api/generated/enum/enum";
 import { useQueryClient } from "@tanstack/react-query";
 import toastService from "../../../services/toastService";
+import { hasExerciseBodyPartImage } from "../../elements/BodyPartImage";
 
 const toBodyPartValue = (value?: string | null): ExerciseBodyPartValue => {
   const allowed = Object.values(ExerciseFormDtoBodyPart);
@@ -196,7 +197,9 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
   const bodyPartsToSelect = useMemo(() => {
     const responseData = bodyPartsData?.data as EnumLookupResponseDto;
     if (responseData && responseData.values) {
-      return responseData.values.map((item) => ({
+      return responseData.values
+        .filter((item) => hasExerciseBodyPartImage(item.name))
+        .map((item) => ({
         label: item.displayName || item.name || "",
         value: item.name || "",
       }));
@@ -277,7 +280,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
                       return;
                     }
                     const selected = (bodyPartsData?.data as EnumLookupResponseDto)?.values?.find(
-                      (bp) => bp.name === item.value
+                      (bp) => bp.name === item.value && hasExerciseBodyPartImage(bp.name)
                     );
                     if (selected) {
                       setBodyPart(selected);

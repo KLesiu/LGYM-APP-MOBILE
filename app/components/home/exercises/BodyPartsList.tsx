@@ -10,6 +10,7 @@ import ViewLoading from "../../elements/ViewLoading";
 import { useTranslation } from "react-i18next";
 
 import { EnumLookupDto, EnumLookupResponseDto } from "../../../../api/generated/model";
+import { hasExerciseBodyPartImage } from "../../elements/BodyPartImage";
 
 interface BodyPartsListProps {
   onSelectBodyPart: (bodyPart: EnumLookupDto) => void;
@@ -31,9 +32,7 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
   const allBodyParts = useMemo(() => {
     const responseData = data?.data as EnumLookupResponseDto;
     if (responseData && responseData.values) {
-      return responseData.values
-        .map((item) => item)
-       ;
+      return responseData.values.filter((item) => hasExerciseBodyPartImage(item.name));
     }
     return [];
   }, [data]);

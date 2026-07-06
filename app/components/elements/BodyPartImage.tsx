@@ -67,6 +67,15 @@ const BIG_IMAGES: Partial<Record<ExerciseBodyPartValue, ImageSourcePropType>> = 
   [ExerciseFormDtoBodyPart.Glutes]: GlutesBig,
 };
 
+export const EXERCISE_BODY_PARTS_WITH_IMAGES = Object.freeze(
+  Object.keys(REGULAR_IMAGES) as ExerciseBodyPartValue[]
+);
+
+export const hasExerciseBodyPartImage = (bodyPart?: string | null): boolean => {
+  const resolvedBodyPart = resolveBodyPart(bodyPart);
+  return Boolean(REGULAR_IMAGES[resolvedBodyPart]);
+};
+
 const BodyPartImage: React.FC<BodyPartImageProps> = ({ bodyPart, showBig = false }) => {
   const resolvedBodyPart = resolveBodyPart(bodyPart);
   const imageSource = showBig
