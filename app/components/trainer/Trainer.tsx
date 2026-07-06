@@ -6,23 +6,39 @@ import NoTrainerState from "./NoTrainerState";
 import WithTrainerState from "./WithTrainerState";
 import ViewLoading from "../elements/ViewLoading";
 import { useGetApiTraineeTrainer } from "../../../api/generated/trainee-relationship/trainee-relationship";
+import { useNotifications } from "../../contexts/NotificationContext";
+import { isTrainerInvitationNotificationType } from "../../types/notification";
 
 const Trainer: React.FC = () => {
   const { t } = useTranslation();
   const { userId } = useHomeContext();
   const { registerScreen } = useOnboarding();
+  const { activeNotification, clearActiveNotification } = useNotifications();
   const { data: trainerResponse, isLoading: isTrainerLoading, error } =
-    useGetApiTraineeTrainer();
+    useGetApiTraineeTrainer({
+      query: {
+        refetchOnMount: "always",
+      },
+    });
 
   useEffect(() => {
     registerScreen("TRAINER");
   }, [registerScreen]);
 
+  const hasTrainerRelationship = !!trainerResponse?.data?.trainerId && !error;
+
+  useEffect(() => {
+    if (
+      hasTrainerRelationship &&
+      isTrainerInvitationNotificationType(activeNotification?.type)
+    ) {
+      clearActiveNotification();
+    }
+  }, [activeNotification?.type, clearActiveNotification, hasTrainerRelationship]);
+
   if (!userId || isTrainerLoading) {
     return <ViewLoading />;
   }
-
-  const hasTrainerRelationship = !!trainerResponse?.data?.trainerId && !error;
 
   if (!hasTrainerRelationship) {
     return <NoTrainerState />;
