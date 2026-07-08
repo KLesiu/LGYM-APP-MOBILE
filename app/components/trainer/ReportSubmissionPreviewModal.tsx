@@ -68,6 +68,27 @@ const formatAnswerValue = (value: unknown, labels: AnswerValueLabels) => {
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+const isPhotoAnswerArray = (value: unknown): value is Array<Record<string, unknown>> => {
+  if (!Array.isArray(value) || value.length === 0) {
+    return false;
+  }
+
+  return value.every((item) => {
+    if (!isRecord(item)) {
+      return false;
+    }
+
+    return (
+      typeof item.readUrl === "string" ||
+      typeof item.thumbnailUrl === "string" ||
+      typeof item.storageKey === "string" ||
+      typeof item.viewType === "string" ||
+      typeof item.photoId === "string" ||
+      typeof item._id === "string"
+    );
+  });
+};
+
 const getHumanizedKey = (value: string) =>
   value
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -115,12 +136,22 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
       )
       .sort((firstField, secondField) => (firstField.order ?? 0) - (secondField.order ?? 0));
 
-    const getFieldKind = (fieldType: string | null | undefined): AnswerItem["kind"] => {
-      if (fieldType === "Measurements") {
+    const getFieldKind = (
+      fieldType: string | null | undefined,
+      value: unknown
+    ): AnswerItem["kind"] => {
+      const normalizedFieldType = fieldType?.trim().toLowerCase();
+
+      if (normalizedFieldType === "measurements") {
         return "measurements";
       }
 
-      if (fieldType === "Photos") {
+      if (
+        normalizedFieldType === "photos" ||
+        normalizedFieldType === "photo" ||
+        normalizedFieldType?.includes("photo") ||
+        isPhotoAnswerArray(value)
+      ) {
         return "photos";
       }
 
@@ -197,9 +228,10 @@ const ReportSubmissionPreviewModal: React.FC<ReportSubmissionPreviewModalProps> 
       const fieldKey = field.key as string;
       usedKeys.add(fieldKey);
 
-      const kind = getFieldKind(field.type);
+      const fieldValue = answers[fieldKey];
+      const kind = getFieldKind(field.type, fieldValue);
       const measurementRows = kind === "measurements" ? getMeasurementRows(field, answers[fieldKey]) : [];
-      const photos = kind === "photos" ? getPhotos(answers[fieldKey]) : [];
+      const photos = kind === "photos" ? getPhotos(fieldValue) : [];
 
       return {
         key: fieldKey,
