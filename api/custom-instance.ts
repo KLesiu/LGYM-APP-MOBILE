@@ -9,6 +9,10 @@ import { getErrorMessage } from '../utils/errorHandler';
 
 type CancelablePromise<T> = Promise<T> & { cancel: () => void };
 
+type CustomAxiosRequestConfig = AxiosRequestConfig & {
+  skipAuthRedirect?: boolean;
+};
+
 const createIdempotencyKey = (): string => {
   const randomPart = Math.random().toString(36).slice(2);
   return `mobile-${Date.now()}-${randomPart}`;
@@ -120,16 +124,17 @@ export const AXIOS_INSTANCE = axios.create({
 
 export const customInstance = <T>(
   url: string,
-  options?: RequestInit & { data?: unknown },
+  options?: RequestInit & { data?: unknown; skipAuthRedirect?: boolean },
 ): Promise<T> => {
   const source = axios.CancelToken.source();
 
   const { body } = options ?? {};
-  const axiosConfig: AxiosRequestConfig = {
+  const axiosConfig: CustomAxiosRequestConfig = {
     url,
     method: options?.method,
     data: body ?? options?.data,
     cancelToken: source.token,
+    skipAuthRedirect: options?.skipAuthRedirect,
   };
 
   // Set default Content-Type for POST/PUT/PATCH requests with body
@@ -171,12 +176,10 @@ AXIOS_INSTANCE.interceptors.request.use((config) => {
   const method = config.method?.toUpperCase();
 
   const requestHeaders = AxiosHeaders.from(config.headers);
+  const skipAuth = Boolean(requestHeaders.get('X-Skip-Auth'));
 
-  // Check for custom header to skip auth
-  if (requestHeaders.get('X-Skip-Auth')) {
+  if (skipAuth) {
     requestHeaders.delete('X-Skip-Auth');
-    config.headers = requestHeaders;
-    return config;
   }
 
   // Set language header
@@ -190,7 +193,7 @@ AXIOS_INSTANCE.interceptors.request.use((config) => {
     requestHeaders.set('Idempotency-Key', createIdempotencyKey());
   }
 
-  if (token) {
+  if (token && !skipAuth) {
     requestHeaders.set('Authorization', `Bearer ${token}`);
   }
 
@@ -204,8 +207,9 @@ AXIOS_INSTANCE.interceptors.response.use(
   async (error) => {
     const status = error?.response?.status;
     const errorMessage = getErrorMessage(error, '');
+    const skipAuthRedirect = Boolean((error?.config as CustomAxiosRequestConfig | undefined)?.skipAuthRedirect);
 
-    if (status === 401) {
+    if (status === 401 && !skipAuthRedirect) {
       // Unauthorized: clear token and redirect to login
       await AsyncStorage.removeItem('token');
       useAuthStore.getState().logout();

@@ -37,7 +37,14 @@ const Login: React.FC = () => {
 
   const { setErrors: setAppErrors, setUserInfo } = useAppContext();
   const { syncTutorialState } = useOnboarding();
-  const { mutate, isPending } = usePostApiLogin();
+  const { mutate, isPending } = usePostApiLogin({
+    request: {
+      skipAuthRedirect: true,
+      headers: {
+        "X-Skip-Auth": "true",
+      },
+    },
+  });
   const { setToken, setUser } = useAuthStore();
 
   useFocusEffect(
