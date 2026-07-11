@@ -24,6 +24,7 @@ import ReportRequestFormModal from "./ReportRequestFormModal";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { getReportRequestIdFromRedirectUrl } from "../../types/notification";
 import { useHomeContext } from "../home/HomeContext";
+import Toast from "react-native-toast-message";
 
 const ReportRequestsSection: React.FC = () => {
   const { t } = useTranslation();
@@ -82,6 +83,17 @@ const ReportRequestsSection: React.FC = () => {
     );
 
     if (!matchingRequest) {
+      if (!isLoading) {
+        clearActiveNotification();
+        Toast.show({
+          type: "error",
+          text1: t("notifications.openTargetUnavailableTitle", "Notification unavailable"),
+          text2: t(
+            "notifications.openTargetUnavailableDescription",
+            "The related content is no longer available."
+          ),
+        });
+      }
       return;
     }
 
@@ -91,6 +103,8 @@ const ReportRequestsSection: React.FC = () => {
     activeNotification?.type,
     activeReportRequestId,
     clearActiveNotification,
+    isLoading,
+    t,
     visibleRequests,
     selectedRequest?._id,
   ]);

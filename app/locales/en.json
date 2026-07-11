@@ -100,7 +100,9 @@
     "error": "Failed to load notifications",
     "markAsReadFailed": "Failed to mark the notification as read",
     "markAllAsRead": "Mark all as read",
-    "markingAsRead": "Marking as read..."
+    "markingAsRead": "Marking as read...",
+    "openTargetUnavailableTitle": "Notification unavailable",
+    "openTargetUnavailableDescription": "The related content is no longer available."
   },
   "plans": {
     "yourPlans": "Your Plans",

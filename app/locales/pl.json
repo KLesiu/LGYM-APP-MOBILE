@@ -100,7 +100,9 @@
     "error": "Nie udało się pobrać powiadomień",
     "markAsReadFailed": "Nie udało się oznaczyć powiadomienia jako przeczytanego",
     "markAllAsRead": "Oznacz wszystko jako przeczytane",
-    "markingAsRead": "Oznaczanie jako przeczytane..."
+    "markingAsRead": "Oznaczanie jako przeczytane...",
+    "openTargetUnavailableTitle": "Powiadomienie niedostępne",
+    "openTargetUnavailableDescription": "Powiązana zawartość nie jest już dostępna."
   },
   "plans": {
     "yourPlans": "Twoje Plany",

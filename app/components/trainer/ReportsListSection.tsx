@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
+import Toast from "react-native-toast-message";
 import ViewLoading from "../elements/ViewLoading";
 import { useGetApiTraineeReportSubmissions } from "../../../api/generated/trainee-reporting/trainee-reporting";
 import type { ReportSubmissionDto, ResponseMessageDto } from "../../../api/generated/model";
@@ -142,6 +143,17 @@ const ReportsListSection: React.FC = () => {
       );
 
       if (!refreshedMatch || isCancelled) {
+        if (!isCancelled) {
+          clearActiveNotification();
+          Toast.show({
+            type: "error",
+            text1: t("notifications.openTargetUnavailableTitle", "Notification unavailable"),
+            text2: t(
+              "notifications.openTargetUnavailableDescription",
+              "The related content is no longer available."
+            ),
+          });
+        }
         return;
       }
 

@@ -22,15 +22,94 @@ import { useOnboarding } from "./onboarding/OnboardingContext";
 import { useEffect } from "react";
 import Toast from "react-native-toast-message";
 import { useTranslation } from "react-i18next";
+import { useNotifications } from "./contexts/NotificationContext";
+import { useAppContext } from "./AppContext";
+import { useAuthStore } from "../stores/useAuthStore";
+import { getApiIdNotifications } from "../api/generated/in-app-notification/in-app-notification";
+import type { PagedNotificationsResultDto, ResponseMessageDto } from "../api/generated/model";
+import type { NotificationItem } from "./types/notification";
+import {
+  buildNotificationFromPushPayload,
+  clearPendingPushNavigation,
+  getPendingPushNavigation,
+  subscribeToPendingPushNavigation,
+  type PendingPushNavigation,
+} from "./services/push/pushNotificationNavigation";
+import {
+  getTrainerNotificationTargetTab,
+  isTrainerRelevantNotificationType,
+} from "./types/notification";
+
+const isPagedNotificationsResult = (
+  data: PagedNotificationsResultDto | ResponseMessageDto | undefined
+): data is PagedNotificationsResultDto => !!data && "items" in data;
+
+const findNotificationById = async (
+  userId: string,
+  notificationId: string
+): Promise<NotificationItem | null> => {
+  let cursorCreatedAt: string | undefined;
+  let cursorId: string | undefined;
+  const visitedCursors = new Set<string>();
+
+  while (true) {
+    const cursorKey = `${cursorCreatedAt ?? "start"}:${cursorId ?? "start"}`;
+    if (visitedCursors.has(cursorKey)) {
+      return null;
+    }
+
+    visitedCursors.add(cursorKey);
+    const response = await getApiIdNotifications(userId, {
+      Limit: 50,
+      CursorCreatedAt: cursorCreatedAt,
+      CursorId: cursorId,
+    });
+    const payload = response.data;
+
+    if (!isPagedNotificationsResult(payload)) {
+      return null;
+    }
+
+    const matchingNotification = (payload.items ?? []).find(
+      (item) => item._id === notificationId
+    );
+    if (matchingNotification) {
+      return {
+        ...matchingNotification,
+        _id: matchingNotification._id || notificationId,
+      };
+    }
+
+    if (!payload.hasNextPage) {
+      return null;
+    }
+
+    cursorCreatedAt = payload.nextCursorCreatedAt ?? undefined;
+    cursorId = payload.nextCursorId ?? undefined;
+  }
+};
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
   const { setScreenNavigator, canUserNavigateToScreen } = useOnboarding();
+  const { isTokenChecked } = useAppContext();
+  const { isAuthenticated, user } = useAuthStore();
+  const {
+    fetchNotifications,
+    refreshUnreadCount,
+    markAsRead,
+    setActiveNotification,
+    clearActiveNotification,
+  } = useNotifications();
   const [currentScreen, setCurrentScreen] = useState<HomeScreenId>(DEFAULT_HOME_SCREEN);
   const [view, setView] = useState<JSX.Element>();
   const [isHeaderShow, setIsHeaderShow] = useState<boolean>(true);
   const lastBlockedToastAtRef = useRef<number>(0);
   const hasInitializedHomeScreenRef = useRef<boolean>(false);
+  const pendingPushNavigationRef = useRef<PendingPushNavigation | null>(
+    getPendingPushNavigation()
+  );
+  const isProcessingPushNavigationRef = useRef<boolean>(false);
 
   const changeView = useCallback((nextView?: JSX.Element) => {
     setCurrentScreen(DEFAULT_HOME_SCREEN);
@@ -110,6 +189,119 @@ const Home: React.FC = () => {
       navigateToScreen(screenId, { force: true });
     });
   }, [navigateToScreen, setScreenNavigator]);
+
+  const showPushFallback = useCallback(() => {
+    clearActiveNotification();
+    navigateToScreen("NOTIFICATIONS", { force: true });
+    Toast.show({
+      type: "error",
+      text1: t("notifications.openTargetUnavailableTitle", "Notification unavailable"),
+      text2: t(
+        "notifications.openTargetUnavailableDescription",
+        "The related content is no longer available."
+      ),
+    });
+  }, [clearActiveNotification, navigateToScreen, t]);
+
+  const openResolvedNotification = useCallback(
+    async (notification: NotificationItem): Promise<void> => {
+      if (!notification.isRead) {
+        try {
+          await markAsRead(notification._id);
+        } catch (error) {
+          console.error("Failed to mark pushed notification as read", error);
+        }
+      }
+
+      await Promise.all([refreshUnreadCount(), fetchNotifications(0, 20)]);
+
+      setActiveNotification(notification);
+
+      if (isTrainerRelevantNotificationType(notification.type)) {
+        navigateToScreen("TRAINER", { force: true });
+        return;
+      }
+
+      navigateToScreen("NOTIFICATIONS", { force: true });
+    },
+    [fetchNotifications, markAsRead, navigateToScreen, refreshUnreadCount, setActiveNotification]
+  );
+
+  const processPendingPushNavigation = useCallback(async (): Promise<void> => {
+    const pendingNavigation = pendingPushNavigationRef.current;
+    if (!pendingNavigation || isProcessingPushNavigationRef.current) {
+      return;
+    }
+
+    if (!isTokenChecked || !isAuthenticated || !user?._id) {
+      return;
+    }
+
+    isProcessingPushNavigationRef.current = true;
+
+    try {
+      if (pendingNavigation.inAppNotificationId) {
+        const notification = await findNotificationById(
+          user._id,
+          pendingNavigation.inAppNotificationId
+        );
+
+        if (notification) {
+          await openResolvedNotification(notification);
+          clearPendingPushNavigation();
+          pendingPushNavigationRef.current = null;
+          return;
+        }
+      }
+
+      const pushNotification = buildNotificationFromPushPayload(pendingNavigation);
+      const trainerTargetTab = getTrainerNotificationTargetTab(pushNotification);
+      const isTrainerPush = isTrainerRelevantNotificationType(pushNotification?.type);
+
+      if (pushNotification && (trainerTargetTab || isTrainerPush)) {
+        await Promise.all([refreshUnreadCount(), fetchNotifications(0, 20)]);
+        setActiveNotification(pushNotification);
+        navigateToScreen("TRAINER", { force: true });
+        clearPendingPushNavigation();
+        pendingPushNavigationRef.current = null;
+        return;
+      }
+
+      showPushFallback();
+      clearPendingPushNavigation();
+      pendingPushNavigationRef.current = null;
+    } catch (error) {
+      console.error("Failed to process pending push navigation", error);
+      showPushFallback();
+      clearPendingPushNavigation();
+      pendingPushNavigationRef.current = null;
+    } finally {
+      isProcessingPushNavigationRef.current = false;
+    }
+  }, [
+    fetchNotifications,
+    isAuthenticated,
+    isTokenChecked,
+    navigateToScreen,
+    openResolvedNotification,
+    refreshUnreadCount,
+    setActiveNotification,
+    showPushFallback,
+    user?._id,
+  ]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToPendingPushNavigation((pendingNavigation) => {
+      pendingPushNavigationRef.current = pendingNavigation;
+      void processPendingPushNavigation();
+    });
+
+    return unsubscribe;
+  }, [processPendingPushNavigation]);
+
+  useEffect(() => {
+    void processPendingPushNavigation();
+  }, [processPendingPushNavigation]);
 
   return (
     <SafeAreaView className="bg-bgColor flex-1">
