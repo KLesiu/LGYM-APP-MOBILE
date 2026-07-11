@@ -1,0 +1,78 @@
+const path = require('path');
+
+const resolveFirebaseFile = (envVarName, fallbackRelativePath) => {
+  const configuredPath = process.env[envVarName];
+
+  if (configuredPath) {
+    return configuredPath;
+  }
+
+  return path.join(__dirname, fallbackRelativePath);
+};
+
+module.exports = {
+  expo: {
+    name: 'LGYM-APP',
+    slug: 'lgym-app-mobile',
+    scheme: 'lgymappmobile',
+    version: '5.0.0',
+    orientation: 'portrait',
+    icon: './assets/logoLGYMNewX.png',
+    newArchEnabled: true,
+    splash: {
+      resizeMode: 'contain',
+      backgroundColor: '#0A0A0A',
+      image: './assets/logoLGYMNewX.png',
+    },
+    assetBundlePatterns: ['**/*'],
+    android: {
+      adaptiveIcon: {
+        foregroundImage: './assets/logoLGYMNewX.png',
+        backgroundColor: '#0A0A0A',
+      },
+      versionCode: 31,
+      package: 'com.lesiuuu.lgymappmobile',
+      googleServicesFile: resolveFirebaseFile('GOOGLE_SERVICES_JSON', 'google-services.json'),
+    },
+    ios: {
+      supportsTablet: true,
+      bundleIdentifier: 'com.lesiuuu.lgymappmobile',
+      googleServicesFile: resolveFirebaseFile('GOOGLE_SERVICE_INFO_PLIST', 'GoogleService-Info.plist'),
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
+        UIStatusBarStyle: 'UIStatusBarStyleLightContent',
+        UIBackgroundModes: ['remote-notification'],
+      },
+    },
+    web: {
+      favicon: './assets/favicon.png',
+    },
+    extra: {
+      eas: {
+        projectId: '505ff65d-afab-4678-926a-dbeabae8ef7d',
+      },
+    },
+    runtimeVersion: {
+      policy: 'appVersion',
+    },
+    updates: {
+      url: 'https://u.expo.dev/505ff65d-afab-4678-926a-dbeabae8ef7d',
+    },
+    plugins: [
+      'expo-router',
+      'expo-font',
+      'expo-image-picker',
+      'expo-localization',
+      '@react-native-firebase/app',
+      '@react-native-firebase/messaging',
+      [
+        'expo-build-properties',
+        {
+          ios: {
+            useFrameworks: 'static',
+          },
+        },
+      ],
+    ],
+  },
+};

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Platform } from "react-native";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Constants from "expo-constants";
+import Constants from "expo-constants";
 import * as Updates from "expo-updates";
 import * as Application from "expo-application";
 import { useAppContext } from "../app/AppContext";
@@ -159,8 +159,8 @@ export const useAppInitialization = () => {
   };
 
  const getAppVersion = () => {
-    if (Constants.default.expoConfig?.version) {
-      return Constants.default.expoConfig.version;
+    if (Constants.expoConfig?.version) {
+      return Constants.expoConfig.version;
     }
     if (Updates.runtimeVersion) {
       return Updates.runtimeVersion;
