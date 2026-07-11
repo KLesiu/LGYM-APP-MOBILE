@@ -13,4 +13,6 @@ export const ReportTemplateFieldRequestType = {
   Number: 'Number',
   Boolean: 'Boolean',
   Date: 'Date',
+  Photos: 'Photos',
+  Measurements: 'Measurements',
 } as const;

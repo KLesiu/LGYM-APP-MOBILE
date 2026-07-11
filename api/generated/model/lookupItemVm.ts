@@ -5,11 +5,9 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface EnumLookupDto {
+export interface LookupItemVm {
   /** @nullable */
   id?: string | null;
-  /** @nullable */
-  name?: string | null;
   /** @nullable */
   displayName?: string | null;
 }

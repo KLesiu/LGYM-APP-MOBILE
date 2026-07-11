@@ -5,11 +5,11 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface EnumLookupDto {
+export interface UpsertTraineeNoteRequest {
   /** @nullable */
-  id?: string | null;
+  title?: string | null;
   /** @nullable */
-  name?: string | null;
-  /** @nullable */
-  displayName?: string | null;
+  content?: string | null;
+  visibleToTrainee?: boolean;
+  isPinned?: boolean;
 }

@@ -14,4 +14,5 @@ export interface ReportTemplateFieldRequest {
   type?: ReportTemplateFieldRequestType;
   isRequired?: boolean;
   order?: number;
+  moduleConfig?: unknown | null;
 }

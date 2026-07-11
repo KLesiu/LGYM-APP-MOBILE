@@ -14,4 +14,5 @@ export interface ReportTemplateFieldDto {
   type?: ReportTemplateFieldDtoType;
   isRequired?: boolean;
   order?: number;
+  moduleConfig?: unknown | null;
 }

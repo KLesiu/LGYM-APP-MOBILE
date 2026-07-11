@@ -22,5 +22,9 @@ export interface ReportSubmissionDto {
   trainerOverallComment?: string | null;
   /** @nullable */
   trainerFieldComments?: ReportSubmissionDtoTrainerFieldComments;
+  /** @nullable */
+  trainerFeedbackAddedAt?: string | null;
+  /** @nullable */
+  trainerFeedbackReadAt?: string | null;
   request?: ReportRequestDto;
 }

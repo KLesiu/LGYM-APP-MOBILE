@@ -7,5 +7,6 @@
 import type { MeasurementFormDto } from './measurementFormDto';
 
 export interface MeasurementsBulkFormDto {
-  measurements: MeasurementFormDto[];
+  /** @nullable */
+  measurements: MeasurementFormDto[] | null;
 }

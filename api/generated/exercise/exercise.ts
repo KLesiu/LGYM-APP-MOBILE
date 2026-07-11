@@ -25,6 +25,7 @@ import type {
 
 import type {
   ExerciseByBodyPartRequestDto,
+  ExerciseExtendedFormDto,
   ExerciseFormDto,
   ExerciseResponseDto,
   ExerciseTrainingHistoryItemDto,
@@ -128,6 +129,94 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       > => {
       return useMutation(getPostApiExerciseAddExerciseMutationOptions(options), queryClient);
     }
+    export type postApiExerciseAddExerciseWithFormulaResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+
+export type postApiExerciseAddExerciseWithFormulaResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
+export type postApiExerciseAddExerciseWithFormulaResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+    
+export type postApiExerciseAddExerciseWithFormulaResponseSuccess = (postApiExerciseAddExerciseWithFormulaResponse200) & {
+  headers: Headers;
+};
+export type postApiExerciseAddExerciseWithFormulaResponseError = (postApiExerciseAddExerciseWithFormulaResponse400 | postApiExerciseAddExerciseWithFormulaResponse403) & {
+  headers: Headers;
+};
+
+export type postApiExerciseAddExerciseWithFormulaResponse = (postApiExerciseAddExerciseWithFormulaResponseSuccess | postApiExerciseAddExerciseWithFormulaResponseError)
+
+export const getPostApiExerciseAddExerciseWithFormulaUrl = () => {
+
+
+  
+
+  return `/api/exercise/addExerciseWithFormula`
+}
+
+export const postApiExerciseAddExerciseWithFormula = async (exerciseExtendedFormDto: ExerciseExtendedFormDto, options?: RequestInit): Promise<postApiExerciseAddExerciseWithFormulaResponse> => {
+  
+  return customInstance<postApiExerciseAddExerciseWithFormulaResponse>(getPostApiExerciseAddExerciseWithFormulaUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      exerciseExtendedFormDto,)
+  }
+);}
+
+
+
+
+export const getPostApiExerciseAddExerciseWithFormulaMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseAddExerciseWithFormula>>, TError,{data: ExerciseExtendedFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseAddExerciseWithFormula>>, TError,{data: ExerciseExtendedFormDto}, TContext> => {
+
+const mutationKey = ['postApiExerciseAddExerciseWithFormula'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiExerciseAddExerciseWithFormula>>, {data: ExerciseExtendedFormDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiExerciseAddExerciseWithFormula(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiExerciseAddExerciseWithFormulaMutationResult = NonNullable<Awaited<ReturnType<typeof postApiExerciseAddExerciseWithFormula>>>
+    export type PostApiExerciseAddExerciseWithFormulaMutationBody = ExerciseExtendedFormDto
+    export type PostApiExerciseAddExerciseWithFormulaMutationError = ResponseMessageDto
+
+    export const usePostApiExerciseAddExerciseWithFormula = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseAddExerciseWithFormula>>, TError,{data: ExerciseExtendedFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiExerciseAddExerciseWithFormula>>,
+        TError,
+        {data: ExerciseExtendedFormDto},
+        TContext
+      > => {
+      return useMutation(getPostApiExerciseAddExerciseWithFormulaMutationOptions(options), queryClient);
+    }
     export type postApiExerciseIdAddUserExerciseResponse200 = {
   data: ResponseMessageDto
   status: 200
@@ -216,6 +305,100 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiExerciseIdAddUserExerciseMutationOptions(options), queryClient);
+    }
+    export type postApiExerciseIdAddUserExerciseWithFormulaResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+
+export type postApiExerciseIdAddUserExerciseWithFormulaResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
+export type postApiExerciseIdAddUserExerciseWithFormulaResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
+export type postApiExerciseIdAddUserExerciseWithFormulaResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
+    
+export type postApiExerciseIdAddUserExerciseWithFormulaResponseSuccess = (postApiExerciseIdAddUserExerciseWithFormulaResponse200) & {
+  headers: Headers;
+};
+export type postApiExerciseIdAddUserExerciseWithFormulaResponseError = (postApiExerciseIdAddUserExerciseWithFormulaResponse400 | postApiExerciseIdAddUserExerciseWithFormulaResponse403 | postApiExerciseIdAddUserExerciseWithFormulaResponse404) & {
+  headers: Headers;
+};
+
+export type postApiExerciseIdAddUserExerciseWithFormulaResponse = (postApiExerciseIdAddUserExerciseWithFormulaResponseSuccess | postApiExerciseIdAddUserExerciseWithFormulaResponseError)
+
+export const getPostApiExerciseIdAddUserExerciseWithFormulaUrl = (id: string,) => {
+
+
+  
+
+  return `/api/exercise/${id}/addUserExerciseWithFormula`
+}
+
+export const postApiExerciseIdAddUserExerciseWithFormula = async (id: string,
+    exerciseExtendedFormDto: ExerciseExtendedFormDto, options?: RequestInit): Promise<postApiExerciseIdAddUserExerciseWithFormulaResponse> => {
+  
+  return customInstance<postApiExerciseIdAddUserExerciseWithFormulaResponse>(getPostApiExerciseIdAddUserExerciseWithFormulaUrl(id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      exerciseExtendedFormDto,)
+  }
+);}
+
+
+
+
+export const getPostApiExerciseIdAddUserExerciseWithFormulaMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdAddUserExerciseWithFormula>>, TError,{id: string;data: ExerciseExtendedFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdAddUserExerciseWithFormula>>, TError,{id: string;data: ExerciseExtendedFormDto}, TContext> => {
+
+const mutationKey = ['postApiExerciseIdAddUserExerciseWithFormula'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiExerciseIdAddUserExerciseWithFormula>>, {id: string;data: ExerciseExtendedFormDto}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  postApiExerciseIdAddUserExerciseWithFormula(id,data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiExerciseIdAddUserExerciseWithFormulaMutationResult = NonNullable<Awaited<ReturnType<typeof postApiExerciseIdAddUserExerciseWithFormula>>>
+    export type PostApiExerciseIdAddUserExerciseWithFormulaMutationBody = ExerciseExtendedFormDto
+    export type PostApiExerciseIdAddUserExerciseWithFormulaMutationError = ResponseMessageDto
+
+    export const usePostApiExerciseIdAddUserExerciseWithFormula = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseIdAddUserExerciseWithFormula>>, TError,{id: string;data: ExerciseExtendedFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiExerciseIdAddUserExerciseWithFormula>>,
+        TError,
+        {id: string;data: ExerciseExtendedFormDto},
+        TContext
+      > => {
+      return useMutation(getPostApiExerciseIdAddUserExerciseWithFormulaMutationOptions(options), queryClient);
     }
     export type postApiExerciseIdDeleteExerciseResponse200 = {
   data: ResponseMessageDto
@@ -398,6 +581,99 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiExerciseUpdateExerciseMutationOptions(options), queryClient);
+    }
+    export type postApiExerciseUpdateExerciseWithFormulaResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+
+export type postApiExerciseUpdateExerciseWithFormulaResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+
+export type postApiExerciseUpdateExerciseWithFormulaResponse403 = {
+  data: ResponseMessageDto
+  status: 403
+}
+
+export type postApiExerciseUpdateExerciseWithFormulaResponse404 = {
+  data: ResponseMessageDto
+  status: 404
+}
+    
+export type postApiExerciseUpdateExerciseWithFormulaResponseSuccess = (postApiExerciseUpdateExerciseWithFormulaResponse200) & {
+  headers: Headers;
+};
+export type postApiExerciseUpdateExerciseWithFormulaResponseError = (postApiExerciseUpdateExerciseWithFormulaResponse400 | postApiExerciseUpdateExerciseWithFormulaResponse403 | postApiExerciseUpdateExerciseWithFormulaResponse404) & {
+  headers: Headers;
+};
+
+export type postApiExerciseUpdateExerciseWithFormulaResponse = (postApiExerciseUpdateExerciseWithFormulaResponseSuccess | postApiExerciseUpdateExerciseWithFormulaResponseError)
+
+export const getPostApiExerciseUpdateExerciseWithFormulaUrl = () => {
+
+
+  
+
+  return `/api/exercise/updateExerciseWithFormula`
+}
+
+export const postApiExerciseUpdateExerciseWithFormula = async (exerciseExtendedFormDto: ExerciseExtendedFormDto, options?: RequestInit): Promise<postApiExerciseUpdateExerciseWithFormulaResponse> => {
+  
+  return customInstance<postApiExerciseUpdateExerciseWithFormulaResponse>(getPostApiExerciseUpdateExerciseWithFormulaUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      exerciseExtendedFormDto,)
+  }
+);}
+
+
+
+
+export const getPostApiExerciseUpdateExerciseWithFormulaMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseUpdateExerciseWithFormula>>, TError,{data: ExerciseExtendedFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseUpdateExerciseWithFormula>>, TError,{data: ExerciseExtendedFormDto}, TContext> => {
+
+const mutationKey = ['postApiExerciseUpdateExerciseWithFormula'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiExerciseUpdateExerciseWithFormula>>, {data: ExerciseExtendedFormDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiExerciseUpdateExerciseWithFormula(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiExerciseUpdateExerciseWithFormulaMutationResult = NonNullable<Awaited<ReturnType<typeof postApiExerciseUpdateExerciseWithFormula>>>
+    export type PostApiExerciseUpdateExerciseWithFormulaMutationBody = ExerciseExtendedFormDto
+    export type PostApiExerciseUpdateExerciseWithFormulaMutationError = ResponseMessageDto
+
+    export const usePostApiExerciseUpdateExerciseWithFormula = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiExerciseUpdateExerciseWithFormula>>, TError,{data: ExerciseExtendedFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiExerciseUpdateExerciseWithFormula>>,
+        TError,
+        {data: ExerciseExtendedFormDto},
+        TContext
+      > => {
+      return useMutation(getPostApiExerciseUpdateExerciseWithFormulaMutationOptions(options), queryClient);
     }
     export type postApiExerciseIdAddGlobalTranslationResponse200 = {
   data: ResponseMessageDto

@@ -28,6 +28,8 @@ import type {
   ForgotPasswordRequest,
   LoginRequest,
   LoginResponseDto,
+  PushInstallationActionRequest,
+  RegisterPushInstallationRequest,
   RegisterUserRequest,
   ResetPasswordRequest,
   ResponseMessageDto,
@@ -478,6 +480,234 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiLogoutMutationOptions(options), queryClient);
+    }
+    export type postApiPushInstallationsRegisterResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+    
+export type postApiPushInstallationsRegisterResponseSuccess = (postApiPushInstallationsRegisterResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiPushInstallationsRegisterResponse = (postApiPushInstallationsRegisterResponseSuccess)
+
+export const getPostApiPushInstallationsRegisterUrl = () => {
+
+
+  
+
+  return `/api/push/installations/register`
+}
+
+export const postApiPushInstallationsRegister = async (registerPushInstallationRequest: RegisterPushInstallationRequest, options?: RequestInit): Promise<postApiPushInstallationsRegisterResponse> => {
+  
+  return customInstance<postApiPushInstallationsRegisterResponse>(getPostApiPushInstallationsRegisterUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      registerPushInstallationRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiPushInstallationsRegisterMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsRegister>>, TError,{data: RegisterPushInstallationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsRegister>>, TError,{data: RegisterPushInstallationRequest}, TContext> => {
+
+const mutationKey = ['postApiPushInstallationsRegister'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiPushInstallationsRegister>>, {data: RegisterPushInstallationRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiPushInstallationsRegister(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiPushInstallationsRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof postApiPushInstallationsRegister>>>
+    export type PostApiPushInstallationsRegisterMutationBody = RegisterPushInstallationRequest
+    export type PostApiPushInstallationsRegisterMutationError = unknown
+
+    export const usePostApiPushInstallationsRegister = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsRegister>>, TError,{data: RegisterPushInstallationRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiPushInstallationsRegister>>,
+        TError,
+        {data: RegisterPushInstallationRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiPushInstallationsRegisterMutationOptions(options), queryClient);
+    }
+    export type postApiPushInstallationsUnregisterResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+    
+export type postApiPushInstallationsUnregisterResponseSuccess = (postApiPushInstallationsUnregisterResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiPushInstallationsUnregisterResponse = (postApiPushInstallationsUnregisterResponseSuccess)
+
+export const getPostApiPushInstallationsUnregisterUrl = () => {
+
+
+  
+
+  return `/api/push/installations/unregister`
+}
+
+export const postApiPushInstallationsUnregister = async (pushInstallationActionRequest: PushInstallationActionRequest, options?: RequestInit): Promise<postApiPushInstallationsUnregisterResponse> => {
+  
+  return customInstance<postApiPushInstallationsUnregisterResponse>(getPostApiPushInstallationsUnregisterUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      pushInstallationActionRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiPushInstallationsUnregisterMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsUnregister>>, TError,{data: PushInstallationActionRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsUnregister>>, TError,{data: PushInstallationActionRequest}, TContext> => {
+
+const mutationKey = ['postApiPushInstallationsUnregister'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiPushInstallationsUnregister>>, {data: PushInstallationActionRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiPushInstallationsUnregister(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiPushInstallationsUnregisterMutationResult = NonNullable<Awaited<ReturnType<typeof postApiPushInstallationsUnregister>>>
+    export type PostApiPushInstallationsUnregisterMutationBody = PushInstallationActionRequest
+    export type PostApiPushInstallationsUnregisterMutationError = unknown
+
+    export const usePostApiPushInstallationsUnregister = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsUnregister>>, TError,{data: PushInstallationActionRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiPushInstallationsUnregister>>,
+        TError,
+        {data: PushInstallationActionRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiPushInstallationsUnregisterMutationOptions(options), queryClient);
+    }
+    export type postApiPushInstallationsDisassociateResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+    
+export type postApiPushInstallationsDisassociateResponseSuccess = (postApiPushInstallationsDisassociateResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiPushInstallationsDisassociateResponse = (postApiPushInstallationsDisassociateResponseSuccess)
+
+export const getPostApiPushInstallationsDisassociateUrl = () => {
+
+
+  
+
+  return `/api/push/installations/disassociate`
+}
+
+export const postApiPushInstallationsDisassociate = async (pushInstallationActionRequest: PushInstallationActionRequest, options?: RequestInit): Promise<postApiPushInstallationsDisassociateResponse> => {
+  
+  return customInstance<postApiPushInstallationsDisassociateResponse>(getPostApiPushInstallationsDisassociateUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      pushInstallationActionRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiPushInstallationsDisassociateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsDisassociate>>, TError,{data: PushInstallationActionRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsDisassociate>>, TError,{data: PushInstallationActionRequest}, TContext> => {
+
+const mutationKey = ['postApiPushInstallationsDisassociate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiPushInstallationsDisassociate>>, {data: PushInstallationActionRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiPushInstallationsDisassociate(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiPushInstallationsDisassociateMutationResult = NonNullable<Awaited<ReturnType<typeof postApiPushInstallationsDisassociate>>>
+    export type PostApiPushInstallationsDisassociateMutationBody = PushInstallationActionRequest
+    export type PostApiPushInstallationsDisassociateMutationError = unknown
+
+    export const usePostApiPushInstallationsDisassociate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiPushInstallationsDisassociate>>, TError,{data: PushInstallationActionRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiPushInstallationsDisassociate>>,
+        TError,
+        {data: PushInstallationActionRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiPushInstallationsDisassociateMutationOptions(options), queryClient);
     }
     export type getApiGetUsersRankingResponse200 = {
   data: UserBaseInfoDto[]

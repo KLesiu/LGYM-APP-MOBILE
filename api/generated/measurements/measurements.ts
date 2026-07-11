@@ -29,9 +29,9 @@ import type {
   GetApiMeasurementsIdTrendParams,
   MeasurementFormDto,
   MeasurementResponseDto,
-  MeasurementsBulkFormDto,
   MeasurementTrendDto,
   MeasurementTrendsDto,
+  MeasurementsBulkFormDto,
   MeasurementsHistoryDto,
   MeasurementsListDto,
   ResponseMessageDto
@@ -117,7 +117,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type PostApiMeasurementsAddMutationBody = MeasurementFormDto
     export type PostApiMeasurementsAddMutationError = ResponseMessageDto
 
-export const usePostApiMeasurementsAdd = <TError = ResponseMessageDto,
+    export const usePostApiMeasurementsAdd = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMeasurementsAdd>>, TError,{data: MeasurementFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiMeasurementsAdd>>,
@@ -127,7 +127,7 @@ export const usePostApiMeasurementsAdd = <TError = ResponseMessageDto,
       > => {
       return useMutation(getPostApiMeasurementsAddMutationOptions(options), queryClient);
     }
-export type postApiMeasurementsAddBulkResponse200 = {
+    export type postApiMeasurementsAddBulkResponse200 = {
   data: ResponseMessageDto
   status: 200
 }
@@ -136,7 +136,7 @@ export type postApiMeasurementsAddBulkResponse400 = {
   data: ResponseMessageDto
   status: 400
 }
-
+    
 export type postApiMeasurementsAddBulkResponseSuccess = (postApiMeasurementsAddBulkResponse200) & {
   headers: Headers;
 };
@@ -147,18 +147,27 @@ export type postApiMeasurementsAddBulkResponseError = (postApiMeasurementsAddBul
 export type postApiMeasurementsAddBulkResponse = (postApiMeasurementsAddBulkResponseSuccess | postApiMeasurementsAddBulkResponseError)
 
 export const getPostApiMeasurementsAddBulkUrl = () => {
+
+
+  
+
   return `/api/measurements/add-bulk`
 }
 
 export const postApiMeasurementsAddBulk = async (measurementsBulkFormDto: MeasurementsBulkFormDto, options?: RequestInit): Promise<postApiMeasurementsAddBulkResponse> => {
+  
   return customInstance<postApiMeasurementsAddBulkResponse>(getPostApiMeasurementsAddBulkUrl(),
-  {
+  {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(measurementsBulkFormDto)
+    body: JSON.stringify(
+      measurementsBulkFormDto,)
   }
 );}
+
+
+
 
 export const getPostApiMeasurementsAddBulkMutationOptions = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>, TError,{data: MeasurementsBulkFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
@@ -171,13 +180,25 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       : {...options, mutation: {...options.mutation, mutationKey}}
       : {mutation: { mutationKey, }, request: undefined};
 
+      
+
+
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>, {data: MeasurementsBulkFormDto}> = (props) => {
           const {data} = props ?? {};
 
           return  postApiMeasurementsAddBulk(data,requestOptions)
         }
 
+
+
+        
+
+
   return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiMeasurementsAddBulkMutationResult = NonNullable<Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>>
+    export type PostApiMeasurementsAddBulkMutationBody = MeasurementsBulkFormDto
+    export type PostApiMeasurementsAddBulkMutationError = ResponseMessageDto
 
     export const usePostApiMeasurementsAddBulk = <TError = ResponseMessageDto,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiMeasurementsAddBulk>>, TError,{data: MeasurementsBulkFormDto}, TContext>, request?: SecondParameter<typeof customInstance>}
@@ -825,6 +846,7 @@ export function useGetApiMeasurementsIdTrends<TData = Awaited<ReturnType<typeof 
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
 
 
 

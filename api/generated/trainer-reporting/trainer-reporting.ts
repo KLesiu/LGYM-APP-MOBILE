@@ -24,12 +24,21 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CompletePhotoUploadRequest,
+  CompletePhotoUploadResponse,
   CreateReportRequestRequest,
+  GetApiTrainerReportingPhotosHistoryParams,
+  GetPhotoHistoryResponse,
+  GetSignedReadUrlResponse,
+  InitiatePhotoUploadRequest,
+  InitiatePhotoUploadResponse,
+  RecurringReportAssignmentDto,
   ReportRequestDto,
   ReportSubmissionDto,
   ReportTemplateDto,
   ResponseMessageDto,
   UpdateReportSubmissionFeedbackRequest,
+  UpsertRecurringReportAssignmentRequest,
   UpsertReportTemplateRequest
 } from '.././model';
 
@@ -777,5 +786,933 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiTrainerTraineesTraineeIdReportSubmissionsSubmissionIdFeedbackMutationOptions(options), queryClient);
+    }
+    export type postApiTrainerReportingPhotosUploadInitResponse200 = {
+  data: InitiatePhotoUploadResponse
+  status: 200
+}
+
+export type postApiTrainerReportingPhotosUploadInitResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTrainerReportingPhotosUploadInitResponseSuccess = (postApiTrainerReportingPhotosUploadInitResponse200) & {
+  headers: Headers;
+};
+export type postApiTrainerReportingPhotosUploadInitResponseError = (postApiTrainerReportingPhotosUploadInitResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTrainerReportingPhotosUploadInitResponse = (postApiTrainerReportingPhotosUploadInitResponseSuccess | postApiTrainerReportingPhotosUploadInitResponseError)
+
+export const getPostApiTrainerReportingPhotosUploadInitUrl = () => {
+
+
+  
+
+  return `/api/trainer/reporting/photos/upload-init`
+}
+
+export const postApiTrainerReportingPhotosUploadInit = async (initiatePhotoUploadRequest: InitiatePhotoUploadRequest, options?: RequestInit): Promise<postApiTrainerReportingPhotosUploadInitResponse> => {
+  
+  return customInstance<postApiTrainerReportingPhotosUploadInitResponse>(getPostApiTrainerReportingPhotosUploadInitUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      initiatePhotoUploadRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTrainerReportingPhotosUploadInitMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerReportingPhotosUploadInit>>, TError,{data: InitiatePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerReportingPhotosUploadInit>>, TError,{data: InitiatePhotoUploadRequest}, TContext> => {
+
+const mutationKey = ['postApiTrainerReportingPhotosUploadInit'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerReportingPhotosUploadInit>>, {data: InitiatePhotoUploadRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTrainerReportingPhotosUploadInit(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerReportingPhotosUploadInitMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerReportingPhotosUploadInit>>>
+    export type PostApiTrainerReportingPhotosUploadInitMutationBody = InitiatePhotoUploadRequest
+    export type PostApiTrainerReportingPhotosUploadInitMutationError = ResponseMessageDto
+
+    export const usePostApiTrainerReportingPhotosUploadInit = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerReportingPhotosUploadInit>>, TError,{data: InitiatePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerReportingPhotosUploadInit>>,
+        TError,
+        {data: InitiatePhotoUploadRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerReportingPhotosUploadInitMutationOptions(options), queryClient);
+    }
+    export type getApiTrainerReportingPhotosPhotoIdSignedUrlResponse200 = {
+  data: GetSignedReadUrlResponse
+  status: 200
+}
+
+export type getApiTrainerReportingPhotosPhotoIdSignedUrlResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type getApiTrainerReportingPhotosPhotoIdSignedUrlResponseSuccess = (getApiTrainerReportingPhotosPhotoIdSignedUrlResponse200) & {
+  headers: Headers;
+};
+export type getApiTrainerReportingPhotosPhotoIdSignedUrlResponseError = (getApiTrainerReportingPhotosPhotoIdSignedUrlResponse400) & {
+  headers: Headers;
+};
+
+export type getApiTrainerReportingPhotosPhotoIdSignedUrlResponse = (getApiTrainerReportingPhotosPhotoIdSignedUrlResponseSuccess | getApiTrainerReportingPhotosPhotoIdSignedUrlResponseError)
+
+export const getGetApiTrainerReportingPhotosPhotoIdSignedUrlUrl = (photoId: string,) => {
+
+
+  
+
+  return `/api/trainer/reporting/photos/${photoId}/signed-url`
+}
+
+export const getApiTrainerReportingPhotosPhotoIdSignedUrl = async (photoId: string, options?: RequestInit): Promise<getApiTrainerReportingPhotosPhotoIdSignedUrlResponse> => {
+  
+  return customInstance<getApiTrainerReportingPhotosPhotoIdSignedUrlResponse>(getGetApiTrainerReportingPhotosPhotoIdSignedUrlUrl(photoId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiTrainerReportingPhotosPhotoIdSignedUrlQueryKey = (photoId: string,) => {
+    return [
+    `/api/trainer/reporting/photos/${photoId}/signed-url`
+    ] as const;
+    }
+
+    
+export const getGetApiTrainerReportingPhotosPhotoIdSignedUrlQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError = ResponseMessageDto>(photoId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiTrainerReportingPhotosPhotoIdSignedUrlQueryKey(photoId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>> = ({ signal }) => getApiTrainerReportingPhotosPhotoIdSignedUrl(photoId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(photoId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiTrainerReportingPhotosPhotoIdSignedUrlQueryResult = NonNullable<Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>>
+export type GetApiTrainerReportingPhotosPhotoIdSignedUrlQueryError = ResponseMessageDto
+
+
+export function useGetApiTrainerReportingPhotosPhotoIdSignedUrl<TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError = ResponseMessageDto>(
+ photoId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTrainerReportingPhotosPhotoIdSignedUrl<TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError = ResponseMessageDto>(
+ photoId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTrainerReportingPhotosPhotoIdSignedUrl<TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError = ResponseMessageDto>(
+ photoId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiTrainerReportingPhotosPhotoIdSignedUrl<TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError = ResponseMessageDto>(
+ photoId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosPhotoIdSignedUrl>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiTrainerReportingPhotosPhotoIdSignedUrlQueryOptions(photoId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+export type postApiTrainerReportingPhotosCompleteUploadResponse200 = {
+  data: CompletePhotoUploadResponse
+  status: 200
+}
+
+export type postApiTrainerReportingPhotosCompleteUploadResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTrainerReportingPhotosCompleteUploadResponseSuccess = (postApiTrainerReportingPhotosCompleteUploadResponse200) & {
+  headers: Headers;
+};
+export type postApiTrainerReportingPhotosCompleteUploadResponseError = (postApiTrainerReportingPhotosCompleteUploadResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTrainerReportingPhotosCompleteUploadResponse = (postApiTrainerReportingPhotosCompleteUploadResponseSuccess | postApiTrainerReportingPhotosCompleteUploadResponseError)
+
+export const getPostApiTrainerReportingPhotosCompleteUploadUrl = () => {
+
+
+  
+
+  return `/api/trainer/reporting/photos/complete-upload`
+}
+
+export const postApiTrainerReportingPhotosCompleteUpload = async (completePhotoUploadRequest: CompletePhotoUploadRequest, options?: RequestInit): Promise<postApiTrainerReportingPhotosCompleteUploadResponse> => {
+  
+  return customInstance<postApiTrainerReportingPhotosCompleteUploadResponse>(getPostApiTrainerReportingPhotosCompleteUploadUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      completePhotoUploadRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTrainerReportingPhotosCompleteUploadMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerReportingPhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerReportingPhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext> => {
+
+const mutationKey = ['postApiTrainerReportingPhotosCompleteUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerReportingPhotosCompleteUpload>>, {data: CompletePhotoUploadRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTrainerReportingPhotosCompleteUpload(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerReportingPhotosCompleteUploadMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerReportingPhotosCompleteUpload>>>
+    export type PostApiTrainerReportingPhotosCompleteUploadMutationBody = CompletePhotoUploadRequest
+    export type PostApiTrainerReportingPhotosCompleteUploadMutationError = ResponseMessageDto
+
+    export const usePostApiTrainerReportingPhotosCompleteUpload = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerReportingPhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerReportingPhotosCompleteUpload>>,
+        TError,
+        {data: CompletePhotoUploadRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerReportingPhotosCompleteUploadMutationOptions(options), queryClient);
+    }
+    export type getApiTrainerReportingPhotosHistoryResponse200 = {
+  data: GetPhotoHistoryResponse
+  status: 200
+}
+
+export type getApiTrainerReportingPhotosHistoryResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type getApiTrainerReportingPhotosHistoryResponseSuccess = (getApiTrainerReportingPhotosHistoryResponse200) & {
+  headers: Headers;
+};
+export type getApiTrainerReportingPhotosHistoryResponseError = (getApiTrainerReportingPhotosHistoryResponse400) & {
+  headers: Headers;
+};
+
+export type getApiTrainerReportingPhotosHistoryResponse = (getApiTrainerReportingPhotosHistoryResponseSuccess | getApiTrainerReportingPhotosHistoryResponseError)
+
+export const getGetApiTrainerReportingPhotosHistoryUrl = (params?: GetApiTrainerReportingPhotosHistoryParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/trainer/reporting/photos/history?${stringifiedParams}` : `/api/trainer/reporting/photos/history`
+}
+
+export const getApiTrainerReportingPhotosHistory = async (params?: GetApiTrainerReportingPhotosHistoryParams, options?: RequestInit): Promise<getApiTrainerReportingPhotosHistoryResponse> => {
+  
+  return customInstance<getApiTrainerReportingPhotosHistoryResponse>(getGetApiTrainerReportingPhotosHistoryUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiTrainerReportingPhotosHistoryQueryKey = (params?: GetApiTrainerReportingPhotosHistoryParams,) => {
+    return [
+    `/api/trainer/reporting/photos/history`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+    
+export const getGetApiTrainerReportingPhotosHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError = ResponseMessageDto>(params?: GetApiTrainerReportingPhotosHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiTrainerReportingPhotosHistoryQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>> = ({ signal }) => getApiTrainerReportingPhotosHistory(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiTrainerReportingPhotosHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>>
+export type GetApiTrainerReportingPhotosHistoryQueryError = ResponseMessageDto
+
+
+export function useGetApiTrainerReportingPhotosHistory<TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError = ResponseMessageDto>(
+ params: undefined |  GetApiTrainerReportingPhotosHistoryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTrainerReportingPhotosHistory<TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError = ResponseMessageDto>(
+ params?: GetApiTrainerReportingPhotosHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTrainerReportingPhotosHistory<TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError = ResponseMessageDto>(
+ params?: GetApiTrainerReportingPhotosHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiTrainerReportingPhotosHistory<TData = Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError = ResponseMessageDto>(
+ params?: GetApiTrainerReportingPhotosHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerReportingPhotosHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiTrainerReportingPhotosHistoryQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse201 = {
+  data: RecurringReportAssignmentDto
+  status: 201
+}
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponseSuccess = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse201) & {
+  headers: Headers;
+};
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponseError = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponseSuccess | postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponseError)
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsUrl = (traineeId: string,) => {
+
+
+  
+
+  return `/api/trainer/trainees/${traineeId}/recurring-report-assignments`
+}
+
+export const postApiTrainerTraineesTraineeIdRecurringReportAssignments = async (traineeId: string,
+    upsertRecurringReportAssignmentRequest: UpsertRecurringReportAssignmentRequest, options?: RequestInit): Promise<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse> => {
+  
+  return customInstance<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse>(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsUrl(traineeId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      upsertRecurringReportAssignmentRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError,{traineeId: string;data: UpsertRecurringReportAssignmentRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError,{traineeId: string;data: UpsertRecurringReportAssignmentRequest}, TContext> => {
+
+const mutationKey = ['postApiTrainerTraineesTraineeIdRecurringReportAssignments'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignments>>, {traineeId: string;data: UpsertRecurringReportAssignmentRequest}> = (props) => {
+          const {traineeId,data} = props ?? {};
+
+          return  postApiTrainerTraineesTraineeIdRecurringReportAssignments(traineeId,data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignments>>>
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsMutationBody = UpsertRecurringReportAssignmentRequest
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsMutationError = ResponseMessageDto
+
+    export const usePostApiTrainerTraineesTraineeIdRecurringReportAssignments = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError,{traineeId: string;data: UpsertRecurringReportAssignmentRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignments>>,
+        TError,
+        {traineeId: string;data: UpsertRecurringReportAssignmentRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsMutationOptions(options), queryClient);
+    }
+    export type getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse200 = {
+  data: RecurringReportAssignmentDto[]
+  status: 200
+}
+
+export type getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponseSuccess = (getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse200) & {
+  headers: Headers;
+};
+export type getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponseError = (getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse400) & {
+  headers: Headers;
+};
+
+export type getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse = (getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponseSuccess | getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponseError)
+
+export const getGetApiTrainerTraineesTraineeIdRecurringReportAssignmentsUrl = (traineeId: string,) => {
+
+
+  
+
+  return `/api/trainer/trainees/${traineeId}/recurring-report-assignments`
+}
+
+export const getApiTrainerTraineesTraineeIdRecurringReportAssignments = async (traineeId: string, options?: RequestInit): Promise<getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse> => {
+  
+  return customInstance<getApiTrainerTraineesTraineeIdRecurringReportAssignmentsResponse>(getGetApiTrainerTraineesTraineeIdRecurringReportAssignmentsUrl(traineeId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiTrainerTraineesTraineeIdRecurringReportAssignmentsQueryKey = (traineeId: string,) => {
+    return [
+    `/api/trainer/trainees/${traineeId}/recurring-report-assignments`
+    ] as const;
+    }
+
+    
+export const getGetApiTrainerTraineesTraineeIdRecurringReportAssignmentsQueryOptions = <TData = Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError = ResponseMessageDto>(traineeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiTrainerTraineesTraineeIdRecurringReportAssignmentsQueryKey(traineeId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>> = ({ signal }) => getApiTrainerTraineesTraineeIdRecurringReportAssignments(traineeId, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(traineeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiTrainerTraineesTraineeIdRecurringReportAssignmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>>
+export type GetApiTrainerTraineesTraineeIdRecurringReportAssignmentsQueryError = ResponseMessageDto
+
+
+export function useGetApiTrainerTraineesTraineeIdRecurringReportAssignments<TData = Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError = ResponseMessageDto>(
+ traineeId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTrainerTraineesTraineeIdRecurringReportAssignments<TData = Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError = ResponseMessageDto>(
+ traineeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTrainerTraineesTraineeIdRecurringReportAssignments<TData = Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError = ResponseMessageDto>(
+ traineeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiTrainerTraineesTraineeIdRecurringReportAssignments<TData = Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError = ResponseMessageDto>(
+ traineeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTrainerTraineesTraineeIdRecurringReportAssignments>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiTrainerTraineesTraineeIdRecurringReportAssignmentsQueryOptions(traineeId,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponse200 = {
+  data: RecurringReportAssignmentDto
+  status: 200
+}
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponseSuccess = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponse200) & {
+  headers: Headers;
+};
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponseError = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponse = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponseSuccess | postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponseError)
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateUrl = (traineeId: string,
+    id: string,) => {
+
+
+  
+
+  return `/api/trainer/trainees/${traineeId}/recurring-report-assignments/${id}/update`
+}
+
+export const postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate = async (traineeId: string,
+    id: string,
+    upsertRecurringReportAssignmentRequest: UpsertRecurringReportAssignmentRequest, options?: RequestInit): Promise<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponse> => {
+  
+  return customInstance<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateResponse>(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateUrl(traineeId,id),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      upsertRecurringReportAssignmentRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate>>, TError,{traineeId: string;id: string;data: UpsertRecurringReportAssignmentRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate>>, TError,{traineeId: string;id: string;data: UpsertRecurringReportAssignmentRequest}, TContext> => {
+
+const mutationKey = ['postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate>>, {traineeId: string;id: string;data: UpsertRecurringReportAssignmentRequest}> = (props) => {
+          const {traineeId,id,data} = props ?? {};
+
+          return  postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate(traineeId,id,data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate>>>
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateMutationBody = UpsertRecurringReportAssignmentRequest
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateMutationError = ResponseMessageDto
+
+    export const usePostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate>>, TError,{traineeId: string;id: string;data: UpsertRecurringReportAssignmentRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdate>>,
+        TError,
+        {traineeId: string;id: string;data: UpsertRecurringReportAssignmentRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdUpdateMutationOptions(options), queryClient);
+    }
+    export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponse200 = {
+  data: RecurringReportAssignmentDto
+  status: 200
+}
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponseSuccess = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponse200) & {
+  headers: Headers;
+};
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponseError = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponse = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponseSuccess | postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponseError)
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseUrl = (traineeId: string,
+    id: string,) => {
+
+
+  
+
+  return `/api/trainer/trainees/${traineeId}/recurring-report-assignments/${id}/pause`
+}
+
+export const postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause = async (traineeId: string,
+    id: string, options?: RequestInit): Promise<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponse> => {
+  
+  return customInstance<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseResponse>(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseUrl(traineeId,id),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause>>, TError,{traineeId: string;id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause>>, TError,{traineeId: string;id: string}, TContext> => {
+
+const mutationKey = ['postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause>>, {traineeId: string;id: string}> = (props) => {
+          const {traineeId,id} = props ?? {};
+
+          return  postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause(traineeId,id,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause>>>
+    
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseMutationError = ResponseMessageDto
+
+    export const usePostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause>>, TError,{traineeId: string;id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPause>>,
+        TError,
+        {traineeId: string;id: string},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdPauseMutationOptions(options), queryClient);
+    }
+    export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponse200 = {
+  data: RecurringReportAssignmentDto
+  status: 200
+}
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponseSuccess = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponse200) & {
+  headers: Headers;
+};
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponseError = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponse = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponseSuccess | postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponseError)
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeUrl = (traineeId: string,
+    id: string,) => {
+
+
+  
+
+  return `/api/trainer/trainees/${traineeId}/recurring-report-assignments/${id}/resume`
+}
+
+export const postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume = async (traineeId: string,
+    id: string, options?: RequestInit): Promise<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponse> => {
+  
+  return customInstance<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeResponse>(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeUrl(traineeId,id),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume>>, TError,{traineeId: string;id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume>>, TError,{traineeId: string;id: string}, TContext> => {
+
+const mutationKey = ['postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume>>, {traineeId: string;id: string}> = (props) => {
+          const {traineeId,id} = props ?? {};
+
+          return  postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume(traineeId,id,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume>>>
+    
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeMutationError = ResponseMessageDto
+
+    export const usePostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume>>, TError,{traineeId: string;id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResume>>,
+        TError,
+        {traineeId: string;id: string},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdResumeMutationOptions(options), queryClient);
+    }
+    export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponse200 = {
+  data: ResponseMessageDto
+  status: 200
+}
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponseSuccess = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponse200) & {
+  headers: Headers;
+};
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponseError = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponse = (postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponseSuccess | postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponseError)
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteUrl = (traineeId: string,
+    id: string,) => {
+
+
+  
+
+  return `/api/trainer/trainees/${traineeId}/recurring-report-assignments/${id}/delete`
+}
+
+export const postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete = async (traineeId: string,
+    id: string, options?: RequestInit): Promise<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponse> => {
+  
+  return customInstance<postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteResponse>(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteUrl(traineeId,id),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete>>, TError,{traineeId: string;id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete>>, TError,{traineeId: string;id: string}, TContext> => {
+
+const mutationKey = ['postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete>>, {traineeId: string;id: string}> = (props) => {
+          const {traineeId,id} = props ?? {};
+
+          return  postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete(traineeId,id,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete>>>
+    
+    export type PostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteMutationError = ResponseMessageDto
+
+    export const usePostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete>>, TError,{traineeId: string;id: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDelete>>,
+        TError,
+        {traineeId: string;id: string},
+        TContext
+      > => {
+      return useMutation(getPostApiTrainerTraineesTraineeIdRecurringReportAssignmentsIdDeleteMutationOptions(options), queryClient);
     }
     

@@ -24,6 +24,12 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CompletePhotoUploadRequest,
+  CompletePhotoUploadResponse,
+  GetApiTraineeReportingPhotosHistoryParams,
+  GetPhotoHistoryResponse,
+  InitiatePhotoUploadRequest,
+  InitiatePhotoUploadResponse,
   ReportRequestDto,
   ReportSubmissionDto,
   ResponseMessageDto,
@@ -320,6 +326,538 @@ export function useGetApiTraineeReportSubmissions<TData = Awaited<ReturnType<typ
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getGetApiTraineeReportSubmissionsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+export type postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponse200 = {
+  data: ReportSubmissionDto
+  status: 200
+}
+
+export type postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponseSuccess = (postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponse200) & {
+  headers: Headers;
+};
+export type postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponseError = (postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponse = (postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponseSuccess | postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponseError)
+
+export const getPostApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadUrl = (submissionId: string,) => {
+
+
+  
+
+  return `/api/trainee/report-submissions/${submissionId}/mark-feedback-read`
+}
+
+export const postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead = async (submissionId: string, options?: RequestInit): Promise<postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponse> => {
+  
+  return customInstance<postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadResponse>(getPostApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadUrl(submissionId),
+  {      
+    ...options,
+    method: 'POST'
+    
+    
+  }
+);}
+
+
+
+
+export const getPostApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead>>, TError,{submissionId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead>>, TError,{submissionId: string}, TContext> => {
+
+const mutationKey = ['postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead>>, {submissionId: string}> = (props) => {
+          const {submissionId} = props ?? {};
+
+          return  postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead(submissionId,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead>>>
+    
+    export type PostApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadMutationError = ResponseMessageDto
+
+    export const usePostApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead>>, TError,{submissionId: string}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTraineeReportSubmissionsSubmissionIdMarkFeedbackRead>>,
+        TError,
+        {submissionId: string},
+        TContext
+      > => {
+      return useMutation(getPostApiTraineeReportSubmissionsSubmissionIdMarkFeedbackReadMutationOptions(options), queryClient);
+    }
+    export type postApiTraineePhotosInitiateResponse200 = {
+  data: InitiatePhotoUploadResponse
+  status: 200
+}
+
+export type postApiTraineePhotosInitiateResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTraineePhotosInitiateResponseSuccess = (postApiTraineePhotosInitiateResponse200) & {
+  headers: Headers;
+};
+export type postApiTraineePhotosInitiateResponseError = (postApiTraineePhotosInitiateResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTraineePhotosInitiateResponse = (postApiTraineePhotosInitiateResponseSuccess | postApiTraineePhotosInitiateResponseError)
+
+export const getPostApiTraineePhotosInitiateUrl = () => {
+
+
+  
+
+  return `/api/trainee/photos/initiate`
+}
+
+export const postApiTraineePhotosInitiate = async (initiatePhotoUploadRequest: InitiatePhotoUploadRequest, options?: RequestInit): Promise<postApiTraineePhotosInitiateResponse> => {
+  
+  return customInstance<postApiTraineePhotosInitiateResponse>(getPostApiTraineePhotosInitiateUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      initiatePhotoUploadRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTraineePhotosInitiateMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineePhotosInitiate>>, TError,{data: InitiatePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTraineePhotosInitiate>>, TError,{data: InitiatePhotoUploadRequest}, TContext> => {
+
+const mutationKey = ['postApiTraineePhotosInitiate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTraineePhotosInitiate>>, {data: InitiatePhotoUploadRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTraineePhotosInitiate(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTraineePhotosInitiateMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTraineePhotosInitiate>>>
+    export type PostApiTraineePhotosInitiateMutationBody = InitiatePhotoUploadRequest
+    export type PostApiTraineePhotosInitiateMutationError = ResponseMessageDto
+
+    export const usePostApiTraineePhotosInitiate = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineePhotosInitiate>>, TError,{data: InitiatePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTraineePhotosInitiate>>,
+        TError,
+        {data: InitiatePhotoUploadRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTraineePhotosInitiateMutationOptions(options), queryClient);
+    }
+    export type postApiTraineeReportingPhotosUploadInitResponse200 = {
+  data: InitiatePhotoUploadResponse
+  status: 200
+}
+
+export type postApiTraineeReportingPhotosUploadInitResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTraineeReportingPhotosUploadInitResponseSuccess = (postApiTraineeReportingPhotosUploadInitResponse200) & {
+  headers: Headers;
+};
+export type postApiTraineeReportingPhotosUploadInitResponseError = (postApiTraineeReportingPhotosUploadInitResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTraineeReportingPhotosUploadInitResponse = (postApiTraineeReportingPhotosUploadInitResponseSuccess | postApiTraineeReportingPhotosUploadInitResponseError)
+
+export const getPostApiTraineeReportingPhotosUploadInitUrl = () => {
+
+
+  
+
+  return `/api/trainee/reporting/photos/upload-init`
+}
+
+export const postApiTraineeReportingPhotosUploadInit = async (initiatePhotoUploadRequest: InitiatePhotoUploadRequest, options?: RequestInit): Promise<postApiTraineeReportingPhotosUploadInitResponse> => {
+  
+  return customInstance<postApiTraineeReportingPhotosUploadInitResponse>(getPostApiTraineeReportingPhotosUploadInitUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      initiatePhotoUploadRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTraineeReportingPhotosUploadInitMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportingPhotosUploadInit>>, TError,{data: InitiatePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportingPhotosUploadInit>>, TError,{data: InitiatePhotoUploadRequest}, TContext> => {
+
+const mutationKey = ['postApiTraineeReportingPhotosUploadInit'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTraineeReportingPhotosUploadInit>>, {data: InitiatePhotoUploadRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTraineeReportingPhotosUploadInit(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTraineeReportingPhotosUploadInitMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTraineeReportingPhotosUploadInit>>>
+    export type PostApiTraineeReportingPhotosUploadInitMutationBody = InitiatePhotoUploadRequest
+    export type PostApiTraineeReportingPhotosUploadInitMutationError = ResponseMessageDto
+
+    export const usePostApiTraineeReportingPhotosUploadInit = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportingPhotosUploadInit>>, TError,{data: InitiatePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTraineeReportingPhotosUploadInit>>,
+        TError,
+        {data: InitiatePhotoUploadRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTraineeReportingPhotosUploadInitMutationOptions(options), queryClient);
+    }
+    export type postApiTraineePhotosCompleteUploadResponse200 = {
+  data: CompletePhotoUploadResponse
+  status: 200
+}
+
+export type postApiTraineePhotosCompleteUploadResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTraineePhotosCompleteUploadResponseSuccess = (postApiTraineePhotosCompleteUploadResponse200) & {
+  headers: Headers;
+};
+export type postApiTraineePhotosCompleteUploadResponseError = (postApiTraineePhotosCompleteUploadResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTraineePhotosCompleteUploadResponse = (postApiTraineePhotosCompleteUploadResponseSuccess | postApiTraineePhotosCompleteUploadResponseError)
+
+export const getPostApiTraineePhotosCompleteUploadUrl = () => {
+
+
+  
+
+  return `/api/trainee/photos/complete-upload`
+}
+
+export const postApiTraineePhotosCompleteUpload = async (completePhotoUploadRequest: CompletePhotoUploadRequest, options?: RequestInit): Promise<postApiTraineePhotosCompleteUploadResponse> => {
+  
+  return customInstance<postApiTraineePhotosCompleteUploadResponse>(getPostApiTraineePhotosCompleteUploadUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      completePhotoUploadRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTraineePhotosCompleteUploadMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineePhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTraineePhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext> => {
+
+const mutationKey = ['postApiTraineePhotosCompleteUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTraineePhotosCompleteUpload>>, {data: CompletePhotoUploadRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTraineePhotosCompleteUpload(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTraineePhotosCompleteUploadMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTraineePhotosCompleteUpload>>>
+    export type PostApiTraineePhotosCompleteUploadMutationBody = CompletePhotoUploadRequest
+    export type PostApiTraineePhotosCompleteUploadMutationError = ResponseMessageDto
+
+    export const usePostApiTraineePhotosCompleteUpload = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineePhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTraineePhotosCompleteUpload>>,
+        TError,
+        {data: CompletePhotoUploadRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTraineePhotosCompleteUploadMutationOptions(options), queryClient);
+    }
+    export type postApiTraineeReportingPhotosCompleteUploadResponse200 = {
+  data: CompletePhotoUploadResponse
+  status: 200
+}
+
+export type postApiTraineeReportingPhotosCompleteUploadResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type postApiTraineeReportingPhotosCompleteUploadResponseSuccess = (postApiTraineeReportingPhotosCompleteUploadResponse200) & {
+  headers: Headers;
+};
+export type postApiTraineeReportingPhotosCompleteUploadResponseError = (postApiTraineeReportingPhotosCompleteUploadResponse400) & {
+  headers: Headers;
+};
+
+export type postApiTraineeReportingPhotosCompleteUploadResponse = (postApiTraineeReportingPhotosCompleteUploadResponseSuccess | postApiTraineeReportingPhotosCompleteUploadResponseError)
+
+export const getPostApiTraineeReportingPhotosCompleteUploadUrl = () => {
+
+
+  
+
+  return `/api/trainee/reporting/photos/complete-upload`
+}
+
+export const postApiTraineeReportingPhotosCompleteUpload = async (completePhotoUploadRequest: CompletePhotoUploadRequest, options?: RequestInit): Promise<postApiTraineeReportingPhotosCompleteUploadResponse> => {
+  
+  return customInstance<postApiTraineeReportingPhotosCompleteUploadResponse>(getPostApiTraineeReportingPhotosCompleteUploadUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      completePhotoUploadRequest,)
+  }
+);}
+
+
+
+
+export const getPostApiTraineeReportingPhotosCompleteUploadMutationOptions = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportingPhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportingPhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext> => {
+
+const mutationKey = ['postApiTraineeReportingPhotosCompleteUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiTraineeReportingPhotosCompleteUpload>>, {data: CompletePhotoUploadRequest}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiTraineeReportingPhotosCompleteUpload(data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiTraineeReportingPhotosCompleteUploadMutationResult = NonNullable<Awaited<ReturnType<typeof postApiTraineeReportingPhotosCompleteUpload>>>
+    export type PostApiTraineeReportingPhotosCompleteUploadMutationBody = CompletePhotoUploadRequest
+    export type PostApiTraineeReportingPhotosCompleteUploadMutationError = ResponseMessageDto
+
+    export const usePostApiTraineeReportingPhotosCompleteUpload = <TError = ResponseMessageDto,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiTraineeReportingPhotosCompleteUpload>>, TError,{data: CompletePhotoUploadRequest}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiTraineeReportingPhotosCompleteUpload>>,
+        TError,
+        {data: CompletePhotoUploadRequest},
+        TContext
+      > => {
+      return useMutation(getPostApiTraineeReportingPhotosCompleteUploadMutationOptions(options), queryClient);
+    }
+    export type getApiTraineeReportingPhotosHistoryResponse200 = {
+  data: GetPhotoHistoryResponse
+  status: 200
+}
+
+export type getApiTraineeReportingPhotosHistoryResponse400 = {
+  data: ResponseMessageDto
+  status: 400
+}
+    
+export type getApiTraineeReportingPhotosHistoryResponseSuccess = (getApiTraineeReportingPhotosHistoryResponse200) & {
+  headers: Headers;
+};
+export type getApiTraineeReportingPhotosHistoryResponseError = (getApiTraineeReportingPhotosHistoryResponse400) & {
+  headers: Headers;
+};
+
+export type getApiTraineeReportingPhotosHistoryResponse = (getApiTraineeReportingPhotosHistoryResponseSuccess | getApiTraineeReportingPhotosHistoryResponseError)
+
+export const getGetApiTraineeReportingPhotosHistoryUrl = (params?: GetApiTraineeReportingPhotosHistoryParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/trainee/reporting/photos/history?${stringifiedParams}` : `/api/trainee/reporting/photos/history`
+}
+
+export const getApiTraineeReportingPhotosHistory = async (params?: GetApiTraineeReportingPhotosHistoryParams, options?: RequestInit): Promise<getApiTraineeReportingPhotosHistoryResponse> => {
+  
+  return customInstance<getApiTraineeReportingPhotosHistoryResponse>(getGetApiTraineeReportingPhotosHistoryUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+
+
+export const getGetApiTraineeReportingPhotosHistoryQueryKey = (params?: GetApiTraineeReportingPhotosHistoryParams,) => {
+    return [
+    `/api/trainee/reporting/photos/history`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+    
+export const getGetApiTraineeReportingPhotosHistoryQueryOptions = <TData = Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError = ResponseMessageDto>(params?: GetApiTraineeReportingPhotosHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetApiTraineeReportingPhotosHistoryQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>> = ({ signal }) => getApiTraineeReportingPhotosHistory(params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetApiTraineeReportingPhotosHistoryQueryResult = NonNullable<Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>>
+export type GetApiTraineeReportingPhotosHistoryQueryError = ResponseMessageDto
+
+
+export function useGetApiTraineeReportingPhotosHistory<TData = Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError = ResponseMessageDto>(
+ params: undefined |  GetApiTraineeReportingPhotosHistoryParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTraineeReportingPhotosHistory<TData = Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError = ResponseMessageDto>(
+ params?: GetApiTraineeReportingPhotosHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>,
+          TError,
+          Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetApiTraineeReportingPhotosHistory<TData = Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError = ResponseMessageDto>(
+ params?: GetApiTraineeReportingPhotosHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetApiTraineeReportingPhotosHistory<TData = Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError = ResponseMessageDto>(
+ params?: GetApiTraineeReportingPhotosHistoryParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiTraineeReportingPhotosHistory>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetApiTraineeReportingPhotosHistoryQueryOptions(params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

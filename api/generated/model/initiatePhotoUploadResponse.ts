@@ -5,11 +5,10 @@
  * OpenAPI spec version: 1.0
  */
 
-export interface EnumLookupDto {
+export interface InitiatePhotoUploadResponse {
   /** @nullable */
-  id?: string | null;
+  uploadUrl?: string | null;
   /** @nullable */
-  name?: string | null;
-  /** @nullable */
-  displayName?: string | null;
+  storageKey?: string | null;
+  expiresAt?: string;
 }
