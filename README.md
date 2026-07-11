@@ -360,7 +360,7 @@ To oznacza, że:
 
 ### Konfiguracja Expo i runtime
 
-Aktualna konfiguracja `app.json` pokazuje kilka ważnych cech aplikacji:
+Aktualna konfiguracja Expo (`app.config.js`) pokazuje kilka ważnych cech aplikacji:
 
 - włączone `newArchEnabled`,
 - pluginy `expo-router`, `expo-font`, `expo-image-picker`,
@@ -826,7 +826,7 @@ This means:
 
 ### Expo runtime and delivery configuration
 
-`app.json` shows several important runtime characteristics:
+The current Expo config (`app.config.js`) shows several important runtime characteristics:
 
 - `newArchEnabled` is enabled,
 - plugins include `expo-router`, `expo-font`, and `expo-image-picker`,
@@ -961,3 +961,98 @@ REACT_APP_BACKEND=https://localhost:7025
 - `Accept-Language` header is always attached from current i18n language.
 - `Authorization: Bearer <token>` is attached when token exists.
 - `X-Skip-Auth` can be set per request to skip auth header injection.
+
+## Push notifications (RNFirebase / FCM)
+
+### Expo Go is not supported for push QA
+
+`@react-native-firebase/messaging` uses native code that is not present in Expo Go. For push work you must use a native development build or an installable preview build. Do not treat Expo Go as a valid QA path for this feature.
+
+### What was added in mobile
+
+- `@react-native-firebase/app`
+- `@react-native-firebase/messaging`
+- `expo-dev-client`
+- `expo-build-properties`
+- `app.config.js` to wire Firebase native files and RNFirebase Expo plugins
+
+The app config now:
+
+- loads Android Firebase config from `GOOGLE_SERVICES_JSON` or `mobile/google-services.json`,
+- loads iOS Firebase config from `GOOGLE_SERVICE_INFO_PLIST` or `mobile/GoogleService-Info.plist`,
+- enables the RNFirebase Expo config plugins,
+- sets iOS `UIBackgroundModes` for `remote-notification`,
+- uses static iOS frameworks for the RNFirebase native integration path.
+
+### Required Firebase project setup
+
+1. In Firebase console, create one Android app with package name `com.lesiuuu.lgymappmobile`.
+2. Download that app's `google-services.json`.
+3. In Firebase console, create one iOS app with bundle identifier `com.lesiuuu.lgymappmobile`.
+4. Download that app's `GoogleService-Info.plist`.
+5. Enable Cloud Messaging for the Firebase project.
+
+Do not commit either Firebase file. This repo now ignores `mobile/google-services.json` and `mobile/GoogleService-Info.plist`.
+
+### Required Apple / APNs setup for iOS FCM
+
+FCM on iOS still depends on Apple Push Notification service. Firebase must be allowed to send to APNs on behalf of the iOS app.
+
+1. In the Apple Developer portal, enable the Push Notifications capability for the iOS app identifier.
+2. Create an APNs authentication key (`.p8`) in Apple Developer.
+3. In Firebase console, open Project settings -> Cloud Messaging.
+4. Upload the APNs auth key to Firebase and provide the Apple key ID and Apple team ID.
+5. Use a real iPhone or a signed internal/TestFlight build for end-to-end push validation. Simulator-only validation is not sufficient.
+
+Do not commit the APNs `.p8`, key IDs, team IDs, or any other credentials.
+
+### Secret handling
+
+For local native work, keep the Firebase files untracked in `mobile/`:
+
+- `mobile/google-services.json`
+- `mobile/GoogleService-Info.plist`
+
+For EAS-hosted builds, prefer EAS file secrets and expose their build-time paths through:
+
+- `GOOGLE_SERVICES_JSON`
+- `GOOGLE_SERVICE_INFO_PLIST`
+
+`app.config.js` reads those environment variables first, so cloud builds do not need committed Firebase files.
+
+### Environment split for Firebase / APNs
+
+- Use separate Firebase projects or at minimum separate Firebase Android/iOS apps for development, staging, and production.
+- Keep each environment's `google-services.json` and `GoogleService-Info.plist` outside git.
+- For iOS, upload the matching APNs auth key to the same Firebase project that the build uses.
+- Backend rollout can keep installation registration on while `apiv3` has `PushNotifications:SendEnabled=false`, so mobile QA can validate token binding before live sends are enabled.
+
+### Operator handoff notes
+
+- If a native build registers tokens but test pushes never arrive, check the backend send flag first before debugging RNFirebase.
+- If iOS registers tokens but only Android receives pushes, verify Firebase Cloud Messaging has the correct APNs key for that environment.
+- Do not paste Firebase service-account JSON, APNs `.p8`, or Apple team/key identifiers into repo files, screenshots, or issue comments.
+
+### Dev-build / preview commands
+
+Native push verification should use one of these commands from `mobile/`:
+
+```bash
+npm run build:androidClient
+npm run build:iosClient
+npm run start:dev-client
+```
+
+Existing preview flows remain available:
+
+```bash
+npm run build:androidDev
+npm run build:ios
+```
+
+Recommended QA path for Task 3:
+
+1. Provide Firebase config files locally or through EAS file secrets.
+2. Build an Android development client with `npm run build:androidClient`.
+3. Start Metro with `npm run start:dev-client`.
+4. Launch the installed build and confirm the app starts without an RNFirebase messaging native-module error.
