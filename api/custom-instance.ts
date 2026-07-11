@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { useAuthStore } from '../stores/useAuthStore';
 import i18n from '../app/i18n';
 import { getErrorMessage } from '../utils/errorHandler';
+import { clearPersistedPushRegistrationState } from '../app/services/push/pushStorage';
 
 type CancelablePromise<T> = Promise<T> & { cancel: () => void };
 
@@ -58,7 +59,7 @@ const getMetroHostName = (): string | null => {
   return hostName;
 };
 
-const resolveBackendBaseUrl = (rawUrl?: string): string | undefined => {
+export const resolveBackendBaseUrl = (rawUrl?: string): string | undefined => {
   if (!rawUrl) {
     return undefined;
   }
@@ -70,12 +71,6 @@ const resolveBackendBaseUrl = (rawUrl?: string): string | undefined => {
 
     if (!__DEV__ || !isLoopbackHost(parsed.hostname)) {
       return normalizedInput;
-    }
-
-    const metroHost = getMetroHostName();
-    if (metroHost) {
-      parsed.hostname = metroHost;
-      return trimTrailingSlash(parsed.toString());
     }
 
     if (Platform.OS === 'android') {
@@ -92,6 +87,12 @@ const resolveBackendBaseUrl = (rawUrl?: string): string | undefined => {
       }
 
       return normalizedInput;
+    }
+
+    const metroHost = getMetroHostName();
+    if (metroHost) {
+      parsed.hostname = metroHost;
+      return trimTrailingSlash(parsed.toString());
     }
 
     return normalizedInput;
@@ -212,6 +213,7 @@ AXIOS_INSTANCE.interceptors.response.use(
     if (status === 401 && !skipAuthRedirect) {
       // Unauthorized: clear token and redirect to login
       await AsyncStorage.removeItem('token');
+      await clearPersistedPushRegistrationState();
       useAuthStore.getState().logout();
       router.replace('/Login');
     } else if (status === 403) {
@@ -230,6 +232,7 @@ AXIOS_INSTANCE.interceptors.response.use(
               text: 'OK',
               onPress: async () => {
                 await AsyncStorage.removeItem('token');
+                await clearPersistedPushRegistrationState();
                 useAuthStore.getState().logout();
                 router.replace('/Login');
               },

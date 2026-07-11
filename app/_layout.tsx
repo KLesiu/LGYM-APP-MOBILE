@@ -16,6 +16,7 @@ import OnboardingProvider from "./onboarding/OnboardingContext";
 import { toastConfig } from "../helpers/toastConfig";
 import NotificationProvider from "./contexts/NotificationContext";
 import SignalRInitializer from "./components/SignalRInitializer";
+import PushNotificationInitializer from "./components/PushNotificationInitializer";
 
 NativeWindStyleSheet.setOutput({ default: "native" });
 
@@ -59,6 +60,7 @@ const Layout: React.FC = () => {
         <NotificationProvider>
           <OnboardingProvider>
             <SignalRInitializer />
+            <PushNotificationInitializer />
             <Stack screenOptions={{ headerShown: false ,gestureEnabled:false,headerBackButtonMenuEnabled:false}} />
             <Toast config={toastConfig} />
           </OnboardingProvider>

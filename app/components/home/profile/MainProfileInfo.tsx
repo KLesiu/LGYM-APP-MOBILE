@@ -17,6 +17,7 @@ import {
   usePostApiLogout,
   usePostApiChangeVisibilityInRanking,
 } from "../../../../api/generated/user/user";
+import { disassociateStoredPushInstallation } from "../../../services/push/pushInstallationService";
 
 interface MainProfileInfoProps {
   email: string;
@@ -52,6 +53,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
 
   const logout = async (): Promise<void> => {
     try {
+      await disassociateStoredPushInstallation();
       await logoutMutation();
     } catch (error) {
       console.error("Logout API request failed, proceeding with local logout", error);
@@ -62,6 +64,12 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   };
 
   const deleteAccount = async (): Promise<void> => {
+    try {
+      await disassociateStoredPushInstallation();
+    } catch (error) {
+      console.error("Push disassociation before account deletion failed", error);
+    }
+
     await getApiDeleteAccount();
     setIsDeleteConfirmationDialogVisible(false);
     await clearBeforeLogout();

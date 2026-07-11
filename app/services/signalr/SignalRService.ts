@@ -11,6 +11,7 @@ import {
   SignalRConfig,
   TrainerNotificationEvents,
 } from "./types";
+import { resolveBackendBaseUrl } from "../../../api/custom-instance";
 
 class SignalRService {
   private static instance: SignalRService;
@@ -24,7 +25,7 @@ class SignalRService {
   private maxReconnectAttempts = 10;
 
   private constructor() {
-    const backendUrl = process.env.REACT_APP_BACKEND || "https://localhost:7025";
+    const backendUrl = resolveBackendBaseUrl(process.env.REACT_APP_BACKEND) || "https://localhost:7025";
     this.config = {
       baseUrl: backendUrl,
       hubPath: "/hubs/notifications",
