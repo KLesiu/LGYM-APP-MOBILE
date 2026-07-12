@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useIsFocused } from "@react-navigation/native";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
@@ -27,6 +27,8 @@ import {
   MEASUREMENT_TYPE_OPTIONS,
   UNIT_OPTIONS_BY_TYPE,
 } from "./measurementConfig";
+
+import measurementsGuideImage from "../../../../assets/measurementsImage.png";
 
 const formatDate = (date: string | null | undefined, locale: string): string => {
   if (!date) {
@@ -102,6 +104,7 @@ const Measurements: React.FC = () => {
   const { userId } = useHomeContext();
   const isFocused = useIsFocused();
   const [isAddDialogVisible, setIsAddDialogVisible] = useState(false);
+  const [isGuideDialogVisible, setIsGuideDialogVisible] = useState(false);
   const [selectedBodyPart, setSelectedBodyPart] = useState<BodyPartFilter>("ALL");
   const [selectedUnit, setSelectedUnit] = useState<MeasurementFormDtoUnit>(MeasurementFormDtoUnit.Centimeters);
   const [activeTab, setActiveTab] = useState<"TREND" | "LATEST" | "HISTORY">("TREND");
@@ -354,13 +357,22 @@ const Measurements: React.FC = () => {
               {t("measurements.subtitle")}
             </Text>
           </View>
-          <CustomButton
-            text={t("measurements.addCta")}
-            onPress={() => setIsAddDialogVisible(true)}
-            buttonStyleType={ButtonStyle.success}
-            textWeight={FontWeights.bold}
-            buttonStyleSize={ButtonSize.long}
-          />
+          <View style={{ gap: 8 }}>
+            <CustomButton
+              text={t("measurements.addCta")}
+              onPress={() => setIsAddDialogVisible(true)}
+              buttonStyleType={ButtonStyle.success}
+              textWeight={FontWeights.bold}
+              buttonStyleSize={ButtonSize.long}
+            />
+            <CustomButton
+              text={t("measurements.howToMeasureCta")}
+              onPress={() => setIsGuideDialogVisible(true)}
+              buttonStyleType={ButtonStyle.outlineBlack}
+              textWeight={FontWeights.bold}
+              buttonStyleSize={ButtonSize.long}
+            />
+          </View>
         </View>
 
         <View style={{ gap: 10 }}>
@@ -509,6 +521,47 @@ const Measurements: React.FC = () => {
       </View>
 
       {isAddDialogVisible && <MeasurementsPopUp offPopUp={() => setIsAddDialogVisible(false)} />}
+      <Modal
+        visible={isGuideDialogVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setIsGuideDialogVisible(false)}
+      >
+        <View className="flex-1 justify-end bg-black/80 px-4 py-6">
+          <View className="max-h-[88%] rounded-[32px] border border-thirdColor bg-secondaryColor px-5 py-5" style={{ gap: 16 }}>
+            <View className="flex-row items-start justify-between" style={{ gap: 12 }}>
+              <View className="flex-1" style={{ gap: 6 }}>
+                <Text className="text-primaryColor text-xs uppercase tracking-[3px]" style={{ fontFamily: "OpenSans_700Bold" }}>
+                  {t("measurements.howToMeasureLabel")}
+                </Text>
+                <Text className="text-textColor text-2xl" style={{ fontFamily: "OpenSans_700Bold" }}>
+                  {t("measurements.howToMeasureTitle")}
+                </Text>
+                <Text className="text-textColor opacity-60 text-sm leading-6" style={{ fontFamily: "OpenSans_400Regular" }}>
+                  {t("measurements.howToMeasureDescription")}
+                </Text>
+              </View>
+
+              <Pressable onPress={() => setIsGuideDialogVisible(false)} className="h-10 w-10 items-center justify-center rounded-full bg-mainColor">
+                <Text className="text-textColor text-xl" style={{ fontFamily: "OpenSans_700Bold" }}>
+                  ×
+                </Text>
+              </Pressable>
+            </View>
+
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 4 }}>
+              <View className="overflow-hidden rounded-3xl bg-mainColor px-3 py-3">
+                <Image
+                  source={measurementsGuideImage}
+                  className="h-[520px] w-full"
+                  resizeMode="contain"
+                  accessibilityLabel={t("measurements.howToMeasureImageAlt")}
+                />
+              </View>
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </BackgroundMainSection>
   );
 };
