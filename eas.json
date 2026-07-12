@@ -26,7 +26,8 @@
     "preview3": {
       "node": "22.18.0",
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "environment": "preview"
     },
     "production": {
       "node": "22.18.0"
