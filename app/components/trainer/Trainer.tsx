@@ -7,7 +7,7 @@ import WithTrainerState from "./WithTrainerState";
 import ViewLoading from "../elements/ViewLoading";
 import { useGetApiTraineeTrainer } from "../../../api/generated/trainee-relationship/trainee-relationship";
 import { useNotifications } from "../../contexts/NotificationContext";
-import { isTrainerInvitationNotificationType } from "../../types/notification";
+import { isTrainerInvitationNotificationType } from "../../../types/notification";
 
 const Trainer: React.FC = () => {
   const { t } = useTranslation();

@@ -10,12 +10,12 @@ import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 import BackgroundMainSection from "../../elements/BackgroundMainSection";
 import { useNotifications } from "../../../contexts/NotificationContext";
-import type { NotificationItem } from "../../../types/notification";
+import type { NotificationItem } from "../../../../types/notification";
 import {
   getInvitationIdFromRedirectUrl,
   isTrainerRelevantNotificationType,
   isTrainerInvitationNotificationType,
-} from "../../../types/notification";
+} from "../../../../types/notification";
 import ViewLoading from "../../elements/ViewLoading";
 import { useHomeContext } from "../HomeContext";
 import {

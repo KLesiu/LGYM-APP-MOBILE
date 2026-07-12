@@ -11,13 +11,13 @@ import type {
 import ViewLoading from "../elements/ViewLoading";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useAuthStore } from "../../../stores/useAuthStore";
-import type { NotificationItem } from "../../types/notification";
+import type { NotificationItem } from "../../../types/notification";
 import {
   formatNotificationTimestamp,
   getNotificationDeduplicationKey,
   getTrainerNotificationTargetTab,
   isTrainerRelevantNotificationType,
-} from "../../types/notification";
+} from "../../../types/notification";
 
 type TrainerNotificationsTab = "new" | "read" | "all";
 

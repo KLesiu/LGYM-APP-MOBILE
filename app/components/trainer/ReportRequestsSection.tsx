@@ -22,7 +22,7 @@ import {
 } from "../../../api/generated/trainee-reporting/trainee-reporting";
 import ReportRequestFormModal from "./ReportRequestFormModal";
 import { useNotifications } from "../../contexts/NotificationContext";
-import { getReportRequestIdFromRedirectUrl } from "../../types/notification";
+import { getReportRequestIdFromRedirectUrl } from "../../../types/notification";
 import { useHomeContext } from "../home/HomeContext";
 import Toast from "react-native-toast-message";
 

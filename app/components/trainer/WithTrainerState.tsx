@@ -18,7 +18,7 @@ import { useNotifications } from "../../contexts/NotificationContext";
 import {
   getTrainerNotificationTargetTab,
   type NotificationItem,
-} from "../../types/notification";
+} from "../../../types/notification";
 import {
   getGetApiTraineeTrainerQueryKey,
   usePostApiTraineeTrainerDetach,

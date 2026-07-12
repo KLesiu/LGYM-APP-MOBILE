@@ -27,7 +27,7 @@ import { useAppContext } from "./AppContext";
 import { useAuthStore } from "../stores/useAuthStore";
 import { getApiIdNotifications } from "../api/generated/in-app-notification/in-app-notification";
 import type { PagedNotificationsResultDto, ResponseMessageDto } from "../api/generated/model";
-import type { NotificationItem } from "./types/notification";
+import type { NotificationItem } from "../types/notification";
 import {
   buildNotificationFromPushPayload,
   clearPendingPushNavigation,
@@ -38,7 +38,7 @@ import {
 import {
   getTrainerNotificationTargetTab,
   isTrainerRelevantNotificationType,
-} from "./types/notification";
+} from "../types/notification";
 
 const isPagedNotificationsResult = (
   data: PagedNotificationsResultDto | ResponseMessageDto | undefined

@@ -4,12 +4,12 @@ import Toast from "react-native-toast-message";
 import { useTranslation } from "react-i18next";
 import { getApiIdNotifications } from "../../../api/generated/in-app-notification/in-app-notification";
 import type { InAppNotificationResultDto } from "../../../api/generated/model";
-import type { NotificationItem } from "../../types/notification";
+import type { NotificationItem } from "../../../types/notification";
 import {
   formatNotificationTimestamp,
   getNotificationDeduplicationKey,
   isTrainerRelevantNotificationType,
-} from "../../types/notification";
+} from "../../../types/notification";
 import { useNotifications } from "../../contexts/NotificationContext";
 import { useAuthStore } from "../../../stores/useAuthStore";
 import { useHomeContext } from "../home/HomeContext";

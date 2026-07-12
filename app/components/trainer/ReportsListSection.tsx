@@ -7,7 +7,7 @@ import { useGetApiTraineeReportSubmissions } from "../../../api/generated/traine
 import type { ReportSubmissionDto, ResponseMessageDto } from "../../../api/generated/model";
 import ReportSubmissionPreviewModal from "./ReportSubmissionPreviewModal";
 import { useNotifications } from "../../contexts/NotificationContext";
-import { getReportSubmissionIdFromRedirectUrl } from "../../types/notification";
+import { getReportSubmissionIdFromRedirectUrl } from "../../../types/notification";
 import { markReportSubmissionFeedbackRead, type ReportSubmissionFeedbackStateDto } from "../../services/reporting/reportingFeedback";
 
 const ReportsListSection: React.FC = () => {

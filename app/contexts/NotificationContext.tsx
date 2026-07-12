@@ -22,10 +22,10 @@ import type {
   NotificationItem,
   NotificationsListState,
   UnreadState,
-} from "../types/notification";
+} from "../../types/notification";
 import {
   getNotificationDeduplicationKey,
-} from "../types/notification";
+} from "../../types/notification";
 
 const NotificationContext = createContext<NotificationContextValue | null>(
   null

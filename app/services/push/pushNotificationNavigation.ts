@@ -1,4 +1,4 @@
-import type { NotificationItem } from "../../types/notification";
+import type { NotificationItem } from "../../../types/notification";
 
 type PushNavigationSource = "background-open" | "initial-open";
 

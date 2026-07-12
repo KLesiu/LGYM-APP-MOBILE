@@ -3,7 +3,7 @@
  * Defines shared types for notification management across the app
  */
 
-import type { InAppNotificationResultDto } from "../../api/generated/model";
+import type { InAppNotificationResultDto } from "../api/generated/model";
 
 export const TRAINER_INVITATION_NOTIFICATION_TYPES = [
   "trainer.invitation.sent",
@@ -218,12 +218,12 @@ export interface NotificationContextValue extends NotificationContextState {
   markAsRead: (notificationId: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
 
-  // Deep link context
+  // Active notification state
   activeNotification: NotificationItem | null;
   setActiveNotification: (notification: NotificationItem | null) => void;
   clearActiveNotification: () => void;
 
-  // Utility methods
+  // Aggregate request state
   isLoading: boolean;
   hasError: boolean;
 }

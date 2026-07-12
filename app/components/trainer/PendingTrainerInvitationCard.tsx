@@ -11,7 +11,7 @@ import { useNotifications } from "../../contexts/NotificationContext";
 import {
   getInvitationIdFromRedirectUrl,
   isTrainerInvitationNotificationType,
-} from "../../types/notification";
+} from "../../../types/notification";
 import toastService from "../../services/toastService";
 import { getErrorMessage } from "../../../utils/errorHandler";
 
