@@ -67,6 +67,11 @@ export const useAppInitialization = () => {
   }, [canValidateToken, token, isTokenChecked]);
 
   const initializeApp = async (): Promise<void> => {
+    if (Platform.OS === "web") {
+      setCanValidateToken(true);
+      return;
+    }
+
     const platform = Platform.OS === "android" ? Platforms.Android : Platforms.Ios;
     checkVersion(
       {
@@ -77,7 +82,7 @@ export const useAppInitialization = () => {
           const appVersionConfig = response.data as AppConfigInfoDto;
           checkIsUpdateRequired(appVersionConfig);
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
           console.error("Error checking app version:", error);
           setCanValidateToken(true);
         },

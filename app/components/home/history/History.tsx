@@ -73,6 +73,9 @@ const toMonthStart = (date: Date): Date =>
 const addMonth = (date: Date, offset: number): Date =>
   new Date(date.getFullYear(), date.getMonth() + offset, 1);
 
+const toTrainingQueryDate = (date: Date): Date =>
+  new Date(date.getFullYear(), date.getMonth(), date.getDate(), 2, 0, 0, 0);
+
 const History: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { userId } = useHomeContext();
@@ -159,15 +162,17 @@ const History: React.FC = () => {
       return;
     }
 
-    setSelectedDate(date);
-    setVisibleMonth(toMonthStart(date));
+    const queryDate = toTrainingQueryDate(date);
+
+    setSelectedDate(queryDate);
+    setVisibleMonth(toMonthStart(queryDate));
 
     setViewLoading(true);
 
     try {
       const result = await getTrainingByDateMutation({
         id: userId,
-        data: { createdAt: date.toISOString() },
+        data: { createdAt: queryDate.toISOString() },
       });
 
       const rawTrainings = Array.isArray(result.data) ? result.data : [];

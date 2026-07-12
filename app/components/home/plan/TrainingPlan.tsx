@@ -60,7 +60,12 @@ const TrainingPlan: React.FC = () => {
   const {
     data: planConfigData,
     isLoading: isPlanConfigLoading,
-  } = useGetApiIdGetPlanConfig(userId, { query: { enabled: !!userId } });
+  } = useGetApiIdGetPlanConfig(userId, {
+    query: {
+      enabled: !!userId,
+      refetchOnMount: "always",
+    },
+  });
 
   const planConfig = useMemo(
     () => (planConfigData?.data as PlanForm) || undefined,
@@ -72,7 +77,10 @@ const TrainingPlan: React.FC = () => {
     isLoading: isPlanDaysLoading,
     refetch: refetchPlanDays,
   } = useGetApiPlanDayIdGetPlanDaysInfo(planConfig?._id || "", {
-    query: { enabled: !!planConfig?._id },
+    query: {
+      enabled: !!planConfig?._id,
+      refetchOnMount: "always",
+    },
   });
 
   const planDaysBaseInfo = useMemo(
