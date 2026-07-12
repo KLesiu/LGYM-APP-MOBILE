@@ -2,9 +2,11 @@ import React, { useMemo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import {
+  getGetApiTraineeTrainerQueryKey,
   usePostApiTraineeInvitationsInvitationIdAccept,
   usePostApiTraineeInvitationsInvitationIdReject,
 } from "../../../api/generated/trainee-relationship/trainee-relationship";
+import { useQueryClient } from "@tanstack/react-query";
 import { useNotifications } from "../../contexts/NotificationContext";
 import {
   getInvitationIdFromRedirectUrl,
@@ -15,6 +17,7 @@ import { getErrorMessage } from "../../../utils/errorHandler";
 
 const PendingTrainerInvitationCard: React.FC = () => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const { activeNotification, clearActiveNotification, fetchNotifications, refreshUnreadCount } =
     useNotifications();
   const { mutateAsync: acceptInvitation, isPending: isAccepting } =
@@ -46,6 +49,13 @@ const PendingTrainerInvitationCard: React.FC = () => {
   const handleAccept = async () => {
     try {
       await acceptInvitation({ invitationId });
+      await queryClient.invalidateQueries({
+        queryKey: getGetApiTraineeTrainerQueryKey(),
+      });
+      await queryClient.refetchQueries({
+        queryKey: getGetApiTraineeTrainerQueryKey(),
+        type: "all",
+      });
       await handleSuccess(t("trainer.invitationAccepted"));
     } catch (error) {
       toastService.showError(

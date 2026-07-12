@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, TouchableOpacity, View, Text } from "react-native";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "@tanstack/react-query";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import BackgroundMainSection from "../elements/BackgroundMainSection";
+import ConfirmDialog from "../elements/ConfirmDialog";
 import TrainerHeroSection from "./TrainerHeroSection";
 import CollaborationSection from "./CollaborationSection";
 import CurrentDietSection from "./CurrentDietSection";
@@ -17,8 +19,20 @@ import {
   getTrainerNotificationTargetTab,
   type NotificationItem,
 } from "../../types/notification";
+import {
+  getGetApiTraineeTrainerQueryKey,
+  usePostApiTraineeTrainerDetach,
+} from "../../../api/generated/trainee-relationship/trainee-relationship";
+import toastService from "../../services/toastService";
 
-type TrainerTabKey = "overview" | "plan" | "diet" | "notes" | "requests" | "reports";
+type TrainerTabKey =
+  | "overview"
+  | "notifications"
+  | "plan"
+  | "diet"
+  | "notes"
+  | "requests"
+  | "reports";
 
 interface WithTrainerStateProps {
   trainerProfile?: TraineeTrainerProfileDto;
@@ -26,8 +40,12 @@ interface WithTrainerStateProps {
 
 const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) => {
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const { activeNotification, setActiveNotification } = useNotifications();
   const [activeTab, setActiveTab] = useState<TrainerTabKey>("overview");
+  const [isDetachDialogVisible, setDetachDialogVisible] = useState<boolean>(false);
+  const detachTrainerMutation = usePostApiTraineeTrainerDetach();
+  const isDetachingTrainer = detachTrainerMutation.isPending;
 
   useEffect(() => {
     const targetTab = getTrainerNotificationTargetTab(activeNotification);
@@ -51,6 +69,7 @@ const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) =
   const tabs = useMemo(
     () => [
       { key: "overview" as const, label: t("trainer.overviewTab"), icon: "person-outline" },
+      { key: "notifications" as const, label: t("trainer.notificationsTab"), icon: "notifications-outline" },
       { key: "plan" as const, label: t("trainer.planTab"), icon: "barbell-outline" },
       { key: "diet" as const, label: t("trainer.dietTab"), icon: "restaurant-outline" },
       { key: "notes" as const, label: t("trainer.notesTab"), icon: "document-text-outline" },
@@ -64,15 +83,18 @@ const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) =
     switch (activeTab) {
       case "overview":
         return (
-          <>
-            <TrainerNotificationsSection
-              onOpenTargetTab={handleOpenNotificationTarget}
-            />
-            <CollaborationSection
-              relationshipStartDate={trainerProfile?.linkedAt}
-              relationshipStatus="active"
-            />
-          </>
+          <CollaborationSection
+            relationshipStartDate={trainerProfile?.linkedAt}
+            relationshipStatus="active"
+            onDetachPress={() => setDetachDialogVisible(true)}
+            isDetachingTrainer={isDetachingTrainer}
+          />
+        );
+      case "notifications":
+        return (
+          <TrainerNotificationsSection
+            onOpenTargetTab={handleOpenNotificationTarget}
+          />
         );
       case "plan":
         return <CurrentPlanSection />;
@@ -86,6 +108,24 @@ const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) =
         return <ReportsListSection />;
       default:
         return null;
+    }
+  };
+
+  const detachFromTrainer = async (): Promise<void> => {
+    try {
+      await detachTrainerMutation.mutateAsync();
+      setDetachDialogVisible(false);
+      toastService.showSuccess(t("trainer.detachSuccess"));
+      await queryClient.invalidateQueries({
+        queryKey: getGetApiTraineeTrainerQueryKey(),
+      });
+      await queryClient.refetchQueries({
+        queryKey: getGetApiTraineeTrainerQueryKey(),
+        type: "all",
+      });
+    } catch (error) {
+      console.error("Detach from trainer failed", error);
+      toastService.showError(t("trainer.detachFailed"));
     }
   };
 
@@ -134,6 +174,20 @@ const WithTrainerState: React.FC<WithTrainerStateProps> = ({ trainerProfile }) =
 
         {renderActiveSection()}
       </ScrollView>
+
+      <ConfirmDialog
+        visible={isDetachDialogVisible}
+        title={t("trainer.detachConfirmTitle")}
+        message={t("trainer.detachConfirmMessage")}
+        onConfirm={() => {
+          void detachFromTrainer();
+        }}
+        onCancel={() => {
+          if (!isDetachingTrainer) {
+            setDetachDialogVisible(false);
+          }
+        }}
+      />
     </BackgroundMainSection>
   );
 };

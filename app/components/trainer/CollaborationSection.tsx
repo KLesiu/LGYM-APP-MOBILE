@@ -1,15 +1,21 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { useTranslation } from "react-i18next";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import CustomButton, { ButtonStyle } from "../elements/CustomButton";
 
 interface CollaborationSectionProps {
   relationshipStartDate?: string | null;
   relationshipStatus?: string | null;
+  onDetachPress?: () => void;
+  isDetachingTrainer?: boolean;
 }
 
 const CollaborationSection: React.FC<CollaborationSectionProps> = ({
   relationshipStartDate,
   relationshipStatus,
+  onDetachPress,
+  isDetachingTrainer = false,
 }) => {
   const { t } = useTranslation();
 
@@ -93,75 +99,109 @@ const CollaborationSection: React.FC<CollaborationSectionProps> = ({
   const hasAnyDetails = hasStartDate || hasStatus;
 
   return (
-    <View className="bg-secondaryColor p-4 rounded-lg">
+    <View className="bg-secondaryColor p-4 rounded-lg" style={{ gap: 16 }}>
       <Text 
-        className="text-primaryColor text-base mb-3"
+        className="text-primaryColor text-base"
         style={{ fontFamily: "OpenSans_700Bold" }}
       >
         {t("trainer.collaboration", "Collaboration")}
       </Text>
 
-      {!hasAnyDetails ? (
-        <Text
-          className="text-textColor opacity-60"
-          style={{ fontFamily: "OpenSans_400Regular" }}
-        >
-          {t("trainer.collaborationDetailsUnavailable")}
-        </Text>
-      ) : (
-        <View style={{ gap: 10 }}>
-          {hasStartDate && relationshipStartDate ? (
-            <>
+      <View style={{ gap: 10 }}>
+        {!hasAnyDetails ? (
+          <Text
+            className="text-textColor opacity-60"
+            style={{ fontFamily: "OpenSans_400Regular" }}
+          >
+            {t("trainer.collaborationDetailsUnavailable")}
+          </Text>
+        ) : (
+          <>
+            {hasStartDate && relationshipStartDate ? (
+              <>
+                <View className="flex-row justify-between items-center">
+                  <Text
+                    className="text-textColor opacity-60"
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                  >
+                    {t("trainer.since", "Since")}
+                  </Text>
+                  <Text
+                    className="text-textColor"
+                    style={{ fontFamily: "OpenSans_600SemiBold" }}
+                  >
+                    {formatDate(relationshipStartDate)}
+                  </Text>
+                </View>
+
+                <View className="flex-row justify-between items-center">
+                  <Text
+                    className="text-textColor opacity-60"
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                  >
+                    {t("trainer.duration", "Duration")}
+                  </Text>
+                  <Text
+                    className="text-textColor"
+                    style={{ fontFamily: "OpenSans_600SemiBold" }}
+                  >
+                    {formatDuration(relationshipStartDate)}
+                  </Text>
+                </View>
+              </>
+            ) : null}
+
+            {hasStatus ? (
               <View className="flex-row justify-between items-center">
                 <Text
                   className="text-textColor opacity-60"
                   style={{ fontFamily: "OpenSans_400Regular" }}
                 >
-                  {t("trainer.since", "Since")}
+                  {t("trainer.status", "Status")}
                 </Text>
                 <Text
-                  className="text-textColor"
-                  style={{ fontFamily: "OpenSans_600SemiBold" }}
+                  className={getStatusColor(relationshipStatus)}
+                  style={{ fontFamily: "OpenSans_700Bold" }}
                 >
-                  {formatDate(relationshipStartDate)}
+                  {getStatusLabel(relationshipStatus)}
                 </Text>
               </View>
+            ) : null}
+          </>
+        )}
+      </View>
 
-              <View className="flex-row justify-between items-center">
-                <Text
-                  className="text-textColor opacity-60"
-                  style={{ fontFamily: "OpenSans_400Regular" }}
-                >
-                  {t("trainer.duration", "Duration")}
-                </Text>
-                <Text
-                  className="text-textColor"
-                  style={{ fontFamily: "OpenSans_600SemiBold" }}
-                >
-                  {formatDuration(relationshipStartDate)}
-                </Text>
-              </View>
-            </>
-          ) : null}
-
-          {hasStatus ? (
-            <View className="flex-row justify-between items-center">
+      {onDetachPress ? (
+        <View className="border-t border-[#3f3f3f] pt-4" style={{ gap: 12 }}>
+          <View className="flex-row items-start" style={{ gap: 12 }}>
+            <View className="w-10 h-10 rounded-full bg-[#3f3f3f] items-center justify-center">
+              <Ionicons name="link-outline" size={20} color="#f87171" />
+            </View>
+            <View className="flex-1" style={{ gap: 4 }}>
               <Text
-                className="text-textColor opacity-60"
-                style={{ fontFamily: "OpenSans_400Regular" }}
-              >
-                {t("trainer.status", "Status")}
-              </Text>
-              <Text
-                className={getStatusColor(relationshipStatus)}
+                className="text-textColor text-base"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
-                {getStatusLabel(relationshipStatus)}
+                {t("trainer.detachTitle")}
+              </Text>
+              <Text
+                className="text-textColor text-xs opacity-70"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                {t("trainer.detachDescription")}
               </Text>
             </View>
-          ) : null}
+          </View>
+
+          <CustomButton
+            text={t("trainer.detachAction")}
+            onPress={onDetachPress}
+            buttonStyleType={ButtonStyle.cancel}
+            disabled={isDetachingTrainer}
+            isLoading={isDetachingTrainer}
+          />
         </View>
-      )}
+      ) : null}
     </View>
   );
 };
