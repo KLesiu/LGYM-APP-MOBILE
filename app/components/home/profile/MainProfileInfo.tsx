@@ -1,6 +1,6 @@
-import { View, Text } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import CustomButton, { ButtonStyle } from "../../elements/CustomButton";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import React from "react";
 import { useAppContext } from "../../../AppContext";
 import { useRouter } from "expo-router";
@@ -17,7 +17,15 @@ import {
   usePostApiLogout,
   usePostApiChangeVisibilityInRanking,
 } from "../../../../api/generated/user/user";
+import {
+  getGetApiAccountExternalLoginsQueryKey,
+  useGetApiAccountExternalLogins,
+  usePostApiAccountLinkGoogle,
+} from "../../../../api/generated/account/account";
 import { disassociateStoredPushInstallation } from "../../../services/push/pushInstallationService";
+import { useGoogleAuth } from "../../../../hooks/useGoogleAuth";
+import { unlinkGoogleAccount } from "../../../services/googleAccount";
+import toastService from "../../../services/toastService";
 
 interface MainProfileInfoProps {
   email: string;
@@ -40,16 +48,95 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
   ] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { data: externalLogins, isLoading: isExternalLoginsLoading } = useGetApiAccountExternalLogins();
+  const { request: googleLinkRequest, response: googleLinkResponse, promptAsync: promptGoogleLink } = useGoogleAuth();
   const [isVisibleInRankingState, setIsVisibleInRankingState] =
     useState<boolean>(isVisibleInRanking);
+  const [isGoogleUnlinkPending, setIsGoogleUnlinkPending] = useState(false);
+  const [isGoogleUnlinkConfirmationVisible, setIsGoogleUnlinkConfirmationVisible] = useState(false);
 
   const { mutateAsync: changeVisibilityMutation, isPending: isChangingVisibility } =
     usePostApiChangeVisibilityInRanking();
   const { mutateAsync: logoutMutation } = usePostApiLogout();
+  const { mutate: linkGoogleAccount, isPending: isLinkingGoogle } = usePostApiAccountLinkGoogle();
+
+  const googleExternalLogin = useMemo(
+    () => externalLogins?.data.find((login) => login.provider === "google") ?? null,
+    [externalLogins]
+  );
+
+  const isGoogleLinked = Boolean(googleExternalLogin);
 
   useEffect(() => {
     setIsVisibleInRankingState(isVisibleInRanking);
   }, [isVisibleInRanking]);
+
+  useEffect(() => {
+    if (googleLinkResponse?.type !== "success") {
+      return;
+    }
+
+    const idToken = googleLinkResponse.params.id_token;
+    if (!idToken) {
+      toastService.showError(t("auth.invalidResponse"), t("profile.googleLinkFailed"));
+      return;
+    }
+
+    linkGoogleAccount(
+      {
+        data: {
+          idToken,
+        },
+      },
+      {
+        onSuccess: async () => {
+          toastService.showSuccess(t("profile.googleLinkSuccess"));
+          await queryClient.invalidateQueries({
+            queryKey: getGetApiAccountExternalLoginsQueryKey(),
+          });
+          await queryClient.refetchQueries({
+            queryKey: getGetApiAccountExternalLoginsQueryKey(),
+            type: "all",
+          });
+        },
+        onError: (error: any) => {
+          console.error("Google link error:", error);
+          toastService.showError(t("profile.googleLinkFailed"), t("common.error"));
+        },
+      }
+    );
+  }, [linkGoogleAccount, googleLinkResponse, queryClient, t]);
+
+  const linkGoogle = () => {
+    if (!googleLinkRequest) {
+      toastService.showError(t("profile.googleAuthUnavailable"), t("common.error"));
+      return;
+    }
+
+    void promptGoogleLink();
+  };
+
+  const unlinkGoogle = async (): Promise<void> => {
+    setIsGoogleUnlinkPending(true);
+
+    try {
+      await unlinkGoogleAccount();
+      toastService.showSuccess(t("profile.googleUnlinkSuccess"));
+      await queryClient.invalidateQueries({
+        queryKey: getGetApiAccountExternalLoginsQueryKey(),
+      });
+      await queryClient.refetchQueries({
+        queryKey: getGetApiAccountExternalLoginsQueryKey(),
+        type: "all",
+      });
+    } catch (error) {
+      console.error("Google unlink error:", error);
+      toastService.showError(t("profile.googleUnlinkFailed"), t("common.error"));
+    } finally {
+      setIsGoogleUnlinkPending(false);
+      setIsGoogleUnlinkConfirmationVisible(false);
+    }
+  };
 
   const logout = async (): Promise<void> => {
     try {
@@ -148,6 +235,56 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
         
         <LanguageSwitcher />
 
+        <View className="w-full" style={{ gap: 8 }}>
+          <Text
+            style={{ fontFamily: "OpenSans_300Light" }}
+            className="text-gray-200/80 font-light text-xs"
+          >
+            {t("profile.googleAccount")}
+          </Text>
+          <View style={{ gap: 12 }} className="bg-secondaryColor rounded-lg p-4">
+            {isExternalLoginsLoading ? (
+              <View className="flex flex-row items-center gap-3">
+                <ActivityIndicator color="#FFFFFF" />
+                <Text className="text-textColor text-sm" style={{ fontFamily: "OpenSans_300Light" }}>
+                  {t("profile.googleLoading")}
+                </Text>
+              </View>
+            ) : (
+              <>
+                <Text className="text-textColor text-sm" style={{ fontFamily: "OpenSans_300Light" }}>
+                  {isGoogleLinked ? t("profile.googleLinked") : t("profile.googleNotLinked")}
+                </Text>
+                {googleExternalLogin?.providerEmail ? (
+                  <Text className="text-textColor text-sm" style={{ fontFamily: "OpenSans_300Light" }}>
+                    {googleExternalLogin.providerEmail}
+                  </Text>
+                ) : null}
+                {isGoogleLinked ? (
+                  <CustomButton
+                    text={t("profile.googleUnlink")}
+                    onPress={() => setIsGoogleUnlinkConfirmationVisible(true)}
+                    customClasses="w-full"
+                    textWeight={FontWeights.bold}
+                    buttonStyleType={ButtonStyle.cancel}
+                    isLoading={isGoogleUnlinkPending}
+                  />
+                ) : (
+                  <CustomButton
+                    text={t("profile.googleLink")}
+                    onPress={linkGoogle}
+                    customClasses="w-full"
+                    textWeight={FontWeights.bold}
+                    buttonStyleType={ButtonStyle.outline}
+                    isLoading={isLinkingGoogle}
+                    disabled={!googleLinkRequest || isGoogleUnlinkPending}
+                  />
+                )}
+              </>
+            )}
+          </View>
+        </View>
+
       </View>
 
       <View className="flex flex-row  w-full" style={{gap:16}}>
@@ -172,6 +309,13 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
         message={t('profile.confirmDeleteMessage')}
         onConfirm={deleteAccount}
         onCancel={() => setIsDeleteConfirmationDialogVisible(false)}
+      />
+      <ConfirmDialog
+        visible={isGoogleUnlinkConfirmationVisible}
+        title={t('profile.googleUnlinkConfirmTitle')}
+        message={t('profile.googleUnlinkConfirmMessage')}
+        onConfirm={unlinkGoogle}
+        onCancel={() => setIsGoogleUnlinkConfirmationVisible(false)}
       />
     </View>
   );

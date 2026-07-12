@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -24,9 +24,11 @@ import { usePostApiLogin, postApiLoginResponse } from "../api/generated/user/use
 import { useAuthStore } from "../stores/useAuthStore";
 import { getErrorMessage } from "../utils/errorHandler";
 import { useTranslation } from "react-i18next";
-import type { UserInfoDto } from "../api/generated/model";
+import type { LoginResponseDto, UserInfoDto } from "../api/generated/model";
 import { useOnboarding } from "./onboarding/OnboardingContext";
 import toastService from "./services/toastService";
+import { useGoogleAuth } from "../hooks/useGoogleAuth";
+import { usePostApiAuthGoogle } from "../api/generated/auth/auth";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -37,7 +39,16 @@ const Login: React.FC = () => {
 
   const { setErrors: setAppErrors, setUserInfo } = useAppContext();
   const { syncTutorialState } = useOnboarding();
+  const { request: googleAuthRequest, response: googleAuthResponse, promptAsync: promptGoogleAuth } = useGoogleAuth();
   const { mutate, isPending } = usePostApiLogin({
+    request: {
+      skipAuthRedirect: true,
+      headers: {
+        "X-Skip-Auth": "true",
+      },
+    },
+  });
+  const { mutate: loginWithGoogle, isPending: isGoogleLoginPending } = usePostApiAuthGoogle({
     request: {
       skipAuthRedirect: true,
       headers: {
@@ -58,6 +69,47 @@ const Login: React.FC = () => {
     }, [setAppErrors])
   );
 
+  const completeLoginSession = useCallback(
+    async (loginResponse: LoginResponseDto, title: string): Promise<boolean> => {
+      if (!loginResponse.token || !loginResponse.req) {
+        toastService.showError(t("auth.invalidResponse"), title);
+        return false;
+      }
+
+      try {
+        const userInfo: UserInfoDto = {
+          ...loginResponse.req,
+          permissionClaims:
+            loginResponse.permissionClaims ??
+            loginResponse.req.permissionClaims,
+        };
+
+        await AsyncStorage.setItem("token", loginResponse.token);
+        await AsyncStorage.setItem("username", userInfo.name || "");
+        await AsyncStorage.setItem("id", userInfo._id || "");
+        if (userInfo.email) {
+          await AsyncStorage.setItem("email", userInfo.email);
+        }
+
+        setToken(loginResponse.token);
+        setUser(userInfo);
+        setUserInfo(userInfo);
+        setAppErrors([]);
+        await syncTutorialState(Boolean(userInfo.hasActiveTutorials));
+        router.push("/Start");
+        return true;
+      } catch (error) {
+        console.error("Error storing credentials:", error);
+        toastService.showError(
+          t("auth.failedToStoreCredentials"),
+          title
+        );
+        return false;
+      }
+    },
+    [router, setAppErrors, setToken, setUser, setUserInfo, syncTutorialState, t]
+  );
+
   const login = async (): Promise<void> => {
     const normalizedUsername = username?.trim();
 
@@ -74,47 +126,8 @@ const Login: React.FC = () => {
         },
       },
       {
-          onSuccess: async (response: postApiLoginResponse) => {
-          try {
-            const loginResponse = response.data;
-
-            if (!("token" in loginResponse) || !loginResponse.token) {
-              toastService.showError(t("auth.invalidResponse"), t("auth.loginFailed"));
-              return;
-            }
-
-            if (!("req" in loginResponse) || !loginResponse.req) {
-              toastService.showError(t("auth.invalidResponse"), t("auth.loginFailed"));
-              return;
-            }
-
-            const userInfo: UserInfoDto = {
-              ...loginResponse.req,
-              permissionClaims:
-                loginResponse.permissionClaims ??
-                loginResponse.req.permissionClaims,
-            };
-
-            await AsyncStorage.setItem("token", loginResponse.token);
-            await AsyncStorage.setItem("username", userInfo.name || "");
-            await AsyncStorage.setItem("id", userInfo._id || "");
-            if (userInfo.email) {
-              await AsyncStorage.setItem("email", userInfo.email);
-            }
-
-            setToken(loginResponse.token);
-            setUser(userInfo);
-            setUserInfo(userInfo);
-            setAppErrors([]);
-            await syncTutorialState(Boolean(userInfo.hasActiveTutorials));
-            router.push("/Start");
-          } catch (error) {
-            console.error("Error storing credentials:", error);
-            toastService.showError(
-              t("auth.failedToStoreCredentials"),
-              t("auth.loginFailed")
-            );
-          }
+        onSuccess: async (response: postApiLoginResponse) => {
+          await completeLoginSession(response.data, t("auth.loginFailed"));
         },
         onError: (error: any) => {
           console.error("Login error:", error);
@@ -124,6 +137,36 @@ const Login: React.FC = () => {
       }
     );
   };
+
+  useEffect(() => {
+    if (googleAuthResponse?.type !== "success") {
+      return;
+    }
+
+    const idToken = googleAuthResponse.params.id_token;
+    if (!idToken) {
+      toastService.showError(t("auth.invalidResponse"), t("auth.googleLoginFailed"));
+      return;
+    }
+
+    loginWithGoogle(
+      {
+        data: {
+          idToken,
+        },
+      },
+      {
+        onSuccess: async (response) => {
+          await completeLoginSession(response.data, t("auth.googleLoginFailed"));
+        },
+        onError: (error: any) => {
+          console.error("Google login error:", error);
+          const errorMessage = getErrorMessage(error, t("auth.googleLoginFailed"));
+          toastService.showError(errorMessage, t("auth.googleLoginFailed"));
+        },
+      }
+    );
+  }, [completeLoginSession, googleAuthResponse, loginWithGoogle, t]);
 
   const goToPreload = () => {
     router.push("/");
@@ -222,9 +265,17 @@ const Login: React.FC = () => {
           <CustomButton
             width="w-full"
             onPress={login}
-            disabled={isPending}
+            disabled={isPending || isGoogleLoginPending}
             buttonStyleType={ButtonStyle.success}
             text={t('auth.login')}
+            buttonStyleSize={ButtonSize.xl}
+          />
+          <CustomButton
+            width="w-full"
+            onPress={() => void promptGoogleAuth()}
+            disabled={!googleAuthRequest || isPending || isGoogleLoginPending}
+            buttonStyleType={ButtonStyle.outline}
+            text={t('auth.googleLogin')}
             buttonStyleSize={ButtonSize.xl}
           />
           <View className="flex flex-row items-center justify-center" style={{ gap: 6 }}>
