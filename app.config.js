@@ -14,7 +14,7 @@ module.exports = {
   expo: {
     name: 'LGYM-APP',
     slug: 'lgym-app-mobile',
-    scheme: 'lgymappmobile',
+    scheme: ['lgymappmobile', 'com.lesiuuu.lgymappmobile'],
     version: '5.0.0',
     orientation: 'portrait',
     icon: './assets/logoLGYMNewX.png',
