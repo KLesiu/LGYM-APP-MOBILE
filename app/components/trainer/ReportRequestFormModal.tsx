@@ -28,7 +28,6 @@ import {
 import { useGetApiMeasurementsIdList } from "../../../api/generated/measurements/measurements";
 import { useHomeContext } from "../home/HomeContext";
 import CustomButton, { ButtonStyle } from "../elements/CustomButton";
-import Checkbox from "../elements/Checkbox";
 import CustomDropdown from "../elements/Dropdown";
 import toastService from "../../services/toastService";
 import { getErrorMessage } from "../../../utils/errorHandler";
@@ -1021,20 +1020,42 @@ const ReportRequestFormModal: React.FC<ReportRequestFormModalProps> = ({
     const fieldType = resolveFieldType(field);
 
     if (fieldType === "Boolean") {
+      const options = [
+        { label: t("trainer.answerYes", "Tak"), value: true },
+        { label: t("trainer.answerNo", "Nie"), value: false },
+      ];
+
       return (
-        <Pressable
-          onPress={() => setFieldValue(fieldKey, values[fieldKey] === true ? false : true)}
-          className="flex-row items-center rounded-xl border border-white/10 bg-[#202020] px-4 py-3"
-          style={{ gap: 12 }}
-        >
-          <Checkbox value={values[fieldKey] === true} />
-          <Text
-            className="text-textColor flex-1"
-            style={{ fontFamily: "OpenSans_400Regular" }}
-          >
-            {t("trainer.booleanFieldLabel")}
-          </Text>
-        </Pressable>
+        <View className="flex-row" style={{ gap: 10 }}>
+          {options.map((option) => {
+            const isSelected = values[fieldKey] === option.value;
+
+            return (
+              <Pressable
+                key={option.label}
+                onPress={() => setFieldValue(fieldKey, option.value)}
+                className={`flex-1 flex-row items-center rounded-xl border px-4 py-3 ${
+                  isSelected ? "border-primaryColor bg-primaryColor/10" : "border-white/10 bg-[#202020]"
+                }`}
+                style={{ gap: 12 }}
+              >
+                <View
+                  className={`h-5 w-5 items-center justify-center rounded-full border ${
+                    isSelected ? "border-primaryColor" : "border-textColor/50"
+                  }`}
+                >
+                  {isSelected ? <View className="h-2.5 w-2.5 rounded-full bg-primaryColor" /> : null}
+                </View>
+                <Text
+                  className={`flex-1 ${isSelected ? "text-primaryColor" : "text-textColor"}`}
+                  style={{ fontFamily: "OpenSans_700Bold" }}
+                >
+                  {option.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
       );
     }
 

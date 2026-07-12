@@ -118,14 +118,6 @@ const CurrentDietSection: React.FC = () => {
                   >
                     {plan.name || t("trainer.unnamedDiet", "Unnamed Diet")}
                   </Text>
-                  <View className={`rounded-full px-3 py-1 ${plan.isActive ? "bg-primaryColor/20" : "bg-[#2A2A2A]"}`}>
-                    <Text
-                      className={`text-[10px] uppercase ${plan.isActive ? "text-primaryColor" : "text-textColor opacity-70"}`}
-                      style={{ fontFamily: "OpenSans_700Bold" }}
-                    >
-                      {plan.isActive ? t("trainer.activePlan", "Active") : t("trainer.currentDiet", "Current Diet")}
-                    </Text>
-                  </View>
                 </View>
 
                 <View className="flex-row flex-wrap" style={{ gap: 8 }}>
