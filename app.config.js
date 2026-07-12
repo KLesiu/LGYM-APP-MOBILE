@@ -62,12 +62,16 @@ module.exports = {
       'expo-router',
       'expo-font',
       'expo-image-picker',
+      'expo-web-browser',
       'expo-localization',
       '@react-native-firebase/app',
       '@react-native-firebase/messaging',
       [
         'expo-build-properties',
         {
+          android: {
+            usesCleartextTraffic: true,
+          },
           ios: {
             useFrameworks: 'static',
           },
