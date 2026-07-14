@@ -30,6 +30,15 @@ import toastService from "./services/toastService";
 import { useGoogleAuth } from "../hooks/useGoogleAuth";
 import { usePostApiAuthGoogle } from "../api/generated/auth/auth";
 
+const logGoogleAuthError = (context: string, error: unknown): void => {
+  if (error instanceof Error) {
+    console.error(context, { name: error.name, message: error.message });
+    return;
+  }
+
+  console.error(context, { message: "Google auth request failed." });
+};
+
 const Login: React.FC = () => {
   const router = useRouter();
   const { t } = useTranslation();
@@ -153,14 +162,15 @@ const Login: React.FC = () => {
       {
         data: {
           idToken,
+          accessToken: googleAuthResponse.params.access_token,
         },
       },
       {
         onSuccess: async (response) => {
           await completeLoginSession(response.data, t("auth.googleLoginFailed"));
         },
-        onError: (error: any) => {
-          console.error("Google login error:", error);
+        onError: (error: unknown) => {
+          logGoogleAuthError("Google login error:", error);
           const errorMessage = getErrorMessage(error, t("auth.googleLoginFailed"));
           toastService.showError(errorMessage, t("auth.googleLoginFailed"));
         },
