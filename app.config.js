@@ -10,6 +10,36 @@ const resolveFirebaseFile = (envVarName, fallbackRelativePath) => {
   return path.join(__dirname, fallbackRelativePath);
 };
 
+const resolveGoogleIosUrlScheme = () => {
+  const configuredScheme = process.env.REACT_APP_GOOGLE_IOS_URL_SCHEME;
+  if (configuredScheme) {
+    return configuredScheme;
+  }
+
+  const iosClientId = process.env.REACT_APP_GOOGLE_IOS_CLIENT_ID;
+  const suffix = '.apps.googleusercontent.com';
+  if (!iosClientId?.endsWith(suffix)) {
+    return undefined;
+  }
+
+  return `com.googleusercontent.apps.${iosClientId.slice(0, -suffix.length)}`;
+};
+
+const googleSigninPlugin = () => {
+  const iosUrlScheme = resolveGoogleIosUrlScheme();
+
+  if (!iosUrlScheme) {
+    return '@react-native-google-signin/google-signin';
+  }
+
+  return [
+    '@react-native-google-signin/google-signin',
+    {
+      iosUrlScheme,
+    },
+  ];
+};
+
 module.exports = {
   expo: {
     name: 'LGYM-APP',
@@ -64,6 +94,7 @@ module.exports = {
       'expo-image-picker',
       'expo-web-browser',
       'expo-localization',
+      googleSigninPlugin(),
       '@react-native-firebase/app',
       '@react-native-firebase/messaging',
       [
