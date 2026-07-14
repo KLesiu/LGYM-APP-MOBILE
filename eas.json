@@ -1,4 +1,7 @@
 {
+  "cli": {
+    "appVersionSource": "remote"
+  },
   "build": {
     "preview": {
       "node": "22.18.0",
@@ -30,14 +33,17 @@
       "environment": "preview"
     },
     "production": {
-      "node": "22.18.0"
+      "node": "22.18.0",
+      "distribution": "store",
+      "autoIncrement": true
     }
   },
-  "submit":{
+  "submit": {
     "production": {
-      "ios": {
+      "android": {
+        "track": "production",
+        "releaseStatus": "completed"
       }
     }
-
   }
 }

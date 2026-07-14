@@ -48,6 +48,10 @@ start_emulator.py
 start-emulator.local.ps1
 start.txt
 
+# Store metadata and review-contact text is operator-managed and can contain
+# private release notes, demo credentials, phone numbers, and review details.
+fastlane/metadata/**/*.txt
+
 /android
 
 repomix-output.xml
