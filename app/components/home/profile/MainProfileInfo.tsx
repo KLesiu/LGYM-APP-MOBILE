@@ -27,6 +27,15 @@ import { useGoogleAuth } from "../../../../hooks/useGoogleAuth";
 import { unlinkGoogleAccount } from "../../../services/googleAccount";
 import toastService from "../../../services/toastService";
 
+const logGoogleAuthError = (context: string, error: unknown): void => {
+  if (error instanceof Error) {
+    console.error(context, { name: error.name, message: error.message });
+    return;
+  }
+
+  console.error(context, { message: "Google auth request failed." });
+};
+
 interface MainProfileInfoProps {
   email: string;
   isVisibleInRanking: boolean;
@@ -86,6 +95,7 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
       {
         data: {
           idToken,
+          accessToken: googleLinkResponse.params.access_token,
         },
       },
       {
@@ -99,8 +109,8 @@ const MainProfileInfo: React.FC<MainProfileInfoProps> = ({
             type: "all",
           });
         },
-        onError: (error: any) => {
-          console.error("Google link error:", error);
+        onError: (error: unknown) => {
+          logGoogleAuthError("Google link error:", error);
           toastService.showError(t("profile.googleLinkFailed"), t("common.error"));
         },
       }
