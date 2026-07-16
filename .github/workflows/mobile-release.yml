@@ -1,0 +1,371 @@
+name: Mobile Production Release
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: mobile-production-release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.prepare.outputs.should_release }}
+      existing_tag: ${{ steps.prepare.outputs.existing_tag }}
+      release_tag: ${{ steps.prepare.outputs.release_tag }}
+      release_version: ${{ steps.prepare.outputs.release_version }}
+      source_merge_sha: ${{ steps.prepare.outputs.source_merge_sha }}
+      reason: ${{ steps.prepare.outputs.reason }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Evaluate release eligibility
+        id: prepare
+        env:
+          PR_MERGED: ${{ github.event.pull_request.merged }}
+          PR_BASE_REF: ${{ github.event.pull_request.base.ref }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+          ACTOR: ${{ github.actor }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        run: |
+          set -euo pipefail
+
+          should_release=false
+          existing_tag=false
+          release_tag=
+          release_version=
+          reason=
+
+          if [[ "${PR_MERGED}" != "true" ]]; then
+            reason='pull request was closed without merge'
+          elif [[ "${PR_BASE_REF}" != 'main' ]]; then
+            reason='pull request did not target main'
+          elif [[ "${PR_HEAD_REF}" != 'dev' ]]; then
+            reason='pull request head ref was not dev'
+          elif [[ "${PR_USER}" == 'github-actions[bot]' || "${ACTOR}" == 'github-actions[bot]' ]]; then
+            reason='bot-authored release recursion is blocked'
+          else
+            release_commit_line="$(git log origin/main --grep="source-sha: ${MERGE_SHA}" --format='%H %s' -n 1 || true)"
+
+            if [[ -n "${release_commit_line}" ]]; then
+              release_version="$(sed -E 's#.*release v([0-9]+\.[0-9]+\.[0-9]+).*#\1#' <<<"${release_commit_line}")"
+              release_tag="mobile-v${release_version}"
+
+              if git rev-parse --verify --quiet "refs/tags/${release_tag}" >/dev/null; then
+                should_release=true
+                existing_tag=true
+                reason='existing release tag found for this merged PR; reusing immutable tag'
+              else
+                echo 'Expected an existing release tag for this previously bumped PR, but none was found.' >&2
+                exit 1
+              fi
+            else
+              should_release=true
+              reason='eligible merged dev to main PR'
+            fi
+          fi
+
+          {
+            echo "should_release=${should_release}"
+            echo "existing_tag=${existing_tag}"
+            echo "release_tag=${release_tag}"
+            echo "release_version=${release_version}"
+            echo "source_merge_sha=${MERGE_SHA}"
+            echo "reason=${reason}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: Report no-op decision
+        if: steps.prepare.outputs.should_release != 'true'
+        run: |
+          echo "Skipping mobile production release: ${{ steps.prepare.outputs.reason }}"
+
+  validate:
+    runs-on: ubuntu-latest
+    needs: prepare
+    if: needs.prepare.outputs.should_release == 'true' && needs.prepare.outputs.existing_tag != 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.18.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run typecheck
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+  version_and_tag:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+      - validate
+    if: needs.prepare.outputs.should_release == 'true' && (needs.prepare.outputs.existing_tag == 'true' || needs.validate.result == 'success')
+    outputs:
+      release_tag: ${{ steps.release.outputs.release_tag || steps.reuse_release.outputs.release_tag }}
+      release_version: ${{ steps.release.outputs.release_version || steps.reuse_release.outputs.release_version }}
+      release_sha: ${{ steps.release.outputs.release_sha || steps.reuse_release.outputs.release_sha }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Reuse existing release tag on rerun
+        if: needs.prepare.outputs.existing_tag == 'true'
+        id: reuse_release
+        run: |
+          release_sha="$(git rev-parse --verify --quiet "refs/tags/${{ needs.prepare.outputs.release_tag }}^{commit}" || true)"
+
+          {
+            echo "release_tag=${{ needs.prepare.outputs.release_tag }}"
+            echo "release_version=${{ needs.prepare.outputs.release_version }}"
+            echo "release_sha=${release_sha}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: Setup Node
+        if: needs.prepare.outputs.existing_tag != 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.18.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Configure release bot git identity
+        if: needs.prepare.outputs.existing_tag != 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Bump patch version, commit, and create immutable tag
+        if: needs.prepare.outputs.existing_tag != 'true'
+        id: release
+        env:
+          SOURCE_MERGE_SHA: ${{ needs.prepare.outputs.source_merge_sha }}
+        run: |
+          set -euo pipefail
+
+          npm version patch --no-git-tag-version
+          release_version="$(node -p "require('./package.json').version")"
+          release_tag="mobile-v${release_version}"
+
+          if git rev-parse --verify --quiet "refs/tags/${release_tag}" >/dev/null; then
+            echo "Release tag ${release_tag} already exists; refusing to create a second release version." >&2
+            exit 1
+          fi
+
+          git add package.json package-lock.json
+          git commit -m "chore(release): release v${release_version} [skip ci] source-sha: ${SOURCE_MERGE_SHA}"
+          git tag "${release_tag}"
+          git push origin HEAD:main
+          git push origin "${release_tag}"
+
+          {
+            echo "release_tag=${release_tag}"
+            echo "release_version=${release_version}"
+            echo "release_sha=$(git rev-parse HEAD)"
+          } >>"${GITHUB_OUTPUT}"
+
+  build:
+    runs-on: ubuntu-latest
+    needs:
+      - prepare
+      - version_and_tag
+    if: needs.prepare.outputs.should_release == 'true'
+    environment: production
+    outputs:
+      release_version: ${{ steps.release.outputs.release_version }}
+      release_tag: ${{ steps.release.outputs.release_tag }}
+      android_build_id: ${{ steps.metadata.outputs.android_build_id }}
+      ios_build_id: ${{ steps.metadata.outputs.ios_build_id }}
+      ios_build_number: ${{ steps.metadata.outputs.ios_build_number }}
+    steps:
+      - name: Checkout immutable release tag
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          ref: refs/tags/${{ needs.version_and_tag.outputs.release_tag }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.18.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          token: ${{ secrets.EXPO_TOKEN }}
+          eas-version: latest
+
+      - name: Expose release metadata
+        id: release
+        run: |
+          {
+            echo "release_version=${{ needs.version_and_tag.outputs.release_version }}"
+            echo "release_tag=${{ needs.version_and_tag.outputs.release_tag }}"
+          } >>"${GITHUB_OUTPUT}"
+
+      - name: Build Android from release tag
+        run: eas build --platform android --profile production --non-interactive --wait --json > android-build.json
+
+      - name: Build iOS from release tag
+        run: eas build --platform ios --profile production --non-interactive --wait --json > ios-build.json
+
+      - name: Extract EAS build metadata
+        id: metadata
+        run: |
+          set -euo pipefail
+
+          android_build_id="$(node -e "const data=require('./android-build.json'); const build=Array.isArray(data)?data[0]:data; if(!build?.id) process.exit(1); console.log(build.id)")"
+          ios_build_id="$(node -e "const data=require('./ios-build.json'); const build=Array.isArray(data)?data[0]:data; if(!build?.id) process.exit(1); console.log(build.id)")"
+          ios_build_number="$(node -e "const data=require('./ios-build.json'); const build=Array.isArray(data)?data[0]:data; const n=build?.appBuildVersion || build?.buildNumber || build?.ios?.buildNumber; if(!n) process.exit(1); console.log(n)")"
+
+          {
+            echo "android_build_id=${android_build_id}"
+            echo "ios_build_id=${ios_build_id}"
+            echo "ios_build_number=${ios_build_number}"
+          } >>"${GITHUB_OUTPUT}"
+
+  submit_android:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: production
+    steps:
+      - name: Checkout immutable release tag
+        uses: actions/checkout@v5
+        with:
+          ref: refs/tags/${{ needs.build.outputs.release_tag }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.18.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          token: ${{ secrets.EXPO_TOKEN }}
+          eas-version: latest
+
+      - name: Submit Android production build
+        run: eas submit --platform android --profile production --id "${{ needs.build.outputs.android_build_id }}" --non-interactive
+
+  submit_ios:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: production
+    steps:
+      - name: Checkout immutable release tag
+        uses: actions/checkout@v5
+        with:
+          ref: refs/tags/${{ needs.build.outputs.release_tag }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.18.0
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Inject runtime-only ASC app id
+        env:
+          ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${ASC_APP_ID}" || ! "${ASC_APP_ID}" =~ ^[0-9]+$ ]]; then
+            echo 'ASC_APP_ID must be set to the numeric App Store Connect app id in the production environment.' >&2
+            exit 1
+          fi
+
+          node - <<'NODE'
+          const fs = require('fs');
+          const config = JSON.parse(fs.readFileSync('eas.json', 'utf8'));
+          config.submit = config.submit || {};
+          config.submit.production = config.submit.production || {};
+          config.submit.production.ios = {
+            ...(config.submit.production.ios || {}),
+            ascAppId: process.env.ASC_APP_ID,
+          };
+          fs.writeFileSync('eas.json', `${JSON.stringify(config, null, 2)}\n`);
+          NODE
+
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          token: ${{ secrets.EXPO_TOKEN }}
+          eas-version: latest
+
+      - name: Submit iOS production build
+        run: eas submit --platform ios --profile production --id "${{ needs.build.outputs.ios_build_id }}" --non-interactive
+
+  review_ios:
+    runs-on: macos-latest
+    needs:
+      - build
+      - submit_ios
+    environment: production
+    steps:
+      - name: Checkout immutable release tag
+        uses: actions/checkout@v5
+        with:
+          ref: refs/tags/${{ needs.build.outputs.release_tag }}
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Install Fastlane
+        run: gem install fastlane
+
+      - name: Submit iOS build for App Review
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          APP_VERSION: ${{ needs.build.outputs.release_version }}
+          IOS_BUILD_NUMBER: ${{ needs.build.outputs.ios_build_number }}
+        run: fastlane ios submit_review

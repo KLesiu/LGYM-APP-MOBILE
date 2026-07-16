@@ -1,4 +1,5 @@
 const path = require('path');
+const { version } = require('./package.json');
 
 const resolveFirebaseFile = (envVarName, fallbackRelativePath) => {
   const configuredPath = process.env[envVarName];
@@ -15,7 +16,7 @@ module.exports = {
     name: 'LGYM-APP',
     slug: 'lgym-app-mobile',
     scheme: ['lgymappmobile', 'com.lesiuuu.lgymappmobile'],
-    version: '5.0.0',
+    version,
     orientation: 'portrait',
     icon: './assets/logoLGYMNewX.png',
     newArchEnabled: true,
@@ -30,7 +31,6 @@ module.exports = {
         foregroundImage: './assets/logoLGYMNewX.png',
         backgroundColor: '#0A0A0A',
       },
-      versionCode: 31,
       package: 'com.lesiuuu.lgymappmobile',
       googleServicesFile: resolveFirebaseFile('GOOGLE_SERVICES_JSON', 'google-services.json'),
     },
