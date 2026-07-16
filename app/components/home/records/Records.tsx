@@ -131,7 +131,7 @@ const Records: React.FC<RecordsProps> = () => {
         {isRecordsLoading ? (
           <ViewLoading />
         ) : (
-          <View className="flex flex-col p-4" style={{ gap: 16 }}>
+          <View className="flex flex-col flex-1 p-4" style={{ gap: 16 }}>
             <View className="flex flex-row justify-between items-center">
               <Text
                 className="text-textColor  text-base "
@@ -152,8 +152,9 @@ const Records: React.FC<RecordsProps> = () => {
             </View>
             <SearchBox value={searchText} onChangeText={setSearchText} />
             <ScrollView
-              className="w-full h-full"
-              contentContainerStyle={{ padding: 8 }}
+              className="w-full flex-1"
+              contentContainerStyle={{ padding: 8, paddingBottom: 120 }}
+              showsVerticalScrollIndicator={false}
             >
               {filteredRecords.length ? (
                 <View className="flex flex-col w-full" style={{ gap: 8 }}>
