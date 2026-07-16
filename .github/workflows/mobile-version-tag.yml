@@ -1,0 +1,85 @@
+name: Mobile Version Tag
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - package.json
+      - package-lock.json
+      - .github/workflows/mobile-version-tag.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mobile-version-tag-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create tag when mobile version increases
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          if [[ "${BEFORE_SHA}" == '0000000000000000000000000000000000000000' ]]; then
+            echo 'Skipping initial branch push.'
+            exit 0
+          fi
+
+          if ! git cat-file -e "${BEFORE_SHA}:package.json" 2>/dev/null; then
+            echo 'Previous commit does not contain package.json; skipping version tag.'
+            exit 0
+          fi
+
+          previous_version="$(git show "${BEFORE_SHA}:package.json" | node -e "let data=''; process.stdin.on('data', chunk => data += chunk); process.stdin.on('end', () => process.stdout.write(JSON.parse(data).version));")"
+          current_version="$(node -p "require('./package.json').version")"
+          lock_version="$(node -p "require('./package-lock.json').version")"
+
+          if ! [[ "${previous_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Previous package version is not semver X.Y.Z: ${previous_version}" >&2
+            exit 1
+          fi
+
+          if ! [[ "${current_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Current package version is not semver X.Y.Z: ${current_version}" >&2
+            exit 1
+          fi
+
+          if [[ "${current_version}" != "${lock_version}" ]]; then
+            echo "package.json version (${current_version}) must match package-lock.json version (${lock_version})." >&2
+            exit 1
+          fi
+
+          if ! node -e "const [pa, pb, pc] = process.argv[1].split('.').map(Number); const [ca, cb, cc] = process.argv[2].split('.').map(Number); process.exit(ca > pa || (ca === pa && (cb > pb || (cb === pb && cc > pc))) ? 0 : 1);" "${previous_version}" "${current_version}"; then
+            echo "Mobile version did not increase (${previous_version} -> ${current_version}); skipping tag."
+            exit 0
+          fi
+
+          release_tag="mobile-v${current_version}"
+
+          if git rev-parse --verify --quiet "refs/tags/${release_tag}" >/dev/null; then
+            tag_sha="$(git rev-parse "refs/tags/${release_tag}^{commit}")"
+
+            if [[ "${tag_sha}" == "${AFTER_SHA}" ]]; then
+              echo "Tag ${release_tag} already points at ${AFTER_SHA}; nothing to do."
+              exit 0
+            fi
+
+            echo "Tag ${release_tag} already exists on ${tag_sha}; refusing to move it to ${AFTER_SHA}." >&2
+            exit 1
+          fi
+
+          git tag "${release_tag}" "${AFTER_SHA}"
+          git push origin "${release_tag}"
