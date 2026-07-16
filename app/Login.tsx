@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -27,8 +27,6 @@ import { useTranslation } from "react-i18next";
 import type { LoginResponseDto, UserInfoDto } from "../api/generated/model";
 import { useOnboarding } from "./onboarding/OnboardingContext";
 import toastService from "./services/toastService";
-import { useGoogleAuth } from "../hooks/useGoogleAuth";
-import { usePostApiAuthGoogle } from "../api/generated/auth/auth";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -39,16 +37,7 @@ const Login: React.FC = () => {
 
   const { setErrors: setAppErrors, setUserInfo } = useAppContext();
   const { syncTutorialState } = useOnboarding();
-  const { request: googleAuthRequest, response: googleAuthResponse, promptAsync: promptGoogleAuth } = useGoogleAuth();
   const { mutate, isPending } = usePostApiLogin({
-    request: {
-      skipAuthRedirect: true,
-      headers: {
-        "X-Skip-Auth": "true",
-      },
-    },
-  });
-  const { mutate: loginWithGoogle, isPending: isGoogleLoginPending } = usePostApiAuthGoogle({
     request: {
       skipAuthRedirect: true,
       headers: {
@@ -137,36 +126,6 @@ const Login: React.FC = () => {
       }
     );
   };
-
-  useEffect(() => {
-    if (googleAuthResponse?.type !== "success") {
-      return;
-    }
-
-    const idToken = googleAuthResponse.params.id_token;
-    if (!idToken) {
-      toastService.showError(t("auth.invalidResponse"), t("auth.googleLoginFailed"));
-      return;
-    }
-
-    loginWithGoogle(
-      {
-        data: {
-          idToken,
-        },
-      },
-      {
-        onSuccess: async (response) => {
-          await completeLoginSession(response.data, t("auth.googleLoginFailed"));
-        },
-        onError: (error: any) => {
-          console.error("Google login error:", error);
-          const errorMessage = getErrorMessage(error, t("auth.googleLoginFailed"));
-          toastService.showError(errorMessage, t("auth.googleLoginFailed"));
-        },
-      }
-    );
-  }, [completeLoginSession, googleAuthResponse, loginWithGoogle, t]);
 
   const goToPreload = () => {
     router.push("/");
@@ -265,17 +224,9 @@ const Login: React.FC = () => {
           <CustomButton
             width="w-full"
             onPress={login}
-            disabled={isPending || isGoogleLoginPending}
+            disabled={isPending}
             buttonStyleType={ButtonStyle.success}
             text={t('auth.login')}
-            buttonStyleSize={ButtonSize.xl}
-          />
-          <CustomButton
-            width="w-full"
-            onPress={() => void promptGoogleAuth()}
-            disabled={!googleAuthRequest || isPending || isGoogleLoginPending}
-            buttonStyleType={ButtonStyle.outline}
-            text={t('auth.googleLogin')}
             buttonStyleSize={ButtonSize.xl}
           />
           <View className="flex flex-row items-center justify-center" style={{ gap: 6 }}>
