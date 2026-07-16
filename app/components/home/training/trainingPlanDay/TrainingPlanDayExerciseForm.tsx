@@ -15,6 +15,7 @@ import {
   usePostApiExerciseIdGetExerciseByBodyPart,
 } from "../../../../../api/generated/exercise/exercise";
 import toastService from "../../../../services/toastService";
+import { getExerciseDisplayName } from "../../../../../helpers/exerciseDisplayName";
 
 import { BodyParts, ExerciseResponseDto, EnumLookupDto } from "../../../../../api/generated/model";
 
@@ -71,7 +72,7 @@ const TrainingPlanDayExerciseForm: React.FC<
         data = (exercisesByBodyPartData.data as ExerciseResponseDto[]).map(
           (dto) => ({
             _id: dto._id || "",
-            name: dto.name || "",
+            name: getExerciseDisplayName(dto),
             user: dto.user || "",
             bodyPart: dto.bodyPart || undefined,
             description: dto.description || "",
@@ -84,7 +85,7 @@ const TrainingPlanDayExerciseForm: React.FC<
         data = (allExercisesData.data as ExerciseResponseDto[]).map(
           (dto) => ({
             _id: dto._id || "",
-            name: dto.name || "",
+            name: getExerciseDisplayName(dto),
             user: dto.user || "",
             bodyPart: dto.bodyPart || undefined,
             description: dto.description || "",
@@ -94,7 +95,7 @@ const TrainingPlanDayExerciseForm: React.FC<
       }
     }
     return data.map((exercise: ExerciseForm) => ({
-      label: exercise.name || "",
+      label: getExerciseDisplayName(exercise),
       value: exercise._id!,
     }));
   }, [exercisesByBodyPartData, allExercisesData, props.bodyPart]);

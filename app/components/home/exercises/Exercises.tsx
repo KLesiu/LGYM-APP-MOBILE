@@ -108,13 +108,13 @@ const Exercises: React.FC<ExercisesProps> = ({
 
   const filteredGlobalExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart
-      ? globalExercises.filter((e) => e.bodyPart?.name === selectedBodyPart.name)
+      ? globalExercises.filter((e) => e.bodyPart?.id === selectedBodyPart.id)
       : [];
   }, [globalExercises, selectedBodyPart]);
 
   const filteredUserExercisesByBodyPart = useMemo(() => {
     return selectedBodyPart
-      ? userExercises.filter((e) => e.bodyPart?.name === selectedBodyPart.name)
+      ? userExercises.filter((e) => e.bodyPart?.id === selectedBodyPart.id)
       : [];
   }, [userExercises, selectedBodyPart]);
 

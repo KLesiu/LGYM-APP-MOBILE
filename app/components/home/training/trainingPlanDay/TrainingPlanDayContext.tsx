@@ -14,6 +14,7 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getGetApiPlanDayIdGetPlanDayQueryOptions } from "../../../../../api/generated/plan-day/plan-day";
 import { BodyParts, PlanDayVmDto } from "../../../../../api/generated/model";
+import { getExerciseDisplayName } from "../../../../../helpers/exerciseDisplayName";
 
 interface TrainingPlanDayContextType {
   setPlanDay: (planDay: PlanDayVm) => void;
@@ -252,7 +253,7 @@ const TrainingPlanDayProvider: React.FC<TrainingPlanDayProviderProps> = ({
               reps: e.reps || "",
               exercise: {
                 _id: e.exercise?._id || "",
-                name: e.exercise?.name || "",
+                name: getExerciseDisplayName(e.exercise),
                 user: e.exercise?.user || "",
                 bodyPart: e.exercise?.bodyPart || undefined,
                 description: e.exercise?.description || "",

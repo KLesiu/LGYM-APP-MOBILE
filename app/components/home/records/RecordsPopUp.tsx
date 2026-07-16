@@ -23,6 +23,7 @@ import { ExerciseResponseDto } from "../../../../api/generated/model";
 import { useQueryClient } from "@tanstack/react-query";
 import toastService from "../../../services/toastService";
 import { getErrorMessage } from "../../../../utils/errorHandler";
+import { getExerciseDisplayName } from "../../../../helpers/exerciseDisplayName";
 
 interface RecordsPopUpProps {
   offPopUp: () => void;
@@ -51,7 +52,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       const response = (exercisesData.data as ExerciseResponseDto[]).map(
         (dto) => ({
           _id: dto._id || "",
-          name: dto.name || "",
+          name: getExerciseDisplayName(dto),
           user: dto.user || "",
           bodyPart: dto.bodyPart || undefined,
           description: dto.description || "",
@@ -60,7 +61,7 @@ const RecordsPopUp: React.FC<RecordsPopUpProps> = (props) => {
       );
       const helpExercisesToSelect = response.map((exercise: ExerciseForm) => {
         return {
-          label: exercise.name,
+          label: getExerciseDisplayName(exercise),
           value: exercise._id,
         } as DropdownItem;
       });

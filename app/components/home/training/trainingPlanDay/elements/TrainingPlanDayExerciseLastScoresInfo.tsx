@@ -8,6 +8,7 @@ import React from "react";
 import { usePostApiExerciseIdGetLastExerciseScores } from "../../../../../../api/generated/exercise/exercise";
 import { useTranslation } from "react-i18next";
 import { EnumLookupDto } from "../../../../../../api/generated/model";
+import { getExerciseDisplayName } from "../../../../../../helpers/exerciseDisplayName";
 
 interface TrainingPlanDayExerciseLastScoresInfoProps {}
 
@@ -39,7 +40,7 @@ const TrainingPlanDayExerciseLastScoresInfo: React.FC<
           gym: isGymFilterActive ? gym?._id : undefined,
           series: currentExercise?.series,
           exerciseId: currentExercise?.exercise._id,
-          exerciseName: currentExercise?.exercise.name,
+          exerciseName: getExerciseDisplayName(currentExercise?.exercise),
         },
       },
       {

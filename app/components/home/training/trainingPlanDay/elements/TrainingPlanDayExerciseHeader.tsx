@@ -3,6 +3,7 @@ import { useTrainingPlanDay } from "../TrainingPlanDayContext";
 import React from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useTranslation } from "react-i18next";
+import { getExerciseDisplayName } from "../../../../../../helpers/exerciseDisplayName";
 
 interface TrainingPlanDayExerciseHeaderProps {}
 
@@ -11,6 +12,7 @@ const TrainingPlanDayExerciseHeader: React.FC<
 > = () => {
   const { t } = useTranslation();
   const { currentExercise } = useTrainingPlanDay();
+  const exerciseDisplayName = getExerciseDisplayName(currentExercise?.exercise);
   const openSearch = async (exerciseName?: string) => {
     if (!exerciseName) return Alert.alert(t('training.exerciseNameRequired'));
     const query = encodeURIComponent(exerciseName);
@@ -32,11 +34,11 @@ const TrainingPlanDayExerciseHeader: React.FC<
             fontFamily: "OpenSans_700Bold",
           }}
         >
-          {currentExercise?.exercise.name}
+          {exerciseDisplayName}
         </Text>
         <Pressable
           className="w-10"
-          onPress={() => openSearch(currentExercise?.exercise.name || undefined)}
+          onPress={() => openSearch(exerciseDisplayName || undefined)}
           hitSlop={8}
         >
           <Ionicons name="search-outline" size={24} color="white" />

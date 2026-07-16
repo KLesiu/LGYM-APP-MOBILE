@@ -11,6 +11,7 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import ExercisesListElement from "./ExercisesListElement";
 import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
+import { getExerciseDisplayName } from "../../../../helpers/exerciseDisplayName";
 
 interface ExercisesListProps {
   bodyPart: EnumLookupDto;
@@ -50,14 +51,14 @@ const ExercisesList: React.FC<ExercisesListProps> = ({
   const filteredGlobalExercises = useMemo(() => {
     const lowercasedSearchText = searchText.toLowerCase();
     return globalExercises.filter((exercise) =>
-      (exercise.name || "").toLowerCase().includes(lowercasedSearchText)
+      getExerciseDisplayName(exercise).toLowerCase().includes(lowercasedSearchText)
     );
   }, [globalExercises, searchText]);
 
   const filteredUserExercises = useMemo(() => {
     const lowercasedSearchText = searchText.toLowerCase();
     return userExercises.filter((exercise) =>
-      (exercise.name || "").toLowerCase().includes(lowercasedSearchText)
+      getExerciseDisplayName(exercise).toLowerCase().includes(lowercasedSearchText)
     );
   }, [userExercises, searchText]);
 

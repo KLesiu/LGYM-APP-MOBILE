@@ -11,6 +11,7 @@ import CustomButton, {
 } from "../../../../elements/CustomButton";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { getExerciseDisplayName } from "../../../../../../helpers/exerciseDisplayName";
 
 interface TrainingPlanDayExerciseListCardProps {
   exercise: PlanDayExercisesFormVm;
@@ -78,7 +79,7 @@ const TrainingPlanDayExerciseListCard: React.FC<
               fontFamily: "OpenSans_400Regular",
             }}
           >
-            {exercise.exercise.name}
+            {getExerciseDisplayName(exercise.exercise)}
           </Text>
           <Text
             className="text-sm smallPhone:text-xs text-textColor "

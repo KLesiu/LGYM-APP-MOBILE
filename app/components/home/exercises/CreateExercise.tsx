@@ -117,7 +117,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     try {
       const payload: ExerciseFormDto = {
         name: exerciseName,
-        bodyPart: toBodyPartValue(bodyPart?.name),
+        bodyPart: toBodyPartValue(bodyPart?.id),
         description: description,
       };
       await createUserExerciseMutation.mutateAsync({
@@ -136,7 +136,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     try {
       const payload: ExerciseFormDto = {
         name: exerciseName,
-        bodyPart: toBodyPartValue(bodyPart?.name),
+        bodyPart: toBodyPartValue(bodyPart?.id),
         description: description,
       };
       await createGlobalExerciseMutation.mutateAsync({
@@ -159,7 +159,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
       const payload: ExerciseFormDto = {
         _id: props.form?._id,
         name: exerciseName,
-        bodyPart: toBodyPartValue(bodyPart?.name),
+        bodyPart: toBodyPartValue(bodyPart?.id),
         description: description,
       };
       await updateExerciseMutation.mutateAsync({
@@ -198,10 +198,10 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
     const responseData = bodyPartsData?.data as EnumLookupResponseDto;
     if (responseData && responseData.values) {
       return responseData.values
-        .filter((item) => hasExerciseBodyPartImage(item.name))
+        .filter((item) => hasExerciseBodyPartImage(item.id))
         .map((item) => ({
         label: item.displayName || item.name || "",
-        value: item.name || "",
+        value: item.id || "",
       }));
     }
     return [];
@@ -272,7 +272,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
                 </Text>
               ) : (
                 <CustomDropdown
-                  value={bodyPart?.name || ""}
+                  value={bodyPart?.id || ""}
                   data={bodyPartsToSelect}
                   onSelect={(item) => {
                     if (!item) {
@@ -280,7 +280,7 @@ const CreateExercise: React.FC<CreateExerciseProps> = (props) => {
                       return;
                     }
                     const selected = (bodyPartsData?.data as EnumLookupResponseDto)?.values?.find(
-                      (bp) => bp.name === item.value && hasExerciseBodyPartImage(bp.name)
+                      (bp) => bp.id === item.value && hasExerciseBodyPartImage(bp.id)
                     );
                     if (selected) {
                       setBodyPart(selected);

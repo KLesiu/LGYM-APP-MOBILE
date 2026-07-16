@@ -18,6 +18,7 @@ import RecordIcon from "./../../../../img/icons/recordsIcon.svg";
 import RecordsPopUp from "../records/RecordsPopUp";
 import { usePostApiExerciseGetExerciseScoresFromTrainingByExercise } from "../../../../api/generated/exercise/exercise";
 import { usePostApiMainRecordsGetRecordOrPossibleRecordInExercise } from "../../../../api/generated/main-records/main-records";
+import { getExerciseDisplayName } from "../../../../helpers/exerciseDisplayName";
 import {
   ExerciseTrainingHistoryItemDto,
   PossibleRecordForExerciseDto,
@@ -128,7 +129,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
         <ScrollView>
           <View className="flex flex-col">
             <View className="flex flex-row justify-center">
-              <BodyPartImage bodyPart={exercise.bodyPart?.name} showBig={true} />
+              <BodyPartImage bodyPart={exercise.bodyPart?.id} showBig={true} />
             </View>
             <View className="flex flex-col w-full" style={{ gap: 8 }}>
               <View className="flex flex-row justify-between flex-wrap">
@@ -136,7 +137,7 @@ const ExerciseDetails: React.FC<ExerciseDetailsProps> = ({
                   className="text-2xl font-bold text-textColor"
                   style={{ fontFamily: "OpenSans_700Bold" }}
                 >
-                  {exercise.name}
+                  {getExerciseDisplayName(exercise)}
                 </Text>
                 {exerciseRecord && (
                   <View

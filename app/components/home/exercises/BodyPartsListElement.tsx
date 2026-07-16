@@ -12,8 +12,8 @@ interface BodyPartsListElementProps{
 const BodyPartsListElement:React.FC<BodyPartsListElementProps> =({bodyPart, onSelectBodyPart})=>{
    return(
     <Card customClasses="flex items-center mb-2" onPress={()=>onSelectBodyPart(bodyPart)}>
-        <Text className="font-bold text-xl  text-textColor" style={{fontFamily: "OpenSans_700Bold"}}>{  bodyPart.displayName}</Text>
-        <BodyPartImage bodyPart={bodyPart.name} />
+        <Text className="font-bold text-xl  text-textColor" style={{fontFamily: "OpenSans_700Bold"}}>{bodyPart.displayName}</Text>
+        <BodyPartImage bodyPart={bodyPart.id} />
     </Card>
    )
 

@@ -9,6 +9,7 @@ import { useAppContext } from "../../../AppContext";
 import Checkbox from "../../elements/Checkbox";
 import { EnumLookupDto, ExerciseResponseDto } from "../../../../api/generated/model";
 import { isAdminUser } from "../../../../utils/authorization";
+import { getExerciseDisplayName } from "../../../../helpers/exerciseDisplayName";
 
 interface ExercisesListElementProps {
   exercise: ExerciseResponseDto;
@@ -43,7 +44,7 @@ const ExercisesListElement: React.FC<ExercisesListElementProps> = ({
             className="font-bold text-xl text-textColor"
             style={{ fontFamily: "OpenSans_700Bold" }}
           >
-            {exercise.name}
+            {getExerciseDisplayName(exercise)}
           </Text>
 
           <Text

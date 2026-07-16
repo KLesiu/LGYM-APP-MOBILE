@@ -18,6 +18,7 @@ import {
   useGetApiExerciseIdGetAllUserExercises,
 } from "../../../../../api/generated/exercise/exercise";
 import toastService from "../../../../services/toastService";
+import { getExerciseDisplayName } from "../../../../../helpers/exerciseDisplayName";
 
 const CreatePlanDayExerciseList: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -77,7 +78,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
     const newExerciseForPlanDay: ExerciseForPlanDay = {
       exercise: {
         value: exercise._id || "",
-        label: exercise.name || "",
+        label: getExerciseDisplayName(exercise),
       },
       series: 1,
       reps: "Max",
@@ -125,7 +126,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
 
     return uniqueExercises
       .filter((exercise) =>
-        (exercise.name || "").toLowerCase().includes(normalizedSearch)
+        getExerciseDisplayName(exercise).toLowerCase().includes(normalizedSearch)
       )
       .slice(0, 12);
   }, [globalExercises, searchText, userExercises]);
@@ -230,7 +231,7 @@ const CreatePlanDayExerciseList: React.FC = () => {
                       className="text-base text-textColor"
                       style={{ fontFamily: "OpenSans_700Bold" }}
                     >
-                      {exercise.name}
+                      {getExerciseDisplayName(exercise)}
                     </Text>
                     <Text
                       className="text-xs text-fifthColor"

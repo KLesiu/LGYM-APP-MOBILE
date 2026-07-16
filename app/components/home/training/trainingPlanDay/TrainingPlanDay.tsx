@@ -56,6 +56,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Message } from "../../../../../enums/Message";
 import toastService from "../../../../services/toastService";
 import { getErrorMessage } from "../../../../../utils/errorHandler";
+import { getExerciseDisplayName } from "../../../../../helpers/exerciseDisplayName";
 
 interface TrainingPlanDayProps {
   hideDaySection: () => void;
@@ -440,7 +441,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
   ) => {
     if (!exerciseToSwitchId) return;
     setExerciseWhichBeingSwitched(exerciseToSwitchId);
-    setBodyPart(bodyPart?.name as BodyParts || undefined);
+    setBodyPart((bodyPart?.id as BodyParts) || undefined);
     setIsTrainingPlanDayExerciseFormShow(true);
   };
 
@@ -463,7 +464,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
     const dto = exercise.data as ExerciseResponseDto;
     return {
       _id: dto._id || "",
-      name: dto.name || "",
+      name: getExerciseDisplayName(dto),
       user: dto.user || "",
       bodyPart: dto.bodyPart || undefined,
       description: dto.description || "",
@@ -637,7 +638,7 @@ const TrainingPlanDay: React.FC<TrainingPlanDayProps> = (props) => {
 
       if (missingFields.length > 0 || invalidFields.length > 0) {
         return formatScoreValidationError(
-          score.exercise.name || t("common.unknown"),
+          getExerciseDisplayName(score.exercise) || t("common.unknown"),
           score.series,
           missingFields,
           invalidFields

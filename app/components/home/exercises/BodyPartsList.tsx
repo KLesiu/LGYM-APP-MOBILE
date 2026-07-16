@@ -32,7 +32,7 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
   const allBodyParts = useMemo(() => {
     const responseData = data?.data as EnumLookupResponseDto;
     if (responseData && responseData.values) {
-      return responseData.values.filter((item) => hasExerciseBodyPartImage(item.name));
+      return responseData.values.filter((item) => hasExerciseBodyPartImage(item.id));
     }
     return [];
   }, [data]);
@@ -43,7 +43,7 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
     }
     const lowercasedSearchText = searchText.toLowerCase();
     return allBodyParts.filter((bodyPart) =>
-      bodyPart.displayName!.toLowerCase().includes(lowercasedSearchText)
+      (bodyPart.displayName || "").toLowerCase().includes(lowercasedSearchText)
     );
   }, [allBodyParts, searchText]);
 
@@ -62,7 +62,7 @@ const BodyPartsList: React.FC<BodyPartsListProps> = ({ onSelectBodyPart }) => {
       >
         {filteredBodyParts.map((bodyPart) => (
           <BodyPartsListElement
-            key={bodyPart.name}
+            key={bodyPart.id}
             bodyPart={bodyPart}
             onSelectBodyPart={onSelectBodyPart}
           />

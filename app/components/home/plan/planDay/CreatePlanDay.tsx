@@ -31,6 +31,7 @@ import { useOnboarding } from "../../../../onboarding/OnboardingContext";
 import toastService from "../../../../services/toastService";
 import { getErrorMessage } from "../../../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import { getExerciseDisplayName } from "../../../../../helpers/exerciseDisplayName";
 
 interface CreatePlanDayProps {
   planId?: string;
@@ -83,7 +84,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
            reps: e.reps || "",
            exercise: {
              _id: e.exercise?._id || "",
-             name: e.exercise?.name || "",
+              name: getExerciseDisplayName(e.exercise),
              user: e.exercise?.user || "",
              bodyPart: e.exercise?.bodyPart || undefined,
              description: e.exercise?.description || "",
@@ -148,7 +149,7 @@ const CreatePlanDay: React.FC<CreatePlanDayProps> = (props) => {
             series: exerciseInPlanDay.series,
             reps: exerciseInPlanDay.reps,
             exercise: {
-              label: exerciseInPlanDay.exercise.name,
+              label: getExerciseDisplayName(exerciseInPlanDay.exercise),
               value: exerciseInPlanDay.exercise._id,
             },
           };
