@@ -3,13 +3,11 @@ import {
   View,
   Text,
   TextInput,
-  Image,
   Pressable,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
 } from "react-native";
-import logoLGYM from "./../assets/logoLGYMNewX.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MiniLoading from "./components/elements/MiniLoading";
 import ShowIcon from "./../img/icons/showIcon.svg";
@@ -27,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import type { LoginResponseDto, UserInfoDto } from "../api/generated/model";
 import { useOnboarding } from "./onboarding/OnboardingContext";
 import toastService from "./services/toastService";
+import BrandMark from "./components/branding/BrandMark";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -148,107 +147,140 @@ const Login: React.FC = () => {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
       >
-        <View
-          style={{ gap: 16, flexGrow: 1 }}
-          className="flex items-center flex-col justify-start bg-bgColor p-4"
-        >
-          <Pressable onPress={goToPreload} className="w-3/5 h-[30%]  ">
-            <Image className="w-full h-full" source={logoLGYM} />
-          </Pressable>
+        <View className="flex-1 overflow-hidden bg-bgColor px-5 pb-8 pt-12">
+          <View className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-primaryColor opacity-10" />
+          <View className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-500 opacity-10" />
 
-      <View
-        className="w-full flex flex-col items-center justify-start"
-        style={{ gap: 8 }}
-      >
-        <View className="flex flex-col w-full" style={{ gap: 8 }}>
-          <View className="flex flex-row gap-1">
-            <Text
-              className="text-textColor  text-base"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              {t('auth.username')}
-            </Text>
-            <Text className="text-redColor">*</Text>
-          </View>
-
-          <TextInput
-            onChangeText={(text: string) => setUsername(text)}
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-            className="w-full px-2 py-4 bg-secondaryColor rounded-lg  text-textColor "
-            autoComplete="given-name"
-          />
-        </View>
-          <View className="flex flex-col w-full relative" style={{ gap: 8 }}>
-          <View className="flex flex-row gap-1">
-            <Text
-              className="text-textColor text-base"
-              style={{ fontFamily: "OpenSans_300Light" }}
-            >
-              {t('auth.password')}
-            </Text>
-            <Text className="text-redColor">*</Text>
-          </View>
-          <TextInput
-            onChangeText={(text: string) => setPassword(text)}
-            style={{
-              fontFamily: "OpenSans_400Regular",
-            }}
-            className="w-full px-2 py-4 bg-secondaryColor rounded-lg text-textColor  "
-            secureTextEntry={secureTextEntry}
-          />
           <Pressable
-            style={{ borderRadius: 8 }}
-            className="absolute top-[39%] h-[50px]   text-sm flex items-center justify-center   right-2"
-            onPress={() => setSecureTextEntry(!secureTextEntry)}
+            accessibilityRole="button"
+            accessibilityLabel="Powrót"
+            onPress={goToPreload}
+            className="items-center"
           >
-            {secureTextEntry ? (
-              <ShowIcon stroke={"white"} />
-            ) : (
-              <HideIcon stroke={"white"} />
-            )}
+            <BrandMark
+              size={82}
+              layout="vertical"
+              subtitle="System ewidencji treningowej"
+            />
           </Pressable>
-        </View>
-        <View className="w-full flex items-end">
-          <Pressable onPress={goToForgotPassword}>
-            <Text
-              className="text-sm text-primaryColor"
-              style={{ fontFamily: "OpenSans_700Bold" }}
-            >
-              {t("auth.forgotPassword")}
-            </Text>
-          </Pressable>
-        </View>
-      </View>
-          <CustomButton
-            width="w-full"
-            onPress={login}
-            disabled={isPending}
-            buttonStyleType={ButtonStyle.success}
-            text={t('auth.login')}
-            buttonStyleSize={ButtonSize.xl}
-          />
-          <View className="flex flex-row items-center justify-center" style={{ gap: 6 }}>
-            <Text
-              className="text-sm text-fifthColor"
-              style={{ fontFamily: "OpenSans_400Regular" }}
-            >
-              {t('auth.noAccountQuestion')}
-            </Text>
-            <Pressable onPress={goToRegister}>
+
+          <View className="mt-8 rounded-2xl border border-secondaryColor bg-cardColor p-5" style={{ gap: 18 }}>
+            <View style={{ gap: 4 }}>
               <Text
-                className="text-sm text-primaryColor"
+                className="text-2xl text-textColor"
                 style={{ fontFamily: "OpenSans_700Bold" }}
               >
-                {t('auth.register')}
+                {t("auth.login")}
               </Text>
-            </Pressable>
+              <Text
+                className="text-sm leading-5 text-fifthColor"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                Wprowadź dane konta, aby przejść do dziennika treningowego.
+              </Text>
+            </View>
+
+            <View style={{ gap: 14 }}>
+              <View style={{ gap: 7 }}>
+                <View className="flex-row gap-1">
+                  <Text
+                    className="text-sm text-textColor"
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                  >
+                    {t("auth.username")}
+                  </Text>
+                  <Text className="text-redColor">*</Text>
+                </View>
+                <TextInput
+                  value={username}
+                  onChangeText={(text: string) => setUsername(text)}
+                  autoCapitalize="none"
+                  autoComplete="username"
+                  placeholder={t("auth.username")}
+                  placeholderTextColor="#64748B"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  className="w-full rounded-xl border border-secondaryColor bg-secondaryColor px-4 py-4 text-textColor"
+                />
+              </View>
+
+              <View className="relative" style={{ gap: 7 }}>
+                <View className="flex-row gap-1">
+                  <Text
+                    className="text-sm text-textColor"
+                    style={{ fontFamily: "OpenSans_400Regular" }}
+                  >
+                    {t("auth.password")}
+                  </Text>
+                  <Text className="text-redColor">*</Text>
+                </View>
+                <TextInput
+                  value={password}
+                  onChangeText={(text: string) => setPassword(text)}
+                  autoComplete="password"
+                  placeholder={t("auth.password")}
+                  placeholderTextColor="#64748B"
+                  style={{ fontFamily: "OpenSans_400Regular" }}
+                  className="w-full rounded-xl border border-secondaryColor bg-secondaryColor px-4 py-4 pr-14 text-textColor"
+                  secureTextEntry={secureTextEntry}
+                />
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel="Pokaż lub ukryj hasło"
+                  className="absolute bottom-1 right-1 h-12 w-12 items-center justify-center"
+                  onPress={() => setSecureTextEntry(!secureTextEntry)}
+                >
+                  {secureTextEntry ? (
+                    <ShowIcon stroke="#F8FAFC" />
+                  ) : (
+                    <HideIcon stroke="#F8FAFC" />
+                  )}
+                </Pressable>
+              </View>
+
+              <View className="items-end">
+                <Pressable onPress={goToForgotPassword}>
+                  <Text
+                    className="text-sm text-primaryColor"
+                    style={{ fontFamily: "OpenSans_700Bold" }}
+                  >
+                    {t("auth.forgotPassword")}
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            <CustomButton
+              width="w-full"
+              onPress={login}
+              disabled={isPending}
+              buttonStyleType={ButtonStyle.success}
+              text={t("auth.login")}
+              buttonStyleSize={ButtonSize.xl}
+            />
+
+            <View className="flex-row items-center justify-center" style={{ gap: 6 }}>
+              <Text
+                className="text-sm text-fifthColor"
+                style={{ fontFamily: "OpenSans_400Regular" }}
+              >
+                {t("auth.noAccountQuestion")}
+              </Text>
+              <Pressable onPress={goToRegister}>
+                <Text
+                  className="text-sm text-primaryColor"
+                  style={{ fontFamily: "OpenSans_700Bold" }}
+                >
+                  {t("auth.register")}
+                </Text>
+              </Pressable>
+            </View>
           </View>
+
           <MiniLoading />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
+
 export default Login;
