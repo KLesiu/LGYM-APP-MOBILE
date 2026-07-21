@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, Linking, Image, useWindowDimensions } from "react-native";
+import { View, Text, Linking, useWindowDimensions } from "react-native";
 import { AppConfigInfoDto } from "../../../api/generated/model";
 import CustomButton, { ButtonSize, ButtonStyle } from "./CustomButton";
-import logoLGYM from "./../../../assets/logoLGYMNewX.png";
 import { useTranslation } from "react-i18next";
+import BrandMark from "../branding/BrandMark";
 
 interface UpdateDialogProps {
   config: AppConfigInfoDto;
@@ -12,7 +12,7 @@ interface UpdateDialogProps {
 const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
   const { t } = useTranslation();
   const { width, height } = useWindowDimensions();
-  const logoSize = Math.max(120, Math.min(width * 0.55, height * 0.24, 220));
+  const logoSize = Math.max(82, Math.min(width * 0.26, height * 0.15, 128));
 
   const handleUpdatePress = () => {
     if (!config.updateUrl) {
@@ -25,57 +25,55 @@ const UpdateDialog: React.FC<UpdateDialogProps> = ({ config }) => {
   };
 
   return (
-    <View className="flex-1  items-center justify-center  bg-bgColor rounded-lg shadow-lg px-4 py-4" style={{ gap: 32 }}>
+    <View className="flex-1 items-center justify-center bg-black/70 px-5 py-8">
       <View
-        className="items-center justify-center"
-        style={{ width: logoSize, height: logoSize }}
+        className="w-full max-w-md items-center rounded-2xl border border-secondaryColor bg-cardColor px-5 py-7 shadow-lg"
+        style={{ gap: 24 }}
       >
-        <Image
-          source={logoLGYM}
-          resizeMode="contain"
-          style={{ width: "100%", height: "100%" }}
-        />
-      </View>
-      <View className="flex flex-col items-center justify-center">
-        <Text
-          className="text-textColor text-xl"
-          style={{ fontFamily: "OpenSans_700Bold" }}
-        >
-          {t("updateDialog.title")}
-        </Text>
+        <BrandMark size={logoSize} layout="vertical" />
 
-        <Text
-          className="text-textColor text-base text-center"
-          style={{ fontFamily: "OpenSans_300Light" }}
-        >
-          {t("updateDialog.description", {
-            version: config.latestVersion || config.minRequiredVersion || "-",
-          })}
-        </Text>
-      </View>
-
-      {config.releaseNotes && (
-        <View className="flex flex-col border border-white p-4 rounded-lg ">
+        <View className="items-center" style={{ gap: 8 }}>
           <Text
-            className="text-textColor text-base text-center"
+            className="text-center text-xl text-textColor"
+            style={{ fontFamily: "OpenSans_700Bold" }}
+          >
+            {t("updateDialog.title")}
+          </Text>
+
+          <Text
+            className="text-center text-base leading-6 text-fifthColor"
             style={{ fontFamily: "OpenSans_400Regular" }}
           >
-            {t("updateDialog.whatsNew")}
-          </Text>
-          <Text
-            className="text-textColor text-sm text-center"
-            style={{ fontFamily: "OpenSans_300Light" }}
-          >
-            {config.releaseNotes}
+            {t("updateDialog.description", {
+              version: config.latestVersion || config.minRequiredVersion || "-",
+            })}
           </Text>
         </View>
-      )}
-      <CustomButton
-        onPress={handleUpdatePress}
-        buttonStyleSize={ButtonSize.long}
-        buttonStyleType={ButtonStyle.success}
-        text={t("updateDialog.updateNow")}
-      ></CustomButton>
+
+        {config.releaseNotes && (
+          <View className="w-full rounded-xl border border-secondaryColor bg-fourthColor p-4">
+            <Text
+              className="text-center text-base text-textColor"
+              style={{ fontFamily: "OpenSans_700Bold" }}
+            >
+              {t("updateDialog.whatsNew")}
+            </Text>
+            <Text
+              className="mt-2 text-center text-sm leading-5 text-fifthColor"
+              style={{ fontFamily: "OpenSans_400Regular" }}
+            >
+              {config.releaseNotes}
+            </Text>
+          </View>
+        )}
+
+        <CustomButton
+          onPress={handleUpdatePress}
+          buttonStyleSize={ButtonSize.long}
+          buttonStyleType={ButtonStyle.success}
+          text={t("updateDialog.updateNow")}
+        />
+      </View>
     </View>
   );
 };
