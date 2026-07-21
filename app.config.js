@@ -12,24 +12,19 @@ const resolveFirebaseFile = (envVarName, fallbackRelativePath) => {
 
 module.exports = {
   expo: {
-    name: 'LGYM-APP',
-    slug: 'lgym-app-mobile',
-    scheme: ['lgymappmobile', 'com.lesiuuu.lgymappmobile'],
+    name: 'Training Hub',
+    description: 'Neutralny wariant demonstracyjny systemu ewidencji treningowej.',
+    slug: 'training-hub-thesis',
+    scheme: ['traininghub', 'lgymappmobile', 'com.lesiuuu.lgymappmobile'],
     version: '5.0.1',
     orientation: 'portrait',
-    icon: './assets/logoLGYMNewX.png',
     newArchEnabled: true,
     splash: {
       resizeMode: 'contain',
-      backgroundColor: '#0A0A0A',
-      image: './assets/logoLGYMNewX.png',
+      backgroundColor: '#07111F',
     },
     assetBundlePatterns: ['**/*'],
     android: {
-      adaptiveIcon: {
-        foregroundImage: './assets/logoLGYMNewX.png',
-        backgroundColor: '#0A0A0A',
-      },
       versionCode: 32,
       package: 'com.lesiuuu.lgymappmobile',
       googleServicesFile: resolveFirebaseFile('GOOGLE_SERVICES_JSON', 'google-services.json'),
@@ -43,9 +38,6 @@ module.exports = {
         UIStatusBarStyle: 'UIStatusBarStyleLightContent',
         UIBackgroundModes: ['remote-notification'],
       },
-    },
-    web: {
-      favicon: './assets/favicon.png',
     },
     extra: {
       eas: {
